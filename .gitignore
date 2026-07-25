@@ -1,0 +1,16 @@
+node_modules/
+out/
+# built by `npm run site`; published to gh-pages, never committed on main
+dist-site/
+.DS_Store
+*.log
+
+# Deliberately NOT ignored:
+#   public/narration/**        generated audio is committed so any checkout
+#                              renders identically without re-running Kokoro
+#   public/narration/*/.cache.json
+#                              tiny hash file; keeps a fresh clone from
+#                              re-synthesizing every clip
+#   src/videos/*/narrationManifest.ts
+#                              generated, but the durations are what the
+#                              compositions time against

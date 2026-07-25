@@ -1,0 +1,22 @@
+{
+  "intro": {
+    "hash": "72d190a2d8e9bdb6",
+    "outFile": "intro.mp3",
+    "durationSeconds": 7.9
+  },
+  "pipeline": {
+    "hash": "9a9f652a8a66095e",
+    "outFile": "pipeline.mp3",
+    "durationSeconds": 9.85
+  },
+  "timing": {
+    "hash": "86f8a77c420f4193",
+    "outFile": "timing.mp3",
+    "durationSeconds": 9.9
+  },
+  "outro": {
+    "hash": "551ea8af4cbe4554",
+    "outFile": "outro.mp3",
+    "durationSeconds": 6.4
+  }
+}
