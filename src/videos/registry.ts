@@ -35,6 +35,13 @@ import {
   WIDTH as SWAP_BASICS_WIDTH,
   HEIGHT as SWAP_BASICS_HEIGHT,
 } from "./swap-basics/Video";
+import {
+  KidDemoVideo,
+  timeline as kidDemoTimeline,
+  FPS as KID_DEMO_FPS,
+  WIDTH as KID_DEMO_WIDTH,
+  HEIGHT as KID_DEMO_HEIGHT,
+} from "./kid-demo/Video";
 
 export type VideoEntry = {
   /** Composition id: used by Remotion, by `remotion render`, and as the site's URL hash. */
@@ -47,6 +54,12 @@ export type VideoEntry = {
   width: number;
   height: number;
   durationInFrames: number;
+  /**
+   * Registered as a Remotion composition (so `remotion still/render <id>` and
+   * Studio can reach it) but kept out of the site gallery. For workbenches and
+   * component showcases — anything renderable that isn't a video to watch.
+   */
+  hidden?: boolean;
 };
 
 export const VIDEOS: VideoEntry[] = [
@@ -83,7 +96,22 @@ export const VIDEOS: VideoEntry[] = [
     height: SWAP_BASICS_HEIGHT,
     durationInFrames: swapBasicsTimeline().durationInFrames,
   },
+  {
+    id: "KidDemo",
+    title: "Kids' series — component workbench",
+    description:
+      "Showcase for src/lib/kid/: the three episode-one characters, their emotions and mouth sync, speech bubbles and a Big Word card. Not an episode.",
+    component: KidDemoVideo,
+    fps: KID_DEMO_FPS,
+    width: KID_DEMO_WIDTH,
+    height: KID_DEMO_HEIGHT,
+    durationInFrames: kidDemoTimeline().durationInFrames,
+    hidden: true,
+  },
 ];
+
+/** The videos the site shows — everything except workbenches. */
+export const PUBLIC_VIDEOS: VideoEntry[] = VIDEOS.filter((v) => !v.hidden);
 
 export function findVideo(id: string | null): VideoEntry | undefined {
   if (!id) return undefined;

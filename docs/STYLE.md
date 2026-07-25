@@ -177,3 +177,91 @@ our theme palette overrides its colors:
   `@remotion/google-fonts` for a font that ships with the render.
 - Heavy weights for headline text (900 at 108px for titles, 64px for diagram
   labels); `theme.textMuted` for secondary detail.
+
+---
+
+# Kids' series
+
+**Everything above this line is the financial series and does not apply here;
+everything below applies only to the kids' series.** The two share the format
+rules (1920×1080 @ 30fps, `timeline()`-derived durations) and the audio-driven
+pacing library (`src/lib/narration.ts`), and nothing else. The kids' toolkit
+lives in `src/lib/kid/` and imports neither `src/lib/theme.ts` nor
+`src/lib/components/`; keep it that way, so a kid scene can never half-inherit
+slate-and-cyan. First audience: a six-year-old.
+
+## Palette philosophy
+
+- **Daylight, not darkness.** `kidTheme` (`src/lib/kid/theme.ts`) is built
+  around bright saturated skies: `skyGradient("day" | "sunset" | "night" |
+  "underwater")`. Sunset is the *calm beat* variant — use it where the
+  financial series would slow down, not for variety.
+- **Ink, never black.** Outlines, eyes and brows are `kidTheme.ink` (#243447).
+  Pure black outlines are the single biggest tell of clip-art.
+- **Bodies are flat-filled.** Not a stylistic preference: the eyelids are
+  painted *over* the eyes in body colour (no clip paths, so any number of
+  characters can share the document), and a gradient body cannot be matched by
+  a lid — `objectBoundingBox` gives the lid its own copy of the ramp and
+  `userSpaceOnUse` is resolved in the Face's transformed space. Both leave two
+  flat rectangles on the character's face. Depth comes from separate flat
+  highlight shapes kept clear of the face, plus the outline. Cloudia keeps a
+  strictly vertical gradient and passes its colour *sampled at eye height* as
+  `skin`; that is the only exception, and it exists because a white cloud with
+  no ramp looks like paper.
+- **Blush over a cold body needs opacity, not hue.** Pink at 40% over cyan is
+  lavender. Drip carries `blushStrength={3}`; that number is a fix, not a taste.
+- Round everything: radii come from `kidRadius`, never inline.
+
+## Character-first staging
+
+- **The characters are the content.** In the financial series a diagram
+  explains and a caption narrates; here the *character* explains, and the
+  backdrop is scenery. `KidBackdrop`'s clouds are at 0.58 alpha for that
+  reason — a background cloud must never compete with Cloudia.
+- **Faces must be huge.** A face is roughly 60–75% of the body's width. Both
+  first passes at these characters failed for the same reason: the face was
+  sized like an icon's, and everything below (limbs, props, colour) was
+  wasted on a shape nobody could read.
+- **Limbs read only outside the silhouette.** Arms are drawn *behind* the body
+  so shoulders and hands never need a join, which means only the part outside
+  the outline exists on screen. Short thin arms become antennae; short thick
+  arms become fins. Reach far, or don't draw the limb.
+- **Give every character on screen a different `phase`.** Breathing, blinking
+  and mouth cycles are all driven from it; two characters sharing a phase bob
+  in lockstep and instantly read as one puppet.
+- **Look at the speaker.** `lookAt(from, to)` turns two staged positions into a
+  pupil offset. A character listening while facing the camera looks absent.
+
+## Speech bubbles
+
+- **Six words, maximum** (`MAX_BUBBLE_WORDS`; the component warns above it).
+  A six-year-old reads a bubble by shape. Longer than that and it is a caption
+  floating in the sky — and the kids' series has no captions.
+- ≥44px is the floor for *any* kid text (`kidType.min`); bubbles default to
+  60px. This is deliberately above the financial series' 34px.
+- **The tail points at the speaker.** It leaves the bubble's bottom edge, so
+  the bubble goes *above* whoever is talking, on their side. A bubble below the
+  speaker has its tail aimed at the ground.
+- Bubbles pop with a spring and grow *out of the tail* (`transformOrigin`), so
+  the line looks like it came from the mouth. They never fade in like captions.
+
+## Big Word cards
+
+- One `WordCard` per vocabulary word the episode is actually teaching, and at
+  most one a minute. Two in quick succession stop meaning "learn this".
+- Letters bounce in one at a time so the word is *spelled*, not revealed.
+- The starburst stays behind the banner. It is decoration, and because the card
+  owns a z-index, anything that overflows the banner draws on top of the
+  characters' faces.
+
+## Mouth sync
+
+- **A character's mouth moves if and only if its own clip is playing.**
+  Dialogue scenes declare `turns: [{clip, speaker}]` in `buildTimeline`;
+  `useSpeaking(scene, speaker)` (or `isSpeaking`) is what the `speaking` prop
+  is wired to. Never hand-time a mouth against a take.
+- The mouth amplitude is three detuned sines with forced closures
+  (`mouthAmplitude`), not a metronome, and the resting shape is the emotion's
+  own mouth — so a character who stops talking stops on a smile, not on a gap.
+- `DialogueAudio` mounts each turn at its offset; a scene is either one clip or
+  one exchange, never both.

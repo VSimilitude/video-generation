@@ -7,6 +7,9 @@
 
 export {
   VIDEOS,
+  // The gallery lists this one: `hidden` entries (component workbenches) are
+  // registered compositions but not videos to watch.
+  PUBLIC_VIDEOS,
   findVideo,
   type VideoEntry,
   type VideoEntry as SiteVideo,

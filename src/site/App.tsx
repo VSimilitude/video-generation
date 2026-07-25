@@ -8,7 +8,12 @@
 import React from "react";
 import { Player } from "@remotion/player";
 import { theme } from "../lib/theme";
-import { VIDEOS, findVideo, formatDuration, type SiteVideo } from "./registry";
+import {
+  PUBLIC_VIDEOS,
+  findVideo,
+  formatDuration,
+  type SiteVideo,
+} from "./registry";
 
 function currentVideoId(): string | null {
   const hash = window.location.hash.replace(/^#\/?/, "");
@@ -59,7 +64,7 @@ const Header: React.FC<{ subtitle: string }> = ({ subtitle }) => (
 const Gallery: React.FC = () => (
   <main style={page}>
     <Header subtitle="Remotion + Kokoro TTS videos, playing live in the browser." />
-    {VIDEOS.map((video) => (
+    {PUBLIC_VIDEOS.map((video) => (
       <a key={video.id} href={`#/${video.id}`} style={cardStyle}>
         <div
           style={{
@@ -90,7 +95,7 @@ const Gallery: React.FC = () => (
         </p>
       </a>
     ))}
-    {VIDEOS.length === 0 ? (
+    {PUBLIC_VIDEOS.length === 0 ? (
       <p style={{ color: theme.textMuted }}>No videos registered yet.</p>
     ) : null}
   </main>
