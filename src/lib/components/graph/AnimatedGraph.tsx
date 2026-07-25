@@ -43,6 +43,77 @@ export const graphType = {
   chip: 38,
 } as const;
 
+/**
+ * Width estimate for a run of text. SVG has no layout pass we can read back at
+ * render time, so anything that needs to know how wide a string renders sizes
+ * it arithmetically. 0.60em per character is a safe over-estimate for tabular
+ * lining digits in the system sans; short, formatted values (`$1,000`, `6.0%`)
+ * and tick labels are the intended payload.
+ */
+export function textWidth(text: string, fontSize: number): number {
+  return text.length * fontSize * 0.6;
+}
+
+/** A box in plot-area coordinates (the same space `sx`/`sy` return). */
+export type OccluderRect = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
+
+/** The box a `<text>` occupies, from its anchor point and anchoring mode. */
+export function textExtent(
+  text: string,
+  fontSize: number,
+  /** x of the anchor point. */
+  x: number,
+  /** Baseline y. */
+  baseline: number,
+  anchor: "start" | "middle" | "end",
+): OccluderRect {
+  const w = textWidth(text, fontSize);
+  const left = anchor === "middle" ? x - w / 2 : anchor === "end" ? x - w : x;
+  return {
+    left,
+    right: left + w,
+    top: baseline - fontSize * 0.8,
+    bottom: baseline + fontSize * 0.25,
+  };
+}
+
+/**
+ * 1 where `rect` is well clear of every occluder, 0 where it is inside one or
+ * within `clearance` of it, ramping across `feather` px in between.
+ *
+ * The clearance band matters as much as the overlap test: a label whose glyphs
+ * stop 5px short of a chip is not covered, but it reads as debris crowding it.
+ * The feather is what makes a sliding chip dissolve the labels it approaches
+ * instead of popping them off.
+ */
+export function clearOfOccluders(
+  rect: OccluderRect,
+  occluders: readonly OccluderRect[],
+  clearance = 20,
+  feather = 26,
+): number {
+  let alpha = 1;
+  for (const o of occluders) {
+    // Two boxes are separated iff they are separated on either axis; the
+    // largest such gap is how far apart they actually are.
+    const gap =
+      Math.max(
+        o.left - rect.right,
+        rect.left - o.right,
+        o.top - rect.bottom,
+        rect.top - o.bottom,
+      ) - clearance;
+    alpha = Math.min(alpha, Math.max(0, Math.min(1, gap / feather)));
+    if (alpha === 0) break;
+  }
+  return alpha;
+}
+
 export type GraphMargin = {
   top: number;
   right: number;
@@ -54,8 +125,9 @@ export type GraphMargin = {
  * Default margins, sized from the type scale above:
  *  - left   rotated y title (44) + right-aligned tick labels (~140) + gap
  *  - bottom tick labels (34 + gap) + axis title (40) + gap
- * A readout chip on an axis deliberately overlays the tick labels in its
- * margin — it is the live value replacing the static scale.
+ * A readout chip on an axis deliberately sits in the tick band of its margin —
+ * it is the live value replacing the static scale, so the tick labels it covers
+ * fade out (see `AxisTicks`) rather than being half-hidden behind it.
  */
 export const GRAPH_MARGIN: GraphMargin = {
   top: 40,
@@ -82,6 +154,14 @@ type GraphContextValue = {
   y: AxisSpec;
   /** clip-path url() that keeps a curve inside the plot area. */
   clip: string;
+  /**
+   * Declare a box that must not have tick labels showing through it — chips do
+   * this so the axis scale gets out of the way of the live readout. Collected
+   * during the children's render and read by `AxisTicks`, which renders after
+   * them; see the note where it is mounted.
+   */
+  occlude: (rect: OccluderRect) => void;
+  occluders: React.MutableRefObject<OccluderRect[]>;
 };
 
 const GraphContext = React.createContext<GraphContextValue | null>(null);
@@ -135,6 +215,9 @@ export const AnimatedGraph: React.FC<{
     });
 
   const axisColor = theme.textMuted;
+  // Rebuilt every frame, before the children that fill it render.
+  const occluders = React.useRef<OccluderRect[]>([]);
+  occluders.current = [];
   const ctx: GraphContextValue = {
     sx,
     sy,
@@ -143,6 +226,8 @@ export const AnimatedGraph: React.FC<{
     x,
     y,
     clip: `url(#${clipId})`,
+    occluders,
+    occlude: (rect) => occluders.current.push(rect),
   };
 
   return (
@@ -176,53 +261,6 @@ export const AnimatedGraph: React.FC<{
           opacity={0.9}
         />
 
-        {/* X ticks + labels */}
-        {x.ticks.map((t, i) => {
-          const o = fadeIn(tickAt + i * 2);
-          return (
-            <g key={`xt-${t}`} opacity={o} transform={`translate(${sx(t)}, ${plotH})`}>
-              <line y1={0} y2={12} stroke={axisColor} strokeWidth={3} opacity={0.9} />
-              <text
-                y={12 + graphType.tick}
-                textAnchor="middle"
-                style={{
-                  ...svgTextOutline(4),
-                  fill: theme.textMuted,
-                  fontSize: graphType.tick,
-                  fontWeight: 600,
-                  fontVariantNumeric: "tabular-nums lining-nums",
-                }}
-              >
-                {x.format(t)}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Y ticks + labels */}
-        {y.ticks.map((t, i) => {
-          const o = fadeIn(tickAt + i * 2);
-          return (
-            <g key={`yt-${t}`} opacity={o} transform={`translate(0, ${sy(t)})`}>
-              <line x1={-12} x2={0} stroke={axisColor} strokeWidth={3} opacity={0.9} />
-              <text
-                x={-24}
-                y={graphType.tick * 0.36}
-                textAnchor="end"
-                style={{
-                  ...svgTextOutline(4),
-                  fill: theme.textMuted,
-                  fontSize: graphType.tick,
-                  fontWeight: 600,
-                  fontVariantNumeric: "tabular-nums lining-nums",
-                }}
-              >
-                {y.format(t)}
-              </text>
-            </g>
-          );
-        })}
-
         {/* Axis titles */}
         <text
           x={plotW / 2}
@@ -254,8 +292,87 @@ export const AnimatedGraph: React.FC<{
           {y.label}
         </text>
 
-        <GraphContext.Provider value={ctx}>{children}</GraphContext.Provider>
+        <GraphContext.Provider value={ctx}>
+          {children}
+          {/* Deliberately mounted after the children: it renders the tick
+              labels *around* the boxes those children declare, and React
+              renders siblings in order, so their occluders exist by the time
+              this reads them. Painting last is harmless — the only ink a tick
+              label can meet is the chip that has just faded it out. */}
+          <AxisTicks tickAt={tickAt} />
+        </GraphContext.Provider>
       </g>
     </svg>
+  );
+};
+
+/**
+ * The scale: a tick mark and a label per tick, on both axes. A label fades out
+ * where a readout chip covers it — the chip *is* that part of the scale while
+ * it is on screen, and two numbers in one spot read as neither.
+ */
+const AxisTicks: React.FC<{ tickAt: number }> = ({ tickAt }) => {
+  const frame = useCurrentFrame();
+  const { sx, sy, plotH, x, y, occluders } = useGraph();
+  const covered = occluders.current;
+  const axisColor = theme.textMuted;
+  const size = graphType.tick;
+  const fadeIn = (delay: number) =>
+    interpolate(frame, [delay, delay + 10], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
+  const labelStyle = {
+    ...svgTextOutline(4),
+    fill: theme.textMuted,
+    fontSize: size,
+    fontWeight: 600,
+    fontVariantNumeric: "tabular-nums lining-nums",
+  } as const;
+
+  return (
+    <>
+      {/* X ticks + labels */}
+      {x.ticks.map((t, i) => {
+        const o = fadeIn(tickAt + i * 2);
+        const text = x.format(t);
+        const clear = clearOfOccluders(
+          textExtent(text, size, sx(t), plotH + 12 + size, "middle"),
+          covered,
+        );
+        return (
+          <g key={`xt-${t}`} opacity={o} transform={`translate(${sx(t)}, ${plotH})`}>
+            <line y1={0} y2={12} stroke={axisColor} strokeWidth={3} opacity={0.9} />
+            <text y={12 + size} textAnchor="middle" opacity={clear} style={labelStyle}>
+              {text}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* Y ticks + labels */}
+      {y.ticks.map((t, i) => {
+        const o = fadeIn(tickAt + i * 2);
+        const text = y.format(t);
+        const clear = clearOfOccluders(
+          textExtent(text, size, -24, sy(t) + size * 0.36, "end"),
+          covered,
+        );
+        return (
+          <g key={`yt-${t}`} opacity={o} transform={`translate(0, ${sy(t)})`}>
+            <line x1={-12} x2={0} stroke={axisColor} strokeWidth={3} opacity={0.9} />
+            <text
+              x={-24}
+              y={size * 0.36}
+              textAnchor="end"
+              opacity={clear}
+              style={labelStyle}
+            >
+              {text}
+            </text>
+          </g>
+        );
+      })}
+    </>
   );
 };

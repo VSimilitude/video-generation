@@ -1,0 +1,52 @@
+{
+  "intro": {
+    "hash": "39791fd914990797",
+    "outFile": "intro.mp3",
+    "durationSeconds": 14
+  },
+  "problem": {
+    "hash": "70c73ba162c944bc",
+    "outFile": "problem.mp3",
+    "durationSeconds": 18.65
+  },
+  "deal": {
+    "hash": "217da247145d795b",
+    "outFile": "deal.mp3",
+    "durationSeconds": 16.225
+  },
+  "legs": {
+    "hash": "44b9f6c65ffc6dbc",
+    "outFile": "legs.mp3",
+    "durationSeconds": 18.025
+  },
+  "netting": {
+    "hash": "5cf7011c77940f01",
+    "outFile": "netting.mp3",
+    "durationSeconds": 18.025
+  },
+  "hedge": {
+    "hash": "04ca598a31ac9b45",
+    "outFile": "hedge.mp3",
+    "durationSeconds": 20.375
+  },
+  "pricing": {
+    "hash": "a42a8f1897c16a59",
+    "outFile": "pricing.mp3",
+    "durationSeconds": 18.5
+  },
+  "value": {
+    "hash": "13daa9eb94740bc2",
+    "outFile": "value.mp3",
+    "durationSeconds": 19.25
+  },
+  "bondlink": {
+    "hash": "c59260775e24d4b7",
+    "outFile": "bondlink.mp3",
+    "durationSeconds": 15
+  },
+  "recap": {
+    "hash": "246135e142e35ccf",
+    "outFile": "recap.mp3",
+    "durationSeconds": 17.25
+  }
+}

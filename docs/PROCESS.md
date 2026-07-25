@@ -34,7 +34,18 @@ proves awkward — that's half the point of the project.
 - Iterate in `npm run studio`. Get layout/pacing right at low fidelity
   before polishing animation.
 
-## 5. Review (deployed player first)
+## 5. Self-review stills (before any deploy)
+
+Render one still per scene and *look at them* — layout bugs are visible in
+a frame and invisible in a diff, and mid-animation states can break even
+when end-state geometry is checked (swap-basics hedge scene).
+
+- `npx remotion still <CompId> out.png --frame N` — pick a frame ~85–90%
+  into each scene (elements landed), plus mid-animation frames for any
+  scene where elements move across each other.
+- Fix what's broken, re-render, re-look. Only then deploy.
+
+## 6. Review (deployed player first)
 
 Review happens on the deployed web player — the reviewer is usually remote,
 on a phone — not on a local mp4.
@@ -50,7 +61,7 @@ on a phone — not on a local mp4.
 - Optional, local only: `npx remotion render <CompId> out/<CompId>.mp4` when
   a real file is needed (publishing elsewhere, frame-accurate inspection).
 
-## 6. Retro (required)
+## 7. Retro (required)
 
 - Add a dated entry to `docs/LEARNINGS.md`: what worked, what didn't, what
   to do differently next video.

@@ -1,7 +1,7 @@
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
 import { theme, svgTextOutline } from "../../theme";
-import { useGraph, graphType, type AxisSpec } from "./AnimatedGraph";
+import { useGraph, graphType, textWidth, type AxisSpec } from "./AnimatedGraph";
 
 // A dot pinned to a curve at a given x, with dashed projections onto both axes
 // and live numeric readouts.
@@ -12,13 +12,11 @@ import { useGraph, graphType, type AxisSpec } from "./AnimatedGraph";
 // tweens between two pre-formatted strings.
 
 /**
- * Width estimate for a chip's text. SVG has no layout pass we can read back at
- * render time, so chips are sized arithmetically. 0.60em per character is a
- * safe over-estimate for tabular lining digits in the system sans; short,
- * formatted values (`$1,000`, `6.0%`) are the intended payload.
+ * Width of a chip: its text (estimated — SVG has no layout pass we can read
+ * back at render time) plus horizontal padding.
  */
 export function chipWidth(text: string, fontSize: number, padX = 22): number {
-  return text.length * fontSize * 0.6 + padX * 2;
+  return textWidth(text, fontSize) + padX * 2;
 }
 
 const CHIP_H = graphType.readout + 26;
@@ -47,12 +45,18 @@ export const GraphChip: React.FC<{
   opacity = 1,
   anchor = "middle",
 }) => {
-  const { sx, sy } = useGraph();
+  const { sx, sy, occlude } = useGraph();
   const w = chipWidth(text, fontSize);
   const h = fontSize + 26;
   const cx = sx(x) + dx;
   const cy = sy(y) + dy;
   const left = anchor === "middle" ? cx - w / 2 : anchor === "end" ? cx - w : cx;
+  // Claim the space: a chip on an axis is the live value replacing that stretch
+  // of the scale, so the tick labels underneath it get out of the way. Declared
+  // once the chip is solid enough to hide what is behind it.
+  if (opacity > 0.15) {
+    occlude({ left, right: left + w, top: cy - h / 2, bottom: cy + h / 2 });
+  }
   if (opacity <= 0) return null;
   return (
     <g opacity={opacity}>
@@ -127,30 +131,34 @@ export const GraphMarker: React.FC<{
   const fy = (formatY ?? (graph.y as AxisSpec).format)(yv);
 
   return (
-    <g opacity={show}>
-      {projections ? (
-        <g stroke={color} strokeWidth={3} strokeDasharray="12 14" opacity={0.75}>
-          <line x1={px} y1={py} x2={px} y2={plotH} />
-          <line x1={px} y1={py} x2={0} y2={py} />
-        </g>
-      ) : null}
-      {/* Surface ring keeps the dot legible where it sits on its own curve. */}
-      <circle
-        cx={px}
-        cy={py}
-        r={radius + 5}
-        fill="none"
-        stroke={theme.bgBottom}
-        strokeWidth={5}
-        opacity={0.9}
-      />
-      <circle
-        cx={px}
-        cy={py}
-        r={radius * (0.6 + 0.4 * show)}
-        fill={color}
-        style={{ filter: `drop-shadow(0 0 16px ${color}aa)` }}
-      />
+    <>
+      <g opacity={show}>
+        {projections ? (
+          <g stroke={color} strokeWidth={3} strokeDasharray="12 14" opacity={0.75}>
+            <line x1={px} y1={py} x2={px} y2={plotH} />
+            <line x1={px} y1={py} x2={0} y2={py} />
+          </g>
+        ) : null}
+        {/* Surface ring keeps the dot legible where it sits on its own curve. */}
+        <circle
+          cx={px}
+          cy={py}
+          r={radius + 5}
+          fill="none"
+          stroke={theme.bgBottom}
+          strokeWidth={5}
+          opacity={0.9}
+        />
+        <circle
+          cx={px}
+          cy={py}
+          r={radius * (0.6 + 0.4 * show)}
+          fill={color}
+          style={{ filter: `drop-shadow(0 0 16px ${color}aa)` }}
+        />
+      </g>
+      {/* Readouts carry their own opacity rather than inheriting the group's,
+          so the tick labels they displace fade in step with them. */}
       {readouts ? (
         <>
           {/* On the y axis, right edge tucked just left of the axis line. */}
@@ -162,6 +170,7 @@ export const GraphMarker: React.FC<{
             text={fy}
             color={color}
             fontSize={graphType.readout}
+            opacity={show}
           />
           {/* On the x axis, below it, centred on the marker. */}
           <GraphChip
@@ -171,10 +180,11 @@ export const GraphMarker: React.FC<{
             text={fx}
             color={color}
             fontSize={graphType.readout}
+            opacity={show}
           />
         </>
       ) : null}
-    </g>
+    </>
   );
 };
 

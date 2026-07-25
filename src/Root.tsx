@@ -1,42 +1,27 @@
 import React from "react";
 import { Composition } from "remotion";
-import {
-  PipelineDemoVideo,
-  timeline as pipelineDemoTimeline,
-  FPS,
-  WIDTH,
-  HEIGHT,
-} from "./videos/pipeline-demo/Video";
-import {
-  BondBasicsVideo,
-  timeline as bondBasicsTimeline,
-  FPS as BOND_BASICS_FPS,
-  WIDTH as BOND_BASICS_WIDTH,
-  HEIGHT as BOND_BASICS_HEIGHT,
-} from "./videos/bond-basics/Video";
+import { VIDEOS } from "./videos/registry";
 
-// One <Composition> per video. Duration comes from each video's timeline(),
-// which is derived from the generated narration manifest — re-run
-// `npm run narration` after script changes and durations follow automatically.
+// One <Composition> per registered video. Everything — id, component, size and
+// duration — comes from src/videos/registry.ts, which derives each duration
+// from that video's timeline() and so from the generated narration manifest:
+// re-run `npm run narration` after a script change and the durations follow.
+//
+// Registering a video is an entry in the registry, not an edit here.
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      <Composition
-        id="PipelineDemo"
-        component={PipelineDemoVideo}
-        durationInFrames={pipelineDemoTimeline().durationInFrames}
-        fps={FPS}
-        width={WIDTH}
-        height={HEIGHT}
-      />
-      <Composition
-        id="BondBasics"
-        component={BondBasicsVideo}
-        durationInFrames={bondBasicsTimeline().durationInFrames}
-        fps={BOND_BASICS_FPS}
-        width={BOND_BASICS_WIDTH}
-        height={BOND_BASICS_HEIGHT}
-      />
+      {VIDEOS.map((video) => (
+        <Composition
+          key={video.id}
+          id={video.id}
+          component={video.component}
+          durationInFrames={video.durationInFrames}
+          fps={video.fps}
+          width={video.width}
+          height={video.height}
+        />
+      ))}
     </>
   );
 };

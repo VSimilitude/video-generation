@@ -94,6 +94,10 @@ our theme palette overrides its colors:
 - Check axis-title and readout geometry against `CAPTION_SAFE_BOTTOM` like any
   other captioned content; the graph's bottom margin is the part that gets
   close.
+- **A readout chip replaces the scale it covers.** Chips declare their box and
+  `AxisTicks` fades the tick labels that intersect it (plus a clearance band),
+  so a chip never sits half on top of a number. Nothing per-video to do —
+  but it means a chip parked on an axis will take a tick or two with it.
 
 ## Voice
 
@@ -142,6 +146,13 @@ our theme palette overrides its colors:
   offsets plus a drop shadow — so it survives whatever is behind it.
 - One accent per idea. `theme.accent` (blue) is the default;
   `theme.warm` / `theme.good` mark contrast or success states.
+- **Two legible text blocks never share a spot — including mid-move.** When
+  elements converge, merge or swap places, sequence it: fade the departing one
+  out *before* anything arrives, then collapse the space. Geometry checks
+  compare end states and will pass while the transition is an illegible smear
+  (swap-basics' `hedge`, caught only by rendering stills across the beat).
+  Derive text-block heights from font size × leading × line count rather than
+  assuming one line, and re-render a few frames *inside* every animated beat.
 - **Springs for entrances**, `interpolate` for continuous motion (growth,
   progress, sweeps). Stagger multi-element entrances so each lands on its
   own beat, as `PipelineDiagram` does. Entrances are the cheap half of the

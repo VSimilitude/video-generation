@@ -12,6 +12,178 @@ and abandoned. Newest entries at the top.
 
 ---
 
+## 2026-07-25 — swap-basics (build notes)
+
+_Financial series #2, and the first video built entirely on the machinery
+bond-basics v2 left behind — so also the consolidation pass. Watch-side retro
+gets filled in after review of the deployed cut._
+
+**Shape:** 10 scenes, 3:07 (5,602 frames), 175.3s of speech + 11.4s of tails.
+Two more scenes and 14s longer than bond-basics v2, at the same
+mechanism-level depth the v2 retro made binding.
+
+**The promotions went well, and the reason is worth keeping**
+
+- **`CashflowTimeline` → `src/lib/components/`** on its second video, as
+  planned in the v1 note. The move needed three generalizations, each forced by
+  a real requirement rather than invented for the API:
+  - *Layout moved out of the component.* It used to wrap itself in
+    `ContentArea`, which made "two of these on one screen" impossible. It now
+    renders a plain sized block and the caller wraps it. bond-basics' two call
+    sites each gained one `<ContentArea paddingX={80}>` line.
+  - *`maxAmount`*, because two timelines that get compared have to share one
+    dollar scale — otherwise the fixed leg's flat $40,000 bars would be drawn
+    at full height on their own row and the comparison would be a lie.
+  - *`scale: "linear"`*, because the compressive default exists to keep a $50
+    coupon visible next to $1,050, and it would flatten the 30/45/50 spread the
+    floating leg exists to show. Default stays compressive.
+  - `subLine` and `showTicks` are explicit props with bond-compatible defaults.
+    `subLine` deliberately does *not* derive itself from the flows: bond-basics
+    cuts between two timelines where only the first has a `sub`, and deriving
+    it would silently shrink the second one's geometry and make the cut jump.
+    Generalizing a component is mostly a hunt for the places where "obvious"
+    inference would break an existing caller.
+- **A second promotion fell out for free:** bond-basics' yield dial became
+  `src/lib/components/Dial.tsx` (label / value / angle / colour), because the
+  pricing scene turns the same gauge to find the fair swap rate. The caller
+  keeps the judgement calls — which direction is "good" is a scene decision,
+  not a component one — and `dialAngle(value, center, range)` is the only maths
+  that moved.
+- **Verified the promotions were render-neutral, not just plausible.** Rendered
+  bond-basics through the SSR harness twice — once with `HEAD`'s `Video.tsx`,
+  once with the rewritten one — at 121 frame-states across all 11 scenes and
+  diffed the markup: byte-identical. That took ten minutes and is the only
+  reason "must still serve bond-basics unchanged" is a fact rather than a hope.
+  Recommend this whenever code is promoted under an existing caller.
+
+**Did `beats()` and the graph API hold up? (both were on trial)**
+
+- **`beats()`: yes, unchanged, across 10 more scenes.** Every entrance in the
+  video is a fraction of its own clip with a comment naming the clause. The one
+  place it strains is `value`, where the narration describes the picture
+  ("plot the swap's value against rates") in its *last* clause while the
+  drawing has to start in the first — so the visual leads the words by ~10s and
+  the fractions encode that deliberately. Fractions assume clause proportions
+  survive rewording; that assumption held for all 10 lines this time because
+  none were reworded after synthesis.
+- **Graph API: yes, with two additions.** `ALREADY_DRAWN` did a new job here —
+  not cross-cut continuity but "this chart is an echo, not an argument" (the
+  `bondlink` mini-graphs mount fully drawn inside cards that spring in). Added
+  `X_TITLE_BASELINE` to the barrel export so a scene can check the graph's
+  lowest ink against `CAPTION_SAFE_BOTTOM` arithmetically instead of
+  re-deriving 130. Two local children (`ZeroLine`, `RateLine`, both ~15 lines
+  on `useGraph()`) covered everything else; nothing in the library needed to
+  learn about swaps.
+- **Two mirrored series is the easiest two-series case there is.** The v2 retro
+  worried about the thin tritan margin on accent/good; here the pair is
+  accent/warm and, more usefully, the two lines are *geometric* mirrors — even
+  with no colour at all, "the one going up" and "the one going down" are
+  distinguishable. Legend + per-marker chips still carry identity.
+
+**Other build-side notes**
+
+- **The registry-driven Root landed.** `src/Root.tsx` and `src/site/registry.ts`
+  each imported every video with aliased `FPS as X_FPS` blocks; at three videos
+  that was four blocks and two lists to keep in step. Both now read
+  `src/videos/registry.ts`, and Root maps over it. Adding video #4 is one entry.
+- **Arithmetic geometry checks caught nothing this time**, which is the first
+  time that's happened — because the checks were written *while* laying each
+  scene out rather than after. Three layouts changed shape as a result: the
+  `legs` rows lost their per-row tick band on the fixed leg (the two rows now
+  share one set of year labels, which is also what the narration says: "on one
+  timeline"), the `hedge` survivor row rises half a pitch instead of a full one
+  (a full pitch parked it on top of the faded pair), and the `value` legend
+  moved into the empty wedge *below* the crossing after a numeric sweep showed
+  the top-right corner is where the payer line lives.
+- **Everything on screen is a pricing function.** 20 checkpoints in
+  `pricing.ts`, including two that assert the two-leg difference equals the
+  closed form `(r − FIXED)·N·A(n,r)` — the leg PVs and the plotted line are
+  then provably the same arithmetic. The SSR harness additionally greps the
+  rendered markup for 20 specific strings ($1,000,000 / $45,000 / −$10,000 /
+  $111,004 / +$27k / …) so "the number came from the function" is checked, not
+  claimed.
+- **The flat-curve simplification is the honest cost of the video.** One rate
+  is both the expected future reset and the discount rate, which makes the fair
+  swap rate come out exactly equal to the market rate. It is documented at the
+  top of `pricing.ts`, including the consequence that the 3% / 4.5% / 5% path
+  in `legs`/`netting` is what the resets *turned out* to be, not the curve the
+  swap was priced off.
+- **First cross-video import in the suite:** swap-basics' `bondlink` scene
+  imports `price3y` from `../bond-basics/pricing`, because the scene's whole
+  claim is "same engine" and duplicating the function would make that claim
+  false in the code. Flagged rather than hidden: if a third video wants bond
+  pricing, that is the signal to promote it to `src/lib/` instead of growing
+  video-to-video edges.
+
+**Watch for on review**
+
+- **`bondlink` deviates from the brief on purpose.** The plan said the short
+  card's marker slides down and the long card's up. On one shared price/yield
+  curve with one shared rate move, both markers would move the same way — so
+  each card instead shows *its own winning scenario* (short: rates up, price
+  down; owner: rates down, price up), which keeps the two markers moving in
+  opposite directions and stays true. If it reads as "two different rate
+  moves = confusing", the fix is to plot position value instead of price, at
+  the cost of the literal echo of bond-basics' chart.
+- **The `legs` → `netting` cut re-frames rather than continues.** Netting
+  redraws the same money at a different bar scale with a centre axis. It may
+  want the `ALREADY_DRAWN` treatment in spirit — identical geometry, then the
+  merge — if the cut reads as a new picture.
+- **`problem` has the tightest layout** (66px clear of the caption strip) and a
+  two-line tick label under every bar. Check it at phone size first.
+- **`hedge` spends ~7s after its last big move** (the net box lands at 62%).
+  Same shape of risk the `duration` scene had in v2; if it reads as static, add
+  a beat rather than slowing the cancellation.
+- **`pricing` shows two identical $111,004 stacks** once the dial lands, which
+  is exactly the point but might read as a rendering bug. The dial and the
+  counting readout are what make it legible — watch that the eye follows them.
+- Still **no headless Chrome**, so no frame has been *looked at*. The SSR
+  harness now renders every scene at four frames and fails on
+  NaN/Infinity/undefined in the markup, which catches broken arithmetic but
+  says nothing about whether two boxes overlap. That gap is now three videos
+  old.
+
+**Still review (2026-07-25, headless Chrome working) — what looking caught**
+
+Four defects, none of which the arithmetic checks could have caught, and the
+reason is the same in every case: **geometry checks test end states; the
+picture is wrong in between.**
+
+- **`hedge` was broken mid-animation, not mis-laid-out.** The build note above
+  records tuning the survivor's rise "half a pitch instead of a full one (a
+  full pitch parked it on top of the faded pair)" — a check on the *final*
+  arrangement, which was correct. What no one checked was the 24 frames while
+  the two floating rows converged: they slid into the same slot at full
+  opacity and rendered two 52px strings over each other as an illegible smear,
+  then stayed there ghosted at 16%. Every static arrangement in that scene was
+  fine. The transition between them was the bug. Fixed by making the
+  cancellation strictly sequential — strike in place, fade to nothing, *then*
+  collapse the space — so at most one legible row is ever in a slot, and by
+  writing that invariant into the scene comment as a property of the whole
+  animation rather than of its last frame.
+- **Corollary for the checks themselves:** an arithmetic check should assert
+  over the animation's parameter range, not its endpoints. "Do rows i and j
+  overlap?" is a question with a `collide ∈ [0,1]` in it. Where that is
+  awkward, the cheap substitute is what found these: render 5–6 stills across
+  each animated beat and look.
+- The other three were plain occlusions that only exist on screen: the
+  `pricing` right-hand title wrapping to two lines and disappearing behind its
+  own bar stack (the title box reserved one line's height), the `problem`
+  "wanted: steady $40,000" label struck through by its own dashed line (the
+  label's height was assumed, not derived from its leading), and — in the
+  shared graph lib, so in both videos — readout chips sitting on top of the
+  tick labels they were supposed to replace. Two of the three are the same
+  mistake: **a text block's height was a guess, and the guess was one line.**
+  Both now derive height from font size × leading × lines.
+- **The graph fix went in the library, once.** `GraphChip` declares the box it
+  occupies; `AxisTicks` (now mounted after the graph's children so it can read
+  what they declared) fades any tick label that intersects a chip, with a 20px
+  clearance band and a 26px feather so a sliding chip dissolves labels rather
+  than popping them. No per-video code, and the "chip replaces that stretch of
+  the scale" intent the margins were written around is finally true.
+
+---
+
 ## 2026-07 — inherited from hero_swap
 
 Not a video in this repo, but the source of the conventions the suite was

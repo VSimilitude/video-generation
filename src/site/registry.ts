@@ -1,71 +1,16 @@
-// The video registry for the web player site.
+// The site's view of the suite.
 //
-// Adding a video to the site is ONE entry below: import its composition,
-// timeline() and FPS/WIDTH/HEIGHT, then fill in a title + one-line
-// description. Keep `id` identical to the <Composition> id in src/Root.tsx —
-// it is the URL hash on the site (#/PipelineDemo) and the argument to
-// `npx remotion render <id>`.
+// The list itself lives in src/videos/registry.ts — one entry per video, shared
+// with src/Root.tsx so the compositions Remotion registers and the videos the
+// player offers can't drift apart. Add a video there; this file only adds the
+// formatting the gallery needs.
 
-import type React from "react";
-import {
-  PipelineDemoVideo,
-  timeline as pipelineDemoTimeline,
-  FPS as PIPELINE_DEMO_FPS,
-  WIDTH as PIPELINE_DEMO_WIDTH,
-  HEIGHT as PIPELINE_DEMO_HEIGHT,
-} from "../videos/pipeline-demo/Video";
-import {
-  BondBasicsVideo,
-  timeline as bondBasicsTimeline,
-  FPS as BOND_BASICS_FPS,
-  WIDTH as BOND_BASICS_WIDTH,
-  HEIGHT as BOND_BASICS_HEIGHT,
-} from "../videos/bond-basics/Video";
-
-export type SiteVideo = {
-  /** Matches the <Composition> id in src/Root.tsx. */
-  id: string;
-  title: string;
-  /** One line, shown in the gallery and above the player. */
-  description: string;
-  component: React.FC;
-  fps: number;
-  width: number;
-  height: number;
-  durationInFrames: number;
-};
-
-export const VIDEOS: SiteVideo[] = [
-  {
-    id: "PipelineDemo",
-    title: "Generated, Start to Finish",
-    description:
-      "How this video series is made: a script becomes Kokoro speech, and Remotion times the visuals to the voice.",
-    component: PipelineDemoVideo,
-    fps: PIPELINE_DEMO_FPS,
-    width: PIPELINE_DEMO_WIDTH,
-    height: PIPELINE_DEMO_HEIGHT,
-    // Duration is derived from the generated narration manifest, exactly as
-    // in src/Root.tsx — no hand-entered lengths.
-    durationInFrames: pipelineDemoTimeline().durationInFrames,
-  },
-  {
-    id: "BondBasics",
-    title: "Bond Basics",
-    description:
-      "What a bond is, how discounting its future payments sets the price, and why the price slides down the yield curve when rates rise. Part 1 of the financial series.",
-    component: BondBasicsVideo,
-    fps: BOND_BASICS_FPS,
-    width: BOND_BASICS_WIDTH,
-    height: BOND_BASICS_HEIGHT,
-    durationInFrames: bondBasicsTimeline().durationInFrames,
-  },
-];
-
-export function findVideo(id: string | null): SiteVideo | undefined {
-  if (!id) return undefined;
-  return VIDEOS.find((video) => video.id === id);
-}
+export {
+  VIDEOS,
+  findVideo,
+  type VideoEntry,
+  type VideoEntry as SiteVideo,
+} from "../videos/registry";
 
 /** mm:ss for a frame count, for the gallery/player labels. */
 export function formatDuration(durationInFrames: number, fps: number): string {

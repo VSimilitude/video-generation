@@ -9,7 +9,9 @@ import {
 } from "remotion";
 import { Backdrop } from "../../lib/components/Backdrop";
 import { Caption } from "../../lib/components/Caption";
+import { CashflowTimeline } from "../../lib/components/CashflowTimeline";
 import { ContentArea } from "../../lib/components/ContentArea";
+import { Dial, dialAngle } from "../../lib/components/Dial";
 import { TitleCard } from "../../lib/components/TitleCard";
 import {
   ALREADY_DRAWN,
@@ -349,216 +351,12 @@ const TermCards: React.FC<{ at: number[] }> = ({ at }) => {
 
 // --- Scenes 4 & 5: cashflows / example ------------------------------------
 //
-// One timeline component, parameterized by its cash flows, used twice in this
-// video: once with generic labels and once with concrete numbers. Kept local to
-// the video per the needed-twice rule in CLAUDE.md — the planned swap video
-// wants the same picture, and promoting it to src/lib/ at that point should be
-// a file move, so the props stay generic (no bond vocabulary in the API).
-
-type CashFlow = {
-  /** Slot index along the axis; also indexes `ticks`. */
-  t: number;
-  /**
-   * Signed magnitude. The sign picks the direction (positive = received, drawn
-   * upward), and |amount| drives the bar height on a compressed scale so a
-   * small coupon next to a large redemption is still legible.
-   */
-  amount: number;
-  /** Text at the arrow's tip. */
-  label: string;
-  /** Optional smaller second line under the label. */
-  sub?: string;
-  color: string;
-};
-
-const BAR_MIN = 84;
-const BAR_MAX = 200;
-const HEAD = 26;
-const LABEL_H = 48; // 38px * 1.25 line-height, rounded up
-const SUB_H = 40; // 30px * 1.3, rounded up (worst case: every flow has a sub)
-const LABEL_GAP = 10;
-// Space under the axis owned by the year labels: the 20px tick mark straddles
-// the axis (8px of it below), then a 6px gap, then a 34px * 1.2 = 41px label —
-// 55px in all, inside the 56px band. Downward flows start below this band so a
-// bar can never land on a year label.
-const TICK_BAND = 56;
-const AXIS_H = 4;
-// Worst-case space one side of the axis can consume: tallest bar + arrowhead +
-// a two-line tip label.
-const FLOW_REGION = LABEL_H + SUB_H + LABEL_GAP + HEAD + BAR_MAX; // 324
-// 324 above the axis + 4 axis + 56 tick band + 324 below = 708px, which clears
-// the 800px ContentArea by 92px.
-const TIMELINE_H = FLOW_REGION * 2 + AXIS_H + TICK_BAND;
-const TIMELINE_W = 1560;
-
-function barHeight(amount: number, maxAbs: number): number {
-  const ratio = Math.min(1, Math.abs(amount) / maxAbs);
-  // Compressive (sub-linear) so a 50 next to a 1050 is still ~120px tall.
-  return BAR_MIN + (BAR_MAX - BAR_MIN) * Math.pow(ratio, 0.45);
-}
-
-const CashflowTimeline: React.FC<{
-  flows: CashFlow[];
-  ticks: string[];
-  /** Entrance frame for the axis, then one per flow (in `flows` order). */
-  at: number[];
-}> = ({ flows, ticks, at }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const axis = spring({
-    frame: frame - at[0],
-    fps,
-    config: { damping: 18, mass: 0.9 },
-  });
-  const maxAbs = Math.max(...flows.map((f) => Math.abs(f.amount)));
-  const slotW = TIMELINE_W / ticks.length;
-  const axisTop = FLOW_REGION;
-
-  return (
-    <ContentArea paddingX={80}>
-      <div style={{ width: TIMELINE_W, height: TIMELINE_H, position: "relative" }}>
-        {/* Axis */}
-        <div
-          style={{
-            position: "absolute",
-            top: axisTop,
-            left: 0,
-            width: `${100 * clamp01(axis)}%`,
-            height: AXIS_H,
-            borderRadius: 2,
-            background: theme.textMuted,
-            opacity: 0.85,
-          }}
-        />
-        {/* Ticks */}
-        {ticks.map((tick, i) => {
-          const show = spring({
-            frame: frame - at[0] - 6 * i,
-            fps,
-            config: { damping: 18, mass: 0.9 },
-          });
-          return (
-            <div
-              key={tick}
-              style={{
-                position: "absolute",
-                top: axisTop - 12,
-                left: i * slotW,
-                width: slotW,
-                opacity: Math.max(0, show),
-              }}
-            >
-              <div
-                style={{
-                  width: 4,
-                  height: 20,
-                  margin: "0 auto",
-                  borderRadius: 2,
-                  background: theme.textMuted,
-                  opacity: 0.85,
-                }}
-              />
-              <div
-                style={{
-                  marginTop: 6,
-                  fontSize: 34,
-                  fontWeight: 600,
-                  lineHeight: 1.2,
-                  color: theme.textMuted,
-                  textAlign: "center",
-                  textShadow: darkOutline(1),
-                }}
-              >
-                {tick}
-              </div>
-            </div>
-          );
-        })}
-        {/* Flows */}
-        {flows.map((flow, i) => {
-          const grow = spring({
-            frame: frame - at[i + 1],
-            fps,
-            config: { damping: 15, mass: 0.8 },
-          });
-          const p = clamp01(grow);
-          const up = flow.amount >= 0;
-          const h = barHeight(flow.amount, maxAbs);
-          // Upward flows leave from the axis; downward ones start under the
-          // tick band so they never sit on top of a year label.
-          const originTop = up ? axisTop : axisTop + AXIS_H + TICK_BAND;
-          return (
-            <div
-              key={`${flow.t}-${flow.label}`}
-              style={{
-                position: "absolute",
-                top: originTop,
-                left: flow.t * slotW,
-                width: slotW,
-                height: 0,
-                opacity: Math.max(0, grow),
-              }}
-            >
-              {/* Shaft */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  marginLeft: -15,
-                  width: 30,
-                  height: h * p,
-                  bottom: up ? 0 : undefined,
-                  top: up ? undefined : 0,
-                  borderRadius: 6,
-                  background: flow.color,
-                  boxShadow: `0 0 26px ${flow.color}55`,
-                }}
-              />
-              {/* Head */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  marginLeft: -22,
-                  bottom: up ? h * p : undefined,
-                  top: up ? undefined : h * p,
-                  width: 0,
-                  height: 0,
-                  borderLeft: "22px solid transparent",
-                  borderRight: "22px solid transparent",
-                  borderBottom: up ? `${HEAD}px solid ${flow.color}` : undefined,
-                  borderTop: up ? undefined : `${HEAD}px solid ${flow.color}`,
-                }}
-              />
-              {/* Label at the tip */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: 0,
-                  width: slotW,
-                  bottom: up ? h * p + HEAD + LABEL_GAP : undefined,
-                  top: up ? undefined : h * p + HEAD + LABEL_GAP,
-                  textAlign: "center",
-                  color: flow.color,
-                  textShadow: darkOutline(2),
-                }}
-              >
-                <div style={{ fontSize: 38, fontWeight: 800, lineHeight: 1.25 }}>
-                  {flow.label}
-                </div>
-                {flow.sub ? (
-                  <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.3 }}>
-                    {flow.sub}
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </ContentArea>
-  );
-};
+// One timeline component, parameterized by its cash flows, used twice here:
+// once with generic labels and once with concrete numbers. It now lives in
+// src/lib/components/CashflowTimeline.tsx — promoted on its second video
+// (swap-basics draws both legs of a swap with it) per CLAUDE.md's needed-twice
+// rule. The move took the geometry with it; what stayed behind is layout, so
+// these two scenes wrap it in the ContentArea the component used to own.
 
 const TICKS = ["today", "year 1", "year 2", "maturity"];
 
@@ -855,86 +653,34 @@ const DiscountingScene: React.FC<{ at: number[] }> = ({ at }) => {
 // were told to match. The "=" flips to "≠" whenever they differ by more than a
 // cent, which is what makes turning the dial feel like solving for something.
 
+// The dial itself now lives in src/lib/components/Dial.tsx (promoted on its
+// second use — swap-basics turns the same gauge to find the fair swap rate).
+// What stays here is the part that is about *this* scene: where the needle sits
+// relative to the coupon, and what that means.
+
 const DIAL_COUPON = BOND_3Y.couponRate;
 /** Dial sweep: ±120° maps to coupon ±2%. */
-const dialAngle = (y: number): number => ((y - DIAL_COUPON) / 0.02) * 120;
+const yieldAngle = (y: number): number => dialAngle(y, DIAL_COUPON, 0.02);
 
-function polar(cx: number, cy: number, r: number, deg: number): [number, number] {
-  const a = (deg * Math.PI) / 180;
-  return [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-}
-
-function arcPath(cx: number, cy: number, r: number, a0: number, a1: number): string {
-  const [x0, y0] = polar(cx, cy, r, a0);
-  const [x1, y1] = polar(cx, cy, r, a1);
-  const large = Math.abs(a1 - a0) > 180 ? 1 : 0;
-  const sweep = a1 > a0 ? 1 : 0;
-  return `M${x0},${y0} A${r},${r} 0 ${large} ${sweep} ${x1},${y1}`;
-}
+/** Muted at the coupon, good above it, warm below — the scene's own reading. */
+const yieldColor = (y: number): string => {
+  const a = yieldAngle(y);
+  if (Math.abs(a) < 1) return theme.textMuted;
+  return y > DIAL_COUPON ? theme.good : theme.warm;
+};
 
 const YieldDial: React.FC<{ value: number; opacity: number }> = ({
   value,
   opacity,
-}) => {
-  const a = dialAngle(value);
-  const [nx, ny] = polar(150, 150, 86, a);
-  const above = value > DIAL_COUPON;
-  const arcColor = Math.abs(a) < 1 ? theme.textMuted : above ? theme.good : theme.warm;
-  return (
-    <div style={{ textAlign: "center", opacity }}>
-      <div
-        style={{
-          fontSize: 36,
-          fontWeight: 700,
-          letterSpacing: 2,
-          color: theme.textMuted,
-          textShadow: darkOutline(1),
-        }}
-      >
-        YIELD
-      </div>
-      <svg width={300} height={210} viewBox="0 0 300 210">
-        <path
-          d={arcPath(150, 150, 100, -120, 120)}
-          fill="none"
-          stroke={theme.panelBorder}
-          strokeWidth={16}
-          strokeLinecap="round"
-        />
-        <path
-          d={arcPath(150, 150, 100, 0, a)}
-          fill="none"
-          stroke={arcColor}
-          strokeWidth={16}
-          strokeLinecap="round"
-          style={{ filter: `drop-shadow(0 0 14px ${arcColor}88)` }}
-        />
-        <line
-          x1={150}
-          y1={150}
-          x2={nx}
-          y2={ny}
-          stroke={theme.text}
-          strokeWidth={9}
-          strokeLinecap="round"
-        />
-        <circle cx={150} cy={150} r={16} fill={theme.text} />
-      </svg>
-      <div
-        style={{
-          marginTop: -4,
-          fontSize: 62,
-          fontWeight: 900,
-          color: arcColor,
-          fontVariantNumeric: "tabular-nums lining-nums",
-          textShadow: darkOutline(2),
-        }}
-      >
-        {pct(value, 1)}
-      </div>
-    </div>
-  );
-};
+}) => (
+  <Dial
+    label="YIELD"
+    value={pct(value, 1)}
+    angle={yieldAngle(value)}
+    color={yieldColor(value)}
+    opacity={opacity}
+  />
+);
 
 const EquationCard: React.FC<{
   label: string;
@@ -1457,34 +1203,38 @@ export const BondBasicsVideo: React.FC = () => {
               <TermCards at={beats(NARRATION.terms, [0.22, 0.47, 0.7], FPS)} />
             ) : null}
             {scene.id === "cashflows" ? (
-              <CashflowTimeline
-                ticks={TICKS}
-                at={beats(NARRATION.cashflows, [0.03, 0.22, 0.38, 0.47, 0.62], FPS)}
-                flows={[
-                  { t: 0, amount: -1000, label: "price", color: theme.bad },
-                  { t: 1, amount: 50, label: "coupon", color: theme.good },
-                  { t: 2, amount: 50, label: "coupon", color: theme.good },
-                  {
-                    t: 3,
-                    amount: 1050,
-                    label: "face value",
-                    sub: "+ final coupon",
-                    color: theme.good,
-                  },
-                ]}
-              />
+              <ContentArea paddingX={80}>
+                <CashflowTimeline
+                  ticks={TICKS}
+                  at={beats(NARRATION.cashflows, [0.03, 0.22, 0.38, 0.47, 0.62], FPS)}
+                  flows={[
+                    { t: 0, amount: -1000, label: "price", color: theme.bad },
+                    { t: 1, amount: 50, label: "coupon", color: theme.good },
+                    { t: 2, amount: 50, label: "coupon", color: theme.good },
+                    {
+                      t: 3,
+                      amount: 1050,
+                      label: "face value",
+                      sub: "+ final coupon",
+                      color: theme.good,
+                    },
+                  ]}
+                />
+              </ContentArea>
             ) : null}
             {scene.id === "example" ? (
-              <CashflowTimeline
-                ticks={TICKS}
-                at={beats(NARRATION.example, [0.03, 0.15, 0.58, 0.65, 0.78], FPS)}
-                flows={[
-                  { t: 0, amount: -1000, label: "−$1,000", color: theme.bad },
-                  { t: 1, amount: 50, label: "+$50", color: theme.good },
-                  { t: 2, amount: 50, label: "+$50", color: theme.good },
-                  { t: 3, amount: 1050, label: "+$1,050", color: theme.good },
-                ]}
-              />
+              <ContentArea paddingX={80}>
+                <CashflowTimeline
+                  ticks={TICKS}
+                  at={beats(NARRATION.example, [0.03, 0.15, 0.58, 0.65, 0.78], FPS)}
+                  flows={[
+                    { t: 0, amount: -1000, label: "−$1,000", color: theme.bad },
+                    { t: 1, amount: 50, label: "+$50", color: theme.good },
+                    { t: 2, amount: 50, label: "+$50", color: theme.good },
+                    { t: 3, amount: 1050, label: "+$1,050", color: theme.good },
+                  ]}
+                />
+              </ContentArea>
             ) : null}
             {scene.id === "discounting" ? (
               // axis + the three payments under "here's the pricing idea";

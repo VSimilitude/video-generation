@@ -15,6 +15,9 @@ export {
   AnimatedGraph,
   ALREADY_DRAWN,
   GRAPH_MARGIN,
+  // Exported so a scene can check the graph's lowest ink against
+  // CAPTION_SAFE_BOTTOM arithmetically instead of re-deriving the number.
+  X_TITLE_BASELINE,
   graphType,
   drawProgress,
   useGraph,
