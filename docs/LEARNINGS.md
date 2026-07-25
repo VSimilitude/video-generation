@@ -98,3 +98,40 @@ between scenes?_
 - Derive spacing constants from the component that owns the geometry.
   A magic number copied into four scenes is four bugs waiting for the
   component to change.
+
+---
+
+## Next: bond-basics
+
+_Build-side notes recorded at ship time (2026-07-24); the watch-side retro
+gets filled in after review of the deployed cut._
+
+**Build-side, what worked**
+
+- **Fraction-based beats.** Element entrances are resolved as fractions of
+  the scene's own clip length (`beats(clip, fractions)` in `Video.tsx`),
+  not literal frame numbers — reword a line, re-run narration, and the
+  stagger moves with the voice. Candidate for promotion to
+  `src/lib/narration.ts` if it survives the swap video. Caveats: assumes
+  clause proportions are stable under rewording, and each fraction needs a
+  comment naming its target clause.
+- **Derived geometry caught a real bug again** (year-tick labels 3.6px into
+  the price bar). Generalization: any component stacking absolute bands
+  should sum its bands into its own declared height (`TIMELINE_H`) so the
+  arithmetic is checkable in one place.
+- `CashflowTimeline` is deliberately vocabulary-free (`t`/`amount`/`label`)
+  and used twice on identical geometry — promote to `src/lib/` when the
+  swap video needs it. Bar heights use a compressive scale
+  (`(|a|/max)^0.45`) so a $50 coupon stays visible next to a $1,050
+  redemption.
+
+**Watch for on review**
+
+- Springs that drive layout are clamped (`min(1, spring)`) so bars can't
+  overshoot the reserved region — costs bounce on the key diagram. Decide:
+  should the safe area carry an ~8% overshoot allowance?
+- The `example` scene has a ~3.5s stretch between the −$1,000 arrow and the
+  first coupon (the clause naming coupon/maturity). If it reads as dead
+  air, add a beat for the year ticks, not earlier coupons.
+- Colons in narration lines ("The face value: …") render as pauses in
+  Kokoro — check they read as lead-ins, not hard stops.
