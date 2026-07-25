@@ -7,6 +7,13 @@ import {
   WIDTH,
   HEIGHT,
 } from "./videos/pipeline-demo/Video";
+import {
+  BondBasicsVideo,
+  timeline as bondBasicsTimeline,
+  FPS as BOND_BASICS_FPS,
+  WIDTH as BOND_BASICS_WIDTH,
+  HEIGHT as BOND_BASICS_HEIGHT,
+} from "./videos/bond-basics/Video";
 
 // One <Composition> per video. Duration comes from each video's timeline(),
 // which is derived from the generated narration manifest — re-run
@@ -21,6 +28,14 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
+      />
+      <Composition
+        id="BondBasics"
+        component={BondBasicsVideo}
+        durationInFrames={bondBasicsTimeline().durationInFrames}
+        fps={BOND_BASICS_FPS}
+        width={BOND_BASICS_WIDTH}
+        height={BOND_BASICS_HEIGHT}
       />
     </>
   );

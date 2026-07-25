@@ -14,6 +14,13 @@ import {
   WIDTH as PIPELINE_DEMO_WIDTH,
   HEIGHT as PIPELINE_DEMO_HEIGHT,
 } from "../videos/pipeline-demo/Video";
+import {
+  BondBasicsVideo,
+  timeline as bondBasicsTimeline,
+  FPS as BOND_BASICS_FPS,
+  WIDTH as BOND_BASICS_WIDTH,
+  HEIGHT as BOND_BASICS_HEIGHT,
+} from "../videos/bond-basics/Video";
 
 export type SiteVideo = {
   /** Matches the <Composition> id in src/Root.tsx. */
@@ -41,6 +48,17 @@ export const VIDEOS: SiteVideo[] = [
     // Duration is derived from the generated narration manifest, exactly as
     // in src/Root.tsx — no hand-entered lengths.
     durationInFrames: pipelineDemoTimeline().durationInFrames,
+  },
+  {
+    id: "BondBasics",
+    title: "Bond Basics",
+    description:
+      "What a bond is: face value, coupon, maturity, and why price and yield move in opposite directions. Part 1 of the financial series.",
+    component: BondBasicsVideo,
+    fps: BOND_BASICS_FPS,
+    width: BOND_BASICS_WIDTH,
+    height: BOND_BASICS_HEIGHT,
+    durationInFrames: bondBasicsTimeline().durationInFrames,
   },
 ];
 

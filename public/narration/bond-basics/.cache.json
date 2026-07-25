@@ -1,0 +1,37 @@
+{
+  "intro": {
+    "hash": "aa843602bdcb45fc",
+    "outFile": "intro.mp3",
+    "durationSeconds": 8.4
+  },
+  "loan": {
+    "hash": "8ba06d8eccfa8104",
+    "outFile": "loan.mp3",
+    "durationSeconds": 11.55
+  },
+  "terms": {
+    "hash": "a1ea6623debc404d",
+    "outFile": "terms.mp3",
+    "durationSeconds": 11.375
+  },
+  "cashflows": {
+    "hash": "b43b211e53120bce",
+    "outFile": "cashflows.mp3",
+    "durationSeconds": 10.775
+  },
+  "example": {
+    "hash": "00156afd690ea7b4",
+    "outFile": "example.mp3",
+    "durationSeconds": 11.9
+  },
+  "priceyield": {
+    "hash": "65cb5c52e02025de",
+    "outFile": "priceyield.mp3",
+    "durationSeconds": 13.225
+  },
+  "outro": {
+    "hash": "62bd1b94465afee8",
+    "outFile": "outro.mp3",
+    "durationSeconds": 9.175
+  }
+}

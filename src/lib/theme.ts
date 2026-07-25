@@ -18,6 +18,9 @@ export const theme = {
   accentSoft: "#8fdcff",
   warm: "#ffb84c",
   good: "#7fe08a",
+  // Soft red for "money going out" / a falling quantity. Deliberately muted
+  // rather than a signal red — it marks a direction, not an error.
+  bad: "#ff7d6b",
 
   outline: "#0a0e18",
   fontFamily:
