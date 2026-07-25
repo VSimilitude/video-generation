@@ -217,3 +217,14 @@ gets filled in after review of the deployed cut._
   air, add a beat for the year ticks, not earlier coupons.
 - Colons in narration lines ("The face value: …") render as pauses in
   Kokoro — check they read as lead-ins, not hard stops.
+
+### bond-basics — watch-side retro (2026-07-25)
+
+v1 verdict from review: too shallow, animation decorative ("I'd like more
+depth, it can be longer... animation to be meaningful and engaging...
+graphs that are drawn dynamically"). v2 (mechanism depth + drawn graphs)
+verdict: "definitely better." Conclusions now binding (in STYLE.md):
+mechanism-level depth over definition-level; drawn graphs with moving
+markers for quantitative relationships; motion carries the explanation.
+Length: 2:53 accepted without complaint; depth-per-second matters more
+than hitting a duration target.
