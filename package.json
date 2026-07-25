@@ -7,6 +7,7 @@
     "studio": "remotion studio",
     "render": "remotion render",
     "narration": "node scripts/generate-narration.mjs",
+    "deploy": "node scripts/deploy-site.mjs",
     "site": "esbuild src/site/main.tsx --bundle --minify --format=iife --outfile=dist-site/bundle.js --define:process.env.NODE_ENV='\"production\"' && node scripts/build-site.mjs",
     "typecheck": "tsc --noEmit"
   },

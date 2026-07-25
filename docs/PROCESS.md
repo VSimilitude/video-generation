@@ -41,9 +41,9 @@ on a phone — not on a local mp4.
 
 - Add the video to `src/site/registry.ts` (one entry: composition, title,
   one-line description).
-- `npm run site`, then publish `dist-site/` to the `gh-pages` branch and send
-  the link. The compositions play live via `@remotion/player`; narration
-  audio ships alongside as `narration/<slug>/*.mp3`.
+- `npm run deploy` — builds `dist-site/` and pushes it to `gh-pages`. The
+  suite is live at <https://vsimilitude.github.io/video-generation/>; the
+  compositions play via `@remotion/player` with narration audio alongside.
 - Watch it end-to-end at full speed (not scrubbing), with sound. Check:
   caption readability at phone size, cuts that feel rushed (raise
   tailFrames), audio glitches, dead air (raise speed or trim text).

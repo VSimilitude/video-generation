@@ -38,6 +38,8 @@ npm run narration -- --video <slug>  # just one video
 npm run narration -- --audition <slug>:<lineKey> <outDir>  # voice audition
 npm run studio                       # Remotion studio (preview)
 npm run site                         # build the web player into dist-site/
+npm run deploy                       # build + push dist-site to gh-pages
+                                     #   -> https://vsimilitude.github.io/video-generation/
 npx remotion render <CompId> out/<CompId>.mp4
 npm run typecheck
 ```
