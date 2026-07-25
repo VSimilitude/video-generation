@@ -101,7 +101,89 @@ between scenes?_
 
 ---
 
-## Next: bond-basics
+## 2026-07-25 — bond-basics v2 (rework)
+
+Reviewer feedback on the v1 cut, verbatim: **"more depth, it can be longer"**
+and **"animation should be meaningful and engaging — graphs drawn dynamically
+(eg to show the price vs yield relationship, making it more intuitive)"**.
+
+**What changed structurally**
+
+- **7 scenes → 11**, and the one-line assertion "price and yield move in
+  opposite directions" became four scenes that argue it: `discounting`
+  (present value, built), `yield` (the rate that balances the equation),
+  `curve` (the relationship drawn), `ratemove` + `duration` (the relationship
+  used). Runtime 1:53 → 2:53.
+- **A real pricing function** (`src/videos/bond-basics/pricing.ts`) now feeds
+  every curve, marker and percentage on screen, with the narration's quoted
+  numbers as checkpoints beside it. No point on any graph is hand-placed, and
+  the readouts animate by re-formatting an interpolated *value*, never by
+  cross-fading two strings.
+- **New shared graph layer** — `src/lib/components/graph/` (`AnimatedGraph`,
+  `GraphCurve`, `GraphMarker`, `GraphChip`, `GraphLegend`). Promoted to
+  `src/lib/` on first use rather than after the second, deliberately: the
+  financial series is a queue of videos that all want a drawn chart, and the
+  API is video-agnostic (domains, ticks, units, draw-on windows — no bond
+  vocabulary).
+- **`beats()` promoted to `src/lib/narration.ts`.** It survived the rework
+  intact across 11 scenes, which was the bar set in the v1 note.
+- **The discounting scene is the "mechanism" bet.** Each payment detaches from
+  its year, slides back to today shrinking by exactly its discount factor
+  (label counting $50 → $47.62), and slots into a column whose height is the
+  literal sum of the pieces. Heights are strictly linear in dollars —
+  `CashflowTimeline`'s compressive scale would have made the parts *not* add
+  up, which is the one thing this scene exists to show. The honest consequence
+  is that the redemption is ~91% of the column and the two coupon slivers are
+  ~19px each, so their numbers live in a receipt on the right instead of on
+  the pieces.
+
+**What worked (build side)**
+
+- **`ALREADY_DRAWN`.** Scenes 8–10 are three `Series.Sequence`s mounting the
+  same graph; 9 and 10 mount it already-drawn so the cut lands on an unchanged
+  picture and only the marker moves. Without it every cut re-draws the axes and
+  the continuity — which is the whole argument — evaporates.
+- **`pathLength={1}` for draw-on.** Normalizes stroke-dash units to the path's
+  own length, so no DOM measurement and every frame is deterministic. Gotcha
+  found while wiring the 10-year curve: a section clipped away outside the y
+  domain still owns its share of the path length, so the visible curve appears
+  to start late. Fixed with a `range` prop that limits what gets plotted.
+- **Both bonds are at par at 5%**, so the two markers in `duration` start on
+  the same point and separate as the yield rises. That coincidence does more
+  explanatory work than the −2.7% / −7.4% chips do.
+- **Arithmetic geometry checks caught the two collisions again**, both in the
+  graph's bottom margin: the x-axis readout chip reaches plot + 82px and the
+  axis title's glyph tops were at plot + 89 (7px clear) — the gap is now 52px
+  of margin, giving 16px. Same class of bug as v1's year-tick labels; the fix
+  is the same discipline (derive the margin from the type scale, in one place).
+
+**What to watch on review**
+
+- **Runtime came in at 2:53 against a 3:30–4:00 target.** The approved script
+  is 162s of speech; the remaining 11s is tails. Closing the gap needs more
+  *script*, not longer holds — flagged rather than padded, because ~40s of
+  added silence would undo the depth the rework was for.
+- The `duration` scene has ~4.5s of narration after its last big move (the par
+  line + drop bars land at 76%). If it reads as static, the fix is another
+  beat, not a faster marker.
+- **The 9→10 cut resets the marker** from 4% (where `ratemove` leaves it) back
+  to 5%, and repaints it from the warm "readout" colour to the accent series
+  colour, because scene 10 has two series and they have to be told apart by
+  hue. Two deliberate discontinuities on a cut whose whole point is continuity
+  — watch whether the "One more idea" line covers them.
+- The dataviz validator rates our accent/good pair fine for normal vision and
+  protan/deutan (ΔE ≈ 20) but thin under tritan (6.1), so the two-curve scene
+  leans on the legend and per-marker chips for identity. The palette also
+  fails the skill's lightness band, which targets a *chart surface*; our marks
+  sit on a near-black backdrop with outlines and pass the contrast check.
+  Worth revisiting if a video ever needs three series at once.
+- Still no headless Chrome, so nothing here has been looked at as a rendered
+  frame — the same gap flagged in the pipeline-demo retro, and it now covers
+  five new scenes' worth of layout.
+
+---
+
+## Next: bond-basics (v1 build notes)
 
 _Build-side notes recorded at ship time (2026-07-24); the watch-side retro
 gets filled in after review of the deployed cut._

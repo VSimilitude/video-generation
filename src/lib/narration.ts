@@ -53,6 +53,34 @@ export function buildTimeline(defs: SceneDef[], fps: number): Timeline {
   return { scenes, durationInFrames: Math.max(1, from) };
 }
 
+// --- Beat timing ----------------------------------------------------------
+
+/**
+ * Resolve a scene's element entrances as fractions of *its own* clip length.
+ *
+ * Element entrances inside a scene are staggered (docs/STYLE.md), which needs
+ * per-element frame numbers. Eyeballing those against a take rots the moment a
+ * line is reworded, so each beat is expressed as a fraction of the scene's
+ * narration clip and resolved against the generated manifest: re-run
+ * `npm run narration` and every stagger moves with the voice, exactly like the
+ * scene lengths do.
+ *
+ *   const at = beats(NARRATION.terms, [0.22, 0.47, 0.7], FPS);
+ *
+ * Caveats worth keeping in mind (bond-basics v1 retro): it assumes clause
+ * proportions stay stable under rewording, so every fraction deserves a comment
+ * naming the clause it targets. Fractions are of the *clip*, not the scene, so
+ * a beat at 1.0 lands where the voice stops, before the silent tail.
+ */
+export function beats(
+  clip: NarrationClip,
+  fractions: number[],
+  fps: number,
+): number[] {
+  const frames = clip.durationSeconds * fps;
+  return fractions.map((f) => Math.round(f * frames));
+}
+
 // Mounts a scene's narration clip (no-op for silent scenes). Place inside the
 // scene's <Series.Sequence> so the audio starts with the scene.
 export const SceneAudio: React.FC<{ clip?: NarrationClip }> = ({ clip }) => {

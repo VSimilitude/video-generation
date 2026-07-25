@@ -53,7 +53,7 @@ export const VIDEOS: SiteVideo[] = [
     id: "BondBasics",
     title: "Bond Basics",
     description:
-      "What a bond is: face value, coupon, maturity, and why price and yield move in opposite directions. Part 1 of the financial series.",
+      "What a bond is, how discounting its future payments sets the price, and why the price slides down the yield curve when rates rise. Part 1 of the financial series.",
     component: BondBasicsVideo,
     fps: BOND_BASICS_FPS,
     width: BOND_BASICS_WIDTH,

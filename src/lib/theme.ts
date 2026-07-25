@@ -1,3 +1,5 @@
+import type React from "react";
+
 // Base visual language for the educational suite. Deliberately neutral — a
 // clean dark slate look with one accent — so individual videos can lean on it
 // directly or override pieces per topic. Refine here as we learn what reads
@@ -74,6 +76,23 @@ const CAPTION_SAFE_MARGIN = 50;
  */
 export const CAPTION_SAFE_BOTTOM =
   captionMetrics.bottom + CAPTION_PANEL_HEIGHT + CAPTION_SAFE_MARGIN;
+
+/**
+ * The SVG counterpart of `darkOutline()`. `text-shadow` is a CSS-only
+ * mechanism; inside an <svg> the equivalent halo is a stroke painted *under*
+ * the glyph fill (`paint-order: stroke`), which is what keeps axis labels and
+ * readouts legible where they cross a curve or a projection line.
+ *
+ *   <text style={{ ...svgTextOutline(5), fill: theme.text }}>…</text>
+ */
+export function svgTextOutline(w = 5): React.CSSProperties {
+  return {
+    paintOrder: "stroke",
+    stroke: theme.outline,
+    strokeWidth: w,
+    strokeLinejoin: "round",
+  };
+}
 
 // Layered dark outline so light text stays readable over any backdrop.
 export function darkOutline(w = 2): string {

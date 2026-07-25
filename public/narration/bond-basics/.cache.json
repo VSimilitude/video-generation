@@ -1,13 +1,13 @@
 {
   "intro": {
-    "hash": "aa843602bdcb45fc",
+    "hash": "fe32c9f660ebb078",
     "outFile": "intro.mp3",
-    "durationSeconds": 8.4
+    "durationSeconds": 12.725
   },
   "loan": {
-    "hash": "8ba06d8eccfa8104",
+    "hash": "1977a7565887e94b",
     "outFile": "loan.mp3",
-    "durationSeconds": 11.55
+    "durationSeconds": 16.675
   },
   "terms": {
     "hash": "a1ea6623debc404d",
@@ -24,14 +24,34 @@
     "outFile": "example.mp3",
     "durationSeconds": 11.9
   },
-  "priceyield": {
-    "hash": "65cb5c52e02025de",
-    "outFile": "priceyield.mp3",
-    "durationSeconds": 13.225
+  "discounting": {
+    "hash": "99d77c4d5f21510b",
+    "outFile": "discounting.mp3",
+    "durationSeconds": 17.475
   },
-  "outro": {
-    "hash": "62bd1b94465afee8",
-    "outFile": "outro.mp3",
-    "durationSeconds": 9.175
+  "yield": {
+    "hash": "bd646bd4bc98221e",
+    "outFile": "yield.mp3",
+    "durationSeconds": 13.15
+  },
+  "curve": {
+    "hash": "b432d57c76fb8145",
+    "outFile": "curve.mp3",
+    "durationSeconds": 11.825
+  },
+  "ratemove": {
+    "hash": "fd686e86f202b0ed",
+    "outFile": "ratemove.mp3",
+    "durationSeconds": 20.175
+  },
+  "duration": {
+    "hash": "8444914578b39a24",
+    "outFile": "duration.mp3",
+    "durationSeconds": 19.875
+  },
+  "recap": {
+    "hash": "eac89e6afd8b4f69",
+    "outFile": "recap.mp3",
+    "durationSeconds": 16.15
   }
 }
