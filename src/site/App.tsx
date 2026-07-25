@@ -111,14 +111,17 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => (
       ← All videos
     </a>
     {/* Letterbox: the player fills the viewport width and keeps the
-        composition's aspect ratio, on a flat dark field. */}
+        composition's aspect ratio, on a flat dark field. `display: flex` (not
+        `lineHeight: 0`) removes the inline baseline gap under the player —
+        line-height here would cascade into the composition itself, since the
+        Player does not reset inherited typography. */}
     <div
       style={{
         background: theme.outline,
         border: `1px solid ${theme.panelBorder}`,
         borderRadius: 12,
         overflow: "hidden",
-        lineHeight: 0,
+        display: "flex",
       }}
     >
       <Player

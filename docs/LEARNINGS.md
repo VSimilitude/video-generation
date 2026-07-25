@@ -56,8 +56,45 @@ scaffolded with. Recorded here so the reasoning survives.
 
 ## Next: pipeline-demo
 
-_Placeholder — fill in after the first render of `pipeline-demo` is watched
-end to end. Questions to answer: did the three-step diagram land on the
-narration beats, or did steps arrive early/late? Were the `minFrames`
-floors ever the binding constraint (a sign the script is too terse)? Did
-the 15-frame default tail feel like enough between scenes?_
+_In progress — filled in as the deployed cut gets watched. Still to answer:
+did the three-step diagram land on the narration beats, or did steps arrive
+early/late? Were the `minFrames` floors ever the binding constraint (a sign
+the script is too terse)? Did the 15-frame default tail feel like enough
+between scenes?_
+
+**What didn't**
+
+- **The caption panel collided with the diagram content.** Watching the
+  deployed cut, the bottom caption ran into the pipeline "bubbles". Two
+  separate causes, both structural rather than per-scene:
+  - *Root cause 1 — no shared safe area.* Every scene hand-picked
+    `paddingBottom: 120` as its guess at how much room the caption needs.
+    That number was never derived from `Caption.tsx` and nothing kept the two
+    in sync, so it was wrong the moment the panel wrapped to two lines
+    (64px offset + 166px panel = 230px occupied, against 120px reserved).
+    Fixed with `CAPTION_SAFE_BOTTOM` (280px, derived in `src/lib/theme.ts`
+    from a single `captionMetrics` object that `Caption` also renders from)
+    and a `ContentArea` wrapper that captioned scenes use instead of their
+    own padding. 1080 − 280 = 800px of usable height; the tallest stack
+    (TimingDiagram, ~348px) now clears the caption by ~226px.
+  - *Root cause 2 — the site leaked CSS into the video.* The player's
+    letterbox `<div>` in `src/site/App.tsx` set `lineHeight: 0` to kill the
+    inline baseline gap. `@remotion/player` does not reset inherited
+    typography, so that cascaded into the composition: on the deployed site
+    every text node without an explicit line-height collapsed to a
+    zero-height line box and its glyphs spilled out of the panel they were
+    supposed to sit in. Invisible in Studio and in `remotion render`, which
+    both use the UA default. Fixed at both ends — `Backdrop` now pins
+    `lineHeight: "normal"`, and the letterbox uses `display: flex`.
+
+**Do differently**
+
+- **Layout is not reviewable by reading the code.** Both of these were
+  visible in one still frame and invisible in a diff, and cause 2 only
+  reproduced in the deployed environment. Once headless-Chrome libs are
+  installed, render a still per scene (and one through the actual site
+  bundle, not just Studio) and look at them before calling a cut done — the
+  same self-review step that catches a typo should catch a collision.
+- Derive spacing constants from the component that owns the geometry.
+  A magic number copied into four scenes is four bugs waiting for the
+  component to change.

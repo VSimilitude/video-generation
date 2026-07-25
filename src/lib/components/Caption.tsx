@@ -1,9 +1,13 @@
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
-import { theme, darkOutline } from "../theme";
+import { theme, darkOutline, captionMetrics } from "../theme";
 
 // Bottom caption panel, fading/rising in slowly enough to be read. Keep the
 // text matching (or tightly summarizing) the narration line for the scene.
+//
+// Geometry lives in `captionMetrics` (src/lib/theme.ts) because
+// `CAPTION_SAFE_BOTTOM` — the strip scenes must keep clear — is derived from
+// it. Change sizes there, not here.
 export const Caption: React.FC<{ text: string; accent?: string }> = ({
   text,
   accent = theme.accent,
@@ -21,7 +25,7 @@ export const Caption: React.FC<{ text: string; accent?: string }> = ({
         position: "absolute",
         left: 0,
         right: 0,
-        bottom: 64,
+        bottom: captionMetrics.bottom,
         display: "flex",
         justifyContent: "center",
         padding: "0 90px",
@@ -31,14 +35,14 @@ export const Caption: React.FC<{ text: string; accent?: string }> = ({
     >
       <div
         style={{
-          maxWidth: 1440,
+          maxWidth: captionMetrics.maxWidth,
           textAlign: "center",
           background: theme.panel,
-          border: `2px solid ${accent}88`,
-          fontSize: 42,
+          border: `${captionMetrics.borderWidth}px solid ${accent}88`,
+          fontSize: captionMetrics.fontSize,
           fontWeight: 600,
-          lineHeight: 1.35,
-          padding: "24px 46px",
+          lineHeight: captionMetrics.lineHeight,
+          padding: `${captionMetrics.paddingY}px ${captionMetrics.paddingX}px`,
           borderRadius: 20,
           boxShadow: "0 10px 30px rgba(0,0,0,0.45)",
           textShadow: darkOutline(1),

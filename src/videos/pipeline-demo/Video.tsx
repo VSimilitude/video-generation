@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { Backdrop } from "../../lib/components/Backdrop";
 import { Caption } from "../../lib/components/Caption";
+import { ContentArea } from "../../lib/components/ContentArea";
 import { TitleCard } from "../../lib/components/TitleCard";
 import { SceneAudio, buildTimeline } from "../../lib/narration";
 import { theme, darkOutline } from "../../lib/theme";
@@ -41,17 +42,7 @@ const PipelineDiagram: React.FC = () => {
     { label: "Remotion", detail: "rendered video", color: theme.good, at: 130 },
   ];
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 48,
-        paddingBottom: 120,
-      }}
-    >
+    <ContentArea gap={48}>
       {steps.map((step, i) => {
         const pop = spring({
           frame: frame - step.at,
@@ -95,7 +86,7 @@ const PipelineDiagram: React.FC = () => {
           </React.Fragment>
         );
       })}
-    </div>
+    </ContentArea>
   );
 };
 
@@ -109,18 +100,7 @@ const TimingDiagram: React.FC = () => {
   });
   const bars = 36;
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 34,
-        paddingBottom: 120,
-      }}
-    >
+    <ContentArea direction="column" gap={34}>
       <div style={{ width: 1100 }}>
         <div style={{ fontSize: 34, color: theme.textMuted, marginBottom: 14 }}>
           narration clip
@@ -176,10 +156,12 @@ const TimingDiagram: React.FC = () => {
           audio + tail
         </div>
       </div>
-    </div>
+    </ContentArea>
   );
 };
 
+// No caption on this scene, so it gets the whole frame — a caption-less scene
+// must not carry a leftover bottom padding "just in case".
 const Outro: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -192,7 +174,6 @@ const Outro: React.FC = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        paddingBottom: 120,
       }}
     >
       <div

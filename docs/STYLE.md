@@ -56,6 +56,18 @@ exceptions. If a rule keeps getting broken, it's the wrong rule.
   Don't shorten that to make a cut feel tighter.
 - Keep captions to one or two lines at 42px within the 1440px panel; if it
   doesn't fit, the narration line is too long.
+- **A captioned scene keeps all its content inside the caption-safe area.**
+  The bottom `CAPTION_SAFE_BOTTOM` px of the frame (280px, derived in
+  `src/lib/theme.ts` from `captionMetrics` — 64px offset + 166px two-line
+  panel + 50px margin) belong to the caption and nothing else. Scenes that
+  render a `Caption` wrap their content in `ContentArea`
+  (`src/lib/components/ContentArea.tsx`), which fills the frame minus that
+  strip — 800px of usable height on a 1080 frame — and centers what's inside.
+  Never hand-pick a `paddingBottom` to approximate it: the number drifts from
+  the panel's real height the moment either changes, which is exactly how
+  pipeline-demo's first cut overlapped its diagram.
+- Caption-less scenes (title cards, outros) use the full frame. Don't leave a
+  bottom padding behind "just in case" — it reads as a mis-centered scene.
 
 ## Visuals
 
@@ -68,7 +80,14 @@ exceptions. If a rule keeps getting broken, it's the wrong rule.
 - **Springs for entrances**, `interpolate` for continuous motion (growth,
   progress, sweeps). Stagger multi-element entrances so each lands on its
   own beat, as `PipelineDiagram` does.
-- Leave room for the caption panel: content areas use `paddingBottom: 120`.
+- Leave room for the caption panel with `ContentArea` / `CAPTION_SAFE_BOTTOM`,
+  never a per-scene `paddingBottom` — see **Captions** above.
+- **The composition must be self-contained in its typography.** `@remotion/player`
+  does not reset inherited CSS, so anything the embedding page sets (line-height,
+  font-size, letter-spacing) cascades into the video on the site while Studio
+  and `remotion render` show the browser default. `Backdrop` pins
+  `fontFamily`, `color` and `lineHeight`; add to that list rather than relying
+  on a UA default that only holds in one of the three environments.
 
 ## Type
 

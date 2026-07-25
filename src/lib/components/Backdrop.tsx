@@ -11,6 +11,12 @@ export const Backdrop: React.FC<{ children?: React.ReactNode }> = ({
       background: `linear-gradient(180deg, ${theme.bgTop} 0%, ${theme.bgBottom} 100%)`,
       fontFamily: theme.fontFamily,
       color: theme.text,
+      // Explicit, because @remotion/player does not reset inherited typography:
+      // whatever line-height the *host page* sets around the <Player> cascades
+      // into the composition. Studio and `remotion render` use the UA default
+      // ("normal"), so pinning it here makes the site match them instead of
+      // silently collapsing every line box that doesn't set its own.
+      lineHeight: "normal",
     }}
   >
     <AbsoluteFill
