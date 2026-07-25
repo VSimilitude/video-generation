@@ -400,3 +400,30 @@ mechanism-level depth over definition-level; drawn graphs with moving
 markers for quantitative relationships; motion carries the explanation.
 Length: 2:53 accepted without complaint; depth-per-second matters more
 than hitting a duration target.
+
+---
+
+## Next: water-cycle (Drip's Big Adventure — kids ep 1)
+
+_Build-side notes (2026-07-25); watch-side retro pending the six-year-old's
+verdict, which is the only review that counts._
+
+- **Scale forced a new build shape**: 36 scenes / 125 clips / 9:33 was too
+  big for one agent. Worked: skeleton-first (all scenes timed with real
+  audio + placeholder staging → episode watchable end-to-end from day one),
+  then acts staged in parallel by separate agents against a shared staging
+  kit (scenes/common.tsx). The per-act scene-map merge meant zero
+  conflicts.
+- **Visual self-review scaled too**: agents rendered/inspected ~170 stills
+  during builds; orchestrator did an independent 8-frame sampled pass and
+  found one real bug the builders missed (Big Word freeze badges occluded
+  by syllable blocks — fixed by measuring that no clear orbit existed).
+- **Mid-build API-error recovery**: one act agent died on a server 500;
+  SendMessage resume continued it losslessly. A completed agent could NOT
+  be resumed later — plan fixes as fresh agents.
+- **Dialogue infra** (multi-clip scenes, per-turn speaker windows driving
+  mouths) worked first try and belongs in the permanent kit.
+- Watch-fors on review: colon-free script still has risky exclamation runs
+  (audition clips flagged); moose stillness + 5.7s "standing on nothing"
+  hold are timing bets only playback settles; scene 29's ocean is the
+  thinnest visual.

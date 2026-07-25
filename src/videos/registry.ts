@@ -36,6 +36,13 @@ import {
   HEIGHT as SWAP_BASICS_HEIGHT,
 } from "./swap-basics/Video";
 import {
+  WaterCycleVideo,
+  timeline as waterCycleTimeline,
+  FPS as WATER_CYCLE_FPS,
+  WIDTH as WATER_CYCLE_WIDTH,
+  HEIGHT as WATER_CYCLE_HEIGHT,
+} from "./water-cycle/Video";
+import {
   KidDemoVideo,
   timeline as kidDemoTimeline,
   FPS as KID_DEMO_FPS,
@@ -95,6 +102,17 @@ export const VIDEOS: VideoEntry[] = [
     width: SWAP_BASICS_WIDTH,
     height: SWAP_BASICS_HEIGHT,
     durationInFrames: swapBasicsTimeline().durationInFrames,
+  },
+  {
+    id: "DripWaterCycle",
+    title: "Drip's Big Adventure",
+    description:
+      "Follow one very small, very brave water drop all the way around the water cycle. Episode one of Little Big World.",
+    component: WaterCycleVideo,
+    fps: WATER_CYCLE_FPS,
+    width: WATER_CYCLE_WIDTH,
+    height: WATER_CYCLE_HEIGHT,
+    durationInFrames: waterCycleTimeline().durationInFrames,
   },
   {
     id: "KidDemo",
