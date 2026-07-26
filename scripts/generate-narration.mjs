@@ -44,6 +44,11 @@ const AUDITION_VOICES = [
   { voice: "am_puck", speed: 1.05 },
   { voice: "bf_emma", speed: 1.0 },
   { voice: "bm_george", speed: 1.0 },
+  // Puff (kids ep 2) candidates — shy little air puff:
+  { voice: "af_sky", speed: 1.05 },
+  { voice: "af_nicole", speed: 1.0 }, // whispery; may be too quiet for kids
+  { voice: "bf_lily", speed: 1.05 },
+  { voice: "am_liam", speed: 1.1 },
 ];
 
 const HERE = import.meta.dirname;
