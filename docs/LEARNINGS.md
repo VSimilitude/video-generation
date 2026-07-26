@@ -475,3 +475,40 @@ Actions taken:
   throw becomes a "Something hiccuped — tap to retry" card with a button
   that remounts the player. Containment matters independently of the fix:
   the next bug of any kind should cost a tap, not the episode.
+
+---
+
+## Next: wind (Puff and the Kite That Wouldn't Fly — kids ep 2)
+
+_Build-side notes (2026-07-26); watch-side retro pending._
+
+**What worked (process maturity, ep 1 → ep 2)**
+
+- **Comedy pacing as a design input**: the script shipped with 22 held
+  beats (exact frame counts + reasons) and 40 per-line speed overrides
+  already specified — zero pacing retrofits needed. The rule from ep 1's
+  audience test transferred cleanly.
+- **The hook-order gate worked in anger, twice**: lint:hooks caught two
+  React #300 patterns in act3 while it was being written (one flagged
+  across agents mid-flight), and the every-frame render confirmed clean.
+  The ep-1 crash class did not recur.
+- **Puff's weighted-alpha design** (fill p^1.25, edge p^0.5, face p^0.45)
+  solved hero-legibility-at-25%-opacity; the opacity ramp as character arc
+  survived staging. Candidate STYLE.md rule: translucent characters keep
+  face alpha ~2x fill alpha.
+- **Orchestrator review still adds a layer**: after ~100 agent-reviewed
+  stills, the sampled pass still found one real judgment fix (the Big
+  Empty read as an ink blot at 0.46 fill; lightened to 0.24 — "slightly
+  darker" means slightly).
+
+**Ep-3 cleanup list (before next build)**: promote to src/lib/kid/ —
+BigWordBeat/Camera/Thermometer/CaptionCard/WideLayer (now written twice),
+puffSilhouettePath, Rock + CHAR_BOX cameo bodies, Cloudia's hat, emotionAt()
+helper for in-silence cues; fix kidHand() flip bug (common+coldOpen
+together); Bubbles tailAt option.
+
+**Watch-fors on review**: Puff voice is still the af_sky placeholder
+(recast pending Mike's audition pick); spelled "A. I. R." / "W. I. N. D."
+clips need an ear; scene 30 is prop-crowded; scene 35 map has place-name
+text (cut for pre-readers?); the 75f kite payoff and the rock's stillness
+are timing bets pending playback.
