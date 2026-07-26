@@ -14,3 +14,6 @@ dist-site/
 #   src/videos/*/narrationManifest.ts
 #                              generated, but the durations are what the
 #                              compositions time against
+
+# API keys for build-time asset generation (image gen); never commit
+.env
