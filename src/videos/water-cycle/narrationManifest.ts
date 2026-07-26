@@ -8,7 +8,7 @@ export const NARRATION: Record<string, NarrationClip> = {
   "a1_01_narrator": { file: "narration/water-cycle/a1_01_narrator.mp3", durationSeconds: 4.45 },
   "a1_02_drip": { file: "narration/water-cycle/a1_02_drip.mp3", durationSeconds: 3.875 },
   "a1_03_narrator": { file: "narration/water-cycle/a1_03_narrator.mp3", durationSeconds: 2.8 },
-  "a1_04_drip": { file: "narration/water-cycle/a1_04_drip.mp3", durationSeconds: 5.825 },
+  "a1_04_drip": { file: "narration/water-cycle/a1_04_drip.mp3", durationSeconds: 6.625 },
   "a1_05_narrator": { file: "narration/water-cycle/a1_05_narrator.mp3", durationSeconds: 5.925 },
   "a1_06_drip": { file: "narration/water-cycle/a1_06_drip.mp3", durationSeconds: 5.725 },
   "a1_07_drip": { file: "narration/water-cycle/a1_07_drip.mp3", durationSeconds: 4.85 },

@@ -81,7 +81,17 @@ const SCRIPT: SceneSpec[] = [
     ],
     tailFrames: 26,
   },
-  { id: "s04_slosh", lines: ["a1_06_drip", "a1_07_drip"], gaps: { a1_06_drip: 18 }, tailFrames: 30 },
+  {
+    id: "s04_slosh",
+    lines: ["a1_06_drip", "a1_07_drip"],
+    // The "Monday / Tuesday / also Tuesday" gag needs its punchline to land in
+    // silence: the third card cuts in, Drip stares down the lens, *then* he
+    // erupts. 44 frames is that dead air — the scene cuts to the third card one
+    // second before a1_07 (see SloshScene in scenes/act1.tsx, which reads this
+    // gap off the timeline rather than hard-coding it).
+    gaps: { a1_06_drip: 44 },
+    tailFrames: 30,
+  },
   {
     id: "s05_sunrise",
     lines: ["a1_08_narrator", "a1_09_sunny", "a1_10_narrator"],

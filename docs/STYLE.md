@@ -232,6 +232,22 @@ slate-and-cyan. First audience: a six-year-old.
 - **Look at the speaker.** `lookAt(from, to)` turns two staged positions into a
   pupil offset. A character listening while facing the camera looks absent.
 
+## Comedy pacing
+
+- **Give gags room to land.** The first real audience test (age six, ep 1)
+  confirmed the two best-loved jokes were both deadpan-repetition gags — and
+  both "moved past rather quickly". Repetition and deadpan need *time*, not
+  emphasis. This is a general rule for the series, not a one-episode fix:
+  - A list/roll-call line gets a per-line `speed` override in `narration.mjs`
+    (slower than the character's default) so the items separate.
+  - A visual punchline (card, reaction, reveal) gets a **held beat of
+    silence** — on screen alone for ~1s *before* the next line starts, via
+    `gapFrames` on the preceding turn. Never let the next line begin under
+    the punchline.
+  - Don't telegraph: an emotion change that anticipates the punchline (the
+    default 8-frame `useEmotion` lead) can leak the joke into the silent
+    hold. Cut the lead down for held-beat scenes.
+
 ## Speech bubbles
 
 - **Six words, maximum** (`MAX_BUBBLE_WORDS`; the component warns above it).

@@ -96,7 +96,7 @@ the ride home, `rc` recap.
 
 ### Scene 4 — Slosh
 **On stage:** Drip
-**Visual:** Three identical shots of the same wave sloshing, cut back to back with a "Monday / Tuesday / also Tuesday" caption gag. Drip stares into the lens.
+**Visual:** Three identical shots of the same wave sloshing, cut back to back with a "Monday / Tuesday / also Tuesday" caption gag. Drip stares into the lens. The third card cuts in a full second before he speaks and holds there in silence — the joke is the boredom, so the boredom needs the beat.
 **Lines:** `a1_06_drip`, `a1_07_drip`
 
 > **DRIP:** We do the same thing every day. Slosh. Then slosh. Then, for a change, slosh.

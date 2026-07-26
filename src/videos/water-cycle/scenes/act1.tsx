@@ -1,5 +1,5 @@
 import React from "react";
-import { Easing, Loop } from "remotion";
+import { Easing, Sequence } from "remotion";
 import {
   Blobby,
   BlobbyCrowd,
@@ -141,23 +141,43 @@ const S4_BUBBLES: Record<string, string> = {
 const SLOSH_CARDS = ["Monday", "Tuesday", "also Tuesday"];
 
 const SloshScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
-  // Three identical shots of the same wave, cut back to back. The <Loop> is
-  // what makes them *identical* rather than merely similar: the backdrop's
-  // clock restarts, so every third is the same frames again.
-  const third = Math.max(1, Math.floor(scene.durationInFrames / 3));
+  const { fps } = useVideoConfig();
+  const [wantFrom] = lineWindow(scene, "a1_07_drip");
+
+  // Three identical shots of the same wave, cut back to back. The <Sequence>
+  // wrappers are what make them *identical* rather than merely similar: each
+  // restarts the backdrop's clock, so every shot is the same frames again.
+  //
+  // The cadence is keyed to the dialogue, not to the scene length. "also
+  // Tuesday" is the punchline of the gag, so its cut lands exactly one second
+  // before Drip's outburst (a1_07) and it holds that second in silence — the
+  // dead air is the gap after a1_06_drip in Video.tsx's SCRIPT table. Splitting
+  // the scene into equal thirds used to put this card *on top of* the outburst,
+  // which threw the joke away.
+  const punchAt = Math.max(SLOSH_CARDS.length - 1, wantFrom - fps);
+  const cuts = SLOSH_CARDS.map((_, i) =>
+    Math.round((punchAt * i) / Math.max(1, SLOSH_CARDS.length - 1)),
+  );
+  const shotEnd = (i: number) => (i + 1 < cuts.length ? cuts[i + 1] : scene.durationInFrames);
+
   const cast: Cast = { drip: S4_MARK };
   return (
     <AbsoluteFill>
-      <Loop durationInFrames={third}>
-        <SkyBlend from="night" to="day" u={0.5} clouds={3} stars={false} waves={false} />
-        <WaterBand top={SURFACE - 30} />
-      </Loop>
-      {/* Drip does not loop: he is the one thing in the ocean that never
+      {cuts.map((at, i) => (
+        <Sequence key={at} from={at} durationInFrames={shotEnd(i) - at}>
+          <SkyBlend from="night" to="day" u={0.5} clouds={3} stars={false} waves={false} />
+          <WaterBand top={SURFACE - 30} />
+        </Sequence>
+      ))}
+      {/* Drip does not cut: he is the one thing in the ocean that never
           changes, which is the joke. */}
       <Drip
         {...S4_DRIP}
         scale={S4_SCALE}
-        emotion={useEmotion(scene, "drip", { a1_06_drip: "grumpy", a1_07_drip: "excited" }, "grumpy")}
+        // Lead 2, not the usual 8: the whole point of the silent beat is that
+        // Drip is still doing his flat Monday face when the outburst hits, so
+        // the excitement must not telegraph across the hold.
+        emotion={useEmotion(scene, "drip", { a1_06_drip: "grumpy", a1_07_drip: "excited" }, "grumpy", 2)}
         speaking={useSpeaking(scene, "drip")}
         phase={PHASE.drip}
         shadow={false}
@@ -166,12 +186,14 @@ const SloshScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       />
       {SLOSH_CARDS.map((text, i) => (
         <React.Fragment key={text}>
-          <CutFlash at={i * third} strength={i === 0 ? 0 : 0.55} />
-          {/* Top-left: Drip's bubbles live top-right in this scene. */}
+          <CutFlash at={cuts[i]} strength={i === 0 ? 0 : 0.55} />
+          {/* Top-left: Drip's bubbles live top-right in this scene. The last
+              card rides a little way into the outburst — it is the line Drip is
+              shouting at. */}
           <CaptionCard
             text={text}
-            from={i * third}
-            until={(i + 1) * third - 5}
+            from={cuts[i]}
+            until={i === cuts.length - 1 ? wantFrom + 36 : shotEnd(i) - 5}
             y={165}
             align="left"
           />

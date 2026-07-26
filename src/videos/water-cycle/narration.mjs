@@ -83,9 +83,13 @@ export default {
       text: "Drip has a lot of brothers and sisters.",
       ...NARRATOR,
     },
+    // The sibling roll call is the first of the episode's two best-testing
+    // gags, and at Drip's default 1.1 the names blurred past. Slowed to 0.95
+    // for this line only — same voice, more room between each "Hi".
     a1_04_drip: {
       text: "Hi Drop. Hi Droplet. Hi Dripley. Hi other Drop. Hi Droppy. Hi Drop the third.",
       ...DRIP,
+      speed: 0.95,
     },
     a1_05_narrator: {
       text: "There are more of them than there are stars in the sky. Every single one looks exactly the same.",

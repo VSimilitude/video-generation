@@ -43,7 +43,32 @@ when end-state geometry is checked (swap-basics hedge scene).
 - `npx remotion still <CompId> out.png --frame N` — pick a frame ~85–90%
   into each scene (elements landed), plus mid-animation frames for any
   scene where elements move across each other.
-- Fix what's broken, re-render, re-look. Only then deploy.
+- Fix what's broken, re-render, re-look.
+
+### Mandatory pre-deploy gate: every-frame validation render
+
+**An every-frame validation render must pass before any deploy:**
+
+```
+npx remotion render <CompId> /tmp/validate.mp4 --scale=0.25
+```
+
+It must exit 0. `--scale=0.25` keeps it cheap (a 10-minute episode is a few
+minutes) — the point is not image quality, it is that *every frame is
+rendered, in order, into one mounted React tree*.
+
+Stills cannot catch this class of bug and never will. A still mounts the
+component fresh for a single frame, so a component whose **hook count changes
+between two adjacent frames** — a hook called inside a ternary or after an
+early return, where the branch flips on a frame threshold — renders perfectly
+as a still at *every* frame you sample, and throws React error #300
+("Rendered fewer hooks than expected") the moment those frames are rendered
+contiguously. Only contiguous rendering re-renders the same mounted component
+across the threshold, which is the only thing that trips it.
+
+This is not hypothetical: it shipped. See the water-cycle entry in
+`docs/LEARNINGS.md` — SSR smoke tests and a full still sweep were both green,
+and the deployed player bricked mid-episode for an actual child.
 
 ## 6. Review (deployed player first)
 

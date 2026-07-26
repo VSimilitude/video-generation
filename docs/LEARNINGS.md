@@ -427,3 +427,51 @@ verdict, which is the only review that counts._
   (audition clips flagged); moose stillness + 5.7s "standing on nothing"
   hold are timing bets only playback settles; scene 29's ocean is the
   thinnest visual.
+
+### The crash the six-year-old found (2026-07-25)
+
+The verdict arrived as a bug report: the deployed player died at scene 14,
+mid-episode, and stayed dead. React error #300 — "Rendered fewer hooks than
+expected" — at frame 6286, the exact frame Drip drops through the cloud shelf.
+
+One line, in `MythPillowScene` (`scenes/act2.tsx`):
+
+```tsx
+look={frame > S14_CONTACT ? "down" : useLookAtSpeaker(scene, cast, "cloudia", "left")}
+```
+
+A hook inside a ternary whose condition is a **frame threshold**. Before
+`S14_CONTACT` the component calls N hooks; on the frame after, N−1. React
+tears down on the transition. Fix was to hoist the call above the JSX and
+leave the branch as a value pick — staging identical, hook count constant.
+
+What this taught us:
+
+- **Our entire QA pipeline was structurally blind to it.** SSR smoke tests
+  and ~170 stills all sample *discrete* frames, and every discrete frame was
+  correct in isolation — the component only ever renders once per still, so
+  its hook count is never compared against anything. Hook-count bugs exist
+  only *between* frames. Nothing that samples can see them; only contiguous
+  re-rendering of one mounted tree can. We had no such check, so the first
+  contiguous playback of scene 14 anywhere was on the child's screen.
+- **"Hooks in JSX props" is where this hides.** The staging kit encourages
+  `emotion={useEmotion(...)}` / `speaking={useSpeaking(...)}` inline, which is
+  fine while unconditional — but it puts hook calls in exactly the place
+  where adding a `cond ? a : b` looks like a pure presentational tweak. An
+  AST sweep of all of `src/videos/*/scenes/` and `src/lib/kid/` found this
+  was the only instance; the pattern is nonetheless a standing trap.
+- **A crash is a content bug when the audience is six.** She could not
+  reload, could not read the URL, and did not know the video had not simply
+  ended. A blank page is indistinguishable from "it's over" — so the failure
+  cost the whole rest of the episode, not just one scene.
+
+Actions taken:
+
+- `docs/PROCESS.md` §5 now gates deploys on an **every-frame validation
+  render** (`remotion render <id> --scale=0.25`, must exit 0). Run for the
+  whole suite; all three large compositions pass.
+- **The player no longer bricks.** `src/site/App.tsx` wraps the Player in an
+  error boundary *and* passes Remotion's `errorFallback`, so any composition
+  throw becomes a "Something hiccuped — tap to retry" card with a button
+  that remounts the player. Containment matters independently of the fix:
+  the next bug of any kind should cost a tap, not the episode.

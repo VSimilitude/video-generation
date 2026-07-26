@@ -1033,6 +1033,13 @@ const MythPillowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     cloudia: S14_CLOUDIA,
   };
 
+  // Unconditional: once Drip is through the shelf Cloudia looks down at the hole
+  // rather than at whoever is talking, but the *hook* has to run on every frame
+  // either way. Calling it inside the ternary below changed this component's
+  // hook count on the frame the branch flipped (S14_CONTACT), which is React
+  // error #300 — a crash that only appears when frames render contiguously.
+  const cloudiaLook = useLookAtSpeaker(scene, cast, "cloudia", "left");
+
   return (
     <AbsoluteFill>
       <SkyBlend from="day" to="night" u={0.16} clouds={2} waves={false} />
@@ -1079,7 +1086,7 @@ const MythPillowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           emotion={useEmotion(scene, "cloudia", { a2_08_cloudia: "grumpy" }, "neutral")}
           speaking={useSpeaking(scene, "cloudia")}
           phase={PHASE.cloudia}
-          look={frame > S14_CONTACT ? "down" : useLookAtSpeaker(scene, cast, "cloudia", "left")}
+          look={frame > S14_CONTACT ? "down" : cloudiaLook}
         />
 
         {/* Left of the impact: the MYTH stamp lands to the right of it. */}
