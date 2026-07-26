@@ -101,10 +101,35 @@ our theme palette overrides its colors:
 
 ## Voice
 
-- Default: `af_heart` at speed `1.0`.
+*(This section is the narration pipeline and applies to both series.)*
+
+- **Two engines, and a default.** `kokoro` (local, free, instant) is the
+  default and is what a **narrator** uses — it re-synthesizes the moment a
+  line is reworded, which is the whole reason narration text can stay the
+  source of truth. `minimax` (MiniMax speech-2.8-hd via Replicate, ~$0.11 per
+  1000 characters) is for **characters who act**: it takes an `emotion` and
+  honours inline pause markers, neither of which kokoro has. Declare it
+  per line — `{ text, engine: "minimax", voiceId, emotion, speed }`.
+- A minimax clip costs money and takes ~12 s of paced API time; a kokoro clip
+  costs neither. Cast on what a line needs, not on which model is newer.
+- **Emotion is seasoning, not a setting.** A line carries an `emotion` only
+  when a stage direction in the script asks for one, and the comment on the
+  line names the direction it came from. When in doubt, `auto` — that is the
+  model reading the words as written, and the words were written to carry it.
+  A file where every line has an emotion has none.
+- **Pause markers (`<#0.4#>`) are for intra-line timing the script already
+  asked for**, and nothing else. Every other silence in a video is a held beat
+  *between* lines and belongs to `gaps`/`gapFrames` in the composition, where
+  it is visible to the timeline and to whoever is staging the scene. Markers
+  are a MiniMax feature: the generator rejects one on a kokoro line, where the
+  model would read the punctuation out loud.
 - When a scene wants a different tone, audition rather than guess:
-  `npm run narration -- --audition <slug>:<lineKey> <dir>`, then pick by ear.
-  Model-card grades are not a ranking of what sounds right.
+  `npm run narration -- --audition <slug>:<lineKey> <dir>`, then pick by ear —
+  and for MiniMax candidates, `… <dir> --engine minimax --voices <id1,id2,…>
+  [--emotion happy]`. Model-card grades are not a ranking of what sounds right.
+- Audition on the *hardest* lines a character has, not the first one — a small
+  apology, a delighted shout and a big push ask three different things of one
+  voice.
 - Per-line overrides (`{ text, voice, speed }`) are the mechanism for a
   one-off tonal shift; don't fork a whole video's voice for one aside.
 - **Spell out initialisms** so the voice reads letters, not a word: "U R",

@@ -1,15 +1,15 @@
 # video_generation
 
-A growing suite of (mostly educational) videos built with Remotion + Kokoro
-TTS. Beyond producing each video, the explicit goal is to refine the
-production process itself: after every video, capture what worked and what to
-change in `docs/LEARNINGS.md`, and fold style conclusions into
-`docs/STYLE.md`.
+A growing suite of (mostly educational) videos built with Remotion + TTS
+(Kokoro locally, MiniMax via Replicate for character voices). Beyond producing
+each video, the explicit goal is to refine the production process itself:
+after every video, capture what worked and what to change in
+`docs/LEARNINGS.md`, and fold style conclusions into `docs/STYLE.md`.
 
 ## Layout
 
 - `src/videos/<slug>/` — one directory per video:
-  - `narration.mjs` — the narration script (text lines + voice/speed)
+  - `narration.mjs` — the narration script (text lines + engine/voice/speed)
   - `narrationManifest.ts` — GENERATED clip paths + exact durations
   - `backgrounds.mjs` — painted-background prompts + the episode's style
     anchor (kids' series; optional)
@@ -24,8 +24,13 @@ change in `docs/LEARNINGS.md`, and fold style conclusions into
 - `src/site/` — the static web player (a `@remotion/player` gallery of the
   suite, built to `dist-site/` and deployed to GitHub Pages for review on a
   phone); `src/site/registry.ts` lists the videos, one entry each.
-- `scripts/generate-narration.mjs` — build-time Kokoro TTS for all videos,
-  with per-line caching (only changed lines re-synthesize).
+- `scripts/generate-narration.mjs` — build-time TTS for all videos, with
+  per-line caching (only changed lines re-synthesize). Two engines: `kokoro`
+  (local, free, the default and the narrators') and `minimax` (MiniMax
+  speech-2.8-hd via Replicate — paid, takes an `emotion` and inline `<#0.4#>`
+  pause markers, used for character acting). A minimax line adds
+  `engine: "minimax", voiceId, emotion` and needs `REPLICATE_API_TOKEN` in
+  `.env` only when that line actually changes.
 - `scripts/generate-backgrounds.mjs` — build-time painted backdrops via
   Replicate (flux-schnell), same shape as the TTS generator: per-prompt
   caching, generated manifest, output committed. Needs `REPLICATE_API_TOKEN`
@@ -47,7 +52,10 @@ change in `docs/LEARNINGS.md`, and fold style conclusions into
 ```bash
 npm run narration                    # (re)generate TTS for all videos
 npm run narration -- --video <slug>  # just one video
-npm run narration -- --audition <slug>:<lineKey> <outDir>  # voice audition
+npm run narration -- --audition <slug>:<lineKey> <outDir>  # kokoro audition
+npm run narration -- --audition <slug>:<lineKey> <outDir> \
+    --engine minimax --voices <id1,id2,...> [--emotion happy] [--speed 1.0]
+                                     # same line in candidate MiniMax voices
 npm run backgrounds                     # (re)generate changed background art
 npm run backgrounds -- --video <slug>   # just one video
 npm run backgrounds -- --video <slug> --only <key> --force   # re-roll one plate
@@ -71,6 +79,10 @@ npm run typecheck
   composition automatically.
 - Spell out initialisms in narration text ("U R", not "UR") so the voice
   reads them as letters.
+- Narrators stay on kokoro (free, instant, reworded at will); characters that
+  need acting go to minimax, with `emotion` used sparingly and `<#0.4#>` pause
+  markers only where the script asks for timing *inside* a line — see the
+  Voice section of `docs/STYLE.md`.
 - Painted backgrounds are scenery only. Anything that moves, gets touched, or
   has to line up with a character's feet stays SVG on top of the plate — see
   the kids' section of `docs/STYLE.md`.

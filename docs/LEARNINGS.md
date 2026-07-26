@@ -507,11 +507,13 @@ puffSilhouettePath, Rock + CHAR_BOX cameo bodies, Cloudia's hat, emotionAt()
 helper for in-silence cues; fix kidHand() flip bug (common+coldOpen
 together); Bubbles tailAt option.
 
-**Watch-fors on review**: Puff voice is still the af_sky placeholder
-(recast pending Mike's audition pick); spelled "A. I. R." / "W. I. N. D."
-clips need an ear; scene 30 is prop-crowded; scene 35 map has place-name
-text (cut for pre-readers?); the 75f kite payoff and the rock's stillness
-are timing bets pending playback.
+**Watch-fors on review**: Puff voice is still the af_sky placeholder (his
+audition pick is the last one open — Sunny, Cloudia and Drip are now MiniMax,
+see below); the recast character lines all want an ear, particularly
+Cloudia's `angry` demand and Sunny's `surprised` "Wait. What?"; spelled
+"A. I. R." / "W. I. N. D." clips need an ear; scene 30 is prop-crowded;
+scene 35 map has place-name text (cut for pre-readers?); the 75f kite payoff
+and the rock's stillness are timing bets pending playback.
 
 ### Tier-2 graphics: painted backgrounds, piloted on this episode (2026-07-26)
 
@@ -579,3 +581,53 @@ cannot do. Either generate a plate per state and crossfade two
 `KidPaintedBackdrop`s, or keep `KidBackdrop` for the transition scenes and
 paint only the stable ones. Its ocean scene (flagged as the thinnest visual in
 the ep-1 retro) is the single best argument for doing it.
+
+### A second TTS engine: MiniMax for the characters (2026-07-26)
+
+The Narrator stays on Kokoro. Sunny, Cloudia and Drip moved to **MiniMax
+speech-2.8-hd via Replicate** (`engine: "minimax"`, 14 lines, 617 characters,
+$0.07), cast by ear from auditions: Sunny → `Imposing_Manner`, Cloudia →
+`Abbess`, Drip → `Lively_Girl`. Puff is deliberately still on the `af_sky`
+placeholder behind a one-line `PUFF_ENGINE` toggle — his casting is the open
+question, and flipping it moves all forty-seven of his lines at once.
+
+**The split is the point, not a migration.** Kokoro re-synthesizes a reworded
+line instantly and free, which is exactly what a narrator whose text is the
+source of truth needs. What it cannot do is *act*. MiniMax takes an `emotion`
+and honours inline `<#0.4#>` pause markers, so it earns its ~$0.11/1000
+characters only on lines where a character is playing a beat. Two rules came
+straight out of doing it, and are now in STYLE.md:
+
+- **Emotion is seasoning.** Every non-`auto` emotion cites the stage
+  direction that justified it, in a comment on the line. Sunny is nine-tenths
+  `happy` because bragging is his whole character; the two exceptions are the
+  two moments he stops (his "EXCUSE ME" interruption stayed `auto` — nothing
+  marked it as anger, and nobody in this show is unkind).
+- **Pause markers only where the script already asked for intra-line timing.**
+  Exactly one line qualified: `a2_41_sunny`, whose script note says the three
+  causal links must "land separately". Every other silence in this episode is
+  a held beat *between* lines and belongs to `gaps` in `Video.tsx`, where the
+  timeline can see it. The generator now errors if a marker reaches a kokoro
+  line, where the model would read the punctuation out loud.
+
+**Build notes for the next engine, whenever it happens:**
+
+- **The paid-generator shape transferred whole** from `generate-backgrounds.mjs`
+  — `.env` token, `Prefer: wait` plus a real poll, 12 s pacing, 429 backoff,
+  three retries per item, a failed item leaving its previous clip on disk and
+  failing the *run* at the end. Nothing new had to be learned about Replicate.
+- **The cache hash is per engine.** Kokoro's hash is byte-for-byte the old one
+  (a full run of water-cycle reported "0 clip(s) synthesized"), and the minimax
+  hash deliberately leaves out the local encoder mode — a machine that gains
+  ffmpeg must not re-buy 75 lines.
+- **Durations had to be measured, not estimated.** There is no ffmpeg on this
+  box and `music-metadata` is not a dependency, so the generator walks the
+  mp3's MPEG frame headers and sums each frame's own samples/rate (skipping the
+  Xing header frame). Checked against Remotion's bundled ffprobe: 6.156 s vs
+  6.16 s on a MiniMax clip, 6.336 s vs 6.34 s on a Kokoro one. Anything looser
+  would drift every scene after it, because `buildTimeline` stretches scenes to
+  these numbers.
+- **MiniMax reads slower than Kokoro at the same nominal speed.** The same 14
+  lines went from 33.7 s to 46.8 s (+39%), and the episode from 9:14 to 9:27 of
+  narration. Nothing needed re-timing — audio-driven pacing absorbed all of it,
+  which is the clearest payoff yet from never hand-timing a scene.

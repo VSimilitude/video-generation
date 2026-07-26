@@ -8,25 +8,57 @@
 // `voice` / `speed` are the house default (the Narrator); character lines
 // override per line.
 //
-//   Narrator  af_heart  1.0   warm storyteller, occasional deadpan. Also
-//                             cameo-voices the beetle and the leaf in Act One
-//                             and the rock in Act Two, so the show never grows
-//                             past five actors
-//   Puff      af_sky    1.05  PLACEHOLDER — see below
-//   Sunny     am_puck   1.0   the Sun. Enormous ego, and entirely correct
-//   Cloudia   bf_emma   1.0   one-scene cameo, delivered by wind
-//   Drip      af_bella  1.1   one fan-service line, waving from inside Cloudia
+//   Narrator  kokoro   af_heart         1.0   warm storyteller, occasional
+//                                             deadpan. Also cameo-voices the
+//                                             beetle and the leaf in Act One
+//                                             and the rock in Act Two, so the
+//                                             show never grows past five actors
+//   Puff      kokoro   af_sky           1.05  PLACEHOLDER — see below
+//   Sunny     minimax  Imposing_Manner  1.0   the Sun. Enormous ego, and
+//                                             entirely correct
+//   Cloudia   minimax  Abbess           1.0   one-scene cameo, delivered by wind
+//   Drip      minimax  Lively_Girl      1.0   one fan-service line, waving from
+//                                             inside Cloudia
+//
+// TWO ENGINES. The Narrator stays on kokoro — it is the storyteller voice the
+// series was built on, it is free, and it re-synthesizes instantly when a line
+// is reworded. The characters are cast on MiniMax speech-2.8-hd (Replicate,
+// ~$0.11/1000 characters), which is paid but can *act*: it takes an `emotion`
+// and honours inline pause markers. Casting picked by ear from auditions
+// (public/narration/auditions-mm), approved 2026-07-26.
+//
+//   engine: "minimax", voiceId: "<id>", emotion: "<enum>"
+//   emotions: auto happy sad angry fearful disgusted surprised calm fluent
+//             neutral
+//
+// EMOTION IS SEASONING. A line only carries one when a stage direction in
+// `script.md` asks for it, and the comment on the line names the direction.
+// Everything else stays "auto", which is the model reading the words as
+// written — the same instinct as not adding a `speed` override to a line that
+// does not need one. Sunny's are nearly all `happy` because bragging is his
+// entire character; the two that are not are the two moments he stops.
+//
+// PAUSE MARKERS (`<#0.3#>`) are seconds of silence *inside* a MiniMax line,
+// and they are only allowed where `script.md` already marks an intra-line
+// timing need — one line in this episode (`a2_41_sunny`). Every other silence
+// in the show is a held beat *between* lines and belongs to `gaps` in
+// `Video.tsx`, not here. The generator errors if a marker appears on a kokoro
+// line, where the model would read the punctuation out loud.
 //
 // PUFF'S VOICE IS NOT FINAL. `af_sky` at 1.05 is a placeholder so the episode
-// can be timed and watched end to end; the real pick comes from an audition
-// before any scene is staged. Candidates, all worth hearing on `a1_04_puff`
-// (small and apologetic), `a2_19_puff` (WHOOSH, delighted) and `a3_49_puff`
-// (the big shout):
-//     af_sky  af_nicole  bf_lily  am_liam
-// Run `npm run narration -- --audition wind:a1_04_puff <dir>` and pick by ear.
-// Whichever wins, keep the speed slightly above 1.0 — Puff talks in small
-// quick breaths, the way Drip's 1.1 is character rather than fix. Changing the
-// voice means changing PUFF below and nothing else.
+// can be timed and watched end to end; the real pick is still open, and he is
+// the last actor on the placeholder. He has been auditioned on both engines —
+// kokoro `af_sky` / `af_nicole` / `bf_lily` / `am_liam`, and MiniMax
+// `Sweet_Girl_2` / `Inspirational_girl` (public/narration/auditions-mm) — on
+// `a1_04_puff` (small and apologetic), `a2_19_puff` (WHOOSH, delighted) and
+// `a3_49_puff` (the big shout).
+//   Kokoro:   npm run narration -- --audition wind:a1_04_puff <dir>
+//   MiniMax:  npm run narration -- --audition wind:a1_04_puff <dir> \
+//               --engine minimax --voices Sweet_Girl_2,Inspirational_girl
+// Moving him is ONE edit: flip PUFF_ENGINE below (and confirm the voice id
+// against the winning audition file). All forty-seven of his lines follow.
+// Whichever wins, keep the speed slightly above 1.0 on kokoro — Puff talks in
+// small quick breaths.
 //
 // Keys are `<act>_<number>_<speaker>` in strict playback order:
 // `co` cold open, `a1` the grass, `a2` the lift, `a3` air with a job,
@@ -63,10 +95,23 @@
 // `script.md`'s stage directions and becomes `gaps` in `Video.tsx`; the two
 // halves only work together.
 const NARRATOR = { voice: "af_heart", speed: 1.0 };
-const PUFF = { voice: "af_sky", speed: 1.05 }; // PLACEHOLDER — audition pending
-const SUNNY = { voice: "am_puck", speed: 1.0 };
-const CLOUDIA = { voice: "bf_emma", speed: 1.0 };
-const DRIP = { voice: "af_bella", speed: 1.1 };
+
+// Puff's casting is the one thing still open. "kokoro" | "minimax" — flipping
+// this moves every Puff line at once; nothing else in the file changes.
+const PUFF_ENGINE = "kokoro";
+// Only read when PUFF_ENGINE is "minimax". Confirm against the audition file
+// that won before flipping: candidates were Sweet_Girl_2 and Inspirational_girl.
+const PUFF_MINIMAX_VOICE = "Sweet_Girl_2";
+const PUFF =
+  PUFF_ENGINE === "minimax"
+    ? { engine: "minimax", voiceId: PUFF_MINIMAX_VOICE, speed: 1.0 }
+    : { voice: "af_sky", speed: 1.05 }; // PLACEHOLDER — audition pending
+
+const SUNNY = { engine: "minimax", voiceId: "Imposing_Manner", speed: 1.0 };
+const CLOUDIA = { engine: "minimax", voiceId: "Abbess", speed: 1.0 };
+// Was af_bella @1.1 on kokoro, where the 1.1 bought the bounce. Lively_Girl
+// comes with it, so her one line sits at the engine's own speed.
+const DRIP = { engine: "minimax", voiceId: "Lively_Girl", speed: 1.0 };
 
 export default {
   voice: "af_heart",
@@ -255,15 +300,20 @@ export default {
       text: "And then the whole hill went gold.",
       ...NARRATOR,
     },
-    a2_02_sunny: { text: "GOOD MORNING, EVERYBODY!", ...SUNNY },
+    // Scene 12: "Sunny fills the sky, mid-pose, lens flares he has clearly
+    // added himself." An entrance he is delighted with.
+    a2_02_sunny: { text: "GOOD MORNING, EVERYBODY!", ...SUNNY, emotion: "happy" },
     a2_03_puff: { text: "Oh no. Oh, he is enormous.", ...PUFF },
     a2_04_narrator: {
       text: "This is Sunny. You may remember him. He remembers himself constantly.",
       ...NARRATOR,
     },
+    // Scene 12, and the first firing of the "You're welcome! / HA! HA!" gag —
+    // "He remembers himself constantly."
     a2_05_sunny: {
       text: "I invented mornings! You're welcome! HA! HA!",
       ...SUNNY,
+      emotion: "happy",
     },
     a2_06_narrator: {
       text: "Sunny did what Sunny does. He poured sunshine all over the ground.",
@@ -382,20 +432,31 @@ export default {
       text: "Because of you. And about a hundred million friends.",
       ...NARRATOR,
     },
+    // Deliberately "auto": nothing in Scene 21 marks this as anger, and the
+    // tone guardrail is that nobody in this show is unkind. It is an
+    // interruption, and the words carry it.
     a2_39_sunny: { text: "EXCUSE ME. Who warmed the ground?", ...SUNNY },
     a2_40_puff: { text: "Um. You did.", ...PUFF },
     // Sunny's causal chain — this is the pedagogy and the punchline at once.
-    // Slowed a touch so a six-year-old can follow all three links.
+    // Slowed a touch so a six-year-old can follow all three links, and the one
+    // line in the episode whose script.md note asks for separation *inside* the
+    // line ("runs at 0.95 so all three links land separately", Scene 21) — so
+    // the only pause markers in the file are these two. Emotion: the diagram
+    // assembles itself out of his own beams as he lists. This is the brag.
     a2_41_sunny: {
-      text: "I warm the ground! The ground warms the air! The air goes UP!",
+      text: "I warm the ground! <#0.3#> The ground warms the air! <#0.3#> The air goes UP!",
       ...SUNNY,
       speed: 0.95,
+      emotion: "happy",
     },
+    // Scene 21: "On the last brag the diagram goes planetary and every wind
+    // arrow on Earth lights up at once."
     a2_42_sunny: {
       text: "SO I MAKE ALL THE WIND. EVERYWHERE. ON THE ENTIRE PLANET.",
       ...SUNNY,
+      emotion: "happy",
     },
-    a2_43_sunny: { text: "You're welcome! HA! HA!", ...SUNNY },
+    a2_43_sunny: { text: "You're welcome! HA! HA!", ...SUNNY, emotion: "happy" },
     // The sequel to episode one's "annoyingly, he is completely right".
     // Flattest possible delivery.
     a2_44_narrator: {
@@ -475,9 +536,12 @@ export default {
       text: "Sea breeze! Sea BREEZE! That is me! I am a sea breeze!",
       ...PUFF,
     },
+    // Scene 26: Sunny leans in over a card that is not about him, "enormously
+    // pleased", and holds it through a one-second beat.
     a3_19_sunny: {
       text: "I make the beach windy AND I make the waves sparkle! You're welcome!",
       ...SUNNY,
+      emotion: "happy",
     },
     a3_20_narrator: { text: "Him again.", ...NARRATOR, speed: 0.9 },
     a3_21_narrator: {
@@ -530,19 +594,29 @@ export default {
       text: "And then, high above them, somebody needed a lift.",
       ...NARRATOR,
     },
+    // Scene 30: Cloudia "sits stranded over a flat plain" and is FULL of rain.
+    // Impatient grande dame, not hostile — this is the read approved in the
+    // audition (auditions-mm/cloudia_abbess_angry). If it plays as cross
+    // rather than imperious, drop it to "auto"; the words already demand.
     a3_38_cloudia: {
       text: "Puff, darling! Take me to the mountains! I am FULL of rain!",
       ...CLOUDIA,
+      emotion: "angry",
     },
     a3_39_narrator: {
       text: "So Puff pushed a whole cloud, all the way across the sky.",
       ...NARRATOR,
     },
+    // Cast note, script.md: she "gets delivered across the sky like a parcel
+    // and could not be happier about it". Delivered, and delighted.
     a3_40_cloudia: {
       text: "Finally! Door to door service, darling!",
       ...CLOUDIA,
+      emotion: "happy",
     },
-    a3_41_drip: { text: "Hi! It's me! I'm the weather!", ...DRIP },
+    // Scene 30: Drip "pops out of a window halfway across and waves with both
+    // arms". One line of pure fan service.
+    a3_41_drip: { text: "Hi! It's me! I'm the weather!", ...DRIP, emotion: "happy" },
     a3_42_narrator: {
       text: "That is Drip. Different show. Same sky.",
       ...NARRATOR,
@@ -598,13 +672,17 @@ export default {
       text: "AIR! You cannot see it, you CAN feel it, and it is real stuff! That is me!",
       ...PUFF,
     },
+    // Scene 33: the chant, one lit panel per character. Both of these are the
+    // character taking a bow for their own Big Word.
     rc_03_sunny: {
       text: "WARM AIR RISES! Because I warm the ground! That is also me!",
       ...SUNNY,
+      emotion: "happy",
     },
     rc_04_cloudia: {
       text: "WIND! Air in a hurry! It delivers me door to door, darling!",
       ...CLOUDIA,
+      emotion: "happy",
     },
     rc_05_narrator: {
       text: "SEA BREEZE. Hot sand, cool sea, and a wind off the water every sunny day.",
@@ -644,13 +722,18 @@ export default {
       ...NARRATOR,
     },
     rc_13_narrator: { text: "Next time. Why is the sky BLUE?", ...NARRATOR },
-    rc_14_sunny: { text: "OH, that one is me as well! HA! HA!", ...SUNNY },
+    // Scene 36: the running gag's last confident firing, twelve seconds before
+    // it breaks.
+    rc_14_sunny: { text: "OH, that one is me as well! HA! HA!", ...SUNNY, emotion: "happy" },
     rc_15_narrator: {
       text: "Sunny has a theory. It is wrong.",
       ...NARRATOR,
       speed: 0.9,
     },
-    rc_16_sunny: { text: "Wait. What?", ...SUNNY },
+    // Scene 36: "Sunny holds his pose while the sentence catches up with him."
+    // The whole joke is the delay and then the dawning — the one line in two
+    // episodes where he is not sure of himself.
+    rc_16_sunny: { text: "Wait. What?", ...SUNNY, emotion: "surprised" },
     rc_17_puff: {
       text: "Bye! You can't see me. But you can FEEL me.",
       ...PUFF,

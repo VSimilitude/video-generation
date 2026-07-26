@@ -23,20 +23,31 @@ change it in both files.
 
 ## Cast and voices
 
-| Character | Voice | Speed | Who they are |
-|---|---|---|---|
-| **Narrator** | `af_heart` | 1.0 | Warm storyteller, returning. Deadpans at Sunny for a living. Also cameo-voices the beetle and the leaf in Act One and the rock in Act Two, so the show never grows past five actors. |
-| **Puff** | `af_sky` **(placeholder)** | 1.05 | Our hero. One small puff of air. Convinced he is invisible and therefore *nothing*. Apologises constantly at the start and not once after Act Two. Emerging catchphrase: *"You can't see me. But you can FEEL me."* |
-| **Sunny** | `am_puck` | 1.0 | The Sun, returning, unchanged, insufferable. This is the episode where *"that one is me as well!"* turns out to be literally true for everything on screen. |
-| **Cloudia** | `bf_emma` | 1.0 | Returning for one scene. Gets delivered across the sky like a parcel and could not be happier about it. |
-| **Drip** | `af_bella` | 1.1 | Returning for exactly one line, waving from inside Cloudia. Fan service, deliberately. |
+| Character | Engine | Voice | Speed | Who they are |
+|---|---|---|---|---|
+| **Narrator** | kokoro | `af_heart` | 1.0 | Warm storyteller, returning. Deadpans at Sunny for a living. Also cameo-voices the beetle and the leaf in Act One and the rock in Act Two, so the show never grows past five actors. |
+| **Puff** | kokoro | `af_sky` **(placeholder)** | 1.05 | Our hero. One small puff of air. Convinced he is invisible and therefore *nothing*. Apologises constantly at the start and not once after Act Two. Emerging catchphrase: *"You can't see me. But you can FEEL me."* |
+| **Sunny** | minimax | `Imposing_Manner` | 1.0 | The Sun, returning, unchanged, insufferable. This is the episode where *"that one is me as well!"* turns out to be literally true for everything on screen. |
+| **Cloudia** | minimax | `Abbess` | 1.0 | Returning for one scene. Gets delivered across the sky like a parcel and could not be happier about it. |
+| **Drip** | minimax | `Lively_Girl` | 1.0 | Returning for exactly one line, waving from inside Cloudia. Fan service, deliberately. |
+
+**Two engines.** The Narrator stays on Kokoro — free, local, and re-synthesized
+the moment a line is reworded. The characters are cast on MiniMax
+speech-2.8-hd (via Replicate), which is paid but takes an `emotion` per line
+and honours inline pause markers. Emotions are set in `narration.mjs`, one
+comment per line naming the stage direction below that justified it, and every
+unmarked line stays `auto`. The only pause markers in the episode are the two
+in `a2_41_sunny` — see Scene 21.
 
 **Puff's voice is not cast yet.** `af_sky` at 1.05 is a placeholder so the
-episode can be timed and watched end to end. Audition `af_sky`, `af_nicole`,
-`bf_lily` and `am_liam` on three lines that ask for three different things —
-`a1_04_puff` (small, apologetic), `a2_19_puff` (delighted, airborne) and
-`a3_49_puff` (the big shout) — and pick by ear, per STYLE.md. Whatever wins
-should keep a speed a little above 1.0; Puff talks in small quick breaths.
+episode can be timed and watched end to end, and he is the last actor on one.
+Auditioned on both engines — kokoro `af_sky`, `af_nicole`, `bf_lily`,
+`am_liam`; MiniMax `Sweet_Girl_2`, `Inspirational_girl` — on three lines that
+ask for three different things: `a1_04_puff` (small, apologetic), `a2_19_puff`
+(delighted, airborne) and `a3_49_puff` (the big shout). Pick by ear, per
+STYLE.md. Moving him is one edit: `PUFF_ENGINE` in `narration.mjs`. If he
+stays on kokoro, keep a speed a little above 1.0; Puff talks in small quick
+breaths.
 
 ## The four Big Words
 
@@ -612,7 +623,10 @@ Narrator finishes conceding.
 
 **Pedagogy:** The causal chain, said in one breath by the character who is the
 first link — sun, ground, air, up. `a2_41_sunny` runs at 0.95 so all three links
-land separately. This is episode one's "annoyingly, he is completely right"
+land separately, and — since Sunny is a MiniMax voice — carries the episode's
+only two pause markers, `<#0.3#>` between the links, for the same reason. That
+is intra-line timing the script asked for; every other silence in this episode
+is a held beat between lines and lives in `Video.tsx`. This is episode one's "annoyingly, he is completely right"
 grown up: it concedes twice, deadpans the concession, and then plants the
 series' next joke, because `a2_45` is a promise the recap pays off and episode
 three collects.
