@@ -47,8 +47,14 @@ export const Drip: React.FC<DripProps> = (props) => {
         ? "clutch"
         : "rest");
 
-  // Arms swing slightly with the breath, so they aren't welded to the body.
-  const swing = rig.squash.dy * 0.35;
+  // Arms swing with the breath, but a few frames *behind* it: a limb that
+  // moves on the same frame as the body it hangs off reads as one rigid shape.
+  const swing = rig.trail.dy * 0.35;
+  // Secondary action: the highlights sit on the surface of a moving body of
+  // water, so they slide a couple of pixels as he breathes instead of being
+  // painted on. Driven from the lagged breath, so they arrive after the body.
+  const shineX = rig.trail.dy * 1.8;
+  const shineY = rig.trail.dy * 2.6;
 
   return (
     <CharacterFrame
@@ -99,17 +105,26 @@ export const Drip: React.FC<DripProps> = (props) => {
       {/* Shine and reflection: both kept clear of the face, and both flat
           shapes rather than a gradient — see the `skin` note in Character.tsx
           for why a gradient body can't have matching eyelids. */}
+      <g transform={`translate(${shineX} ${shineY})`}>
+        <ellipse
+          cx={-24}
+          cy={-72}
+          rx={15}
+          ry={30}
+          fill="#ffffff"
+          opacity={0.5}
+          transform="rotate(-16 -24 -72)"
+        />
+        <circle cx={-62 - shineX * 0.6} cy={-8} r={13} fill="#ffffff" opacity={0.6} />
+      </g>
       <ellipse
-        cx={-24}
-        cy={-72}
-        rx={15}
-        ry={30}
-        fill="#ffffff"
-        opacity={0.5}
-        transform="rotate(-16 -24 -72)"
+        cx={4}
+        cy={124}
+        rx={62 + shineY * 1.6}
+        ry={17}
+        fill={kidTheme.waterLight}
+        opacity={0.34}
       />
-      <circle cx={-62} cy={-8} r={13} fill="#ffffff" opacity={0.6} />
-      <ellipse cx={4} cy={124} rx={62} ry={17} fill={kidTheme.waterLight} opacity={0.34} />
 
       <Face
         rig={rig}

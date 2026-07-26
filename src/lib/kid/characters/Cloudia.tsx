@@ -103,7 +103,7 @@ export const Cloudia: React.FC<CloudiaProps> = (props) => {
           eyeScale={0.94}
         />
 
-        {(props.bowTie ?? true) ? <BowTie y={98} /> : null}
+        {(props.bowTie ?? true) ? <BowTie y={98} rig={rig} /> : null}
       </g>
 
       {fill > 0.55 ? <Drips rig={rig} fill={fill} /> : null}
@@ -120,21 +120,30 @@ const Puffs: React.FC = () => (
   </>
 );
 
-const BowTie: React.FC<{ y: number }> = ({ y }) => (
-  <g transform={`translate(0 ${y})`}>
-    {[-1, 1].map((s) => (
-      <path
-        key={s}
-        d={`M ${s * 9} 0 L ${s * 52} -22 Q ${s * 60} 0 ${s * 52} 22 Z`}
-        fill={kidTheme.pink}
-        stroke={kidTheme.pinkDeep}
-        strokeWidth={5}
-        strokeLinejoin="round"
-      />
-    ))}
-    <circle cx={0} cy={0} r={13} fill={kidTheme.pinkDeep} />
-  </g>
-);
+/**
+ * Follow-through, worn as an accessory: the bow tie hangs off a body that is
+ * breathing, so it bobs *after* she does (the lagged breath, `rig.trail`) and
+ * counter-rotates a degree or two as it catches up. She settles, then it does.
+ */
+const BowTie: React.FC<{ y: number; rig: ReturnType<typeof useRig> }> = ({ y, rig }) => {
+  const bob = rig.trail.dy * 2.2;
+  const tip = (rig.trail.dy - rig.squash.dy) * 2.4;
+  return (
+    <g transform={`translate(0 ${y + bob}) rotate(${tip})`}>
+      {[-1, 1].map((s) => (
+        <path
+          key={s}
+          d={`M ${s * 9} 0 L ${s * 52} -22 Q ${s * 60} 0 ${s * 52} 22 Z`}
+          fill={kidTheme.pink}
+          stroke={kidTheme.pinkDeep}
+          strokeWidth={5}
+          strokeLinejoin="round"
+        />
+      ))}
+      <circle cx={0} cy={0} r={13} fill={kidTheme.pinkDeep} />
+    </g>
+  );
+};
 
 /** Drops gathering on her underside once she's carrying too much water. */
 const Drips: React.FC<{ rig: ReturnType<typeof useRig>; fill: number }> = ({

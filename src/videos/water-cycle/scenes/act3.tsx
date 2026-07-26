@@ -15,7 +15,7 @@ import {
   kidType,
   lookAt,
   mixHex,
-  type Emotion,
+  type EmotionInput,
 } from "../../../lib/kid";
 import { useSpeaking } from "../../../lib/narration";
 import {
@@ -2037,8 +2037,9 @@ const TwistScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const talking = useSpeaking(scene, "drip");
   const mapped = useEmotion(scene, "drip", { a3_34_drip: "excited", a3_35_drip: "excited" }, "happy");
   // The jaw drop lands on the snap, which happens inside a narrator line — so
-  // it is set here rather than mapped to one of his own.
-  const emotion: Emotion = frame >= snapAt - 4 ? "amazed" : mapped;
+  // it is set here rather than mapped to one of his own. This one *does* cut:
+  // it is the punchline frame, landing under a `CutFlash`.
+  const emotion: EmotionInput = frame >= snapAt - 4 ? "amazed" : mapped;
 
   return (
     <AbsoluteFill>

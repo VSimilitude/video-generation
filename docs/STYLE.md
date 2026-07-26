@@ -232,6 +232,55 @@ slate-and-cyan. First audience: a six-year-old.
 - **Look at the speaker.** `lookAt(from, to)` turns two staged positions into a
   pupil offset. A character listening while facing the camera looks absent.
 
+## Motion craft
+
+The rig (`src/lib/kid/rig.ts`) encodes the classic principles so a scene gets
+them by default and cannot forget them. Everything here is a pure function of
+`frame` + `phase`: no refs, no `Date`, no randomness. That is not fussiness —
+Remotion hands frames to a *pool* of browser tabs, so anything that remembers
+the previous frame renders differently every time.
+
+- **Nothing starts at full speed.** Entrances anticipate: `bounce` hangs and
+  stretches for ~5 frames before it drops, `pop` crouches small and wide before
+  it springs. On by default for both (`Entrance.anticipate`, off for the slides
+  — the character is still off frame during the anticipation, so there is
+  nothing to see).
+- **Nothing stops dead.** A `bounce` *accelerates* down (`kidEase.gravity`),
+  compresses on the frame it lands, and rings out (`settleWave`). Anything
+  hanging off a body — arms, a bow tie, rays — rides `rig.trail` (the same
+  breath, four frames late) instead of `rig.squash`, so it arrives after the
+  body does.
+- **Emotion changes ease; they never snap.** Pass an `EmotionCue`
+  (`{ emotion, from, at }`) rather than a bare name and the face *morphs* over
+  ~8 frames (`EMOTION_EASE`) and settles with a degree or two of head
+  follow-through. A bare `Emotion` string still works and still cuts — use it
+  only where the cut is the point (a punchline landing under a `CutFlash`).
+  The two mouths that cannot be lerped (amazed's O, scared's squiggle) flatten
+  through a straight line at the midpoint rather than swapping.
+  `useEmotion()` in a scene file returns cues already; when a scene places an
+  emotion by hand, it knows the frame — pass it.
+- **The rig cannot detect the change itself.** It only ever sees the current
+  frame's props, so whoever *decides* the emotion has to hand over the frame it
+  changed on. That is the whole reason `EmotionCue` exists.
+- **Travel on arcs.** `moveAlong(from, to, u, { arc, bias, ease })` for anything
+  crossing the frame; it returns the point *and* the heading, so a flyer can
+  bank into its own path. A straight lerp between two marks is the clearest
+  tell that a scene was positioned rather than animated.
+- **Eyes are never still.** Micro-saccades run on every character
+  (`eyeLife`); a character with no staged `look` also glances away
+  occasionally. A staged `look`/`lookAt` is always authoritative — eye life is
+  a couple of pixels added on top, never an override. `eyeLife={0}` for a
+  deliberate stare.
+- **No hand-rolled curves.** `kidEase` is the show's set (`easeInOutSine` is
+  the default for anything that starts and stops, `gravity` for falls,
+  `easeOutBack` to arrive, `easeInBack` to leave, `anticipate01` for a
+  counter-move). There are no linear ramps left in the rig and there should be
+  none in a scene.
+- **Subtle is the target.** If a still looks the same at a glance but the video
+  feels more alive, that is the win. Judge these in motion — render a short
+  every-frame clip or a few stills two frames apart. A secondary action you can
+  *notice* in a still is too big.
+
 ## Comedy pacing
 
 - **Give gags room to land.** The first real audience test (age six, ep 1)

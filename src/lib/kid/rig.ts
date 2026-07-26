@@ -17,6 +17,81 @@
 //
 // Every function takes an explicit `phase` so a group of characters is
 // desynchronised: same maths, different offset, no two bouncing together.
+//
+// On top of those four, the rig encodes the handful of classic animation
+// principles that pay for themselves at this scale — see "Motion craft" in
+// docs/STYLE.md:
+//   anticipation     a counter-move before the move (`Entrance.anticipate`).
+//   follow-through   nothing stops dead; entrances land with a damped settle
+//                    (`settleWave`), accessories trail the body by a few
+//                    frames (`Rig.trail`).
+//   arcs             things travel on curves, not straight lines (`moveAlong`).
+//   slow in/out      no linear ramps anywhere (`kidEase`).
+//   secondary action a face never *snaps*: emotions morph over ~8 frames
+//                    (`EmotionCue`), and idle eyes drift (`eyeLife`).
+
+// --- easing ----------------------------------------------------------------
+
+const clamp01 = (u: number): number => (u < 0 ? 0 : u > 1 ? 1 : u);
+
+/**
+ * The show's easing set. Scenes should reach for these rather than hand-rolling
+ * a curve, so two characters accelerating "the same way" actually do.
+ *
+ * All of them take and return 0..1 and clamp their input, which is what lets
+ * them be fed a raw `(frame - at) / duration` without a guard.
+ */
+export const kidEase = {
+  /** Only for things that genuinely are linear — a conveyor, a clock hand. */
+  linear: (u: number): number => clamp01(u),
+  easeInSine: (u: number): number => 1 - Math.cos((clamp01(u) * Math.PI) / 2),
+  easeOutSine: (u: number): number => Math.sin((clamp01(u) * Math.PI) / 2),
+  /** The default for anything that starts and stops on screen. */
+  easeInOutSine: (u: number): number => 0.5 - 0.5 * Math.cos(clamp01(u) * Math.PI),
+  easeInQuad: (u: number): number => clamp01(u) ** 2,
+  easeOutQuad: (u: number): number => 1 - (1 - clamp01(u)) ** 2,
+  easeInCubic: (u: number): number => clamp01(u) ** 3,
+  easeOutCubic: (u: number): number => 1 - (1 - clamp01(u)) ** 3,
+  /** Gravity: use for anything falling. */
+  gravity: (u: number): number => clamp01(u) ** 2,
+  /** Overshoots the target and comes back — the cartoon "arrive". */
+  easeOutBack: (u: number, overshoot = 1.7): number => {
+    const t = clamp01(u) - 1;
+    return 1 + (overshoot + 1) * t ** 3 + overshoot * t ** 2;
+  },
+  /** Pulls *back* before it leaves — the cartoon "depart". */
+  easeInBack: (u: number, overshoot = 1.7): number => {
+    const t = clamp01(u);
+    return (overshoot + 1) * t ** 3 - overshoot * t ** 2;
+  },
+  /**
+   * 0..1 with a dip below zero first: the whole anticipation principle as one
+   * curve. `back` is how far the counter-move goes (in output units), `hold`
+   * how much of the duration it occupies.
+   */
+  anticipate01: (u: number, back = 0.16, hold = 0.3): number => {
+    const t = clamp01(u);
+    if (t < hold) return -back * Math.sin((t / hold) * Math.PI);
+    return kidEase.easeOutBack((t - hold) / (1 - hold), 1.4);
+  },
+} as const;
+
+/**
+ * Damped oscillation for follow-through: 1 at u=0, ringing down to 0 by u≈1.
+ *
+ * Multiply by an amplitude and add. Pass `phase = -Math.PI / 2` for a *kick*
+ * that starts at rest (an emotion settling) rather than at full deflection (an
+ * impact, which is already compressed on the frame it lands).
+ */
+export function settleWave(
+  u: number,
+  cycles = 1.4,
+  decay = 4.5,
+  phase = 0,
+): number {
+  if (u <= 0 || u >= 1) return 0;
+  return Math.exp(-decay * u) * Math.cos(u * cycles * Math.PI * 2 + phase);
+}
 
 export type Emotion =
   | "neutral"
@@ -167,6 +242,122 @@ export const EMOTIONS: Record<Emotion, EmotionSpec> = {
   },
 };
 
+// --- emotion transitions ---------------------------------------------------
+
+/**
+ * An emotion *with the frame it changed on*, so the face can morph into it
+ * instead of cutting. A plain `Emotion` string still works everywhere an
+ * `EmotionInput` is accepted — it just snaps, exactly as it always did.
+ *
+ * The change frame has to come from the caller because the rig is a pure
+ * function of the current frame: a character cannot remember what face it was
+ * wearing last frame (Remotion hands frames to a pool of browser tabs, so any
+ * ref-based history is a different picture on a re-render). Whoever *decides*
+ * the emotion knows when it changed; it passes that down.
+ */
+export type EmotionCue = {
+  emotion: Emotion;
+  /** The face being left. Omit — or repeat `emotion` — for no transition. */
+  from?: Emotion;
+  /** Frame the change lands on, on the same clock as `useCurrentFrame()`. */
+  at?: number;
+  /** Morph length. Default `EMOTION_EASE`; anything under 5 reads as a cut. */
+  frames?: number;
+};
+
+export type EmotionInput = Emotion | EmotionCue;
+
+/** ~0.27s at 30fps: long enough to read as a face *changing*, short enough to
+ * land before the line it belongs to starts. */
+export const EMOTION_EASE = 8;
+
+export type EmotionPose = {
+  spec: EmotionSpec;
+  /** 0..1 through the current morph; 1 when settled. */
+  mix: number;
+  /**
+   * 1 normally. During a morph between two *different* mouth shapes it dips to
+   * 0 at the midpoint, so the old shape flattens out before the new one grows
+   * — a squiggle cannot be lerped into an ellipse, but both can go through a
+   * line.
+   */
+  shapeFade: number;
+  /** Degrees of damped head follow-through after the change. */
+  settle: number;
+};
+
+/** Morph one face pose into another. `u` is 0 (all `a`) .. 1 (all `b`). */
+export function blendEmotion(a: EmotionSpec, b: EmotionSpec, u: number): EmotionSpec {
+  if (u <= 0) return a;
+  if (u >= 1) return b;
+  const m = (x: number, y: number): number => x + (y - x) * u;
+  return {
+    browRaise: m(a.browRaise, b.browRaise),
+    browAngle: m(a.browAngle, b.browAngle),
+    browAsym: m(a.browAsym, b.browAsym),
+    eyeScaleX: m(a.eyeScaleX, b.eyeScaleX),
+    eyeScaleY: m(a.eyeScaleY, b.eyeScaleY),
+    lidBase: m(a.lidBase, b.lidBase),
+    pupilScale: m(a.pupilScale, b.pupilScale),
+    mouthWidth: m(a.mouthWidth, b.mouthWidth),
+    mouthCurve: m(a.mouthCurve, b.mouthCurve),
+    mouthOpen: m(a.mouthOpen, b.mouthOpen),
+    mouthTilt: m(a.mouthTilt, b.mouthTilt),
+    // Not lerpable: a squiggle is not halfway to an ellipse. The swap happens
+    // at the midpoint, where `shapeFade` has flattened both to nearly a line.
+    mouthShape: u < 0.5 ? a.mouthShape : b.mouthShape,
+    blush: m(a.blush, b.blush),
+    tilt: m(a.tilt, b.tilt),
+    teethAt: m(a.teethAt, b.teethAt),
+  };
+}
+
+const NO_TRANSITION: EmotionPose = {
+  spec: EMOTIONS.neutral,
+  mix: 1,
+  shapeFade: 1,
+  settle: 0,
+};
+
+/**
+ * Turn an `emotion` prop into the pose to draw this frame: the morphed spec,
+ * plus the follow-through the change leaves behind.
+ */
+export function resolveEmotion(
+  input: EmotionInput | undefined,
+  frame: number,
+  fps: number,
+): EmotionPose {
+  if (input === undefined) return NO_TRANSITION;
+  if (typeof input === "string") {
+    return { ...NO_TRANSITION, spec: EMOTIONS[input] };
+  }
+  const to = EMOTIONS[input.emotion];
+  const from = input.from ? EMOTIONS[input.from] : to;
+  if (from === to || input.at === undefined) {
+    return { ...NO_TRANSITION, spec: to };
+  }
+  const since = frame - input.at;
+  if (since < 0) return { ...NO_TRANSITION, spec: from };
+  const dur = Math.max(1, input.frames ?? EMOTION_EASE);
+  const mix = kidEase.easeInOutSine(since / dur);
+  const shapeFade =
+    from.mouthShape === to.mouthShape ? 1 : Math.abs(2 * mix - 1);
+  // Follow-through: the head over-rotates a touch past the new pose and rings
+  // down. Scaled by how big a change it was, so `happy`→`excited` gets a nudge
+  // and `neutral`→`neutral` gets nothing.
+  const size = Math.min(
+    1,
+    (Math.abs(to.tilt - from.tilt) * 0.22 +
+      Math.abs(to.browRaise - from.browRaise) * 0.05 +
+      Math.abs(to.mouthCurve - from.mouthCurve) * 0.02) /
+      1.6,
+  );
+  const settle =
+    size * 2.1 * settleWave(since / (fps * 0.62), 1.15, 4.2, -Math.PI / 2);
+  return { spec: blendEmotion(from, to, mix), mix, shapeFade, settle };
+}
+
 // --- idle ------------------------------------------------------------------
 
 export type Squash = { sx: number; sy: number; dy: number };
@@ -223,9 +414,12 @@ export function blinkAmount(frame: number, fps: number, phase = 0): number {
     if (t < at) return 0;
     if (t < at + span) {
       const u = t - at;
-      if (u < BLINK_CLOSE) return u / BLINK_CLOSE;
+      // Eased, not linear: a lid accelerates shut and decelerates open. At
+      // 30fps a blink is only ~6 frames, and the curve is most of what
+      // separates "eyes closing" from "a rectangle sliding down".
+      if (u < BLINK_CLOSE) return kidEase.easeInQuad(u / BLINK_CLOSE);
       if (u < BLINK_CLOSE + BLINK_HOLD) return 1;
-      return 1 - (u - BLINK_CLOSE - BLINK_HOLD) / BLINK_OPEN;
+      return 1 - kidEase.easeOutQuad((u - BLINK_CLOSE - BLINK_HOLD) / BLINK_OPEN);
     }
     const r = hash01(seed + k * 3.77);
     const r2 = hash01(seed + k * 9.13 + 5);
@@ -294,6 +488,63 @@ export function lookOffset(look: LookDirection = "camera"): {
 }
 
 /**
+ * Eye life: the small involuntary motion that separates a *character* looking
+ * at something from a decal of one.
+ *
+ * Two layers, both deterministic from the frame:
+ *   - micro-saccades — the pupils jump a pixel or two and hold, on an
+ *     irregular schedule. Never a drift: real eyes move in flicks.
+ *   - an attention shift — an occasional glance away and back, for a character
+ *     with nothing else to look at. `wander` is off whenever the scene has set
+ *     a look direction, because a staged look is authoritative.
+ *
+ * The result is in look units (see `lookOffset`) and is *added* to the staged
+ * direction, so it never overrides where a character has been told to look.
+ */
+export function eyeLife(
+  frame: number,
+  fps: number,
+  phase = 0,
+  amount = 1,
+  wander = false,
+): { x: number; y: number } {
+  if (amount === 0) return { x: 0, y: 0 };
+  const t = frame / fps;
+  const seed = phase * 3.1 + 0.5;
+
+  // --- saccades: hold a target for ~0.6s, flick to the next in ~4 frames.
+  const s = t / 0.6 + phase * 0.37;
+  const n = Math.floor(s);
+  const u = s - n;
+  // Some slots repeat the previous target, so the flicks aren't a metronome.
+  const target = (k: number, axis: number): number => {
+    let i = k;
+    if (hash01(i * 5.1 + seed) < 0.42) i -= 1;
+    return (hash01(i * 1.73 + seed + axis * 11.3) - 0.5) * 2;
+  };
+  const m = kidEase.easeInOutSine(u / 0.14);
+  const sx = target(n - 1, 0) + (target(n, 0) - target(n - 1, 0)) * m;
+  const sy = target(n - 1, 1) + (target(n, 1) - target(n - 1, 1)) * m;
+
+  let x = sx * 0.15 * amount;
+  let y = sy * 0.1 * amount;
+
+  // --- attention shift: ~1s of looking elsewhere, a few times a minute.
+  if (wander) {
+    const w = t / 4.4 + phase * 0.61;
+    const k = Math.floor(w);
+    const wu = w - k;
+    if (wu < 0.22 && hash01(k * 3.37 + seed) > 0.45) {
+      const env = Math.sin((wu / 0.22) * Math.PI);
+      x += (hash01(k * 7.91 + seed) - 0.5) * 2 * 0.42 * env * amount;
+      y += (hash01(k * 2.19 + seed) - 0.5) * 0.34 * env * amount;
+    }
+  }
+
+  return { x, y };
+}
+
+/**
  * Convert a composition-space point into a look direction for a character
  * standing at (cx, cy) — "look at the other character" without hand-tuning.
  */
@@ -308,13 +559,96 @@ export function lookAt(
   };
 }
 
+// --- arcs ------------------------------------------------------------------
+
+export type Pt = { x: number; y: number };
+
+export type Travel = {
+  x: number;
+  y: number;
+  /** Heading along the path, in degrees. 0 is straight right, -90 is up. */
+  angle: number;
+};
+
+/**
+ * Move between two marks *along an arc*. Nothing alive travels in a straight
+ * line, and a character sliding down a lerp is the single most obvious tell
+ * that a scene was positioned rather than animated.
+ *
+ * The arc bows to the left of the direction of travel — i.e. up, for a move to
+ * the right — which is the "thrown, not dragged" read. Negative `arc` sags
+ * instead, for something heavy or tired.
+ *
+ * @param u    0..1 along the move; feed it a raw `(frame - at) / dur`.
+ * @param arc  Bow height as a fraction of the distance. 0 is a straight line.
+ * @param bias <1 puts the peak of the arc early (a throw that loses height);
+ *             >1 late. 1 is a symmetric bow.
+ * @param ease Timing curve. Default `easeInOutSine`; use `gravity` for a fall.
+ */
+export function moveAlong(
+  from: Pt,
+  to: Pt,
+  u: number,
+  opts?: { arc?: number; bias?: number; ease?: (u: number) => number },
+): Travel {
+  const arc = opts?.arc ?? 0.16;
+  const bias = opts?.bias ?? 1;
+  const e = (opts?.ease ?? kidEase.easeInOutSine)(clamp01(u));
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist < 0.0001 || arc === 0) {
+    return {
+      x: from.x + dx * e,
+      y: from.y + dy * e,
+      angle: (Math.atan2(dy, dx) * 180) / Math.PI,
+    };
+  }
+  // Left-hand normal of the chord: for a rightward move this points up.
+  const nx = dy / dist;
+  const ny = -dx / dist;
+  const eb = bias === 1 ? e : Math.pow(Math.max(e, 1e-4), bias);
+  const off = arc * dist * Math.sin(Math.PI * eb);
+  // Heading: the ease factor cancels between the two terms, so the tangent is
+  // the chord plus the derivative of the bow. Cheap, and exact.
+  const slope =
+    arc *
+    dist *
+    Math.PI *
+    Math.cos(Math.PI * eb) *
+    (bias === 1 ? 1 : bias * Math.pow(Math.max(e, 1e-4), bias - 1));
+  return {
+    x: from.x + dx * e + nx * off,
+    y: from.y + dy * e + ny * off,
+    angle: (Math.atan2(dy + ny * slope, dx + nx * slope) * 180) / Math.PI,
+  };
+}
+
 // --- entrances & exits -----------------------------------------------------
 
 export type EntranceKind = "bounce" | "pop" | "slideLeft" | "slideRight";
 export type ExitKind = "zip" | "shrink" | "poof";
 
-export type Entrance = { at?: number; kind?: EntranceKind };
-export type Exit = { at: number; kind?: ExitKind; dir?: "left" | "right" | "up" };
+export type Entrance = {
+  at?: number;
+  kind?: EntranceKind;
+  /**
+   * Counter-move before the move: a hang-and-stretch before a `bounce` drops,
+   * a crouch before a `pop`. ~5 frames. On by default for those two — an
+   * entrance that starts at full speed on frame one has no weight.
+   *
+   * Off by default for the slides, where the character is still off frame
+   * during the anticipation and there is nothing to see.
+   */
+  anticipate?: boolean;
+};
+export type Exit = {
+  at: number;
+  kind?: ExitKind;
+  dir?: "left" | "right" | "up";
+  /** `zip`'s lean the wrong way before the launch. On by default. */
+  anticipate?: boolean;
+};
 
 export type Placement = {
   scaleX: number;
@@ -334,10 +668,19 @@ export const NO_PLACEMENT: Placement = {
   opacity: 1,
 };
 
+/** How far above the mark a `bounce` starts, in composition px. */
+const DROP_HEIGHT = 320;
+
 /**
- * Entrance transform. `bounce` drops in from above and squashes on landing —
- * the landing squash is the part that sells it, and it's why this returns
- * separate x/y scales instead of one number.
+ * Entrance transform, in three beats: anticipate, move, settle.
+ *
+ * `bounce` hangs a moment and stretches (anticipation), *accelerates* down
+ * under `gravity` rather than easing into the mark, then compresses on the
+ * frame it lands and rings out (follow-through). The landing squash is the
+ * part that sells it, and it's why this returns separate x/y scales.
+ *
+ * `pop` crouches small and wide before it springs, which is the same principle
+ * at a different scale.
  */
 export function entranceTransform(
   frame: number,
@@ -350,12 +693,14 @@ export function entranceTransform(
   const f = frame - at;
   if (f < 0) return { ...NO_PLACEMENT, opacity: 0, scaleX: 0, scaleY: 0 };
   const kind = spec.kind ?? "bounce";
-  const s = springFn(f, kind === "pop" ? 10 : 12, 0.7);
-  const land = Math.max(0, 1 - f / (fps * 0.55));
-  // Decaying squash right after the spring settles.
-  const wob = Math.sin(f * 0.55) * 0.16 * land * (kind === "bounce" ? 1 : 0.5);
-  const opacity = Math.min(1, f / 4);
-  if (kind === "slideLeft" || kind === "slideRight") {
+  const slide = kind === "slideLeft" || kind === "slideRight";
+  const anticipate = spec.anticipate ?? !slide;
+  // ~5 frames at 30fps. Longer reads as a stall, shorter as a glitch.
+  const lead = anticipate ? Math.max(2, Math.round(fps * 0.17)) : 0;
+  const opacity = kidEase.easeOutQuad(f / 4);
+
+  if (slide) {
+    const s = springFn(f, 12, 0.7);
     const dir = kind === "slideLeft" ? -1 : 1;
     return {
       scaleX: 1,
@@ -366,11 +711,74 @@ export function entranceTransform(
       opacity,
     };
   }
+
+  if (kind === "bounce") {
+    // Beat 1 — hang above the mark, stretching, drifting a touch higher.
+    if (f < lead) {
+      const u = f / lead;
+      const rise = kidEase.easeOutSine(u);
+      // Grows over the whole hang rather than popping: the anticipation *is*
+      // the hang and the stretch, and a scale pop on top of it reads as two
+      // entrances stacked.
+      const s = kidEase.easeOutQuad(u);
+      return {
+        scaleX: s * (1 - 0.05 * rise),
+        scaleY: s * (1 + 0.09 * rise),
+        dx: 0,
+        dy: -(DROP_HEIGHT + 44 * rise),
+        rotate: 0,
+        opacity,
+      };
+    }
+    // Beat 2 — the fall, accelerating.
+    const g = f - lead;
+    const fallDur = fps * 0.34;
+    const top = DROP_HEIGHT + (anticipate ? 44 : 0);
+    if (g < fallDur) {
+      const drop = kidEase.gravity(g / fallDur);
+      return {
+        scaleX: 1 - 0.07 * drop,
+        scaleY: 1 + 0.11 * drop,
+        dx: 0,
+        dy: -top * (1 - drop),
+        rotate: 0,
+        opacity,
+      };
+    }
+    // Beat 3 — impact, then ring out. Starts fully compressed, because that
+    // is the frame the feet hit.
+    const w = settleWave((g - fallDur) / (fps * 0.72), 1.35, 3.9);
+    return {
+      scaleX: 1 + 0.19 * w,
+      scaleY: 1 - 0.22 * w,
+      dx: 0,
+      dy: 0,
+      rotate: 0,
+      opacity,
+    };
+  }
+
+  // `pop` — crouch, then spring, then ring out.
+  if (f < lead) {
+    const s = 0.12 + 0.26 * kidEase.easeOutQuad(f / lead);
+    return {
+      scaleX: s * 1.18,
+      scaleY: s * 0.82,
+      dx: 0,
+      dy: 0,
+      rotate: 0,
+      opacity,
+    };
+  }
+  const g = f - lead;
+  const spr = springFn(g, 10, 0.7);
+  const s = anticipate ? 0.38 + 0.62 * spr : spr;
+  const w = settleWave(g / (fps * 0.6), 1.3, 4.2, -Math.PI / 2);
   return {
-    scaleX: s * (1 - wob),
-    scaleY: s * (1 + wob),
+    scaleX: s * (1 + 0.1 * w),
+    scaleY: s * (1 - 0.1 * w),
     dx: 0,
-    dy: kind === "bounce" ? -(1 - s) * 320 : 0,
+    dy: 0,
     rotate: 0,
     opacity,
   };
@@ -389,7 +797,8 @@ export function exitTransform(
   const dur = kind === "zip" ? fps * 0.4 : fps * 0.35;
   const u = Math.min(1, f / dur);
   // Anticipation: a small lean the *wrong* way before the launch.
-  const anticip = u < 0.32 ? Math.sin((u / 0.32) * Math.PI) : 0;
+  const anticip =
+    (spec.anticipate ?? true) && u < 0.32 ? Math.sin((u / 0.32) * Math.PI) : 0;
   const ease = u < 0.32 ? 0 : Math.pow((u - 0.32) / 0.68, 2.2);
   const dir = spec.dir === "left" ? -1 : spec.dir === "up" ? 0 : 1;
   if (kind === "zip") {
@@ -403,22 +812,30 @@ export function exitTransform(
     };
   }
   if (kind === "poof") {
+    // Swells, then collapses — the swell *is* the anticipation, so it is not
+    // gated on `anticipate`. The collapse accelerates; a linear one read as a
+    // shape being deleted rather than popping.
+    const gone = kidEase.easeInQuad(u);
     return {
-      scaleX: 1 + Math.sin(u * Math.PI) * 0.3 - u * 1,
-      scaleY: 1 + Math.sin(u * Math.PI) * 0.3 - u * 1,
+      scaleX: 1 + Math.sin(u * Math.PI) * 0.3 - gone,
+      scaleY: 1 + Math.sin(u * Math.PI) * 0.3 - gone,
       dx: 0,
-      dy: -u * 60,
-      rotate: u * 40,
-      opacity: 1 - u,
+      dy: -kidEase.easeOutQuad(u) * 60,
+      rotate: kidEase.easeOutQuad(u) * 40,
+      opacity: 1 - kidEase.easeInSine(u),
     };
   }
+  // `shrink` — used for a character receding, so the size decays *away* from
+  // the viewer rather than at a constant rate: he holds his presence for a
+  // beat and then goes. (Linear here read as a scale slider being dragged.)
+  const away = kidEase.easeInQuad(u);
   return {
-    scaleX: 1 - u,
-    scaleY: 1 - u,
+    scaleX: 1 - away,
+    scaleY: 1 - away,
     dx: 0,
-    dy: u * 40,
+    dy: kidEase.easeInQuad(u) * 40,
     rotate: 0,
-    opacity: 1 - u,
+    opacity: 1 - kidEase.easeInSine(u),
   };
 }
 

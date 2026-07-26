@@ -11,9 +11,12 @@ import {
   WordCard,
   kidOutline,
   kidTheme,
+  kidEase,
   kidType,
   lookAt,
+  moveAlong,
   type Emotion,
+  type EmotionInput,
 } from "../../lib/kid";
 import {
   DialogueAudio,
@@ -227,7 +230,10 @@ const PortraitScene: React.FC = () => {
           fill={0.82}
           clipboard
           look={{ x: 0.5, y: 0.2 }}
-          enter={{ at: 0, kind: "pop" }}
+          // `at` is the slot's own start, not 0: this scene swaps character at
+          // frame 80, so an entrance keyed to the scene start is already over
+          // before the character it belongs to is on screen.
+          enter={{ at: 80, kind: "pop" }}
         />
         {/* Tail on the side the speaker is on, and the bubble above her, so
             the tail points back at the character rather than into the sky. */}
@@ -246,32 +252,48 @@ const PortraitScene: React.FC = () => {
         // Sliding the shades down over the beat is the gag; it's one prop.
         shades={Math.max(0, Math.min(1, (local - 18) / 26))}
         look={{ x: -0.55, y: 0.35 }}
-        enter={{ at: 0, kind: "slideRight" }}
+        enter={{ at: 160, kind: "slideRight" }}
       />
       <SpeechBubble x={470} y={330} text="Watch this." tail="right" from={local + 40} />
     </>
   );
 };
 
-/** Every emotion in the table, on all three characters, 45 frames each. */
+/**
+ * Every emotion in the table, on all three characters, 45 frames each.
+ *
+ * Passed as an `EmotionCue` rather than a bare name, which is the point of the
+ * scene as a regression view: the faces *morph* between poses over 8 frames and
+ * settle, and the two non-lerpable mouths (amazed's O, scared's squiggle) flatten
+ * through a line on the way rather than swapping.
+ */
 const EmotionScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const step = Math.floor(frame / 45) % EMOTION_CYCLE.length;
+  const slot = Math.floor(frame / 45);
+  const step = slot % EMOTION_CYCLE.length;
   const emotion = EMOTION_CYCLE[step];
+  const cue: EmotionInput =
+    slot === 0
+      ? emotion
+      : {
+          emotion,
+          from: EMOTION_CYCLE[(step + EMOTION_CYCLE.length - 1) % EMOTION_CYCLE.length],
+          at: slot * 45,
+        };
   const t = frame / fps;
   return (
     <>
-      <Drip x={380} y={660} scale={1.35} emotion={emotion} phase={0} />
+      <Drip x={380} y={660} scale={1.35} emotion={cue} phase={0} />
       <Cloudia
         x={960}
         y={420}
         scale={1}
-        emotion={emotion}
+        emotion={cue}
         phase={2.2}
         fill={0.5 + 0.5 * Math.sin(t * 0.7)}
       />
-      <Sunny x={1560} y={620} scale={1.1} emotion={emotion} phase={4.1} smug={false} />
+      <Sunny x={1560} y={620} scale={1.1} emotion={cue} phase={4.1} smug={false} />
       <div
         style={{
           position: "absolute",
@@ -302,38 +324,56 @@ const BigWordScene: React.FC = () => (
   </>
 );
 
-/** Ocean beat: crowd of Blobbys in the water, Drip up front, waves rolling. */
-const SeaScene: React.FC = () => (
-  <>
-    <svg
-      width={WIDTH}
-      height={HEIGHT}
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      style={{ position: "absolute", inset: 0 }}
-    >
-      <BlobbyCrowd count={9} x={960} y={806} spread={1500} scale={0.7} />
-      <Blobby x={1650} y={520} scale={0.5} phase={2} mood="surprised" opacity={0.8} />
-    </svg>
-    <Drip
-      x={560}
-      y={560}
-      scale={1.3}
-      emotion="proud"
-      phase={0}
-      shadow={false}
-      look="right"
-      enter={{ at: 0, kind: "slideLeft" }}
-    />
-    <SpeechBubble
-      x={1180}
-      y={400}
-      text="One drop. Big job."
-      tail="left"
-      variant="thought"
-      from={22}
-    />
-  </>
-);
+/**
+ * Ocean beat: crowd of Blobbys in the water, Drip up front, waves rolling —
+ * and one drop lifting off along an arc, which is the review view for
+ * `moveAlong`. Note it is never at the halfway point of the straight line
+ * between its two marks; that is the entire principle.
+ */
+const SeaScene: React.FC = () => {
+  const frame = useCurrentFrame();
+  // `bias` under 1 puts the top of the arc early, so it climbs fast and drifts
+  // — the difference between "lifted" and "moved".
+  const lift = moveAlong(
+    { x: 1700, y: 700 },
+    { x: 1180, y: 250 },
+    (frame - 20) / 110,
+    { arc: 0.3, bias: 0.75, ease: kidEase.easeInOutSine },
+  );
+  return (
+    <>
+      <svg
+        width={WIDTH}
+        height={HEIGHT}
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        style={{ position: "absolute", inset: 0 }}
+      >
+        <BlobbyCrowd count={9} x={960} y={806} spread={1500} scale={0.7} />
+        <g transform={`translate(${lift.x} ${lift.y}) rotate(${lift.angle + 90})`}>
+          <Blobby x={0} y={0} scale={0.5} phase={2} mood="surprised" opacity={0.8} />
+        </g>
+      </svg>
+      <Drip
+        x={560}
+        y={560}
+        scale={1.3}
+        emotion="proud"
+        phase={0}
+        shadow={false}
+        look="right"
+        enter={{ at: 0, kind: "slideLeft" }}
+      />
+      <SpeechBubble
+        x={1180}
+        y={400}
+        text="One drop. Big job."
+        tail="left"
+        variant="thought"
+        from={22}
+      />
+    </>
+  );
+};
 
 export const KidDemoVideo: React.FC = () => {
   const { scenes } = timeline();

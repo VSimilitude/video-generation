@@ -39,6 +39,12 @@ export const Sunny: React.FC<SunnyProps> = (props) => {
   const spin = rig.frame * (props.raySpeed ?? 0.16) + rig.phase * 9;
   const shades = props.shades;
 
+  // Secondary action: the rays breathe with him — and, being the outermost
+  // thing on the character, they arrive last (`trail`, not `squash`). Long and
+  // short rays get opposite signs, so the silhouette flickers rather than
+  // pulsing as one disc.
+  const flare = rig.trail.dy * 2.6;
+
   // Face geometry has to be repeated by the sunglasses, so it lives here once.
   const faceY = 10;
   const faceSize = 1.62;
@@ -59,7 +65,7 @@ export const Sunny: React.FC<SunnyProps> = (props) => {
       <g transform={`rotate(${spin})`}>
         {Array.from({ length: RAYS }, (_, i) => {
           const long = i % 2 === 0;
-          const len = long ? 78 : 50;
+          const len = (long ? 78 : 50) + (long ? flare : -flare * 0.7);
           const half = long ? 26 : 21;
           return (
             <path

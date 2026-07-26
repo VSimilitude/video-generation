@@ -2,15 +2,17 @@ import React from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { kidTheme } from "./theme";
 import {
-  EMOTIONS,
   blinkAmount,
   combine,
   entranceTransform,
   exitTransform,
+  eyeLife,
   idleSquash,
   lookOffset,
   mouthAmplitude,
+  resolveEmotion,
   type Emotion,
+  type EmotionInput,
   type EmotionSpec,
   type Entrance,
   type Exit,
@@ -37,7 +39,14 @@ export type CharacterProps = {
   y: number;
   /** Size multiplier on the character's natural size. */
   scale?: number;
-  emotion?: Emotion;
+  /**
+   * A plain emotion name snaps to that face, exactly as it always has. Pass an
+   * `EmotionCue` (`{ emotion, from, at }`) instead and the face *morphs* over
+   * ~8 frames and settles — which is what you want every time, because a face
+   * that changes between two frames reads as a cut, not as a reaction. Scene
+   * helpers that know when a line starts should always emit the cue form.
+   */
+  emotion?: EmotionInput;
   /** True while this character's narration turn is playing (drives the mouth). */
   speaking?: boolean;
   look?: LookDirection;
@@ -51,6 +60,12 @@ export type CharacterProps = {
   flip?: boolean;
   /** 0 turns breathing off; 1 default; >1 for a bouncier beat. */
   idle?: number;
+  /**
+   * Micro-saccades and (when no `look` is staged) occasional glances away.
+   * 0 turns the eyes to stone; 1 is the default. Raise it for a character who
+   * is meant to look shifty, drop it for one holding a stare.
+   */
+  eyeLife?: number;
   enter?: Entrance;
   exit?: Exit;
   /** Stacking against other characters. */
@@ -69,9 +84,23 @@ export type Rig = {
   mouthShape: MouthShape;
   look: { x: number; y: number };
   squash: Squash;
+  /**
+   * The same breath a few frames in the past. Anything hanging off the body —
+   * arms, a bow tie, a hat — should ride this instead of `squash`, so it
+   * arrives late and reads as being *carried* rather than welded on. That lag
+   * is the whole of the follow-through principle.
+   */
+  trail: Squash;
   placement: Placement;
   speaking: boolean;
+  /** 1 normally; dips to 0 mid-morph between two different mouth shapes. */
+  shapeFade: number;
+  /** Degrees of damped head follow-through after an emotion change. */
+  headSettle: number;
 };
+
+/** How far behind the body accessories trail, in frames. */
+const TRAIL_FRAMES = 4;
 
 /**
  * Read the current frame into a pose. Pure apart from Remotion's frame/fps —
@@ -81,15 +110,21 @@ export function useRig(props: CharacterProps): Rig {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const phase = props.phase ?? 0;
-  const emo = EMOTIONS[props.emotion ?? "neutral"];
   const speaking = props.speaking ?? false;
+  const pose = resolveEmotion(props.emotion, frame, fps);
+  const emo = pose.spec;
 
   const blink = blinkAmount(frame, fps, phase);
   const lid = emo.lidBase + (1 - emo.lidBase) * blink;
 
-  const mouth = speaking
-    ? Math.max(emo.mouthOpen * 0.35, mouthAmplitude(frame, fps, phase))
-    : emo.mouthOpen;
+  // While a mouth *shape* is morphing, the opening closes to nothing at the
+  // crossover: both shapes pass through a flat line rather than swapping.
+  // Not while speaking — there the shape is the talking curve either way.
+  const shapeFade = speaking ? 1 : pose.shapeFade;
+  const mouth =
+    (speaking
+      ? Math.max(emo.mouthOpen * 0.35, mouthAmplitude(frame, fps, phase))
+      : emo.mouthOpen) * shapeFade;
   // A talking mouth has to be able to close, so the "round" (amazed) and
   // "wobble" (scared) shapes give way to the parametric curve while speaking.
   const mouthShape: MouthShape = speaking ? "curve" : emo.mouthShape;
@@ -99,6 +134,13 @@ export function useRig(props: CharacterProps): Rig {
   );
   const leave = exitTransform(frame, fps, props.exit);
 
+  // Staged looks win; eye life is a small offset on top of wherever the scene
+  // pointed them. A character with no staged look is the only one allowed to
+  // glance away on its own.
+  const aim = lookOffset(props.look);
+  const life = eyeLife(frame, fps, phase, props.eyeLife ?? 1, props.look === undefined);
+  const idle = props.idle ?? 1;
+
   return {
     frame,
     fps,
@@ -107,10 +149,16 @@ export function useRig(props: CharacterProps): Rig {
     lid,
     mouth,
     mouthShape,
-    look: lookOffset(props.look),
-    squash: idleSquash(frame, fps, phase, props.idle ?? 1),
+    look: {
+      x: Math.max(-1, Math.min(1, aim.x + life.x)),
+      y: Math.max(-1, Math.min(1, aim.y + life.y)),
+    },
+    squash: idleSquash(frame, fps, phase, idle),
+    trail: idleSquash(frame - TRAIL_FRAMES, fps, phase, idle),
     placement: combine(enter, leave),
     speaking,
+    shapeFade,
+    headSettle: pose.settle,
   };
 }
 
@@ -245,7 +293,10 @@ export const Face: React.FC<FaceProps> = ({
   const { emo } = rig;
   return (
     <g
-      transform={`translate(${x} ${y}) scale(${size}) rotate(${emo.tilt})`}
+      // The head keeps moving for a few frames after the expression lands
+      // (`headSettle`) — a face that stops dead on the new pose reads as a
+      // swapped sprite.
+      transform={`translate(${x} ${y}) scale(${size}) rotate(${emo.tilt + rig.headSettle})`}
       style={{ transformBox: "view-box" }}
     >
       <Blush rig={rig} color={blushColor} strength={blushStrength} />
@@ -366,7 +417,7 @@ const Brow: React.FC<{
 };
 
 const Mouth: React.FC<{ rig: Rig; ink: string }> = ({ rig, ink }) => {
-  const { emo, mouth, mouthShape } = rig;
+  const { emo, mouth, mouthShape, shapeFade } = rig;
   const w = emo.mouthWidth;
   const curve = emo.mouthCurve;
   const tilt = emo.mouthTilt;
@@ -375,7 +426,9 @@ const Mouth: React.FC<{ rig: Rig; ink: string }> = ({ rig, ink }) => {
 
   if (mouthShape === "round") {
     const rx = w * 0.4;
-    const ry = w * 0.4 * (0.55 + 0.8 * mouth);
+    // `shapeFade` collapses the O towards a line while an emotion is morphing
+    // into or out of it, so the swap at the midpoint has nothing to see.
+    const ry = w * 0.4 * (0.55 + 0.8 * mouth) * (0.12 + 0.88 * shapeFade);
     return (
       <g transform={`translate(0 ${y + ry * 0.25})`}>
         <ellipse rx={rx} ry={ry} fill={kidTheme.mouthDark} stroke={ink} strokeWidth={5.5} />
@@ -393,10 +446,13 @@ const Mouth: React.FC<{ rig: Rig; ink: string }> = ({ rig, ink }) => {
     // A squiggle mouth reads as "nervous" instantly — no other cue needed.
     const n = 4;
     const step = w / n;
+    // The squiggle flattens to a straight line as an emotion morphs away from
+    // it — that line is the shape both a curve and an O can grow out of.
+    const bump = 8 * shapeFade;
     let d = `M ${-w / 2} ${y}`;
     for (let i = 0; i < n; i++) {
       const x0 = -w / 2 + step * i;
-      d += ` Q ${x0 + step * 0.5} ${y + (i % 2 === 0 ? -8 : 8)} ${x0 + step} ${y}`;
+      d += ` Q ${x0 + step * 0.5} ${y + (i % 2 === 0 ? -bump : bump)} ${x0 + step} ${y}`;
     }
     return <path d={d} stroke={ink} strokeWidth={6} strokeLinecap="round" fill="none" />;
   }
@@ -440,4 +496,4 @@ const Mouth: React.FC<{ rig: Rig; ink: string }> = ({ rig, ink }) => {
 };
 
 /** Re-exported so a character file needs one import for its types. */
-export type { Emotion, LookDirection, Entrance, Exit };
+export type { Emotion, EmotionInput, LookDirection, Entrance, Exit };

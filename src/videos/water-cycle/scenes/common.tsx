@@ -12,6 +12,7 @@ import {
   Cloudia,
   KidBackdrop,
   SpeechBubble,
+  EMOTION_EASE,
   Sunny,
   WordCard,
   kidOutline,
@@ -22,6 +23,7 @@ import {
   lookAt,
   mixHex,
   type Emotion,
+  type EmotionInput,
   type KidBackdropProps,
   type LookDirection,
   type SkyVariant,
@@ -231,6 +233,11 @@ export function useLineKey(scene: TimedScene): string | null {
  * a line, so a character has to settle into a face before they open it. For
  * the same reason: never map a line to `scared`. Put `scared` in the gap
  * between two lines instead (see Scene 9).
+ *
+ * Returns an `EmotionCue`, not a bare name: it knows both the face being left
+ * and the frame the change lands on, which is exactly what the rig needs to
+ * *morph* between the two instead of cutting (see `resolveEmotion`). Pass the
+ * result straight to `emotion={…}`; nothing else changes.
  */
 export function useEmotion(
   scene: TimedScene,
@@ -238,16 +245,29 @@ export function useEmotion(
   byKey: Record<string, Emotion>,
   resting: Emotion = "happy",
   lead = 8,
-): Emotion {
+): EmotionInput {
   const frame = useCurrentFrame();
   let current = resting;
+  let previous = resting;
+  let at = -1;
   for (const turn of scene.turns ?? []) {
     if (turn.speaker !== speaker) continue;
     const emotion = byKey[lineKeyOf(turn)];
     if (!emotion) continue;
-    if (frame >= turn.from - lead) current = emotion;
+    if (frame < turn.from - lead) continue;
+    // Two mapped lines with the same face are not a change: the morph (and the
+    // settle it leaves behind) belongs to the frame the face actually moved.
+    if (emotion !== current) {
+      previous = current;
+      at = turn.from - lead;
+    }
+    current = emotion;
   }
-  return current;
+  // The morph fits inside the lead, so the face is settled by the time the
+  // line opens the mouth — a scene that asked for a *short* lead (a held beat)
+  // still gets a short change rather than one running under its own line.
+  const frames = Math.min(EMOTION_EASE, Math.max(4, lead));
+  return at < 0 ? current : { emotion: current, from: previous, at, frames };
 }
 
 /**
