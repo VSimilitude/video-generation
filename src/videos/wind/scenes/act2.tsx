@@ -1444,8 +1444,11 @@ const GapWorld: React.FC<{
             inside it. */}
         {hole > 0.01 ? (
           <g transform={`translate(${GAP.x} ${GAP.y})`} opacity={hole}>
-            <path d={holePath(GAP_R)} fill="#0e2c1c" opacity={0.46} />
-            <path d={holePath(GAP_R * 0.8)} fill="#082013" opacity={0.3} />
+            {/* Kept light on purpose (orchestrator review): at 0.46/0.30 the
+                stacked fills read as an ink blot, not an absence — a paused
+                frame is what a held beat *is*, and this one holds 1.5s. */}
+            <path d={holePath(GAP_R)} fill="#0e2c1c" opacity={0.24} />
+            <path d={holePath(GAP_R * 0.8)} fill="#082013" opacity={0.14} />
             <path
               d={holePath(GAP_R)}
               fill="none"
