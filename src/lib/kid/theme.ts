@@ -48,6 +48,19 @@ export const kidTheme = {
   waterDeep: "#0f6ba3",
   shine: "#ffffff",
 
+  // --- air / Puff ---------------------------------------------------------
+  // Puff is drawn at 25–100% opacity across episode two, so his palette is
+  // built for the *low* end: a pale fill that reads as vapour, a face core
+  // light enough to anchor the eyes against grass or sky, and an edge dark
+  // enough to survive both. `airEdge` is deliberately a mid blue rather than
+  // `ink` — a navy outline at 25% went muddy against grass.
+  air: "#dff0ff",
+  airLight: "#f4fcff",
+  airEdge: "#4a86b4",
+  airDeep: "#2f6690",
+  /** Cool air rushing in to fill a gap (Act Two). */
+  airCool: "#9ec9e8",
+
   // --- sun / Sunny --------------------------------------------------------
   sun: "#ffc93c",
   sunLight: "#ffe680",

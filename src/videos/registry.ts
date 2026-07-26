@@ -43,6 +43,13 @@ import {
   HEIGHT as WATER_CYCLE_HEIGHT,
 } from "./water-cycle/Video";
 import {
+  WindVideo,
+  timeline as windTimeline,
+  FPS as WIND_FPS,
+  WIDTH as WIND_WIDTH,
+  HEIGHT as WIND_HEIGHT,
+} from "./wind/Video";
+import {
   KidDemoVideo,
   timeline as kidDemoTimeline,
   FPS as KID_DEMO_FPS,
@@ -113,6 +120,17 @@ export const VIDEOS: VideoEntry[] = [
     width: WATER_CYCLE_WIDTH,
     height: WATER_CYCLE_HEIGHT,
     durationInFrames: waterCycleTimeline().durationInFrames,
+  },
+  {
+    id: "PuffWind",
+    title: "Puff and the Kite That Wouldn't Fly",
+    description:
+      "Where does wind come from? A very small, very invisible hero finds out. Episode two of Little Big World.",
+    component: WindVideo,
+    fps: WIND_FPS,
+    width: WIND_WIDTH,
+    height: WIND_HEIGHT,
+    durationInFrames: windTimeline().durationInFrames,
   },
   {
     id: "KidDemo",

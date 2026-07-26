@@ -100,7 +100,8 @@ export type Emotion =
   | "scared"
   | "proud"
   | "grumpy"
-  | "amazed";
+  | "amazed"
+  | "sad";
 
 export type LookDirection =
   | "camera"
@@ -225,6 +226,29 @@ export const EMOTIONS: Record<Emotion, EmotionSpec> = {
     mouthWidth: 48,
     mouthCurve: -17,
     mouthTilt: 4,
+  },
+  // Added for episode two: Puff apologises nine times in Act One and the kit
+  // had no face for it. `grumpy` reads as cross and `scared` cannot be mapped
+  // to a line at all (its squiggle mouth hard-cuts when the mouth opens), so
+  // there was nothing between "fine" and "frightened".
+  //
+  // The whole expression is the brow: inner ends *up* is the one shape a
+  // six-year-old reads as sad rather than as tired. Half-lids and a small
+  // downturned mouth do the rest, and the shape stays `curve` so it can be
+  // mapped to a spoken line and lerped out of like any other face.
+  sad: {
+    ...BASE,
+    browRaise: -2,
+    browAngle: -15,
+    eyeScaleX: 1.02,
+    eyeScaleY: 1.06,
+    lidBase: 0.2,
+    pupilScale: 1.08,
+    mouthWidth: 46,
+    mouthCurve: -15,
+    mouthOpen: 0,
+    blush: 0.12,
+    tilt: 3,
   },
   amazed: {
     ...BASE,

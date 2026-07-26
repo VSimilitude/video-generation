@@ -14,6 +14,7 @@ export { KidBackdrop, type KidBackdropProps } from "./KidBackdrop";
 export { SpeechBubble, MAX_BUBBLE_WORDS, type SpeechBubbleProps } from "./SpeechBubble";
 export { WordCard, type WordCardProps } from "./WordCard";
 export { Drip, type DripProps } from "./characters/Drip";
+export { Puff, type PuffProps, type PuffPose } from "./characters/Puff";
 export { Sunny, type SunnyProps } from "./characters/Sunny";
 export { Cloudia, type CloudiaProps } from "./characters/Cloudia";
 export { Blobby, BlobbyCrowd, type BlobbyProps } from "./characters/Blobby";
