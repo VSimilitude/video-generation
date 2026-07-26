@@ -19,7 +19,7 @@ import {
   Leaf,
   PHASE,
   PUFF_OPACITY,
-  SkyBlend,
+  PaintedSky,
   SoftShade,
   WideLayer,
   heldBeat,
@@ -100,7 +100,7 @@ const GrassScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={0} />
       <Camera cam={{ x: 960, y: 700, zoom, dy }}>
         <GrassWorld ground={GROUND} wind={ACT_WIND} />
         <Puff
@@ -252,7 +252,7 @@ const CreatureBeat: React.FC<{
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={1.1} />
       <Camera cam={cam}>
         <GrassWorld ground={GROUND} wind={ACT_WIND} seed={creature === "leaf" ? 3 : 1} />
         {/* The stem the creature is sitting on. */}
@@ -418,7 +418,7 @@ const NothingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={1} />
+      <PaintedSky bg="grass_low" phase={2.2} />
       <Camera cam={{ x: S6_X, y: 620, zoom: 1.06 }}>
         <GrassWorld ground={S6_GROUND} wind={ACT_WIND} seed={5} />
         {/* Two blades close on either side, and the deep shade between them.
@@ -508,7 +508,7 @@ const DandelionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={3.3} />
       {/* The one place in Act One where the grass moves: it is being blown, by
           him, which is the entire proof. */}
       <GrassWorld
@@ -705,7 +705,7 @@ const YourHandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={4.4} />
       {/* The window: two towering blades left and right and nothing between
           them but sky. */}
       <WideLayer>
@@ -814,7 +814,7 @@ const BalloonScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={5.5} />
       <GrassWorld ground={GROUND} wind={ACT_WIND} seed={7} />
       <Balloon x={S9_BALLOON.x} y={balloonY} scale={balloonScale} taut={sitting} />
       {/* Puff inside, squashed to the balloon's shape. The camera does the
@@ -1010,7 +1010,7 @@ const BigWordAirScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
  */
 const BalloonStill: React.FC = () => (
   <AbsoluteFill>
-    <SkyBlend from="day" to="day" u={0} clouds={2} />
+    <PaintedSky bg="grass_low" phase={5.5} />
     <GrassWorld ground={GROUND} wind={ACT_WIND} seed={7} />
     <Balloon x={S9_BALLOON.x} y={640} scale={0.86} taut />
     <Camera cam={{ x: S9_BALLOON.x, y: 640, zoom: 0.755, zoomY: 1.14 }}>
@@ -1086,7 +1086,7 @@ const NotSorryScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={3} />
+      <PaintedSky bg="grass_low" phase={6.6} />
       <GrassWorld ground={GROUND} wind={ACT_WIND} seed={9} />
       {/* A hair of glow behind him as he draws up. Not a halo — the light in
           the grass, agreeing with him for a second. */}

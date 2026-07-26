@@ -7,6 +7,9 @@
 //   dist-site/narration/   copied from public/narration (the compositions load
 //                          these via staticFile(), resolved relative to the
 //                          page — so they must ship alongside index.html)
+//   dist-site/backgrounds/ same, for the painted backdrops (public/backgrounds)
+//                          — a missing plate is a blank world on the phone the
+//                          episode is actually reviewed on
 //   dist-site/.nojekyll    GitHub Pages: serve files/dirs as-is
 //
 // Node-only (no shell built-ins) so it works the same on Linux/macOS/Windows.
@@ -20,6 +23,8 @@ const outDir = path.join(root, "dist-site");
 const bundle = path.join(outDir, "bundle.js");
 const narrationSrc = path.join(root, "public", "narration");
 const narrationOut = path.join(outDir, "narration");
+const backgroundsSrc = path.join(root, "public", "backgrounds");
+const backgroundsOut = path.join(outDir, "backgrounds");
 
 async function exists(p) {
   try {
@@ -55,6 +60,19 @@ if (await exists(narrationSrc)) {
   );
 }
 
+// Replace rather than merge, for the same reason as the narration above.
+await rm(backgroundsOut, { recursive: true, force: true });
+if (await exists(backgroundsSrc)) {
+  await cp(backgroundsSrc, backgroundsOut, {
+    recursive: true,
+    filter: (src) => !path.basename(src).startsWith("."),
+  });
+} else {
+  console.warn(
+    "public/backgrounds not found — painted scenes will render empty. Run `npm run backgrounds`.",
+  );
+}
+
 await writeFile(path.join(outDir, ".nojekyll"), "");
 
 const { size } = await stat(bundle);
@@ -63,7 +81,13 @@ const slugs = (await exists(narrationOut))
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
   : [];
+const bgSlugs = (await exists(backgroundsOut))
+  ? (await readdir(backgroundsOut, { withFileTypes: true }))
+      .filter((e) => e.isDirectory())
+      .map((e) => e.name)
+  : [];
 console.log(
   `dist-site ready: bundle.js (${Math.round(size / 1024)} kB), index.html, .nojekyll` +
-    (slugs.length ? `, narration/{${slugs.join(", ")}}` : ""),
+    (slugs.length ? `, narration/{${slugs.join(", ")}}` : "") +
+    (bgSlugs.length ? `, backgrounds/{${bgSlugs.join(", ")}}` : ""),
 );

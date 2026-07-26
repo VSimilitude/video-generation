@@ -11,6 +11,11 @@ export * from "./theme";
 export * from "./rig";
 export { CharacterFrame, Face, useRig, type CharacterProps, type Rig } from "./Character";
 export { KidBackdrop, type KidBackdropProps } from "./KidBackdrop";
+export {
+  KidPaintedBackdrop,
+  KidContactShadow,
+  type KidPaintedBackdropProps,
+} from "./PaintedBackdrop";
 export { SpeechBubble, MAX_BUBBLE_WORDS, type SpeechBubbleProps } from "./SpeechBubble";
 export { WordCard, type WordCardProps } from "./WordCard";
 export { Drip, type DripProps } from "./characters/Drip";

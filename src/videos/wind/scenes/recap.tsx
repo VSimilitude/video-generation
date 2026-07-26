@@ -17,7 +17,7 @@ import {
   Camera,
   PHASE,
   PUFF_OPACITY,
-  SkyBlend,
+  PaintedSky,
   WIDE,
   WideLayer,
   heldBeat,
@@ -384,7 +384,7 @@ const AllFourScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ opacity: 1 - night }}>
-        <SkyBlend from="day" to="day" u={0} clouds={0} />
+        <PaintedSky bg="sky_recap" phase={0.7} />
         <Globe cx={960} cy={706} r={344} />
         <div
           style={{
@@ -859,7 +859,7 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="sky_recap" phase={1.8} />
       <AbsoluteFill
         style={{
           background: `linear-gradient(180deg, #0f6fc4 0%, #2a9fe0 62%, #7ed0f5 100%)`,

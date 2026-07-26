@@ -26,8 +26,8 @@ import {
   KidSilhouette,
   PHASE,
   PUFF_OPACITY,
+  PaintedSky,
   RuleStamp,
-  SkyBlend,
   SoftShade,
   Thermometer,
   WideLayer,
@@ -402,7 +402,7 @@ const SunnyAgainScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="sky_gold" phase={0.4} />
       <Camera cam={cam}>
         <Hill wind={STILL_AIR} crest={640} />
         <Sunny
@@ -599,7 +599,7 @@ const RockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={1} />
+      <PaintedSky bg="sky_gold" phase={1.5} />
       <Camera cam={cam}>
         <SunBeams strength={beams} />
         <SunnyGround ground={S13_GROUND} warm={heat} />
@@ -1237,7 +1237,7 @@ const UpScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={3} />
+      <PaintedSky bg="sky_high" phase={2.6} />
       <RisingWorld rise={rise} grassWind={grassWind} showGrass={rise < 1400} avoidX={px} />
       <WarmCrowd opacity={Math.min(1, Math.max(0, (frame - LIFT_AT + 20) / 40))} />
       {/* The push of air that puts him up there. */}
@@ -1310,7 +1310,7 @@ const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={3} />
+      <PaintedSky bg="sky_high" phase={3.7} />
       <RisingWorld rise={rise} grassWind={STILL_AIR} showGrass={false} />
       <WarmCrowd />
       <RuleStamp text="WARM AIR RISES" from={stampAt} y={330} tilt={-3.5} />
@@ -1503,7 +1503,7 @@ const BigEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={4.8} />
       <Camera cam={cam}>
         <GapWorld hole={1} wave={0} wind={STILL_AIR} />
         {/* Blades close to the lens on either side, so the gap sits *inside*
@@ -1601,7 +1601,7 @@ const FwooshScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={5.9} />
       <GapWorld hole={Math.max(0, hole)} wave={wave} wind={wind} />
       {/* Cool air, pouring in *sideways* from both sides of frame. Direction is
           the whole pedagogy of this scene: half a wind is the warm air going
@@ -1815,7 +1815,7 @@ const RushStill: React.FC = () => {
   const { fps } = useVideoConfig();
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="grass_low" phase={5.9} />
       <GapWorld hole={0} wave={1} wind={0.7} />
       <CoolRush from={0} frame={frame + 300} fps={fps} />
     </AbsoluteFill>
@@ -1914,7 +1914,7 @@ const AmIWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={1} />
+      <PaintedSky bg="sky_high" phase={0.9} />
       <Camera cam={cam}>
         <Hill wind={0.5} crest={880} />
         {/* The sunlit slope the warm air is coming off. Without it the circuit
@@ -2057,7 +2057,7 @@ const SunnyCorrectScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={1} />
+      <PaintedSky bg="sky_gold" phase={2.0} />
       {/* Maximum brightness: the whole frame is lit from his side. */}
       <AbsoluteFill
         style={{
@@ -2344,7 +2344,7 @@ const NotSorryScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={3} />
+      <PaintedSky bg="sky_high" phase={3.1} />
       {/* Open sky, and a long way down: the hill he lifted off is a pale line
           at the bottom of frame and nothing else is in the shot. */}
       <WideLayer opacity={0.5}>

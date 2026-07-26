@@ -11,6 +11,9 @@ change in `docs/LEARNINGS.md`, and fold style conclusions into
 - `src/videos/<slug>/` — one directory per video:
   - `narration.mjs` — the narration script (text lines + voice/speed)
   - `narrationManifest.ts` — GENERATED clip paths + exact durations
+  - `backgrounds.mjs` — painted-background prompts + the episode's style
+    anchor (kids' series; optional)
+  - `backgroundManifest.ts` — GENERATED image paths
   - `Video.tsx` — the composition (exports the component, a `timeline()`
     helper, and FPS/WIDTH/HEIGHT)
 - `src/lib/` — shared code that has earned its way in (theme, audio-driven
@@ -23,9 +26,18 @@ change in `docs/LEARNINGS.md`, and fold style conclusions into
   phone); `src/site/registry.ts` lists the videos, one entry each.
 - `scripts/generate-narration.mjs` — build-time Kokoro TTS for all videos,
   with per-line caching (only changed lines re-synthesize).
+- `scripts/generate-backgrounds.mjs` — build-time painted backdrops via
+  Replicate (flux-schnell), same shape as the TTS generator: per-prompt
+  caching, generated manifest, output committed. Needs `REPLICATE_API_TOKEN`
+  in `.env` only when a prompt actually changes.
 - `site/index.html` + `scripts/build-site.mjs` — static shell and asset copy
-  for `npm run site` (bundle, index.html, `narration/`, `.nojekyll`).
+  for `npm run site` (bundle, index.html, `narration/`, `backgrounds/`,
+  `.nojekyll`).
 - `public/narration/<slug>/` — generated audio (referenced via `staticFile`).
+- `public/backgrounds/<slug>/` — generated painted backdrops, `<key>.webp`
+  (also via `staticFile`). Committed, like the audio: a checkout renders
+  identically without an API key. Never converted — Remotion's ffmpeg has no
+  webp decoder; Chrome decodes them natively for both studio and render.
 - `out/` — rendered videos.
 - `docs/` — PROCESS.md (workflow), STYLE.md (style guide), LEARNINGS.md
   (per-video retro log).
@@ -36,6 +48,10 @@ change in `docs/LEARNINGS.md`, and fold style conclusions into
 npm run narration                    # (re)generate TTS for all videos
 npm run narration -- --video <slug>  # just one video
 npm run narration -- --audition <slug>:<lineKey> <outDir>  # voice audition
+npm run backgrounds                     # (re)generate changed background art
+npm run backgrounds -- --video <slug>   # just one video
+npm run backgrounds -- --video <slug> --only <key> --force   # re-roll one plate
+npm run backgrounds -- --video <slug> --dry-run              # print prompts only
 npm run studio                       # Remotion studio (preview)
 npm run site                         # build the web player into dist-site/
 npm run deploy                       # build + push dist-site to gh-pages
@@ -55,5 +71,8 @@ npm run typecheck
   composition automatically.
 - Spell out initialisms in narration text ("U R", not "UR") so the voice
   reads them as letters.
+- Painted backgrounds are scenery only. Anything that moves, gets touched, or
+  has to line up with a character's feet stays SVG on top of the plate — see
+  the kids' section of `docs/STYLE.md`.
 - After finishing a video: add a dated entry to `docs/LEARNINGS.md` and
   update `docs/STYLE.md` with anything that should become a rule.

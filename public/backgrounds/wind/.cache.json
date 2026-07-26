@@ -1,0 +1,56 @@
+{
+  "hill_day": {
+    "hash": "e6d53b8cafb33669",
+    "outFile": "hill_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "an enormous open blue summer sky filling the top four fifths of the frame with a few soft white clouds, and along the very bottom edge a low line of soft hazy distant green hills, seen from a high vantage point, no foreground, no near hill, simple uncluttered composition, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "grass_low": {
+    "hash": "5b66c57e5ba0e059",
+    "outFile": "grass_low.webp",
+    "aspectRatio": "16:9",
+    "prompt": "looking up from ground level in a meadow, the top four fifths of the frame is a bright blue morning sky with soft white clouds, and across the very bottom edge one narrow band of far-away green meadow painted completely out of focus, blurred and hazy with no individual blades of grass and no detail at all, empty uncluttered foreground, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "sky_gold": {
+    "hash": "7183fb8334c3f35e",
+    "outFile": "sky_gold.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a bright blue summer sky filling most of the frame with warm golden sunlight spilling in from the upper left, soft white clouds tinted gold along their tops, a low band of sunlit green meadow across the bottom edge, no sun disc in the picture, not a sunset, no mountains, wide open middle of frame, simple uncluttered composition, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "sky_high": {
+    "hash": "c8ebaaf479bcd1f5",
+    "outFile": "sky_high.webp",
+    "aspectRatio": "16:9",
+    "prompt": "high above the countryside looking out across the sky, soft rounded clouds at eye level in the lower half, tiny soft green and yellow patchwork fields far below through the haze, huge clear pale blue sky in the upper half, airy and light, simple uncluttered composition, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "beach_wide": {
+    "hash": "d5de6b7036154a44",
+    "outFile": "beach_wide.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide empty sandy beach seen from low down, softly painted pale gold sand with brush texture across the bottom third, no footprints, no tracks, no shells, no seaweed, calm blue sea meeting the sky in a straight horizon just below the middle of the frame, big open sky above with a few soft clouds, simple uncluttered composition, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "bay": {
+    "hash": "16a6c6168610ff21",
+    "outFile": "bay.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a calm sunlit blue bay seen from the shore, gentle open water filling the lower half with soft painted ripples, a low soft green headland far away on the right horizon, no boats, big open sky above with a few soft clouds, simple uncluttered composition, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "headland_turbines": {
+    "hash": "f0920879f5fa454a",
+    "outFile": "headland_turbines.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a broad open green headland ridge above a calm blue sea, seen from slightly below, a smooth empty grassy slope rising across the bottom right, the open sea and a soft distant coastline on the left, the hilltop completely bare with nothing standing on it, no buildings, no poles, no masts, enormous open sky above, simple uncluttered composition, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "country_fields": {
+    "hash": "16fd1104fc754283",
+    "outFile": "country_fields.webp",
+    "aspectRatio": "16:9",
+    "prompt": "rolling green summer countryside seen from a low hillside, soft distant hedgerows and pale yellow fields receding to a far horizon in the lower third, smooth empty green slope in the foreground, warm hazy light, big open sky above with soft clouds, simple uncluttered composition, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  },
+  "sky_recap": {
+    "hash": "f42f1932af5347bc",
+    "outFile": "sky_recap.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a plain soft blue summer sky filling the whole frame, a few small gentle rounded clouds near the edges, completely empty through the middle of the frame, no ground, no horizon, very simple and calm, background art for a preschool animated series, soft gouache painting, visible brush texture, sunny morning under a clear cyan blue sky, soft rounded white cumulus clouds, fresh saturated yellow-greens, gentle airbrushed shading, storybook, no characters, no people, no animals, no text, no watermark"
+  }
+}

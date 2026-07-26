@@ -4,6 +4,7 @@ import {
   Freeze,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -12,6 +13,8 @@ import {
   Drip,
   Face,
   KidBackdrop,
+  KidContactShadow,
+  KidPaintedBackdrop,
   Puff,
   SpeechBubble,
   Sunny,
@@ -28,9 +31,10 @@ import {
   useRig,
   type Emotion,
   type EmotionInput,
+  type KidPaintedBackdropProps,
   type LookDirection,
-  type SkyVariant,
 } from "../../../lib/kid";
+import { BACKGROUNDS, type BackgroundKey } from "../backgroundManifest";
 import {
   isSpeaking,
   useSpeaking,
@@ -906,6 +910,26 @@ function hillPath(crest: number, dy: number): string {
  * laziness: the episode's premise is that there is no wind today, and a hill of
  * gently waving grass would contradict the narration in the first ten seconds.
  */
+/**
+ * Scenery greens, sampled off the painted plates rather than taken from
+ * `kidTheme`. Any SVG ground that shares an edge with a plate uses these.
+ *
+ * `kidTheme.grass` (#5ccc63) is a *blue*-green, and against a gouache plate
+ * whose meadows average #a6c013 it read as a different show's hill pasted onto
+ * this one's sky. The characters keep the theme palette — nothing green is a
+ * character in these two scenes — and the scenery matches the painting. This
+ * is the palette-clash failure the retrofit was watching for, and it is worth
+ * checking on any surface that shares an edge with a plate.
+ */
+export const PAINTED_GREEN = {
+  /** Sunlit grass, as the plates paint it. */
+  lit: "#9dbf2a",
+  /** The shaded side of a slope. */
+  shade: "#6d9418",
+  /** Tufts, hedges, tree crowns — the darkest green in the set. */
+  deep: "#5d8214",
+} as const;
+
 export const Hill: React.FC<{ wind?: number; crest?: number }> = ({
   wind = 0,
   crest = 640,
@@ -915,12 +939,14 @@ export const Hill: React.FC<{ wind?: number; crest?: number }> = ({
   const t = frame / fps;
   return (
     <WideLayer>
-      {/* Far hills, for depth — behind the one anybody stands on. */}
-      <path d={hillPath(crest + 210, 0)} fill="#8ddc8a" opacity={0.8} />
-      <path d={hillPath(crest + 96, 0)} fill="#77d47c" opacity={0.9} />
-      {/* The hill itself. `hillY` is this line. */}
-      <path d={hillPath(crest, 0)} fill={kidTheme.grass} />
-      <path d={hillPath(crest, 190)} fill={kidTheme.grassDark} opacity={0.35} />
+      {/* The far hills that used to be here (two flat shapes at crest+96 and
+          crest+210) are in `hill_day.webp` now — the plate is panned up so its
+          distant ridge sits just above this crest. What cannot come from the
+          plate is the hill anybody *stands* on: `hillY` is a load-bearing
+          function (the kid's feet, the kite's landing, Scene 31's whole frame
+          story), so the near hill stays drawn. */}
+      <path d={hillPath(crest, 0)} fill={PAINTED_GREEN.lit} />
+      <path d={hillPath(crest, 190)} fill={PAINTED_GREEN.shade} opacity={0.35} />
       {/* Tufts along the crest, in two sizes so the surface has a texture and
           not a fringe. Perfectly still at wind 0 — "unnaturally still" is a
           staging note, not a mood. */}
@@ -933,7 +959,7 @@ export const Hill: React.FC<{ wind?: number; crest?: number }> = ({
           <path
             key={i}
             d={`M ${x} ${base} q ${7 + lean} ${-h * 0.6} ${2 + lean * 1.6} ${-h}`}
-            stroke={kidTheme.grassDark}
+            stroke={PAINTED_GREEN.deep}
             strokeWidth={8}
             strokeLinecap="round"
             fill="none"
@@ -1500,25 +1526,41 @@ export const AirArcs: React.FC<{
 };
 
 /**
- * Crossfade between two skies. Both layers are real `KidBackdrop`s, so the
- * clouds line up exactly and only the colour changes.
+ * The painted world under a scene — episode two's Tier-2 backdrop, and the one
+ * every staged scene starts with.
+ *
+ *   <PaintedSky bg="grass_low" phase={1.1} />
+ *
+ * `bg` is a key from `backgrounds.mjs`, resolved through the generated
+ * manifest, so a scene naming a world that was never generated fails to
+ * typecheck rather than rendering a blank frame.
+ *
+ * Three rules a scene has to keep in mind:
+ *
+ *   - **Pass a different `phase` per scene.** Same reason characters get one:
+ *     two consecutive scenes drifting in lockstep read as one long shot with a
+ *     cut in it.
+ *   - **The plate is scenery, and only scenery.** Anything that moves, gets
+ *     touched, or has to line up with a character's feet stays SVG on top —
+ *     the grass blades, the waves, the turbine rotors, the dandelions, the
+ *     kite. See the notes in `backgrounds.mjs`.
+ *   - **`drift={0}` is a staging decision, not an optimisation.** The cold open
+ *     and the title card are written as "perfectly, unnaturally still", and a
+ *     sky breathing behind them would say there was wind.
  */
-export const SkyBlend: React.FC<{
-  from: SkyVariant;
-  to: SkyVariant;
-  u: number;
-  clouds?: number;
-  stars?: boolean;
-  children?: React.ReactNode;
-}> = ({ from, to, u, clouds = 3, stars = false, children }) => (
-  <AbsoluteFill>
-    <KidBackdrop variant={from} clouds={clouds} stars={stars} waves={false} />
-    <AbsoluteFill style={{ opacity: Math.max(0, Math.min(1, u)) }}>
-      <KidBackdrop variant={to} clouds={clouds} stars={stars} waves={false} />
-    </AbsoluteFill>
-    {children}
-  </AbsoluteFill>
+export const PaintedSky: React.FC<
+  Omit<KidPaintedBackdropProps, "src"> & { bg: BackgroundKey }
+> = ({ bg, ...rest }) => (
+  <KidPaintedBackdrop src={staticFile(BACKGROUNDS[bg])} {...rest} />
 );
+
+// `SkyBlend` (a crossfade between two gradient `KidBackdrop`s) used to live
+// here and every world scene in the episode opened with it. The painted plates
+// replaced all thirty-three of those call sites, so it is gone rather than left
+// lying around: the two scenes that still want flat colour are a crayon diagram
+// (Scene 14) and the recap's four-way split (Scene 33), and both draw their own
+// gradient because what they want is a *surface*, not a sky. `KidBackdrop`
+// itself is still the fallback for an unstaged scene (see `ScenePlaceholder`).
 
 /** The cartoon thermometer. `level` is 0..1 of the tube. */
 export const Thermometer: React.FC<{
@@ -1773,5 +1815,16 @@ const PlaceholderDrip: React.FC<{ scene: TimedScene; cast: Cast }> = ({ scene, c
 );
 
 // Re-exported so an act file needs one import for the whole kit.
-export { interpolate, spring, useCurrentFrame, useVideoConfig, AbsoluteFill, isSpeaking };
+export {
+  interpolate,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+  AbsoluteFill,
+  isSpeaking,
+  // The contact shadow a body needs once there is a painting under it: a flat
+  // character with nothing beneath it floats over painted ground in a way it
+  // never did over a flat gradient.
+  KidContactShadow,
+};
 export type { TimedScene };

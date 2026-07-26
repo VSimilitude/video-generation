@@ -2,13 +2,15 @@ import React from "react";
 import { kidEase, kidRadius, kidShadow, kidTheme, kidType, moveAlong, settleWave } from "../../../lib/kid";
 import {
   AbsoluteFill,
+  CHAR_BOX,
   Camera,
   Hill,
-  Kite,
-  hillY,
-  KiteString,
+  KidContactShadow,
   KidSilhouette,
-  SkyBlend,
+  Kite,
+  KiteString,
+  PaintedSky,
+  hillY,
   heldBeat,
   interpolate,
   kidHand,
@@ -107,11 +109,22 @@ const HillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      {/* No clouds. A flat blue sky, exactly as written — and nothing in the
-          backdrop that drifts, because drifting clouds are wind. */}
-      <SkyBlend from="day" to="day" u={0} clouds={0} />
+      {/* `drift={0}`, and it is the whole cold open in one prop: the painted
+          sky has clouds in it, but nothing in this frame may *move*, because
+          moving cloud is wind and the episode's premise is that there is none
+          today. The plate is panned up so its horizon clouds sit behind the
+          crest and give the hill somewhere to be. */}
+      <PaintedSky bg="hill_day" drift={0} dy={-190} />
       <Camera cam={{ x: 1000, y: 620, zoom }}>
         <Hill wind={0} crest={HILL_MARKS.crest} />
+        {/* Contact shadows, on the ground line the hill hands out rather than
+            near it. Both bodies are flat fills over a painted slope now, and
+            without these the kid stands on the picture instead of in it. The
+            kite's own shadow only exists once it is down. */}
+        <KidContactShadow x={kidX} y={kidYAt(kidX) + (CHAR_BOX.kid / 2) * HILL_MARKS.kidScale} rx={104} ry={20} />
+        {kite.down ? (
+          <KidContactShadow x={kite.x} y={kite.y + 54} rx={130} ry={22} strength={0.2} />
+        ) : null}
         <KiteString
           from={hand}
           to={{ x: kite.x, y: kite.y }}
@@ -219,11 +232,18 @@ const TitleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={0} />
+      <PaintedSky bg="hill_day" drift={0} dy={-190} />
       {/* Pushed down as well as out: the title needs the top two thirds, and
           the kite has to stay in shot at the bottom for the whole card. */}
       <Camera cam={{ x: 960, y: 900, zoom, dy: 190 }}>
         <Hill wind={0} crest={HILL_MARKS.crest} />
+        <KidContactShadow
+          x={HILL_MARKS.kidX}
+          y={kidYAt(HILL_MARKS.kidX) + (CHAR_BOX.kid / 2) * HILL_MARKS.kidScale}
+          rx={104}
+          ry={20}
+        />
+        <KidContactShadow x={HILL_MARKS.kiteRest.x} y={HILL_MARKS.kiteRest.y + 54} rx={130} ry={22} strength={0.2} />
         <KidSilhouette
           x={HILL_MARKS.kidX}
           y={kidYAt(HILL_MARKS.kidX)}

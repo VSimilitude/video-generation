@@ -212,6 +212,55 @@ slate-and-cyan. First audience: a six-year-old.
   lavender. Drip carries `blushStrength={3}`; that number is a fix, not a taste.
 - Round everything: radii come from `kidRadius`, never inline.
 
+## Painted backgrounds (Tier 2)
+
+Episode two's worlds are generated gouache plates (`backgrounds.mjs` →
+`npm run backgrounds` → `public/backgrounds/<slug>/`) with the SVG cast and
+props composited on top. Piloted on the wind episode; these are the rules that
+came out of it.
+
+- **One style anchor per episode, appended to every prompt.** It is the only
+  reason separately-generated plates look like one show. Tune it once for the
+  whole episode and regenerate; never per key. Name colours explicitly — the
+  first wind anchor said "warm morning light" and hazed five of nine plates out
+  to cream with no blue in the sky at all.
+- **Every plate owes the frame two clean zones**: a low-detail lower third
+  where characters stand and cast shadows, and open sky in the upper half where
+  the bubbles go. Write both into the prompt ("simple uncluttered foreground",
+  "plenty of open sky") and check each image by looking at it.
+- **Anything that moves stays SVG.** Grass blades that bend, waves that roll,
+  turbine rotors, dandelions, anything a character touches. A plate is scenery,
+  and scenery is the part of the world that does nothing.
+- **Never name a thing you don't want.** "no wind turbines" put two wind
+  turbines on the ridge. Describe the empty version instead ("the hilltop
+  completely bare, nothing standing on it").
+- **Where a painted shape and a character's ground line disagree, the ground
+  line wins.** `hillY()` is load-bearing (feet, a landing kite, a frame story
+  five minutes wide) and a painted hill cannot be nudged into agreeing with a
+  parabola. Give up that band of the frame in the prompt — paint the *far*
+  hills and keep drawing the near one.
+- **Delete the SVG the plate now draws.** Two ridges, one painted and one
+  drawn, is the failure mode; scene 28's headland, scene 27's bay and scene
+  29's hillside all lost their drawn ground entirely and kept only the parts
+  that move.
+- **SVG scenery that shares an edge with a plate matches the plate, not the
+  theme.** `kidTheme.grass` is a blue-green; the plates average a yellow-green
+  (#a6c013). Sample the image and keep the sampled set next to the scenery
+  (`PAINTED_GREEN` in the wind kit). Characters keep the theme palette —
+  scenery is what moves.
+- **A plate is never dead still.** `KidPaintedBackdrop` drifts it a few px on a
+  ~26s cycle with a hair of scale, and each scene passes its own `phase` so
+  consecutive shots don't breathe in lockstep. `drift={0}` is allowed, but only
+  as a staging decision: the wind cold open uses it because moving cloud would
+  say there was wind.
+- **Flat characters need a contact shadow over paint.** They did not over a
+  gradient. `KidContactShadow` at the ground point, ~0.2 strength, green-shifted
+  ink — and it fades out as a character lifts off, because a shadow that stays
+  put under a rising character is worse than none.
+- **The plate is 1344×768 and the frame is 1920×1080.** Everything is upscaled
+  ~1.4×, which soft painting survives and hard edges would not. Don't put text,
+  a logo or a fine grid in a prompt.
+
 ## Character-first staging
 
 - **The characters are the content.** In the financial series a diagram

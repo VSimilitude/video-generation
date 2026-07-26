@@ -20,12 +20,14 @@ import {
   Camera,
   CutFlash,
   Hill,
+  KidContactShadow,
   Kite,
   KidSilhouette,
   KiteString,
+  PAINTED_GREEN,
   PHASE,
   PUFF_OPACITY,
-  SkyBlend,
+  PaintedSky,
   Thermometer,
   WIDE,
   WideLayer,
@@ -334,7 +336,7 @@ const BeachScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="beach_wide" phase={0.5} />
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${(1 - wipe) * 100}% 0 0)` }}>
         <BeachWorld />
         <Gulls />
@@ -457,7 +459,7 @@ const HotSandCoolSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="beach_wide" phase={1.6} />
       {onSplit ? null : <Surface kind={onSand ? "sand" : "sea"} y={SURFACE_Y} />}
       {onSand ? <HeatShimmer y={SURFACE_Y} /> : null}
       {onSea ? <Ripples x={S24_PUFF.x} y={SURFACE_Y - 40} /> : null}
@@ -713,7 +715,7 @@ const BeachMakesWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="beach_wide" phase={2.7} />
       <BeachWorld />
       <Gulls lift={clamp01((frame - coolAt) / 60) * 0.4} />
 
@@ -874,7 +876,7 @@ const CoolInflow: React.FC<{ at: number }> = ({ at }) => {
 /** The picture Scene 26 freezes: the sea breeze, blowing. */
 const SeaBreezeShot: React.FC = () => (
   <AbsoluteFill>
-    <SkyBlend from="day" to="day" u={0} clouds={2} />
+    <PaintedSky bg="beach_wide" phase={3.8} />
     <BeachWorld />
     <Gulls lift={0.4} />
     <WarmRise x={GAP.x} strength={1} />
@@ -1038,16 +1040,12 @@ const BayWorld: React.FC<{ swell: number }> = ({ swell }) => {
   const t = frame / fps;
   return (
     <WideLayer>
-      {/* The far shore, and a headland: land is what makes water read as a bay
-          rather than as open sea. */}
-      <path
-        d={`M ${WIDE.x} ${HORIZON} Q 300 ${HORIZON - 54} 900 ${HORIZON - 12} Q 1500 ${HORIZON + 22} ${WIDE.x + WIDE.w} ${HORIZON - 30} L ${WIDE.x + WIDE.w} ${HORIZON + 26} L ${WIDE.x} ${HORIZON + 26} Z`}
-        fill="#8ddc8a"
-      />
-      <path d={`M ${WIDE.x} ${HORIZON + 20} L ${WIDE.x + WIDE.w} ${HORIZON + 20} L ${WIDE.x + WIDE.w} ${HORIZON + 46} L ${WIDE.x} ${HORIZON + 46} Z`} fill={SAND} opacity={0.9} />
-      <path d={`M ${WIDE.x} ${HORIZON + 44} L ${WIDE.x + WIDE.w} ${HORIZON + 44} L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill={SEA_FAR} />
-      <path d={`M ${WIDE.x} ${HORIZON + 170} L ${WIDE.x + WIDE.w} ${HORIZON + 170} L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill={SEA_MID} />
-      <path d={`M ${WIDE.x} ${HORIZON + 470} L ${WIDE.x + WIDE.w} ${HORIZON + 470} L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill={SEA_NEAR} opacity={0.75} />
+      {/* The water, the far shore and the headland are all in `bay.webp`: this
+          is the one beach scene whose geography is plain horizontal bands, so
+          the plate could take the whole world and leave only the part that
+          moves. The swell lines below are that part — and they are also the
+          whole of "glassy", because at `swell` 0 they flatten and the painted
+          water is all that is left. */}
       {Array.from({ length: 8 }, (_, i) => {
         const y = HORIZON + 120 + i * 96;
         const roll = Math.sin(t * 0.9 + i * 0.8) * 22 * swell;
@@ -1113,7 +1111,7 @@ const SailboatScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={2} />
+      <PaintedSky bg="bay" phase={4.9} />
       <Camera cam={cam}>
         <BayWorld swell={taut * 0.9} />
         {/* The bay is glassy until the wind arrives: a mirror under the boat,
@@ -1378,7 +1376,7 @@ const TurbinesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         <Bedroom clickAt={clickAt} />
       ) : (
         <>
-          <SkyBlend from="day" to="day" u={0} clouds={3} />
+          <PaintedSky bg="headland_turbines" phase={0.2} />
           <Headland />
           {TURBINES.map((tb, i) => (
             <Turbine
@@ -1415,22 +1413,22 @@ const TurbinesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   );
 };
 
+/**
+ * What is left of the headland once the painting arrived.
+ *
+ * The sea, the sky and the ridge itself are all in `headland_turbines.webp`
+ * now — the plate's grass line runs from y≈800 at frame left up over a crest at
+ * y≈530 and back down to y≈700 on the right, which is *above* all three turbine
+ * bases (806/838/862) and above the cable path, so every tower still stands on
+ * ground and nothing had to move. Two painted ridges (one drawn, one plate) is
+ * the failure mode this file used to have; the fix was to delete the drawn one
+ * rather than to try to make them agree.
+ *
+ * The field lines stay: they are what the cable runs under, and they read as
+ * furrows on the painted slope.
+ */
 const Headland: React.FC = () => (
   <WideLayer>
-    {/* The sea is still out there behind the headland — this is the same coast
-        the last four scenes were on. It has to run all the way down to the
-        grass: floated as a band in the sky it read as a stripe on the lens. */}
-    <path d={`M ${WIDE.x} ${HORIZON} L ${WIDE.x + WIDE.w} ${HORIZON} L ${WIDE.x + WIDE.w} 940 L ${WIDE.x} 940 Z`} fill={SEA_FAR} opacity={0.9} />
-    <path d={`M ${WIDE.x} ${HORIZON + 90} L ${WIDE.x + WIDE.w} ${HORIZON + 90} L ${WIDE.x + WIDE.w} 940 L ${WIDE.x} 940 Z`} fill={SEA_MID} opacity={0.85} />
-    <path
-      d={`M ${WIDE.x} 980 Q 500 800 1100 880 Q 1700 950 ${WIDE.x + WIDE.w} 900 L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`}
-      fill={kidTheme.grassDark}
-    />
-    <path
-      d={`M ${WIDE.x} 900 Q 420 700 1020 800 Q 1620 890 ${WIDE.x + WIDE.w} 820 L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`}
-      fill={kidTheme.grass}
-    />
-    {/* Field lines, so the cable has somewhere to go under. */}
     {[960, 1030, 1104].map((y) => (
       <path key={y} d={`M ${WIDE.x} ${y} Q 960 ${y - 30} ${WIDE.x + WIDE.w} ${y}`} stroke={kidTheme.grassDark} strokeWidth={6} fill="none" opacity={0.4} />
     ))}
@@ -1651,7 +1649,7 @@ const SeedsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         <DandelionHillside from={hillAt} beat={[beatFrom, beatTo]} />
       ) : (
         <>
-          <SkyBlend from="day" to="day" u={0} clouds={3} />
+          <PaintedSky bg="country_fields" phase={1.3} />
           <OpenCountry />
           <SeedBlizzard />
           <Puff
@@ -1687,14 +1685,21 @@ const OpenCountry: React.FC = () => {
   const dx = -frame * 3.4;
   return (
     <WideLayer>
-      <path d={`M ${WIDE.x} 700 Q 700 620 1500 690 Q 2200 750 ${WIDE.x + WIDE.w} 690 L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill="#8ddc8a" />
+      {/* The far band of fields used to be a static shape here; it is in
+          `country_fields.webp` now. Everything below still scrolls — this is a
+          travelling shot, and the parallax between the plate and these two
+          layers is what sells the distance. */}
+      {/* Everything below is in `PAINTED_GREEN`, not `kidTheme`: the theme's
+          grass is a blue-green and it read as a strip of a different show laid
+          across the bottom of the painting. Scenery that shares an edge with a
+          plate matches the plate. */}
       <g transform={`translate(${dx % 900} 0)`}>
-        <path d={`M ${WIDE.x} 820 Q 900 740 1800 830 Q 2600 900 ${WIDE.x + WIDE.w} 830 L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill={kidTheme.grass} />
+        <path d={`M ${WIDE.x} 820 Q 900 740 1800 830 Q 2600 900 ${WIDE.x + WIDE.w} 830 L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill={PAINTED_GREEN.lit} />
         {Array.from({ length: 12 }, (_, i) => {
           const x = -900 + i * 380;
           return (
             <g key={i}>
-              <path d={`M ${x} 900 q 90 -40 180 0`} stroke={kidTheme.grassDark} strokeWidth={26} fill="none" strokeLinecap="round" />
+              <path d={`M ${x} 900 q 90 -40 180 0`} stroke={PAINTED_GREEN.shade} strokeWidth={26} fill="none" strokeLinecap="round" />
             </g>
           );
         })}
@@ -1705,9 +1710,9 @@ const OpenCountry: React.FC = () => {
           return (
             <g key={i} transform={`translate(${x} 1020)`}>
               <path d="M 0 0 L 0 -140" stroke="#8a5a34" strokeWidth={26} strokeLinecap="round" />
-              <circle cx={0} cy={-190} r={96} fill={kidTheme.grassDark} />
-              <circle cx={-54} cy={-150} r={62} fill={kidTheme.grass} />
-              <circle cx={58} cy={-158} r={58} fill={kidTheme.grass} />
+              <circle cx={0} cy={-190} r={96} fill={PAINTED_GREEN.deep} />
+              <circle cx={-54} cy={-150} r={62} fill={PAINTED_GREEN.shade} />
+              <circle cx={58} cy={-158} r={58} fill={PAINTED_GREEN.shade} />
             </g>
           );
         })}
@@ -1812,12 +1817,13 @@ const DandelionHillside: React.FC<{ from: number; beat: [number, number] }> = ({
   const drift = kidEase.easeInOutSine(clamp01(u));
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={3} />
+      <PaintedSky bg="country_fields" phase={1.3} />
       <Camera cam={{ x: 960, y: 700, zoom: 1.04 + drift * 0.07, dx: -drift * 120 }}>
         <WideLayer>
-          <path d={`M ${WIDE.x} 620 Q 700 470 1500 560 Q 2300 640 ${WIDE.x + WIDE.w} 570 L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill="#8ddc8a" />
-          <path d={`M ${WIDE.x} 760 Q 800 600 1700 700 Q 2500 780 ${WIDE.x + WIDE.w} 720 L ${WIDE.x + WIDE.w} ${BOTTOM} L ${WIDE.x} ${BOTTOM} Z`} fill={kidTheme.grass} />
-          {/* Rows of dandelions, bigger and looser towards the camera, every
+          {/* The hillside itself is the painting — two flat green shapes used
+              to be here and they are exactly what `country_fields.webp` draws
+              better. What is left is the only thing that was ever the point:
+              rows of dandelions, bigger and looser towards the camera, every
               one of them nodding on its own clock. */}
           {Array.from({ length: 15 }, (_, row) =>
             Array.from({ length: 26 }, (_, col) => {
@@ -1909,7 +1915,7 @@ const DoorToDoorScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={4} />
+      <PaintedSky bg="sky_recap" phase={2.4} />
       <PlainAndMountains dx={-glide} />
 
       {/* Her hat, streaming. Last seen blowing across episode one's sign-off,
@@ -2224,9 +2230,23 @@ const TheHillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={0} />
+      <PaintedSky bg="hill_day" drift={6} dy={-190} />
       <Camera cam={cam}>
         <Hill wind={gust} crest={HILL_MARKS.crest} />
+        {/* Same two contact shadows as the cold open — this is that frame with
+            one thing changed, so it has to be seated the same way. Puff gets
+            one too while he is low over the grass; it fades out as he lifts,
+            because a shadow that stays put under a rising character is worse
+            than none. */}
+        <KidContactShadow x={kidX} y={hillY(kidX, HILL_MARKS.crest)} rx={104} ry={20} />
+        <KidContactShadow x={kite.x} y={hillY(kite.x, HILL_MARKS.crest) + 12} rx={120} ry={20} strength={0.18 * (kite.flat ? 1 : 0)} />
+        <KidContactShadow
+          x={puffX}
+          y={hillY(puffX, HILL_MARKS.crest) + 10}
+          rx={150 * S31_PUFF.scale}
+          ry={26}
+          strength={0.16 * clamp01(1 - (hillY(puffX, HILL_MARKS.crest) - puffCentre) / 420)}
+        />
         <KiteString
           from={hand}
           to={{ x: kite.x, y: kite.y }}
@@ -2420,8 +2440,9 @@ const WhatTheyCanSeeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   return (
     <AbsoluteFill>
-      <SkyBlend from="day" to="day" u={0} clouds={1} />
+      <PaintedSky bg="hill_day" drift={10} phase={1} dy={-190} />
       <Hill wind={0.5} crest={HILL_MARKS.crest} />
+      <KidContactShadow x={kidX} y={hillY(kidX, HILL_MARKS.crest)} rx={104} ry={20} />
       <KiteString from={hand} to={S32_KITE} slack={0.05} />
       <KidSilhouette x={kidX} y={kidY} scale={HILL_MARKS.kidScale} flip {...kid} />
       <Kite x={S32_KITE.x} y={S32_KITE.y} scale={0.55} rot={-12} life={1} />
