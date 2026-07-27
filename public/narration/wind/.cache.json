@@ -70,9 +70,9 @@
     "durationSeconds": 3.168
   },
   "a1_07_narrator": {
-    "hash": "9380146651ec65af",
+    "hash": "8a013e77ef88ab4e",
     "outFile": "a1_07_narrator.mp3",
-    "durationSeconds": 2.35
+    "durationSeconds": 2.196
   },
   "a1_08_puff": {
     "hash": "6a526e1e0211c513",
@@ -80,9 +80,9 @@
     "durationSeconds": 3.024
   },
   "a1_09_narrator": {
-    "hash": "c745fa92bb47fe0a",
+    "hash": "80dbfacfa4f2ed91",
     "outFile": "a1_09_narrator.mp3",
-    "durationSeconds": 2.2
+    "durationSeconds": 2.952
   },
   "a1_10_puff": {
     "hash": "aed6db1260be8b88",
@@ -100,9 +100,9 @@
     "durationSeconds": 1.908
   },
   "a1_13_narrator": {
-    "hash": "9380146651ec65af",
+    "hash": "13b19c25fddd0fac",
     "outFile": "a1_13_narrator.mp3",
-    "durationSeconds": 2.35
+    "durationSeconds": 2.052
   },
   "a1_14_puff": {
     "hash": "af65bee11de55dd0",
@@ -110,9 +110,9 @@
     "durationSeconds": 3.42
   },
   "a1_15_narrator": {
-    "hash": "c745fa92bb47fe0a",
+    "hash": "38f17ff864df8768",
     "outFile": "a1_15_narrator.mp3",
-    "durationSeconds": 2.2
+    "durationSeconds": 2.232
   },
   "a1_16_puff": {
     "hash": "cb19363c0493af8e",
@@ -290,9 +290,9 @@
     "durationSeconds": 5.55
   },
   "a2_08_narrator": {
-    "hash": "656406995cc49159",
+    "hash": "686bb12ac35d6083",
     "outFile": "a2_08_narrator.mp3",
-    "durationSeconds": 2.375
+    "durationSeconds": 4.284
   },
   "a2_09_puff": {
     "hash": "c3cb54961f504b41",
@@ -348,6 +348,21 @@
     "hash": "52099a1969c2f3f9",
     "outFile": "a2_19_puff.mp3",
     "durationSeconds": 3.204
+  },
+  "a2_19b_puff": {
+    "hash": "708a18da46288af9",
+    "outFile": "a2_19b_puff.mp3",
+    "durationSeconds": 5.796
+  },
+  "a2_19c_narrator": {
+    "hash": "e45f1b8a1197a41d",
+    "outFile": "a2_19c_narrator.mp3",
+    "durationSeconds": 3.55
+  },
+  "a2_19d_puff": {
+    "hash": "59dc309af85a1538",
+    "outFile": "a2_19d_puff.mp3",
+    "durationSeconds": 1.476
   },
   "a2_20_narrator": {
     "hash": "8318b197c96d0788",
@@ -745,9 +760,9 @@
     "durationSeconds": 5.1
   },
   "a3_51_narrator": {
-    "hash": "9380146651ec65af",
+    "hash": "54d61245b969ad61",
     "outFile": "a3_51_narrator.mp3",
-    "durationSeconds": 2.35
+    "durationSeconds": 2.196
   },
   "a3_52_puff": {
     "hash": "d162ece0605489f7",

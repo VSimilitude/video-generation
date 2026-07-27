@@ -487,7 +487,8 @@ _Build-side notes (2026-07-26); watch-side retro pending._
 - **Comedy pacing as a design input**: the script shipped with 22 held
   beats (exact frame counts + reasons) and 40 per-line speed overrides
   already specified — zero pacing retrofits needed. The rule from ep 1's
-  audience test transferred cleanly.
+  audience test transferred cleanly. (24 and 42 after the roll call went in;
+  the *format* absorbed the addition without argument, which is the point.)
 - **The hook-order gate worked in anger, twice**: lint:hooks caught two
   React #300 patterns in act3 while it was being written (one flagged
   across agents mid-flight), and the every-frame render confirmed clean.
@@ -515,6 +516,73 @@ Cloudia's `angry` demand and Sunny's `surprised` "Wait. What?"; spelled
 "A. I. R." / "W. I. N. D." clips need an ear; scene 30 is prop-crowded;
 scene 35 map has place-name text (cut for pre-readers?); the 75f kite payoff
 and the rock's stillness are timing bets pending playback.
+
+### The six-year-old's two notes (2026-07-27)
+
+First watch-side feedback on ep 2, and both notes were about the same thing:
+who is talking, and how much room the joke gets. Both are now general rules.
+
+**1. "The beetle and the leaf sound like the narrator."** They did — the
+Narrator cameo-voiced all three on-screen bit-parts (beetle, leaf, rock) under
+a self-imposed "never grow past five actors" guardrail. That guardrail was
+cheap for the wrong thing. The beetle/leaf gag is *somebody else* failing to
+notice Puff; delivered in the storyteller's voice it collapses into the
+storyteller asking a rhetorical question, and the episode's central repetition
+gag — three firings, five minutes apart, with the whole ending banked on the
+third — was being carried by a voice the audience had already filed as "the
+narration". Recast to `Patient_Man` / `Calm_Woman` / `Deep_Voice_Man`, ~$0.03.
+**The rule that replaced the guardrail: a body with a face and a line gets its
+own voice.** Voice count is not a budget worth defending; a MiniMax bit-part is
+three cents.
+
+Three things fell out of it that will happen again:
+
+- **Recasting is a text edit.** The rock's "Ohhh yeah" was a Kokoro spelling.
+  Moving the line to MiniMax, where a repeated letter reads as separate
+  syllables, meant respelling it — exactly as Puff's "Poooof"/"PUUUSH" had to
+  be when *he* was cast. Sweep a character's sound words whenever it changes
+  engine; the rule was already in STYLE.md and still nearly got missed, because
+  "the rock" did not feel like "a character being recast".
+- **Keys are wiring, not casting.** The three cameos kept their `_narrator` line
+  keys. Renaming would have touched `Video.tsx`, every `SPEAKER_VISUAL` map and
+  every bubble map for zero gain — the staged speaker is a per-line override
+  (`useStage`), which is precisely the indirection ep 2 built for these bodies.
+  Worth remembering the next time a key looks wrong: check whether anything
+  actually *reads* it.
+- **Determinism is a feature you only notice when you lose it.** Kokoro gave
+  identical clips for identical text for free, so "identical text, identical
+  speed" was a sufficient production note for a repetition gag. MiniMax
+  returned the beetle's one sentence at 2.20s and then 2.84s — a 30% swing in
+  the line whose entire job is to sound the same. The generator grew
+  `{ sameAs: "<earlier key>" }`, which copies a clip under a second key: no
+  synthesis, no API call, no dice roll. **Any repetition gag on a paid remote
+  model should share one recording rather than order two.**
+
+**2. "More Hi Drop, Hi Droppy."** The single most-quoted joke from ep 1 was
+Drip greeting a queue of identical raindrops by name. Ep 2 now has the same
+shape in Scene 15 — Puff greeting four of the dozens of identical warm puffs
+rising with him ("Hi Puffy. Hi Puffington. Hi other Puff. Hi Puff the third."),
+a flat Narrator explanation, and an unbothered button. **This is a series
+signature now; every episode should have one.** The shape: a character
+cheerfully naming near-identical strangers → one flat explanatory line → an
+unseasoned button from the character.
+
+Two things made it cheap to add, and both are reusable:
+
+- **It cost no new staging idea.** The scene already had the picture — dozens
+  of identical puffs holding station around him. The gag needed four of them
+  addressed individually (a wave, an eye-line, a bob back), not a new set. Look
+  for the joke the shot can already tell.
+- **It does pedagogy for free.** Four other Puffs is `a2_22_narrator`'s point —
+  *this is happening to all the warm air, not to one special puff* — made as a
+  picture two scenes before it is made as a sentence. The best gags in this
+  series are the ones that are also the lesson.
+
+Cost: 12.6s of runtime (ep 2 is 11:40 now, over the 10–11 min target — the
+roll call is worth it, but that is a real trade). The rising shot needed a new
+high-cloud parallax band to have anything left to climb past; **a shot that
+gets longer needs its world checked, not just its timing** — the parallax
+layers had all scrolled off the bottom by the old scene's end.
 
 ### Tier-2 graphics: painted backgrounds, piloted on this episode (2026-07-26)
 

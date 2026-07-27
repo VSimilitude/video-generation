@@ -7,6 +7,7 @@ import {
   kidOutline,
   kidTheme,
   kidType,
+  lookAt,
   moveAlong,
   settleWave,
   useRig,
@@ -1058,10 +1059,54 @@ function riseAt(f: number): number {
   return RISE_SPEED * (t - RISE_ACCEL / 2);
 }
 
-/** Where Scene 15 leaves the climb, so Scene 16 can carry on from it. */
-const S15_RISE_END = riseAt(520);
+/**
+ * Where Scene 15 leaves the climb, so Scene 16 can carry on from it.
+ *
+ * This is Scene 15's own length in frames, which is audio-driven and therefore
+ * moves whenever its lines do — it grew by 378 frames when the roll call went
+ * in. Recompute it from `timeline()` (the `s15_up` scene's `durationInFrames`)
+ * rather than guessing; a stale number here shows up as the world jumping at
+ * the cut into Scene 16.
+ */
+const S15_RISE_END = riseAt(874);
 
 const WARM_PUFFS = 42;
+
+/**
+ * Where crowd puff `i` sits, in composition coordinates.
+ *
+ * Factored out of `WarmCrowd` because Scene 15's roll call has to *point at*
+ * four specific members of the crowd — Puff's eyes go to them and they bob
+ * back, so the greeting and the greeted have to agree about where they are.
+ */
+function warmPuffAt(i: number): { x: number; y: number; r: number } {
+  return {
+    x: -180 + ((i * 397) % 2260),
+    y: -220 + ((i * 617) % 1420),
+    r: 20 + ((i * 53) % 22),
+  };
+}
+
+/**
+ * The high cloud band, drawn low in the wide layer and then lifted back out of
+ * frame — SVG clips to its own viewBox, so content simply drawn at y = -4000
+ * would never be rendered at all. The lift is what buys altitude instead.
+ */
+const HIGH_WISP_LIFT = 2450;
+
+/** Wide-layer marks for the thin cloud he climbs through. Lowest arrives first. */
+const HIGH_WISPS = [
+  { x: 640, y: 1700, w: 300, o: 0.5 },
+  { x: 1420, y: 1340, w: 220, o: 0.42 },
+  // Left of the lane Puff climbs through, and left of the mark he holds in
+  // Scene 16: this one crosses his altitude under the rule stamp, and a pale
+  // cloud behind a character at 0.55 opacity is the one thing that can lose him.
+  { x: 430, y: 980, w: 360, o: 0.55 },
+  { x: 1560, y: 620, w: 260, o: 0.46 },
+  { x: 520, y: 260, w: 200, o: 0.38 },
+  { x: 1180, y: -100, w: 330, o: 0.5 },
+  { x: 300, y: -460, w: 240, o: 0.4 },
+] as const;
 
 const RisingWorld: React.FC<{
   rise: number;
@@ -1128,6 +1173,40 @@ const RisingWorld: React.FC<{
           })}
         </WideLayer>
       </div>
+      {/* Higher than the birds: a band of thin cloud he climbs up through.
+          This is what the shot has left once the ground furniture has gone by
+          — and after the roll call went into Scene 15 it has twelve more
+          seconds of climbing to fill, plus the whole of Scene 16. Without it
+          the last third of the rise is Puff and a flat plate, and a rising
+          shot with nothing going past it is not rising.
+          Slower than the birds (0.30 against 0.42) because it is further away,
+          and lifted by HIGH_WISP_LIFT so the first one arrives at the top of
+          the frame just as the roll call starts. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateY(${rise * 0.3 - HIGH_WISP_LIFT}px)`,
+        }}
+      >
+        <WideLayer>
+          {HIGH_WISPS.map((w, i) => {
+            const drift = Math.sin(t * 0.22 + i * 1.7) * 34;
+            return (
+              <g key={i} opacity={w.o} transform={`translate(${w.x + drift} ${w.y})`}>
+                <ellipse rx={w.w} ry={w.w * 0.17} fill={kidTheme.paper} />
+                <ellipse
+                  cx={-w.w * 0.34}
+                  cy={-w.w * 0.1}
+                  rx={w.w * 0.52}
+                  ry={w.w * 0.14}
+                  fill={kidTheme.paper}
+                />
+              </g>
+            );
+          })}
+        </WideLayer>
+      </div>
       {/* Near: the grass he is leaving, bending down and away beneath him. */}
       {showGrass ? (
         <div style={{ position: "absolute", inset: 0, transform: `translateY(${rise}px)` }}>
@@ -1148,33 +1227,45 @@ const RisingWorld: React.FC<{
   );
 };
 
-/** Dozens of other warm puffs, holding station because they rise as fast as he does. */
-const WarmCrowd: React.FC<{ opacity?: number }> = ({ opacity = 1 }) => {
+/**
+ * Dozens of other warm puffs, holding station because they rise as fast as he
+ * does.
+ *
+ * `bob` is the roll call answering back: `{ [crowdIndex]: 0..1 }`, one small
+ * dip-and-lift per greeted puff. It is the smallest gesture that reads as "and
+ * that one said hello too" without giving a background blob a face — they are
+ * scenery with manners, not characters.
+ */
+const WarmCrowd: React.FC<{ opacity?: number; bob?: Record<number, number> }> = ({
+  opacity = 1,
+  bob,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
   return (
     <WideLayer opacity={opacity}>
       {Array.from({ length: WARM_PUFFS }, (_, i) => {
-        const x = -180 + ((i * 397) % 2260);
-        const y = -220 + ((i * 617) % 1420);
-        const r = 20 + ((i * 53) % 22);
+        const { x, y, r } = warmPuffAt(i);
         // Each wanders a little on its own circle: they are keeping pace, not
         // pinned to the glass.
         const wx = Math.sin(t * 0.7 + i * 1.3) * 26;
         const wy = Math.cos(t * 0.52 + i * 0.9) * 20;
+        const nod = bob?.[i] ?? 0;
         return (
           <AirBlob
             key={i}
             x={x + wx}
-            y={y + wy}
-            r={r}
+            y={y + wy - nod * 34}
+            r={r * (1 + nod * 0.2)}
             t={t + i}
             seed={i * 0.7}
             // Warm air, so they carry a little of the ground's heat in them.
             fill={i % 3 === 0 ? "#ffe2cb" : kidTheme.air}
             edge={i % 3 === 0 ? kidTheme.sunDark : kidTheme.airEdge}
-            opacity={0.55}
+            // A greeted puff firms up while it answers, so the eye finds the
+            // one he is talking to out of forty-two identical shapes.
+            opacity={0.55 + nod * 0.35}
             points={14}
           />
         );
@@ -1187,12 +1278,41 @@ const S15_BUBBLES: Record<string, string> = {
   a2_16_puff: "I am going UP!",
   a2_17_puff: "This happened to my friend Drip!",
   a2_19_puff: "I am actually flying!",
+  // A summary, not a transcript — four greetings in four words. The line
+  // itself names four puffs; the bubble is the shape of him saying hello a lot.
+  // Nothing for a2_19c or a2_19d on purpose: the button is a deadpan and a
+  // bubble popping on it is a new thing entering the beat.
+  a2_19b_puff: "Hi! Hi! Hi! Hi!",
 };
+
+// --- the roll call (Scene 15, after WHOOSH) --------------------------------
+//
+// Episode one's best-received joke was Drip greeting a queue of identical
+// raindrops by name, and the six-year-old asked for more of it. Scene 15
+// already had the picture — dozens of warm puffs rising alongside him, all the
+// same — so the gag needed no new idea, only four of those puffs to be
+// addressed individually.
+//
+// These are indices into `WarmCrowd`, chosen off `warmPuffAt` for a left-to-
+// right sweep across Puff at the height he is holding by then (~1030, ~438):
+// one on his left, one above, and two out to his right. Nobody new arrives;
+// he is greeting the crowd that has been there since the lift-off.
+const S15_GREETED = [31, 3, 15, 38];
+
+// Fractions of `a2_19b_puff` for the four names, `beats()`-style but resolved
+// against the timed turn so they follow the clip. Each targets the middle of
+// its own clause:
+//   0.23  "Hi Puffy."          (after "Oh! Hello!")
+//   0.42  "Hi Puffington."
+//   0.64  "Hi other Puff."
+//   0.87  "Hi Puff the third."
+const S15_GREET_AT = [0.23, 0.42, 0.64, 0.87];
 
 const UpScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const stage = useStage(scene);
   const [, upTo] = lineWindow(scene, "a2_16_puff");
+  const [rollFrom, rollTo] = lineWindow(scene, "a2_19b_puff");
 
   const rise = riseAt(frame);
 
@@ -1235,11 +1355,45 @@ const UpScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const puffY = hover("puff", py, scale);
   const mark: Mark = { x: px, y: puffY, scale, who: "puff", side: px < 960 ? "right" : "left", offset: 360 };
 
+  // --- the roll call.
+  //
+  // Four greetings, four waves, four puffs bobbing back. The waves lead their
+  // names by six frames, which is where a real hand goes: you start waving at
+  // somebody and then say hello to them.
+  //
+  // Everything here is gated on the roll-call line's own window, so all of it
+  // has stopped by the time `a2_19c_narrator` starts. The straight line and the
+  // button play over a Puff who is doing nothing at all — the joke is that he
+  // reports "It is a very popular name" as a mild fact, and a hand still waving
+  // underneath it would be selling it.
+  const rollAt = S15_GREET_AT.map((u) => rollFrom + (rollTo - rollFrom) * u);
+  const rolling = frame >= rollFrom && frame < rollTo;
+  // His arms come down and his eyes come back three frames before the line
+  // ends, i.e. under his own voice. The rig swaps arm paths outright, so the
+  // change is a cut — and a cut inside the twenty-frame beat after this line
+  // is a thing starting in a silence the script bought.
+  const waving = frame >= rollFrom && frame < rollAt[rollAt.length - 1] + 20;
+  const nods: Record<number, number> = {};
+  let waveAmt = 0;
+  let greeting = -1;
+  rollAt.forEach((at, i) => {
+    const u = (frame - at) / 22;
+    nods[S15_GREETED[i]] = u >= 0 && u <= 1 ? Math.sin(u * Math.PI) : 0;
+    const swing = (frame - (at - 6)) / 26;
+    if (swing >= 0 && swing <= 1) waveAmt = Math.max(waveAmt, Math.sin(swing * Math.PI));
+    // Whoever he is addressing right now: his eyes get there before the name.
+    if (frame >= at - 10) greeting = i;
+  });
+  const greeted = waving && greeting >= 0 ? warmPuffAt(S15_GREETED[greeting]) : null;
+
   return (
     <AbsoluteFill>
       <PaintedSky bg="sky_high" phase={2.6} />
       <RisingWorld rise={rise} grassWind={grassWind} showGrass={rise < 1400} avoidX={px} />
-      <WarmCrowd opacity={Math.min(1, Math.max(0, (frame - LIFT_AT + 20) / 40))} />
+      <WarmCrowd
+        opacity={Math.min(1, Math.max(0, (frame - LIFT_AT + 20) / 40))}
+        bob={rolling ? nods : undefined}
+      />
       {/* The push of air that puts him up there. */}
       {lift > 0 && lift < 44 ? (
         <AirArcs
@@ -1259,7 +1413,15 @@ const UpScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.puff}
         emotion={emotion}
         speaking={stage.speaking("puff")}
-        look={frame < LIFT_AT ? "down" : { x: 0.1, y: -0.4 }}
+        look={
+          greeted
+            ? lookAt({ x: px, y: puffY }, greeted)
+            : frame < LIFT_AT
+              ? "down"
+              : { x: 0.1, y: -0.4 }
+        }
+        pose={waving ? "wave" : "rest"}
+        wave={waveAmt}
         bank={bank}
         idle={frame < LIFT_AT ? 1.3 : 1}
         wisps={3}

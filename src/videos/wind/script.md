@@ -5,7 +5,7 @@
 **Audience:** six-year-olds — and the grown-up in the room
 **Target:** ~10–11 minutes of finished video
 **Shape:** cold open, three acts, recap. Thirty-six scenes, one hundred and
-seventy spoken lines.
+seventy-three spoken lines.
 
 > **Title note.** The brief's working title was *Puff and the Big Empty*. "The
 > Big Empty" is the best phrase in this script and it is also the one idea a
@@ -25,16 +25,37 @@ change it in both files.
 
 | Character | Engine | Voice | Speed | Who they are |
 |---|---|---|---|---|
-| **Narrator** | kokoro | `af_heart` | 1.0 | Warm storyteller, returning. Deadpans at Sunny for a living. Also cameo-voices the beetle and the leaf in Act One and the rock in Act Two, so the show never grows past five actors. |
+| **Narrator** | kokoro | `af_heart` | 1.0 | Warm storyteller, returning. Deadpans at Sunny for a living. Voice only — no body, ever. |
 | **Puff** | minimax | `Exuberant_Girl` | 1.0 | Our hero. One small puff of air. Convinced he is invisible and therefore *nothing*. Apologises constantly at the start and not once after Act Two. Emerging catchphrase: *"You can't see me. But you can FEEL me."* Cast 2026-07-26 — **pending a full-context ear check**. |
 | **Sunny** | minimax | `Imposing_Manner` | 1.0 | The Sun, returning, unchanged, insufferable. This is the episode where *"that one is me as well!"* turns out to be literally true for everything on screen. |
 | **Cloudia** | minimax | `Abbess` | 1.0 | Returning for one scene. Gets delivered across the sky like a parcel and could not be happier about it. |
 | **Drip** | minimax | `Lively_Girl` | 1.0 | Returning for exactly one line, waving from inside Cloudia. Fan service, deliberately. |
+| **Beetle** | minimax | `Patient_Man` | 0.92 | Two lines, fired three times across the episode. Calm, unhurried, and genuinely unable to perceive Puff. |
+| **Leaf** | minimax | `Calm_Woman` | 0.92 | The same two lines one scene later, in a different voice. That difference is the whole point of casting her. |
+| **Rock** | minimax | `Deep_Voice_Man` | 0.85 | One line, very slow, completely sincere. |
+
+**The three cameos have their own voices** (2026-07-27). They were the Narrator
+doing all three, on the theory that the show never grows past five actors — and
+the first six-year-old to watch it said *"the beetle and the leaf sound like the
+narrator"*, which is the gag failing. The joke needs the audience to hear
+somebody **else** fail to notice Puff; in the Narrator's voice it reads as the
+storyteller asking a rhetorical question. The show has eight voices now, and
+the guardrail it replaces is a better one: **anything with a face and a line
+gets its own voice.** None of the three was auditioned — they were cast on
+description from the same MiniMax system-voice list — so all three are on the
+ear-check list below.
+
+Their line keys still end `_narrator` (`a1_07_narrator`, `a2_08_narrator`, …).
+That is deliberate: the keys are wired into `Video.tsx`, every `SPEAKER_VISUAL`
+map and every bubble map, nothing downstream derives the *staged* speaker from
+the key anyway (that is `useStage`'s per-line override, API 2b), and renaming
+them would be a rename of the episode for no gain. The suffix now means "not
+one of the four principals".
 
 **Two engines.** The Narrator stays on Kokoro — free, local, and re-synthesized
-the moment a line is reworded. The characters are cast on MiniMax
-speech-2.8-hd (via Replicate), which is paid but takes an `emotion` per line
-and honours inline pause markers. Emotions are set in `narration.mjs`, one
+the moment a line is reworded. Everybody with a body on screen is cast on
+MiniMax speech-2.8-hd (via Replicate), which is paid but takes an `emotion` per
+line and honours inline pause markers. Emotions are set in `narration.mjs`, one
 comment per line naming the stage direction below that justified it, and every
 unmarked line stays `auto`. The only pause markers in the episode are the two
 in `a2_41_sunny` — see Scene 21.
@@ -50,7 +71,7 @@ brings the small quick breaths herself. **Still pending a full-context ear
 check** — nobody has yet watched the episode through with him in it, and the
 two spelled Big Words (below) have never been heard on this engine at all.
 
-**Sixty lines, twenty-six of them seasoned.** Puff's `emotion`s are the arc:
+**Sixty-two lines, twenty-seven of them seasoned.** Puff's `emotion`s are the arc:
 six `sad` in Act One where the directions say deflation, `surprised` where a
 fact lands on him, `happy` from his first win onward, one `calm` (the cool sea)
 and one `angry` — the big shout, where on this engine `angry` is effort and
@@ -179,7 +200,7 @@ of stated.
 ---
 
 ### Scene 4 — The beetle
-**On stage:** Narrator (cameo as beetle), Puff
+**On stage:** Beetle, Puff (Narrator opens the scene)
 **Visual:** A round, shiny, extremely calm beetle on a stem. Puff bobs right up
 in front of its face and waves both little arms. The beetle looks straight
 through him — the pupils track past Puff to the middle distance, which is the
@@ -208,7 +229,7 @@ in Scene 32 can work.
 ---
 
 ### Scene 5 — The leaf
-**On stage:** Narrator (cameo as leaf), Puff
+**On stage:** Leaf, Puff (Narrator opens the scene)
 **Visual:** Identical staging to Scene 4, one beat wider, with a leaf where the
 beetle was. Same framing, same distance, same everything — the audience should
 feel the repeat before they hear it. Puff's wave is smaller this time.
@@ -414,7 +435,7 @@ constantly" is the grown-up's first smirk of the act.
 ---
 
 ### Scene 13 — A rock, having a lovely time
-**On stage:** Narrator (cameo as rock), Puff
+**On stage:** Rock, Puff (Narrator carries the rest of the scene)
 **Visual:** Sunbeams come down as thick gold ropes onto the ground. A cartoon
 thermometer stuck in the soil climbs. Then a wide, flat, extremely pleased grey
 rock, lying in full sun with its eyes shut. It has a face. It does not move a
@@ -439,7 +460,10 @@ mouth may move on the line; after it, the rock is furniture.
 everyone skips when they say "the sun heats the air". Played as a character
 having a nice lie-down, so the fact arrives as a joke and stays as an image.
 `a2_07_narrator` runs at 0.95 so its three items separate; `a2_08_narrator` at
-0.85, because the rock is in no hurry whatsoever.
+0.85, because the rock is in no hurry whatsoever. That line lost its stretched
+spelling when the rock was cast — "Ohhh yeah" was a Kokoro instruction and this
+engine reads a repeated letter as separate syllables, so it is "Ohh yeah" now
+and the length comes from 0.85 and `happy` instead. See Sound-word spellings.
 
 ---
 
@@ -469,10 +493,11 @@ of its own instead of a line inside another scene.
 **On stage:** Narrator, Puff
 **Visual:** Puff starts to wobble, then bob, then lift off the grass with the
 blades bending down and away beneath him. One continuous rising shot: grass,
-fence post, the kid on the hill (tiny, far off, kite still down), birds. Other
-warm puffs rise all around him, dozens of them, all at the same speed.
+fence post, the kid on the hill (tiny, far off, kite still down), birds, and
+then a band of thin high cloud he keeps climbing up through. Other warm puffs
+rise all around him, dozens of them, all at the same speed.
 **Lines:** `a2_15_narrator`, `a2_16_puff`, `a2_17_puff`, `a2_18_narrator`,
-`a2_19_puff`
+`a2_19_puff`, `a2_19b_puff`, `a2_19c_narrator`, `a2_19d_puff`
 
 > **NARRATOR:** And warm air does something wonderful. Warm air gets light.
 > **PUFF:** Wait. Wait wait wait. I am going UP!
@@ -480,12 +505,40 @@ warm puffs rise all around him, dozens of them, all at the same speed.
 > **NARRATOR:** Different show. Same sun.
 > **PUFF:** WHOOSH! I am flying! I am actually flying!
 
+*Then he notices the company.* Puff turns and waves at four of the puffs rising
+beside him, one at a time, left to right — the same crowd that has been there
+since the lift-off, nobody new arrives. Each one he greets bobs back. His
+bubble is **"Hi! Hi! Hi! Hi!"**, a summary and not a transcript.
+
+> **PUFF:** Oh! Hello! Hi Puffy. Hi Puffington. Hi other Puff. Hi Puff the third.
+
+**HELD BEAT — 20f (0.7s) after `a2_19b_puff`.** The greeting lands. He is still
+beaming at nobody in particular while the audience works out that all four
+answered to the same name.
+
+> **NARRATOR:** Every single one of them was also called Puff.
+
+**HELD BEAT — 24f (0.8s) after `a2_19c_narrator`.** **Nothing enters this.** No
+wave, no bubble, no emotion change, no entrance — Puff hangs there doing
+absolutely nothing while the shot keeps climbing behind him. Deadpan is
+stillness, and the laugh lives in the silence rather than in the read.
+
+> **PUFF:** It is a very popular name.
+
 **Pedagogy:** Warm air is less dense and rises — at six-year-old resolution,
 "warm air gets light". The Drip callback is doing real pedagogical work as well
 as fan service: it tells a returning viewer that the same sun drives both
 episodes, which is exactly the connection the series is built on. "Different
 show. Same sun." runs at 0.92 and needs to be the flattest reading in the
 episode.
+
+The roll call earns its twelve and a half seconds twice over: it is the
+episode's biggest laugh, and it is also `a2_22_narrator`'s point made as a
+picture two scenes early — *this is happening to all the warm air at once, not
+to one special puff*. A child who has just met four other Puffs cannot think
+the lift is about the hero. The roll call runs at 0.92 so the four names
+separate (Comedy pacing), and the button is deliberately unseasoned: Puff
+reports it as a mild fact about naming trends, which is the joke.
 
 ---
 
@@ -907,7 +960,7 @@ readout, and it is legible from across a room.
 ---
 
 ### Scene 32 — Look what they CAN see
-**On stage:** Narrator (cameo as beetle), Puff
+**On stage:** Beetle, Puff (Narrator carries the rest of the scene)
 **Visual:** Wide on the hill — kid, kite high in the blue, and Puff at full
 opacity for the first time, sitting on the grass at the edge of frame looking
 up. A beetle wanders into the bottom of the shot. **Same beetle staging as
@@ -1056,10 +1109,10 @@ rather quickly". This script answers that in two places at once, and both are
 already written down:
 
 - **Slower per-line speeds** for every list, roll call and repeated
-  straight-line, set in `narration.mjs` with a comment on each. Forty lines
-  carry an override. The deadpan floor is `a2_08_narrator` (the rock) at 0.85;
+  straight-line, set in `narration.mjs` with a comment on each. Forty-two lines
+  carry an override, the newest two being Scene 15's roll call. The deadpan floor is `a2_08_narrator` (the rock) at 0.85;
   the slowest narration is `rc_06_narrator` at 0.88.
-- **Held beats of silence**, twenty-two of them, each written above with its
+- **Held beats of silence**, twenty-four of them, each written above with its
   exact frame count and its reason. They become `gaps` in `Video.tsx`. The
   three longest are the kite soaring (75f), the dandelion hillside (60f) and
   the cold open flop (60f) — the episode's payoff, its heart and its hook.
@@ -1076,7 +1129,19 @@ already written down:
 - *"Hello? Is somebody there?" / "Huh. Must have been nothing."* — `a1_07`+`a1_09`,
   `a1_13`+`a1_15`, `a3_51`. Identical text, identical 0.92 speed, identical
   staging all three times. The third has no partner line, because Puff answers
-  it. **Do not vary these.**
+  it. **Do not vary these.** `a3_51` is not even a re-recording of `a1_07`: it
+  is the same clip, shared through the generator's `sameAs`. Kokoro gave that
+  away for free (same text, same voice, byte-identical file); MiniMax returned
+  the sentence 2.20s the first time and 2.84s the second, which is a thirty
+  percent difference in the one line whose whole job is to sound exactly like it
+  did five minutes earlier.
+- *The roll call* — `a2_19b`+`a2_19c`+`a2_19d`, Scene 15. The series signature
+  now, not a one-off: episode one had Drip greeting a queue of identical
+  raindrops ("Hi Drop, Hi Droppy") and it was the six-year-old's favourite joke
+  in the show, so episode two greets four identical Puffs. The shape is fixed —
+  a character cheerfully naming near-identical strangers, a flat one-line
+  explanation from the Narrator, and an unbothered button from the character.
+  Episode three should have one.
 - *"You're welcome!" / "HA! HA!"* — `a2_05`, `a2_43`, `a3_19`, `rc_03`, `rc_14`.
 - *"That one is me as well!"* — `rc_14`, paid off across the whole episode and
   finally broken in the last twelve seconds.
@@ -1101,15 +1166,17 @@ staging the script insists on, because it is the character development rendered
 in the medium the character is made of.
 
 **Sound-word spellings** are locked to the exact strings in `narration.mjs` —
-WHOOSH, FWOOSH, Poof, PUSH, Flop, Oof, Ohhh. Do not "correct" them; they are
+WHOOSH, FWOOSH, Poof, PUSH, Flop, Oof, Ohh. Do not "correct" them; they are
 shaped for the text-to-speech model, not for a copy editor. **And the shaping
 is per engine.** A stretched vowel is a kokoro instruction: it reads "Ohhh" as
-one long sound, and MiniMax reads it as separated syllables. So the Narrator's
-kokoro lines may stretch ("Ohhh yeah", the rock) and Puff's MiniMax lines may
-not — his two stretches became plain words when he changed engine
-(`a1_25_puff` "Poooof!" → "Poof!", `a3_49_puff` "PUUUSH!" → "PUSH!" with
-`emotion: "angry"`, which is where the length went). WHOOSH and FWOOSH are
-single-letter runs and survive both engines.
+one long sound, and MiniMax reads it as separated syllables. Every stretch in
+this episode has now lost that argument, because everything with a body is on
+MiniMax: Puff's two went when he was cast (`a1_25_puff` "Poooof!" → "Poof!",
+`a3_49_puff` "PUUUSH!" → "PUSH!" with `emotion: "angry"`, which is where the
+length went), and the rock's went when it was (`a2_08_narrator` "Ohhh yeah" →
+"Ohh yeah" at 0.85 and `happy`). WHOOSH and FWOOSH are single-letter runs and
+survive both engines. **Casting a character is a text edit as well as a voice
+edit** — sweep its sound words before assuming the clip is the same clip.
 
 The *drawn* words keep their stretch: the speech bubbles in
 `scenes/act1.tsx` and `scenes/act3.tsx` still read "Poooof!" and "PUUUSH!",
@@ -1121,15 +1188,27 @@ are now two different jobs; this is the only place they disagree.
 generated. What is left is listening, in this order:
 1. ~~Puff's voice itself~~ — cast, `Exuberant_Girl`. The remaining check is the
    whole episode with him in it, which is a watch, not an audition.
-2. `a1_38_puff` ("A. I. R.") and `a2_32_puff` ("W. I. N. D.") — the spelled Big
+2. **The three cameos, all unheard** (`Patient_Man` beetle, `Calm_Woman` leaf,
+   `Deep_Voice_Man` rock). Cast on description, not by ear, which is a rule
+   broken knowingly. Listen for three things: that the beetle and the leaf are
+   audibly *different people* (that is the entire reason they were recast), that
+   neither is unkind — they cannot perceive Puff, they are not ignoring him —
+   and that the rock at 0.85 reads as relaxed rather than as a fault. Any of
+   them can be re-cast for the price of one line.
+3. `a2_08_narrator` — the rock's respelled "Ohh yeah". If the engine still
+   separates the two h's, the fully safe fallback is written into
+   `narration.mjs`: "Oh yeah. That is the stuff."
+4. `a1_38_puff` ("A. I. R.") and `a2_32_puff` ("W. I. N. D.") — the spelled Big
    Words, and **the highest risk in the episode**: they moved to MiniMax with
    the rest of Puff and nobody has heard single letters on this engine.
    Phonetic fallbacks are pre-written in `narration.mjs`.
-3. `a3_49_puff` ("PUSH!" at `angry`) and `a1_25_puff` ("Poof!") — respelled for
+5. `a3_49_puff` ("PUSH!" at `angry`) and `a1_25_puff` ("Poof!") — respelled for
    the engine, so what was verified in the audition was the *word*, not this
    exact clip. `a2_28_narrator` ("FWOOSH." alone in a clip) is unchanged.
-4. Puff's six `sad` lines as a run (`a1_04`, `a1_10`, `a1_16`, `a1_17`, `a1_18`,
+6. The roll call as a run — `a2_19b_puff` (four names at 0.92; do they
+   separate?), then `a2_19c_narrator` flat, then `a2_19d_puff` unseasoned. If
+   the button sounds like it is being sold, it is wrong; it is a mild fact.
+7. Puff's six `sad` lines as a run (`a1_04`, `a1_10`, `a1_16`, `a1_17`, `a1_18`,
    `a1_20`) — six in one act is the most concentrated seasoning in the file, and
    the failure mode is a hero who sounds miserable rather than small.
-5. `a2_08_narrator` (the rock, at 0.85 — check it reads as relaxed rather than
-   as a fault) and `a3_19_sunny`, the longest exclamation run in the script.
+8. `a3_19_sunny`, the longest exclamation run in the script.

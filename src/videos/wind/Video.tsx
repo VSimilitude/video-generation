@@ -34,7 +34,7 @@ import { RECAP_SCENES } from "./scenes/recap";
 // THE GAPS ARE THE SCRIPT'S, NOT THE BUILDER'S.
 //
 // Episode two writes down every silence in it. script.md's stage directions
-// carry twenty-two held beats with exact frame counts and a reason each, and
+// carry twenty-four held beats with exact frame counts and a reason each, and
 // they become the `gaps` below verbatim. Its own words: "raising one is a note,
 // lowering one is a change to the joke." Every number in a `gaps` block traces
 // to a `HELD BEAT` line in the screenplay; the comment names it.
@@ -193,7 +193,26 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s15_up",
-    lines: ["a2_15_narrator", "a2_16_puff", "a2_17_puff", "a2_18_narrator", "a2_19_puff"],
+    lines: [
+      "a2_15_narrator",
+      "a2_16_puff",
+      "a2_17_puff",
+      "a2_18_narrator",
+      "a2_19_puff",
+      "a2_19b_puff",
+      "a2_19c_narrator",
+      "a2_19d_puff",
+    ],
+    gaps: {
+      // 20f — the roll call lands. Four greetings and four little waves, and
+      // then Puff is still there beaming at nobody in particular while the
+      // audience works out that all four answered to the same name.
+      a2_19b_puff: 20,
+      // 24f — the held beat the button is fired from. Nothing enters it: no
+      // wave, no bubble, no emotion change. Deadpan is stillness, and the laugh
+      // lives in the silence rather than in the read (see a2_19d's `auto`).
+      a2_19c_narrator: 24,
+    },
     tailFrames: 30,
   },
   { id: "s16_rule_warm_air_rises", lines: ["a2_20_narrator", "a2_21_puff", "a2_22_narrator"], tailFrames: 32 },

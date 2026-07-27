@@ -9,10 +9,8 @@
 // override per line.
 //
 //   Narrator  kokoro   af_heart         1.0   warm storyteller, occasional
-//                                             deadpan. Also cameo-voices the
-//                                             beetle and the leaf in Act One
-//                                             and the rock in Act Two, so the
-//                                             show never grows past five actors
+//                                             deadpan. Voice only — no body,
+//                                             ever
 //   Puff      minimax  Exuberant_Girl   1.0   our hero. Small, apologetic,
 //                                             then unstoppable
 //   Sunny     minimax  Imposing_Manner  1.0   the Sun. Enormous ego, and
@@ -20,14 +18,25 @@
 //   Cloudia   minimax  Abbess           1.0   one-scene cameo, delivered by wind
 //   Drip      minimax  Lively_Girl      1.0   one fan-service line, waving from
 //                                             inside Cloudia
+//   Beetle    minimax  Patient_Man      0.92  two lines, three firings
+//   Leaf      minimax  Calm_Woman       0.92  two lines
+//   Rock      minimax  Deep_Voice_Man   0.85  one line, no hurry at all
+//
+// THE THREE CAMEOS HAVE THEIR OWN VOICES NOW. They used to be the Narrator
+// doing all three, on the theory that the show never grows past five actors.
+// The first six-year-old to watch the cut said "the beetle and the leaf sound
+// like the narrator" — which is the whole gag failing, because the joke needs
+// the audience to hear somebody *else* fail to notice Puff. They are cast, and
+// the show has eight voices.
 //
 // TWO ENGINES. The Narrator stays on kokoro — it is the storyteller voice the
 // series was built on, it is free, and it re-synthesizes instantly when a line
-// is reworded. The characters are cast on MiniMax speech-2.8-hd (Replicate,
-// ~$0.11/1000 characters), which is paid but can *act*: it takes an `emotion`
-// and honours inline pause markers. Casting picked by ear from auditions
-// (public/narration/auditions-mm, and auditions-mm-puff for Puff), all four
-// approved 2026-07-26.
+// is reworded. Everybody with a body on screen is cast on MiniMax
+// speech-2.8-hd (Replicate, ~$0.11/1000 characters), which is paid but can
+// *act*: it takes an `emotion` and honours inline pause markers. The four
+// principals were picked by ear from auditions (public/narration/auditions-mm,
+// and auditions-mm-puff for Puff) and approved 2026-07-26; the three cameos
+// were cast on description on 2026-07-27 and are unheard.
 //
 //   engine: "minimax", voiceId: "<id>", emotion: "<enum>"
 //   emotions: auto happy sad angry fearful disgusted surprised calm fluent
@@ -39,8 +48,8 @@
 // written — the same instinct as not adding a `speed` override to a line that
 // does not need one. Sunny's are nearly all `happy` because bragging is his
 // entire character; the two that are not are the two moments he stops.
-// Puff's sixty lines are thirty-four `auto` and twenty-six seasoned, and the
-// seasoning is the arc: six `sad` in Act One (every one of them a stage
+// Puff's sixty-two lines are thirty-five `auto` and twenty-seven seasoned, and
+// the seasoning is the arc: six `sad` in Act One (every one of them a stage
 // direction that says deflation or "sad, not tragic"), `surprised` on the six
 // lines where a fact lands on him, `happy` from his first win onward, and one
 // each of `calm` (sitting on the cool sea) and `angry` (the shout — see
@@ -78,7 +87,7 @@
 // the approved read. WHOOSH came through the screen test intact and stays;
 // FWOOSH is the same shape (no repeated letter) and rides on that. Anything
 // new goes through --audition before it goes in.
-// All sixty of his lines follow.
+// All sixty-two of his lines follow.
 //
 // Keys are `<act>_<number>_<speaker>` in strict playback order:
 // `co` cold open, `a1` the grass, `a2` the lift, `a3` air with a job,
@@ -94,9 +103,11 @@
 //     ("Um.", "Wait.") or split onto its own line with a gap after it.
 //   - Sound words are spelled as words: WHOOSH (proven in episode one),
 //     FWOOSH, Poof, Flop. Spellings are per engine: a stretched vowel
-//     ("Poooof", "PUUUSH") is a kokoro instruction and a MiniMax mispronounce,
-//     so the Narrator's kokoro lines may stretch and Puff's minimax lines may
-//     not. The stretch on a minimax line is an `emotion`, not a spelling.
+//     ("Poooof", "PUUUSH", "Ohhh") is a kokoro instruction and a MiniMax
+//     mispronounce, so a kokoro line may stretch and a minimax line may not.
+//     The stretch on a minimax line is an `emotion`, not a spelling. The rock
+//     lost its "Ohhh" when it was cast — see a2_08 — and the only stretched
+//     spellings left in the file are on the Narrator's own kokoro lines.
 //   - CAPS mark shouted words and survive the model fine.
 //   - The spelled-out Big Words are single letters with full stops
 //     ("A. I. R.", "W. I. N. D.") so the model reads letter names and a kid can
@@ -140,6 +151,60 @@ const CLOUDIA = { engine: "minimax", voiceId: "Abbess", speed: 1.0 };
 // Was af_bella @1.1 on kokoro, where the 1.1 bought the bounce. Lively_Girl
 // comes with it, so her one line sits at the engine's own speed.
 const DRIP = { engine: "minimax", voiceId: "Lively_Girl", speed: 1.0 };
+
+// THE CAMEOS — and why their keys still say `_narrator`.
+//
+// The beetle, the leaf and the rock have bodies on screen and now have voices
+// of their own, but their line keys are unchanged (`a1_07_narrator`,
+// `a2_08_narrator`, …). That is deliberate and it is not laziness:
+//
+//   - The keys are wired into `Video.tsx`'s SCRIPT, `turnsOf`, every scene's
+//     `SPEAKER_VISUAL` map, every bubble map and every `lineWindow` call in
+//     `scenes/act1.tsx` and `scenes/act2.tsx`. Renaming them is a rename of
+//     the episode, for no gain.
+//   - Nothing downstream reads the key to decide who is *on stage* anyway.
+//     `speakerOf()` derives a voice from the suffix, and every scene with a
+//     cameo already overrides that per line with `useStage(scene, VISUAL)` —
+//     API 2b in `scenes/common.tsx` exists precisely because these three
+//     bodies had to mouth "narrator" turns. Mouths, bubbles, faces and eyes
+//     all read the *staged* speaker, not the voiced one.
+//
+// So the suffix now means "not one of the four principals" rather than "the
+// Narrator says this". The Narrator himself is every other `_narrator` key,
+// and he still never has a body.
+//
+// None of the three was auditioned — they were cast on description, from the
+// same MiniMax system voice list as the principals. EAR-CHECK ALL THREE.
+//
+// Deadpan, unhurried, and identical every time it fires: the beetle's two
+// lines are the episode's central repetition gag and Scene 32's payoff, so
+// all three firings share voice, emotion and speed exactly. 0.92 is the speed
+// they were read at as Narrator lines and it is kept — the joke is the
+// sameness, and the pacing rule wants a repeated straight-line slow.
+const BEETLE = {
+  engine: "minimax",
+  voiceId: "Patient_Man",
+  emotion: "calm",
+  speed: 0.92,
+};
+// The leaf fires the same two lines one scene later. A different voice from
+// the beetle, and as far from Puff's as the list allows: the gag is that they
+// are two different people who both cannot see him.
+const LEAF = {
+  engine: "minimax",
+  voiceId: "Calm_Woman",
+  emotion: "calm",
+  speed: 0.92,
+};
+// One line, very slow, completely sincere. `happy` because the rock is having
+// the best day of its life (script.md, Scene 13) and the words alone read as a
+// shrug; 0.85 stays exactly as it was, because the rock is in no hurry.
+const ROCK = {
+  engine: "minimax",
+  voiceId: "Deep_Voice_Man",
+  emotion: "happy",
+  speed: 0.85,
+};
 
 export default {
   voice: "af_heart",
@@ -205,19 +270,17 @@ export default {
       ...NARRATOR,
     },
     a1_06_puff: { text: "Good morning, beetle! I am Puff!", ...PUFF },
-    // BEETLE (narrator cameo). First half of the episode's central repetition
-    // gag. Deadpan, unhurried, and identical both times it fires — the joke is
-    // the sameness, so a1_07 and a1_13 share text, voice and speed exactly.
+    // BEETLE. First half of the episode's central repetition gag. Every firing
+    // is word for word and read for read the same — a1_07 / a1_13 / a3_51 all
+    // carry the identical text through the identical `BEETLE`/`LEAF` spread.
     a1_07_narrator: {
       text: "Hello? Is somebody there?",
-      ...NARRATOR,
-      speed: 0.92,
+      ...BEETLE,
     },
     a1_08_puff: { text: "YES! Me! I am right here!", ...PUFF },
     a1_09_narrator: {
       text: "Huh. Must have been nothing.",
-      ...NARRATOR,
-      speed: 0.92,
+      ...BEETLE,
     },
     // Scene 4, after the beetle looks through him: "the deflation is the
     // picture". The read matches the picture.
@@ -227,11 +290,11 @@ export default {
       ...NARRATOR,
     },
     a1_12_puff: { text: "Good morning, leaf! I am Puff!", ...PUFF },
-    // LEAF (narrator cameo). Second firing. Same words, same speed.
+    // LEAF. Second firing, a different creature, the same two sentences at the
+    // same speed. Only the voice changes, which is the point of casting them.
     a1_13_narrator: {
       text: "Hello? Is somebody there?",
-      ...NARRATOR,
-      speed: 0.92,
+      ...LEAF,
     },
     a1_14_puff: {
       text: "It is ME. Puff. We do this every single day.",
@@ -239,8 +302,7 @@ export default {
     },
     a1_15_narrator: {
       text: "Huh. Must have been nothing.",
-      ...NARRATOR,
-      speed: 0.92,
+      ...LEAF,
     },
     // Scene 5, second firing: same deflation, one beat longer ("Puff's wave is
     // smaller this time").
@@ -404,11 +466,20 @@ export default {
       ...NARRATOR,
       speed: 0.95,
     },
-    // ROCK (narrator cameo). One line, very slow, completely sincere.
+    // ROCK. One line, very slow, completely sincere — and RESPELLED FOR THE
+    // MOVE, exactly like Puff's two sound words were. "Ohhh" is a kokoro
+    // instruction (one long sound); MiniMax reads a run of repeated letters as
+    // separated syllables, and "oh-huh-huh yeah" is the deadpan floor of the
+    // episode arriving broken. The length now comes from 0.85 and `happy`,
+    // which is where a stretch lives on this engine.
+    //
+    // EAR-CHECK. "Ohh" is a two-letter run and this engine has never said it
+    // here. If it still separates, the fully safe fallback is pre-written and
+    // costs one word: "Oh yeah. That is the stuff." The rock has no speech
+    // bubble, so there is no drawn spelling to keep in step.
     a2_08_narrator: {
-      text: "Ohhh yeah. That is the stuff.",
-      ...NARRATOR,
-      speed: 0.85,
+      text: "Ohh yeah. That is the stuff.",
+      ...ROCK,
     },
     a2_09_puff: { text: "Is the rock okay?", ...PUFF },
     a2_10_narrator: {
@@ -462,6 +533,39 @@ export default {
       ...PUFF,
       emotion: "happy",
     },
+    // THE ROLL CALL. Episode one's best-loved joke with a six-year-old was
+    // Drip greeting a queue of identical raindrops by name ("Hi Drop, Hi
+    // Droppy"), and the same six-year-old asked for more of it. This is the
+    // episode-two variant, and it fits where it sits: Scene 15 already has
+    // dozens of identical warm puffs rising alongside him, so the gag costs
+    // three lines and no new staging idea.
+    //
+    // Slowed to 0.92 by the Comedy pacing rule (docs/STYLE.md): a roll call is
+    // a list, and the four greetings have to separate or they are one noise.
+    // `happy` is the same seasoning a2_19 carries — he is mid-delight and this
+    // is him being delighted at somebody else.
+    a2_19b_puff: {
+      text: "Oh! Hello! Hi Puffy. Hi Puffington. Hi other Puff. Hi Puff the third.",
+      ...PUFF,
+      speed: 0.92,
+      emotion: "happy",
+    },
+    // The straight line, and the other half of the pacing rule: flat, slow, and
+    // with the 24f held beat after it doing the work. Narrator, so it stays on
+    // kokoro and re-times for free.
+    a2_19c_narrator: {
+      text: "Every single one of them was also called Puff.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
+    // The button, and deliberately NOT seasoned. The joke is that Puff reports
+    // this as a mild fact about naming trends; `happy` would play it as a
+    // punchline being sold, which is exactly what a deadpan is not. The laugh
+    // is in the 24f of silence in front of it, not in the read — same call as
+    // a1_43 ("Sorry.") and for the same reason. Speed stays at his own 1.0:
+    // the roll call needed slowing because it was a list, and this is one short
+    // sentence that wants to land and stop.
+    a2_19d_puff: { text: "It is a very popular name.", ...PUFF },
     a2_20_narrator: {
       text: "Warm air rises. Say it with me. Warm air rises.",
       ...NARRATOR,
@@ -809,14 +913,18 @@ export default {
       ...NARRATOR,
       speed: 0.95,
     },
-    // BEETLE (narrator cameo). Third and final firing of the repetition gag,
-    // word for word and speed for speed identical to a1_07 and a1_13. Do not
-    // "improve" this line.
-    a3_51_narrator: {
-      text: "Hello? Is somebody there?",
-      ...NARRATOR,
-      speed: 0.92,
-    },
+    // BEETLE. Third and final firing of the repetition gag — and it is not a
+    // re-recording of a1_07, it is a1_07. Do not "improve" this line.
+    //
+    // On kokoro this was free: the same text in the same voice produced a
+    // byte-identical clip, which is why the production note could simply say
+    // "identical text, identical speed". MiniMax is a remote model called once
+    // per key, and the first two generations of this one sentence came back
+    // 2.20s and 2.84s — a thirty percent difference in the sentence whose
+    // entire job is to sound exactly like it did five minutes earlier. So the
+    // recording is shared outright (`sameAs`, see the generator's header). The
+    // text lives on a1_07; changing it there re-copies here.
+    a3_51_narrator: { sameAs: "a1_07_narrator" },
     // "auto": "the line the whole character was built to say", and Scene 32
     // hands it a 45f beat on either side. Four quiet words that answer a gag
     // fired twice in Act One — the restraint is the point.

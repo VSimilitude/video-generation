@@ -24,8 +24,18 @@
 //         text: "Door to door service, darling!",
 //         engine: "minimax", voiceId: "Abbess", emotion: "happy", speed: 1.0,
 //       },
+//       // …or replay an earlier line's *exact recording* under a new key:
+//       askAgain: { sameAs: "ask" },
 //     },
 //   };
+//
+// SAME RECORDING, TWICE. `{ sameAs: "<earlier key>" }` copies that line's clip
+// under this key's own filename — no synthesis, no API call, no money. It is
+// for a repetition gag, where the joke is that the line is identical: kokoro
+// gives that away for free (it is deterministic), MiniMax does not, and a
+// re-generated sentence can come back half a second longer in a different
+// reading. An alias must name a line defined *earlier* in the file, and it
+// re-copies whenever the source line changes.
 //
 // TWO ENGINES
 //   kokoro  (default) — local, free, instant, the Narrator's voice and the
@@ -51,7 +61,7 @@
 // run that fails halfway: each line retries three times on its own, and a line
 // that still fails leaves its previous clip in place and reports at the end.
 
-import { writeFile, mkdir, rm, readFile, readdir, stat } from "node:fs/promises";
+import { writeFile, mkdir, rm, readFile, readdir, stat, copyFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import path from "node:path";
@@ -446,9 +456,10 @@ function loadTts() {
 }
 
 // Normalize a line entry ("text" or {text, voice?, speed?, engine?, voiceId?,
-// emotion?}) against the video's defaults.
+// emotion?, sameAs?}) against the video's defaults.
 function lineSpec(entry, defaults) {
   if (typeof entry === "string") return { engine: "kokoro", text: entry, ...defaults };
+  if (entry.sameAs) return { engine: "alias", sameAs: entry.sameAs };
   const engine = entry.engine ?? "kokoro";
   if (engine === "minimax") {
     return {
@@ -468,9 +479,25 @@ function lineSpec(entry, defaults) {
 }
 
 // Every way a line can be wrong, checked before anything is synthesized or
-// paid for. Returns a list of human-readable problems.
-function specProblems(spec) {
+// paid for. Returns a list of human-readable problems. `order` is the video's
+// key list, needed only to check that an alias points backwards at a real line.
+function specProblems(spec, order = [], key = null) {
   const problems = [];
+  if (spec.engine === "alias") {
+    const at = order.indexOf(spec.sameAs);
+    if (at < 0) {
+      problems.push(`sameAs names ${JSON.stringify(spec.sameAs)}, which is not a line here`);
+    } else if (key !== null && at >= order.indexOf(key)) {
+      // The copy is made as the run walks the file in order, so the source has
+      // to have been made already. Aliasing forwards would silently produce a
+      // clip of nothing.
+      problems.push(
+        `sameAs points forwards at ${JSON.stringify(spec.sameAs)} — an alias must name an earlier line`,
+      );
+    }
+    if (spec.sameAs === key) problems.push("sameAs points at itself");
+    return problems;
+  }
   if (typeof spec.text !== "string" || spec.text.trim() === "") {
     problems.push("has no text");
   }
@@ -502,15 +529,18 @@ function specProblems(spec) {
   return problems;
 }
 
-function clipHash(spec, encMode) {
+function clipHash(spec, encMode, sourceHash) {
   // The kokoro hash is exactly what it always was, so an engine that gained
   // fields does not re-synthesize a single existing clip. The minimax hash
   // leaves out encMode — the mp3 arrives already encoded, and a machine that
-  // gains ffmpeg must not re-buy 75 lines.
+  // gains ffmpeg must not re-buy 75 lines. An alias hashes its *source's* hash,
+  // so re-wording the source re-copies the alias.
   const material =
-    spec.engine === "minimax"
-      ? [MINIMAX_MODEL, spec.text, spec.voiceId, spec.emotion, spec.speed]
-      : [spec.text, spec.voice, spec.speed, encMode];
+    spec.engine === "alias"
+      ? ["alias", spec.sameAs, sourceHash]
+      : spec.engine === "minimax"
+        ? [MINIMAX_MODEL, spec.text, spec.voiceId, spec.emotion, spec.speed]
+        : [spec.text, spec.voice, spec.speed, encMode];
   return createHash("sha256")
     .update(JSON.stringify(material))
     .digest("hex")
@@ -571,9 +601,11 @@ async function generateVideo({ slug, config }, encMode, token) {
   let paidChars = 0;
 
   console.log(`\n${slug}:`);
+  const hashes = {};
   for (const [key, entry] of Object.entries(config.lines)) {
     const spec = lineSpec(entry, defaults);
-    const hash = clipHash(spec, encMode);
+    const hash = clipHash(spec, encMode, hashes[spec.sameAs]);
+    hashes[key] = hash;
     const cached = cache[key];
     if (
       cached &&
@@ -586,6 +618,39 @@ async function generateVideo({ slug, config }, encMode, token) {
         durationSeconds: cached.durationSeconds,
       };
       console.log(`  ${key.padEnd(16)} (cached) ${cached.durationSeconds.toFixed(2)}s`);
+      continue;
+    }
+
+    if (spec.engine === "alias") {
+      // A second key that plays the *same recording* as an earlier one.
+      //
+      // This exists for repetition gags. Kokoro is deterministic, so two keys
+      // carrying the same words in the same voice used to produce byte-identical
+      // clips for free; MiniMax is a remote model called once per key, and the
+      // wind episode's beetle said its one sentence 0.65s slower the second time
+      // it was generated. A running gag whose whole mechanism is the sameness
+      // cannot be left to that, and re-buying the line is both a cost and a
+      // second roll of the dice. The bytes are copied under the alias key's own
+      // filename, so nothing downstream can tell the difference — several places
+      // recover a line key from its clip path.
+      const source = clips[spec.sameAs];
+      if (!source) {
+        failed.push(`${key}: sameAs "${spec.sameAs}" has no clip`);
+        console.log(`  ${key.padEnd(16)} FAILED — sameAs "${spec.sameAs}" has no clip`);
+        continue;
+      }
+      const sourceFile = source.file.split("/").pop();
+      const outFile = `${key}${path.extname(sourceFile)}`;
+      await copyFile(path.join(outDir, sourceFile), path.join(outDir, outFile));
+      if (cached?.outFile && cached.outFile !== outFile) {
+        await rm(path.join(outDir, cached.outFile), { force: true });
+      }
+      const { durationSeconds } = source;
+      nextCache[key] = { hash, outFile, durationSeconds };
+      clips[key] = { file: `narration/${slug}/${outFile}`, durationSeconds };
+      console.log(
+        `  ${key.padEnd(16)} ${durationSeconds.toFixed(2)}s  (same recording as ${spec.sameAs})`,
+      );
       continue;
     }
 
@@ -828,10 +893,11 @@ async function main() {
       voice: config.voice ?? DEFAULT_VOICE,
       speed: config.speed ?? DEFAULT_SPEED,
     };
+    const order = Object.keys(config.lines);
     for (const [key, entry] of Object.entries(config.lines)) {
       const spec = lineSpec(entry, defaults);
       if (spec.engine === "minimax") usesMiniMax = true;
-      for (const problem of specProblems(spec)) {
+      for (const problem of specProblems(spec, order, key)) {
         invalid.push(`${slug}/${key} ${problem}`);
       }
     }

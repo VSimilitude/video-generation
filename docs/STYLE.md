@@ -132,6 +132,21 @@ our theme palette overrides its colors:
   voice.
 - Per-line overrides (`{ text, voice, speed }`) are the mechanism for a
   one-off tonal shift; don't fork a whole video's voice for one aside.
+- **A body with a face and a line gets its own voice.** The narrator may quote
+  a character ("and the moose said…") but must not *be* one: a bit-part
+  delivered in the narrator's voice reads as the storyteller doing a voice, and
+  any joke that depends on somebody-other-than-the-narrator saying it collapses.
+  The wind episode had its narrator cameo a beetle, a leaf and a rock to keep
+  the cast at five; the six-year-old's first note was "the beetle and the leaf
+  sound like the narrator", and recasting all three cost three cents. Voice
+  count is not a budget worth defending.
+- **Share the recording for a repetition gag; don't order it twice.** Kokoro is
+  deterministic, so identical text in an identical voice gives an identical
+  clip for free. A paid remote model does not: MiniMax returned the same
+  sentence at 2.20s and then 2.84s, in the line whose entire job was to sound
+  the same as it had five minutes earlier. Use
+  `{ sameAs: "<earlier key>" }` — the generator copies the clip under the new
+  key, so nothing downstream can tell, and it costs nothing.
 - **Spell out initialisms** so the voice reads letters, not a word: "U R",
   not "UR". Same for anything the model mangles — respell phonetically
   ("kay-o-koh"). Listen to every clip before building visuals; fixes are
@@ -383,6 +398,23 @@ the previous frame renders differently every time.
   - Don't telegraph: an emotion change that anticipates the punchline (the
     default 8-frame `useEmotion` lead) can leak the joke into the silent
     hold. Cut the lead down for held-beat scenes.
+  - **Deadpan is stillness.** Nothing new enters the beat *or the button* — no
+    bubble, no gesture, no entrance, no emotion change. A hand still waving
+    under a flat line is the character selling the joke, and the button itself
+    stays unseasoned (`emotion: "auto"`); the laugh is in the silence in front
+    of it, not in the read.
+- **The roll-call gag is a kids'-series signature — give every episode one.**
+  Ep 1's most-quoted joke was Drip greeting a queue of identical raindrops by
+  name; the six-year-old's request for ep 2 was literally "more Hi Drop, Hi
+  Droppy". The shape: a character cheerfully naming near-identical strangers →
+  one flat explanatory line from the narrator → an unbothered button from the
+  character. Two things make it worth its runtime:
+  - Build it out of a picture the scene **already** has (ep 2's was staged on
+    the dozens of identical warm puffs that were rising alongside Puff anyway),
+    so it costs four eye-lines and a wave rather than a new set.
+  - Pick the one whose joke is also the lesson — four other Puffs is "this
+    happens to *all* the warm air", made as a picture two scenes before the
+    narration makes it as a sentence.
 
 ## Speech bubbles
 
