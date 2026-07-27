@@ -26,7 +26,7 @@ change it in both files.
 | Character | Engine | Voice | Speed | Who they are |
 |---|---|---|---|---|
 | **Narrator** | kokoro | `af_heart` | 1.0 | Warm storyteller, returning. Deadpans at Sunny for a living. Also cameo-voices the beetle and the leaf in Act One and the rock in Act Two, so the show never grows past five actors. |
-| **Puff** | kokoro | `af_sky` **(placeholder)** | 1.05 | Our hero. One small puff of air. Convinced he is invisible and therefore *nothing*. Apologises constantly at the start and not once after Act Two. Emerging catchphrase: *"You can't see me. But you can FEEL me."* |
+| **Puff** | minimax | `Exuberant_Girl` | 1.0 | Our hero. One small puff of air. Convinced he is invisible and therefore *nothing*. Apologises constantly at the start and not once after Act Two. Emerging catchphrase: *"You can't see me. But you can FEEL me."* Cast 2026-07-26 — **pending a full-context ear check**. |
 | **Sunny** | minimax | `Imposing_Manner` | 1.0 | The Sun, returning, unchanged, insufferable. This is the episode where *"that one is me as well!"* turns out to be literally true for everything on screen. |
 | **Cloudia** | minimax | `Abbess` | 1.0 | Returning for one scene. Gets delivered across the sky like a parcel and could not be happier about it. |
 | **Drip** | minimax | `Lively_Girl` | 1.0 | Returning for exactly one line, waving from inside Cloudia. Fan service, deliberately. |
@@ -39,15 +39,25 @@ comment per line naming the stage direction below that justified it, and every
 unmarked line stays `auto`. The only pause markers in the episode are the two
 in `a2_41_sunny` — see Scene 21.
 
-**Puff's voice is not cast yet.** `af_sky` at 1.05 is a placeholder so the
-episode can be timed and watched end to end, and he is the last actor on one.
-Auditioned on both engines — kokoro `af_sky`, `af_nicole`, `bf_lily`,
-`am_liam`; MiniMax `Sweet_Girl_2`, `Inspirational_girl` — on three lines that
-ask for three different things: `a1_04_puff` (small, apologetic), `a2_19_puff`
-(delighted, airborne) and `a3_49_puff` (the big shout). Pick by ear, per
-STYLE.md. Moving him is one edit: `PUFF_ENGINE` in `narration.mjs`. If he
-stays on kokoro, keep a speed a little above 1.0; Puff talks in small quick
-breaths.
+**Puff is cast: MiniMax `Exuberant_Girl` at 1.0**, the last actor off a
+placeholder (2026-07-26). Auditioned on both engines on the three lines that
+ask for three different things — `a1_04_puff` (small, apologetic), `a2_19_puff`
+(delighted, airborne) and `a3_49_puff` (the big shout): kokoro `af_sky`,
+`af_nicole`, `bf_lily`, `am_liam`; MiniMax `Sweet_Girl_2`,
+`Inspirational_girl`, `Decent_Boy`, `Lovely_Girl`, `Young_Knight`,
+`Exuberant_Girl`. The old kokoro 1.05 was compensation for `af_sky`; this voice
+brings the small quick breaths herself. **Still pending a full-context ear
+check** — nobody has yet watched the episode through with him in it, and the
+two spelled Big Words (below) have never been heard on this engine at all.
+
+**Sixty lines, twenty-six of them seasoned.** Puff's `emotion`s are the arc:
+six `sad` in Act One where the directions say deflation, `surprised` where a
+fact lands on him, `happy` from his first win onward, one `calm` (the cool sea)
+and one `angry` — the big shout, where on this engine `angry` is effort and
+volume rather than temper. Every non-`auto` line names its stage direction in a
+comment. The apologies are deliberately *not* all sad: Scene 11's button and
+Scene 22's reflex are comedy and habit respectively, and playing them sad kills
+both.
 
 ## The four Big Words
 
@@ -258,14 +268,14 @@ broken. `a1_17_puff` is the roll-call line and carries a 0.95 speed override in
 **On stage:** Narrator, Puff
 **Visual:** A dandelion clock, huge in frame, every seed rendered. Puff swells
 up — cheeks out, comically round, the most solid he has looked so far — and
-holds it. On "Poooof!" the seed head detonates into a slow-motion galaxy of
+holds it. On "Poof!" the seed head detonates into a slow-motion galaxy of
 seeds crossing the whole screen.
 **Lines:** `a1_23_narrator`, `a1_24_narrator`, `a1_25_puff`, `a1_26_narrator`,
 `a1_27_puff`
 
 > **NARRATOR:** Watch. Here is a dandelion, all full of fluffy seeds.
 > **NARRATOR:** Now. Take a big breath, and puff it out.
-> **PUFF:** Okay. Here I go. Ready? Poooof!
+> **PUFF:** Okay. Here I go. Ready? Poof!
 
 **HELD BEAT — 45f (1.5s) after `a1_25_puff`.** The seeds fly in silence. No
 narration over the proof — the point is that the audience sees an invisible
@@ -880,7 +890,7 @@ audience is a full beat ahead of him and gets to sit in it.
 **HELD BEAT — 45f (1.5s) after `a3_48_narrator`.** Puff draws in the biggest
 breath of his life. Grass bends. Nobody speaks.
 
-> **PUFF:** PUUUSH!
+> **PUFF:** PUSH!
 
 **HELD BEAT — 75f (2.5s) after `a3_49_puff`.** **The longest silence in the
 episode, and the payoff of the whole thing.** The kite snaps off the grass, the
@@ -1091,16 +1101,35 @@ staging the script insists on, because it is the character development rendered
 in the medium the character is made of.
 
 **Sound-word spellings** are locked to the exact strings in `narration.mjs` —
-WHOOSH, FWOOSH, Poooof, PUUUSH, Flop, Oof, Ohhh. Do not "correct" them; they
-are shaped for the text-to-speech model, not for a copy editor.
+WHOOSH, FWOOSH, Poof, PUSH, Flop, Oof, Ohhh. Do not "correct" them; they are
+shaped for the text-to-speech model, not for a copy editor. **And the shaping
+is per engine.** A stretched vowel is a kokoro instruction: it reads "Ohhh" as
+one long sound, and MiniMax reads it as separated syllables. So the Narrator's
+kokoro lines may stretch ("Ohhh yeah", the rock) and Puff's MiniMax lines may
+not — his two stretches became plain words when he changed engine
+(`a1_25_puff` "Poooof!" → "Poof!", `a3_49_puff` "PUUUSH!" → "PUSH!" with
+`emotion: "angry"`, which is where the length went). WHOOSH and FWOOSH are
+single-letter runs and survive both engines.
 
-**Audition list.** Before building any visuals, in this order:
-1. **Puff's voice itself** — `af_sky`, `af_nicole`, `bf_lily`, `am_liam` on
-   `a1_04_puff`, `a2_19_puff` and `a3_49_puff`. Everything else waits on this.
+The *drawn* words keep their stretch: the speech bubbles in
+`scenes/act1.tsx` and `scenes/act3.tsx` still read "Poooof!" and "PUUUSH!",
+because on screen the extra letters are a picture of a long loud noise and a
+pre-reader gets that instantly. Spelling for the ear and spelling for the eye
+are now two different jobs; this is the only place they disagree.
+
+**Ear-check list.** ~~Audition~~ done — every voice is cast and every clip is
+generated. What is left is listening, in this order:
+1. ~~Puff's voice itself~~ — cast, `Exuberant_Girl`. The remaining check is the
+   whole episode with him in it, which is a watch, not an audition.
 2. `a1_38_puff` ("A. I. R.") and `a2_32_puff` ("W. I. N. D.") — the spelled Big
-   Words. Phonetic fallbacks are pre-written in `narration.mjs`.
-3. `a2_28_narrator` ("FWOOSH." alone in a clip) and `a3_49_puff` ("PUUUSH!") —
-   new sound words, and a vowel run of the kind episode one flagged.
-4. `a1_25_puff` ("Poooof!") and `a2_08_narrator` (the rock, at 0.85 — check it
-   reads as relaxed rather than as a fault).
-5. `a3_19_sunny`, the longest exclamation run in the script.
+   Words, and **the highest risk in the episode**: they moved to MiniMax with
+   the rest of Puff and nobody has heard single letters on this engine.
+   Phonetic fallbacks are pre-written in `narration.mjs`.
+3. `a3_49_puff` ("PUSH!" at `angry`) and `a1_25_puff` ("Poof!") — respelled for
+   the engine, so what was verified in the audition was the *word*, not this
+   exact clip. `a2_28_narrator` ("FWOOSH." alone in a clip) is unchanged.
+4. Puff's six `sad` lines as a run (`a1_04`, `a1_10`, `a1_16`, `a1_17`, `a1_18`,
+   `a1_20`) — six in one act is the most concentrated seasoning in the file, and
+   the failure mode is a hero who sounds miserable rather than small.
+5. `a2_08_narrator` (the rock, at 0.85 — check it reads as relaxed rather than
+   as a fault) and `a3_19_sunny`, the longest exclamation run in the script.

@@ -136,6 +136,19 @@ our theme palette overrides its colors:
   not "UR". Same for anything the model mangles — respell phonetically
   ("kay-o-koh"). Listen to every clip before building visuals; fixes are
   cheap before scenes exist and expensive after.
+- **Spelling is per engine, so recasting a character is a text edit too.** A
+  stretched vowel ("Poooof", "PUUUSH", "Ohhh") is a kokoro instruction — it
+  reads the run as one long sound. MiniMax reads it as separated syllables and
+  the word arrives broken. On a minimax line the length comes from the
+  `emotion` instead (the wind episode's big shout is a plain "PUSH!" at
+  `angry`, which that engine plays as effort and volume, not temper). Single
+  letter runs — WHOOSH, FWOOSH — are fine on both. When a line moves engines,
+  sweep its sound words before assuming the clip is the same clip.
+- **The drawn word and the spoken word are allowed to disagree.** A speech
+  bubble may keep "PUUUSH!" while the clip says "PUSH!": on screen the extra
+  letters are a picture of a long loud noise, which is exactly what a
+  pre-reader needs and exactly what the TTS model cannot parse. Say so in the
+  script where it happens, or the next reader will "fix" one of them.
 - Prefer generic, name-free narration lines where the content allows. Lines
   that don't name a specific subject can be reused across videos and
   re-cut without re-synthesis.

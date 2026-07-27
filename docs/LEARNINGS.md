@@ -507,9 +507,10 @@ puffSilhouettePath, Rock + CHAR_BOX cameo bodies, Cloudia's hat, emotionAt()
 helper for in-silence cues; fix kidHand() flip bug (common+coldOpen
 together); Bubbles tailAt option.
 
-**Watch-fors on review**: Puff voice is still the af_sky placeholder (his
-audition pick is the last one open — Sunny, Cloudia and Drip are now MiniMax,
-see below); the recast character lines all want an ear, particularly
+**Watch-fors on review**: Puff is now cast (MiniMax `Exuberant_Girl`, see
+below) and the whole cast is off placeholders, but nobody has watched the
+episode end to end with his voice in it; the recast character lines all want an
+ear, particularly
 Cloudia's `angry` demand and Sunny's `surprised` "Wait. What?"; spelled
 "A. I. R." / "W. I. N. D." clips need an ear; scene 30 is prop-crowded;
 scene 35 map has place-name text (cut for pre-readers?); the 75f kite payoff
@@ -587,9 +588,22 @@ the ep-1 retro) is the single best argument for doing it.
 The Narrator stays on Kokoro. Sunny, Cloudia and Drip moved to **MiniMax
 speech-2.8-hd via Replicate** (`engine: "minimax"`, 14 lines, 617 characters,
 $0.07), cast by ear from auditions: Sunny → `Imposing_Manner`, Cloudia →
-`Abbess`, Drip → `Lively_Girl`. Puff is deliberately still on the `af_sky`
-placeholder behind a one-line `PUFF_ENGINE` toggle — his casting is the open
-question, and flipping it moves all forty-seven of his lines at once.
+`Abbess`, Drip → `Lively_Girl`. Puff followed later the same day — MiniMax
+`Exuberant_Girl` at 1.0, sixty lines, 1955 characters, $0.22 — and the
+one-line `PUFF_ENGINE` toggle the recast was built behind did exactly what it
+promised: one word changed, sixty clips moved. **Two things the toggle could
+not carry, and both are now STYLE.md rules.** First, spelling is per engine: a
+stretched vowel is a *kokoro instruction* (one long sound) and a MiniMax
+mispronounce (separated syllables), so his two sound words were respelled on
+the way over — "Poooof!" → "Poof!", "PUUUSH!" → "PUSH!" — and the length that
+was in the letters is now in `emotion: "angry"`, which this engine plays as
+effort rather than temper. The drawn speech bubbles keep the stretch on
+purpose; the eye and the ear want different spellings. Second, the emotion map
+had to be *written*, not inherited: sixty lines, twenty-six seasoned and
+thirty-four `auto`, each non-`auto` one citing its stage direction — and the
+restraint rule earned its keep on the apologies, where the three that are
+comedy or reflex stay `auto` and only the six Act One ones are `sad`. His
+narration got 11 s longer (567 s → 578 s) and nothing needed re-timing.
 
 **The split is the point, not a migration.** Kokoro re-synthesizes a reworded
 line instantly and free, which is exactly what a narrator whose text is the

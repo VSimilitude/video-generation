@@ -13,7 +13,8 @@
 //                                             beetle and the leaf in Act One
 //                                             and the rock in Act Two, so the
 //                                             show never grows past five actors
-//   Puff      kokoro   af_sky           1.05  PLACEHOLDER — see below
+//   Puff      minimax  Exuberant_Girl   1.0   our hero. Small, apologetic,
+//                                             then unstoppable
 //   Sunny     minimax  Imposing_Manner  1.0   the Sun. Enormous ego, and
 //                                             entirely correct
 //   Cloudia   minimax  Abbess           1.0   one-scene cameo, delivered by wind
@@ -25,7 +26,8 @@
 // is reworded. The characters are cast on MiniMax speech-2.8-hd (Replicate,
 // ~$0.11/1000 characters), which is paid but can *act*: it takes an `emotion`
 // and honours inline pause markers. Casting picked by ear from auditions
-// (public/narration/auditions-mm), approved 2026-07-26.
+// (public/narration/auditions-mm, and auditions-mm-puff for Puff), all four
+// approved 2026-07-26.
 //
 //   engine: "minimax", voiceId: "<id>", emotion: "<enum>"
 //   emotions: auto happy sad angry fearful disgusted surprised calm fluent
@@ -37,6 +39,12 @@
 // written — the same instinct as not adding a `speed` override to a line that
 // does not need one. Sunny's are nearly all `happy` because bragging is his
 // entire character; the two that are not are the two moments he stops.
+// Puff's sixty lines are thirty-four `auto` and twenty-six seasoned, and the
+// seasoning is the arc: six `sad` in Act One (every one of them a stage
+// direction that says deflation or "sad, not tragic"), `surprised` on the six
+// lines where a fact lands on him, `happy` from his first win onward, and one
+// each of `calm` (sitting on the cool sea) and `angry` (the shout — see
+// a3_49). His apologies are deliberately NOT all sad; see a1_43 and a2_46.
 //
 // PAUSE MARKERS (`<#0.3#>`) are seconds of silence *inside* a MiniMax line,
 // and they are only allowed where `script.md` already marks an intra-line
@@ -45,20 +53,32 @@
 // `Video.tsx`, not here. The generator errors if a marker appears on a kokoro
 // line, where the model would read the punctuation out loud.
 //
-// PUFF'S VOICE IS NOT FINAL. `af_sky` at 1.05 is a placeholder so the episode
-// can be timed and watched end to end; the real pick is still open, and he is
-// the last actor on the placeholder. He has been auditioned on both engines —
-// kokoro `af_sky` / `af_nicole` / `bf_lily` / `am_liam`, and MiniMax
-// `Sweet_Girl_2` / `Inspirational_girl` (public/narration/auditions-mm) — on
-// `a1_04_puff` (small and apologetic), `a2_19_puff` (WHOOSH, delighted) and
-// `a3_49_puff` (the big shout).
+// PUFF IS CAST: MiniMax `Exuberant_Girl`, approved 2026-07-26, the last actor
+// off a placeholder. Auditioned on both engines and on the three lines that ask
+// three different things of him — `a1_04_puff` (small and apologetic),
+// `a2_19_puff` (WHOOSH, delighted) and `a3_49_puff` (the big shout): kokoro
+// `af_sky` / `af_nicole` / `bf_lily` / `am_liam`, MiniMax `Sweet_Girl_2` /
+// `Inspirational_girl` / `Decent_Boy` / `Lovely_Girl` / `Young_Knight` /
+// `Exuberant_Girl` (public/narration/auditions-mm-puff), then a four-line
+// screen test of the winner across his arc.
 //   Kokoro:   npm run narration -- --audition wind:a1_04_puff <dir>
 //   MiniMax:  npm run narration -- --audition wind:a1_04_puff <dir> \
-//               --engine minimax --voices Sweet_Girl_2,Inspirational_girl
-// Moving him is ONE edit: flip PUFF_ENGINE below (and confirm the voice id
-// against the winning audition file). All forty-seven of his lines follow.
-// Whichever wins, keep the speed slightly above 1.0 on kokoro — Puff talks in
-// small quick breaths.
+//               --engine minimax --voices Exuberant_Girl [--emotion sad]
+// His speed is the engine's own 1.0. The old kokoro 1.05 was compensation —
+// `af_sky` needed pushing to sound like small quick breaths, and Exuberant_Girl
+// brings that with her (the screen-test clips land within two tenths of a
+// second of the kokoro ones they replace — this engine is normally ~40% slower
+// than kokoro at the same nominal speed, and she is not).
+//
+// STRETCHED SPELLINGS DO NOT SURVIVE THE MOVE. "Poooof" and "PUUUSH" were
+// kokoro spellings: kokoro reads a run of repeated letters as a long vowel,
+// MiniMax reads it as separated syllables ("puh-uh-uh-sh"). On this engine the
+// stretch has to come from the emotion, not the spelling — so his two sound
+// words are plain ("Poof!", "PUSH!") and the shout carries `angry`, which is
+// the approved read. WHOOSH came through the screen test intact and stays;
+// FWOOSH is the same shape (no repeated letter) and rides on that. Anything
+// new goes through --audition before it goes in.
+// All sixty of his lines follow.
 //
 // Keys are `<act>_<number>_<speaker>` in strict playback order:
 // `co` cold open, `a1` the grass, `a2` the lift, `a3` air with a job,
@@ -73,18 +93,23 @@
 //     rhythm. No ellipses either: a hesitation is written as a real word
 //     ("Um.", "Wait.") or split onto its own line with a gap after it.
 //   - Sound words are spelled as words: WHOOSH (proven in episode one),
-//     FWOOSH, Poooof, Flop.
+//     FWOOSH, Poof, Flop. Spellings are per engine: a stretched vowel
+//     ("Poooof", "PUUUSH") is a kokoro instruction and a MiniMax mispronounce,
+//     so the Narrator's kokoro lines may stretch and Puff's minimax lines may
+//     not. The stretch on a minimax line is an `emotion`, not a spelling.
 //   - CAPS mark shouted words and survive the model fine.
 //   - The spelled-out Big Words are single letters with full stops
 //     ("A. I. R.", "W. I. N. D.") so the model reads letter names and a kid can
-//     chant along with the card. THESE TWO ARE THE FIRST THINGS TO AUDITION.
-//     If the model says "one" for "I." or "uh" for "A.", swap in the phonetic
-//     fallbacks, which are pre-written and known safe:
+//     chant along with the card. THESE TWO ARE THE FIRST THINGS TO EAR-CHECK.
+//     They changed engine with the rest of Puff and nobody has heard them on
+//     MiniMax. If the model says "one" for "I." or "uh" for "A.", swap in the
+//     phonetic fallbacks, which are pre-written and known safe:
 //       a1_38_puff  ->  "Ay. Eye. Arr. That spells AIR!"
 //       a2_32_puff  ->  "Double you. Eye. Enn. Dee. WIND!"
-//   - Also audition before building visuals: `a1_25_puff` ("Poooof!"),
-//     `a2_19_puff` and `a3_49_puff` (long vowel runs), `a2_28_narrator`
-//     ("FWOOSH." alone in a line) and `a3_19_sunny` (exclamation run).
+//   - Also ear-check before building anything on them: `a1_25_puff` ("Poof!",
+//     plain now — it is the beat the dandelion detonates off), `a3_49_puff`
+//     ("PUSH!" at `angry`), `a2_28_narrator` ("FWOOSH." alone in a line) and
+//     `a3_19_sunny` (exclamation run).
 //
 // COMEDY PACING — per-line speed overrides
 // Episode one's retro (docs/LEARNINGS.md, docs/STYLE.md "Comedy pacing") found
@@ -96,16 +121,19 @@
 // halves only work together.
 const NARRATOR = { voice: "af_heart", speed: 1.0 };
 
-// Puff's casting is the one thing still open. "kokoro" | "minimax" — flipping
-// this moves every Puff line at once; nothing else in the file changes.
-const PUFF_ENGINE = "kokoro";
-// Only read when PUFF_ENGINE is "minimax". Confirm against the audition file
-// that won before flipping: candidates were Sweet_Girl_2 and Inspirational_girl.
-const PUFF_MINIMAX_VOICE = "Sweet_Girl_2";
+// Puff's casting, decided. "kokoro" | "minimax" — this one switch moves every
+// Puff line at once, and it is kept (rather than inlined) because his emotions
+// are inert on kokoro: a kokoro line ignores `emotion` entirely, so flipping
+// back for a free re-time costs the acting and nothing else. The stretched
+// sound-word spellings do NOT come back with it — see the note above.
+const PUFF_ENGINE = "minimax";
+// Only read when PUFF_ENGINE is "minimax". Won the audition on all three of his
+// hard lines; the runners-up were Lovely_Girl and Decent_Boy.
+const PUFF_MINIMAX_VOICE = "Exuberant_Girl";
 const PUFF =
   PUFF_ENGINE === "minimax"
     ? { engine: "minimax", voiceId: PUFF_MINIMAX_VOICE, speed: 1.0 }
-    : { voice: "af_sky", speed: 1.05 }; // PLACEHOLDER — audition pending
+    : { voice: "af_sky", speed: 1.05 }; // the old placeholder, for re-timing
 
 const SUNNY = { engine: "minimax", voiceId: "Imposing_Manner", speed: 1.0 };
 const CLOUDIA = { engine: "minimax", voiceId: "Abbess", speed: 1.0 };
@@ -165,9 +193,12 @@ export default {
       text: "This is Puff. Puff is a small puff of air.",
       ...NARRATOR,
     },
+    // Scene 3: "somebody was having a bad morning", and the cast note's own
+    // description of this line — "small and apologetic". His opening state.
     a1_04_puff: {
       text: "Sorry. Sorry. I know you can't see me.",
       ...PUFF,
+      emotion: "sad",
     },
     a1_05_narrator: {
       text: "Puff floated over to a beetle.",
@@ -188,7 +219,9 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
-    a1_10_puff: { text: "Sorry.", ...PUFF, speed: 0.95 },
+    // Scene 4, after the beetle looks through him: "the deflation is the
+    // picture". The read matches the picture.
+    a1_10_puff: { text: "Sorry.", ...PUFF, speed: 0.95, emotion: "sad" },
     a1_11_narrator: {
       text: "Puff floated over to a leaf.",
       ...NARRATOR,
@@ -209,22 +242,35 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
-    a1_16_puff: { text: "Sorry. Sorry.", ...PUFF, speed: 0.95 },
+    // Scene 5, second firing: same deflation, one beat longer ("Puff's wave is
+    // smaller this time").
+    a1_16_puff: { text: "Sorry. Sorry.", ...PUFF, speed: 0.95, emotion: "sad" },
     // Roll call of the people who cannot see him. Slowed so the three items
     // separate.
+    // Scene 6: Puff "sinks down between two grass blades and goes very quiet
+    // and very faint" — twenty-five percent opacity, the lowest he ever gets.
     a1_17_puff: {
       text: "Nobody ever SEES me. Not the beetles. Not the leaves. Nobody.",
       ...PUFF,
       speed: 0.95,
+      emotion: "sad",
     },
-    a1_18_puff: { text: "I think I might be nothing at all.", ...PUFF },
+    // Scene 6's held beat: "Sad, not tragic — this show does not do despair."
+    // `sad` is the note; the 24f beat after it is the rest of the note.
+    a1_18_puff: { text: "I think I might be nothing at all.", ...PUFF, emotion: "sad" },
     a1_19_narrator: { text: "Puff. May I say something?", ...NARRATOR },
-    a1_20_puff: { text: "Sorry. Yes. Sorry.", ...PUFF, speed: 0.95 },
+    // Still Scene 6, still at his lowest — the reflex apology fires even as
+    // somebody answers him for the first time all episode. Last `sad` of the
+    // run; from the dandelion on, the apologies are a habit, not a mood.
+    a1_20_puff: { text: "Sorry. Yes. Sorry.", ...PUFF, speed: 0.95, emotion: "sad" },
     a1_21_narrator: {
       text: "You are not nothing. You are AIR. And air is real stuff.",
       ...NARRATOR,
     },
-    a1_22_puff: { text: "Stuff? Me? I am STUFF?", ...PUFF },
+    // The episode's misconception being argued with, on the character who holds
+    // it. Script's Big Words note: Puff "is not proud of himself the way Drip
+    // was — he is astonished".
+    a1_22_puff: { text: "Stuff? Me? I am STUFF?", ...PUFF, emotion: "surprised" },
     a1_23_narrator: {
       text: "Watch. Here is a dandelion, all full of fluffy seeds.",
       ...NARRATOR,
@@ -233,15 +279,22 @@ export default {
       text: "Now. Take a big breath, and puff it out.",
       ...NARRATOR,
     },
-    a1_25_puff: { text: "Okay. Here I go. Ready? Poooof!", ...PUFF },
+    // RESPELLED FOR MINIMAX: was "Poooof!", which this engine reads as three
+    // syllables. The wind-up it used to carry is staged instead — Scene 7 swells
+    // him through the whole line and detonates the seed head on the first frame
+    // of the 45f beat after it, so the word only has to be the release.
+    a1_25_puff: { text: "Okay. Here I go. Ready? Poof!", ...PUFF },
     a1_26_narrator: {
       text: "Every single seed. Gone. Flying.",
       ...NARRATOR,
       speed: 0.95,
     },
+    // Scene 7, proof one: "an invisible thing move a visible one", and the first
+    // fact that lands on him. Three questions in a row, all of them real.
     a1_27_puff: {
       text: "I did that? With my puff? I moved a whole flower?",
       ...PUFF,
+      emotion: "surprised",
     },
     a1_28_narrator: {
       text: "Here is one you can try right now, wherever you are.",
@@ -255,17 +308,31 @@ export default {
       text: "Feel that? That little cool push on your cheek? That is air. That is Puff.",
       ...NARRATOR,
     },
-    a1_31_puff: { text: "They can feel me. THEY CAN FEEL ME!", ...PUFF },
+    // Scene 8's pedagogy note: "It also gives Puff his first win." First `happy`
+    // of the episode, and the arc turns here.
+    a1_31_puff: {
+      text: "They can feel me. THEY CAN FEEL ME!",
+      ...PUFF,
+      emotion: "happy",
+    },
     a1_32_narrator: {
       text: "One more. Somebody blew up a balloon.",
       ...NARRATOR,
     },
+    // "auto" on purpose: the Oofs are him being squashed, which is physical
+    // comedy the words already do. The delight in Scene 9 ("thrilled about it")
+    // is spent on a1_35, where he works out what it means.
     a1_33_puff: { text: "Oof. Oof! I am inside a balloon!", ...PUFF },
     a1_34_narrator: {
       text: "The balloon got fat and round. Something filled it up.",
       ...NARRATOR,
     },
-    a1_35_puff: { text: "It is me. I FILLED it. I have a SHAPE!", ...PUFF },
+    // Scene 9: inside the balloon he "is thrilled about it".
+    a1_35_puff: {
+      text: "It is me. I FILLED it. I have a SHAPE!",
+      ...PUFF,
+      emotion: "happy",
+    },
     a1_36_narrator: {
       text: "Nothing cannot fill a balloon. Only stuff can fill a balloon.",
       ...NARRATOR,
@@ -274,21 +341,33 @@ export default {
       text: "So here is our first big word. Air.",
       ...NARRATOR,
     },
-    // SPELL MOMENT. Audition first. Fallback if the letters read wrong:
-    // "Ay. Eye. Arr. That spells AIR!"
+    // SPELL MOMENT — EAR-CHECK FIRST, and unheard on this engine. Deliberately
+    // "auto": an emotion is the likeliest thing to make a model slur four
+    // letters together, and the card is already doing the celebrating.
+    // Fallback if the letters read wrong: "Ay. Eye. Arr. That spells AIR!"
     a1_38_puff: { text: "A. I. R. That spells AIR!", ...PUFF, speed: 0.9 },
     a1_39_narrator: {
       text: "You cannot see air. You CAN feel air. Air is real STUFF.",
       ...NARRATOR,
     },
+    // Scene 10: the catchphrase's first firing, and "deliberately the positive
+    // version of his opening complaint — same fact, opposite feeling". The
+    // feeling is the only thing distinguishing it from a1_04, so it is set.
     a1_40_puff: {
       text: "You can't see me. But you can FEEL me.",
       ...PUFF,
+      emotion: "happy",
     },
     a1_41_narrator: {
       text: "Puff felt taller. Which is tricky, when you are made of air.",
       ...NARRATOR,
     },
+    // Scene 11, the act's button. Both of these stay "auto" and it is a
+    // decision, not an omission: a1_42 contains both halves of its own joke
+    // (the reflex and the catching-himself) and no single emotion can play
+    // both, and a1_43 is a deadpan — the gag is that the habit wins, and `sad`
+    // would make the audience feel sorry for him at the exact moment the show
+    // wants them to laugh. The 30f beat between them does the work.
     a1_42_puff: { text: "Sorry! I mean. Not sorry.", ...PUFF },
     a1_43_puff: { text: "Sorry.", ...PUFF, speed: 0.9 },
 
@@ -345,6 +424,9 @@ export default {
       text: "The sun warms the GROUND. And then the warm ground warms the air.",
       ...NARRATOR,
     },
+    // "auto" although the next narrator line says "Puff was enjoying himself":
+    // that is a joke about his feet, not a direction for the read, and the line
+    // is a contented mumble. `happy` here spends the lift-off's delight early.
     a2_13_puff: {
       text: "Ooh. Ooh, that is toasty. I can feel it on my feet.",
       ...PUFF,
@@ -358,25 +440,39 @@ export default {
       text: "And warm air does something wonderful. Warm air gets light.",
       ...NARRATOR,
     },
-    a2_16_puff: { text: "Wait. Wait wait wait. I am going UP!", ...PUFF },
+    // Scene 15: he "starts to wobble, then bob, then lift off". The moment it
+    // dawns on him, and the production note insists the lift is "played as
+    // delight from the first frame" — so surprise here, delight from a2_19.
+    a2_16_puff: {
+      text: "Wait. Wait wait wait. I am going UP!",
+      ...PUFF,
+      emotion: "surprised",
+    },
     a2_17_puff: { text: "This happened to my friend Drip!", ...PUFF },
     a2_18_narrator: {
       text: "Different show. Same sun.",
       ...NARRATOR,
       speed: 0.92,
     },
+    // Scene 15, and the audition line described as "delighted, airborne";
+    // production note: "Puff's lift-off is played as delight from the first
+    // frame". WHOOSH survives this engine — verified on the screen test.
     a2_19_puff: {
       text: "WHOOSH! I am flying! I am actually flying!",
       ...PUFF,
+      emotion: "happy",
     },
     a2_20_narrator: {
       text: "Warm air rises. Say it with me. Warm air rises.",
       ...NARRATOR,
       speed: 0.95,
     },
+    // Scene 16: the rule chanted back while "Puff rides the arrow", still
+    // airborne and still delighted.
     a2_21_puff: {
       text: "Warm air RISES! And I am the warm air!",
       ...PUFF,
+      emotion: "happy",
     },
     a2_22_narrator: {
       text: "Every warm puff on that whole hill was going up with him.",
@@ -390,6 +486,10 @@ export default {
       text: "Puff left a gap. An empty space, exactly Puff shaped.",
       ...NARRATOR,
     },
+    // "auto", though it is an apology: Scene 17 calls it "the second-to-last of
+    // the episode", thrown over his shoulder mid-flight. Sheepish, not sad —
+    // the `sad` run ended in Act One and putting one here re-deflates him two
+    // scenes after he stopped being deflated.
     a2_25_puff: { text: "Oops. Sorry about the hole.", ...PUFF },
     a2_26_narrator: {
       text: "And air does not like a gap. Not one bit.",
@@ -401,7 +501,14 @@ export default {
     },
     // Sound word alone in its own clip, with a held beat after it. Audition.
     a2_28_narrator: { text: "FWOOSH.", ...NARRATOR },
-    a2_29_puff: { text: "Whoa! Who are all these guys?", ...PUFF },
+    // Scene 18: the cool air "slams into the gap" from both sides — "the first
+    // time the audience sees wind and it should arrive as a physical event".
+    // It arrives on him, unannounced.
+    a2_29_puff: {
+      text: "Whoa! Who are all these guys?",
+      ...PUFF,
+      emotion: "surprised",
+    },
     a2_30_narrator: {
       text: "Cool air. In a very big hurry.",
       ...NARRATOR,
@@ -411,8 +518,9 @@ export default {
       text: "And that rushing, hurrying, sideways air has a name. Wind.",
       ...NARRATOR,
     },
-    // SPELL MOMENT. Audition first. Fallback if the letters read wrong:
-    // "Double you. Eye. Enn. Dee. WIND!"
+    // SPELL MOMENT — EAR-CHECK FIRST, and unheard on this engine. "auto" for
+    // the same reason as a1_38: four letter names need clarity more than they
+    // need a mood. Fallback: "Double you. Eye. Enn. Dee. WIND!"
     a2_32_puff: { text: "W. I. N. D. WIND!", ...PUFF, speed: 0.9 },
     a2_33_narrator: {
       text: "Wind is air in a hurry. Say it with us.",
@@ -472,12 +580,21 @@ export default {
     // No dash here on purpose. The interruption is staged, not punctuated —
     // Puff stops because the *scene* stops him, and the gap after this line
     // does the work an em dash would have done to the model.
+    // Scene 22, the arc's turning point, and the two lines it turns on stay
+    // "auto" on purpose. The direction is that he "starts the apology
+    // automatically, as reflex, and then physically stops himself" — a2_46 is a
+    // habit firing, not grief, and a2_47 is resolve, which is not on the
+    // emotion list at all (`happy` would play it as a gag, `sad` as a relapse).
+    // The turn is in the 30f beat between them and in the shape of him firming
+    // up mid-line; the payoff — and the only emotion in the scene — is a2_48.
     a2_46_puff: { text: "Sorry, everybody! I did not mean to.", ...PUFF },
     a2_47_puff: { text: "No. Wait. Not sorry.", ...PUFF, speed: 0.95 },
+    // Scene 22: "a two-item recap of Act One disguised as a boast."
     a2_48_puff: {
       text: "I move flowers. I fill balloons. I am STUFF.",
       ...PUFF,
       speed: 0.95,
+      emotion: "happy",
     },
 
     // ---------------------------------------------------------------
@@ -487,19 +604,39 @@ export default {
       text: "Puff wanted to know what else a wind could do. So we went to the beach.",
       ...NARRATOR,
     },
-    a3_02_puff: { text: "The beach! I have never been ANYWHERE!", ...PUFF },
+    // Scene 23: he "arrives from frame left at speed and skids to a stop" —
+    // the first time he has travelled anywhere under his own power.
+    a3_02_puff: {
+      text: "The beach! I have never been ANYWHERE!",
+      ...PUFF,
+      emotion: "happy",
+    },
     a3_03_narrator: {
       text: "And the beach has a secret. The beach makes its own wind. Every sunny day.",
       ...NARRATOR,
     },
-    a3_04_puff: { text: "The beach MAKES wind? By itself?", ...PUFF },
+    // Scene 23 "frames the sea breeze as a mystery" — the question is real.
+    a3_04_puff: {
+      text: "The beach MAKES wind? By itself?",
+      ...PUFF,
+      emotion: "surprised",
+    },
     a3_05_narrator: {
       text: "Puff. Go and sit on the sand, and tell me how it feels.",
       ...NARRATOR,
     },
+    // "auto": Scene 24 has him "tomato red, hopping", which is physical comedy
+    // with no emotion on the list that fits it — `angry` and `fearful` would
+    // both be wrong about a show where nothing hurts.
     a3_06_puff: { text: "Ow. Ow ow ow. That sand is HOT.", ...PUFF },
     a3_07_narrator: { text: "Now go and sit on the sea.", ...NARRATOR },
-    a3_08_puff: { text: "Ooh. The sea is lovely and cool.", ...PUFF },
+    // Scene 24, the matching half: he "goes cool blue, sighing". The one `calm`
+    // in the episode, and it is there to make the sand line hotter.
+    a3_08_puff: {
+      text: "Ooh. The sea is lovely and cool.",
+      ...PUFF,
+      emotion: "calm",
+    },
     // The comparison the whole sea-breeze idea rests on. Slowed.
     a3_09_narrator: {
       text: "Same sun. Same morning. Sand hot. Sea cool.",
@@ -514,11 +651,20 @@ export default {
       text: "So the air above the hot sand gets warm, and up it goes.",
       ...NARRATOR,
     },
-    a3_12_puff: { text: "And that leaves a GAP! I know this bit!", ...PUFF },
+    // Scene 25: "Puff recognises the shape of the diagram before the Narrator
+    // finishes, and points." Getting there first is the whole beat.
+    a3_12_puff: {
+      text: "And that leaves a GAP! I know this bit!",
+      ...PUFF,
+      emotion: "happy",
+    },
     a3_13_narrator: {
       text: "It does. And the cool air over the sea comes rushing in to fill it.",
       ...NARRATOR,
     },
+    // FWOOSH is the Narrator's sound word from Scene 18 handed to Puff; single
+    // letter runs, so it survives the engine change (same shape as WHOOSH).
+    // "auto" — a3_12 already carried the recognition beat.
     a3_14_puff: { text: "FWOOSH! Off the sea! Onto the beach!", ...PUFF },
     a3_15_narrator: {
       text: "That is why the wind at the beach blows in off the water, nearly every sunny day.",
@@ -532,9 +678,11 @@ export default {
       text: "And a breeze that comes in off the sea is a sea breeze.",
       ...NARRATOR,
     },
+    // Scene 26: the Big Word lands and it turns out to be his name for himself.
     a3_18_puff: {
       text: "Sea breeze! Sea BREEZE! That is me! I am a sea breeze!",
       ...PUFF,
+      emotion: "happy",
     },
     // Scene 26: Sunny leans in over a card that is not about him, "enormously
     // pleased", and holds it through a one-second beat.
@@ -550,6 +698,10 @@ export default {
     },
     a3_22_puff: { text: "There is a boat. Should I push the boat?", ...PUFF },
     a3_23_narrator: { text: "Push the boat, Puff.", ...NARRATOR },
+    // "auto", and it is the smaller sibling of a3_49. The exertion read that
+    // won the audition for the big shout (`angry`) reads as cross when it has
+    // "Okay, boat." in front of it — the shove is Scene 27's staging, both arms
+    // braced, and the sail snapping taut sells the force.
     a3_24_puff: { text: "Okay, boat. PUSH!", ...PUFF },
     a3_25_narrator: {
       text: "The sail went tight, and the boat went whizzing across the bay.",
@@ -571,7 +723,9 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
-    a3_31_puff: { text: "I MAKE LIGHTBULBS!", ...PUFF },
+    // Scene 28 stages this precisely: 36f of silence on a night light in a dark
+    // bedroom, "while the audience gets there on their own. Then the shout."
+    a3_31_puff: { text: "I MAKE LIGHTBULBS!", ...PUFF, emotion: "happy" },
     a3_32_narrator: {
       text: "Then Puff carried seeds. Thousands of them, across the fields.",
       ...NARRATOR,
@@ -584,6 +738,10 @@ export default {
       text: "Seeds cannot walk. So the wind takes them somewhere new to grow.",
       ...NARRATOR,
     },
+    // "auto", and the most deliberate one in Act Three. Scene 29 is "the
+    // emotional beat the ending is banked against" and it pays off in a 60f
+    // silence over a hillside of dandelions — quiet, working it out. `happy`
+    // would bounce it and spend the silence before it starts.
     a3_35_puff: {
       text: "So there are flowers. In places. Because of me.",
       ...PUFF,
@@ -630,6 +788,8 @@ export default {
       text: "There was a kid. And a brand new kite. Lying flat on the grass.",
       ...NARRATOR,
     },
+    // "auto": Scene 31 says "Puff stops dead", which is about the picture. The
+    // line is recognition, and the audience is already a beat ahead of him.
     a3_45_puff: { text: "Oh. Oh, that kite is not flying at all.", ...PUFF },
     a3_46_narrator: {
       text: "No. It is not. Do you know what that kite is missing, Puff?",
@@ -637,7 +797,13 @@ export default {
     },
     a3_47_puff: { text: "Me. That kite is missing ME.", ...PUFF },
     a3_48_narrator: { text: "Go on then.", ...NARRATOR, speed: 0.9 },
-    a3_49_puff: { text: "PUUUSH!", ...PUFF },
+    // THE SHOUT. Respelled for MiniMax — "PUUUSH!" reads as separated syllables
+    // here, where kokoro read it as one long vowel. The length now comes from
+    // `angry`, which is the approved read: on this engine `angry` is effort and
+    // volume, not temper (auditioned plain-vs-stretched and surprised-vs-angry,
+    // public/narration/auditions-mm-puff/push_v2_plain_angry.mp3). Scene 31
+    // gives it the biggest breath in the episode and 75f of silence after.
+    a3_49_puff: { text: "PUSH!", ...PUFF, emotion: "angry" },
     a3_50_narrator: {
       text: "Up it went. Higher than the fence. Higher than the trees. Higher than the birds.",
       ...NARRATOR,
@@ -651,11 +817,17 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
+    // "auto": "the line the whole character was built to say", and Scene 32
+    // hands it a 45f beat on either side. Four quiet words that answer a gag
+    // fired twice in Act One — the restraint is the point.
     a3_52_puff: { text: "Yes. Yes, there is.", ...PUFF, speed: 0.95 },
     a3_53_narrator: {
       text: "Nobody on that hill could see Puff. Nobody ever will.",
       ...NARRATOR,
     },
+    // "auto": the catchphrase in "its grown-up form", over the kite. Scene 32's
+    // thesis is that nothing about his visibility changed — the confidence is
+    // in the sentence, and a bright read would make it a boast instead.
     a3_54_puff: {
       text: "They still can't see me. But look what they CAN see.",
       ...PUFF,
@@ -668,9 +840,12 @@ export default {
       text: "Let's say the big words together. Ready?",
       ...NARRATOR,
     },
+    // Scene 33: one lit panel per character, each taking a bow for their own Big
+    // Word — same note that puts rc_03 and rc_04 on `happy`.
     rc_02_puff: {
       text: "AIR! You cannot see it, you CAN feel it, and it is real stuff! That is me!",
       ...PUFF,
+      emotion: "happy",
     },
     // Scene 33: the chant, one lit panel per character. Both of these are the
     // character taking a bow for their own Big Word.
@@ -712,10 +887,13 @@ export default {
       text: "It carries that sand all the way across an ocean, and sprinkles it on a rainforest.",
       ...NARRATOR,
     },
+    // Scene 35 is "the mind-blower" and this is the audience's line, said for
+    // them. Slowed already; `surprised` is the last fact that lands on him.
     rc_11_puff: {
       text: "Sand. Across a whole OCEAN. In the sky.",
       ...PUFF,
       speed: 0.95,
+      emotion: "surprised",
     },
     rc_12_narrator: {
       text: "And the trees grow better because of it. That is the wind, doing a job.",
@@ -734,9 +912,12 @@ export default {
     // The whole joke is the delay and then the dawning — the one line in two
     // episodes where he is not sure of himself.
     rc_16_sunny: { text: "Wait. What?", ...SUNNY, emotion: "surprised" },
+    // Scene 36: the catchphrase's third and last firing, waving from the corner
+    // of the episode-three card. The sign-off, and he is at full opacity.
     rc_17_puff: {
       text: "Bye! You can't see me. But you can FEEL me.",
       ...PUFF,
+      emotion: "happy",
     },
   },
 };
