@@ -501,6 +501,17 @@ _Build-side notes (2026-07-26); watch-side retro pending._
   stills, the sampled pass still found one real judgment fix (the Big
   Empty read as an ink blot at 0.46 fill; lightened to 0.24 — "slightly
   darker" means slightly).
+- **A running gag can be planted with no dialogue at all**: the sleeping
+  volcano (scenes 23–24, snoring smoke rings, one four-frame Puff glance and
+  nothing else) cost ~130 lines of SVG, no narration and no timeline change,
+  and it is now a series asset that a later episode can wake up. Two things
+  made it work and are the reusable part: it seats on the *measured* horizon
+  (drawn `HORIZON` in 23, the painted plate's y=606 in 24, sampled off a still
+  rather than guessed) so it never floats or cuts the sea; and it was cut from
+  scene 26 because `WaveTrim` covers the whole horizon band from the Big Word
+  slam onward — a background gag that vanishes mid-shot reads as a bug, so the
+  test for "does it go in this scene" is *continuously visible for the whole
+  shot*, not *visible at all*.
 
 **Ep-3 cleanup list (before next build)**: promote to src/lib/kid/ —
 BigWordBeat/Camera/Thermometer/CaptionCard/WideLayer (now written twice),

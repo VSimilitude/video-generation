@@ -730,7 +730,9 @@ One disguised as a boast.
 **Visual:** Wipe to a wide beach — pale sand, blue-green sea, a few gulls
 hanging motionless. Puff arrives from frame left at speed and skids to a stop,
 scattering a little sand. First time we have seen him travel any distance under
-his own power.
+his own power. Far out on the sea horizon, frame left, a small island volcano
+is fast asleep — Puff gives it one four-frame glance as he settles and then
+forgets about it. Nobody says a word.
 **Lines:** `a3_01_narrator`, `a3_02_puff`, `a3_03_narrator`, `a3_04_puff`
 
 > **NARRATOR:** Puff wanted to know what else a wind could do. So we went to the beach.
@@ -749,7 +751,9 @@ beach, which is the best kind of fact this show can hand out.
 **Visual:** Two matched shots, cut side by side. Puff sits on the sand and
 turns tomato red, hopping. Puff sits on the sea and goes cool blue, sighing.
 Then a split screen with a thermometer in each half — sand's climbing fast,
-sea's barely moving — and the same sun over both.
+sea's barely moving — and the same sun over both. The sleeping volcano is out
+on the horizon of the sea shot, same spot and same size as Scene 23, still
+asleep, still unmentioned.
 **Lines:** `a3_05_narrator`, `a3_06_puff`, `a3_07_narrator`, `a3_08_puff`,
 `a3_09_narrator`, `a3_10_narrator`
 
@@ -1149,6 +1153,14 @@ already written down:
 - **Sunny is always right.** `a2_41`, `a2_42`, `a2_44` ("I checked. Then I
   checked again."), `a2_45`, `a3_19`. Episode three's premise is planted in
   `a2_45`.
+- *The volcano is asleep.* Scenes 23 and 24, on the sea horizon, snoring smoke
+  rings on a three-second loop. **Nobody mentions it** — no line, no bubble, no
+  narration, and the only acknowledgement in the episode is one four-frame flick
+  of Puff's eyes in Scene 23. This is a series gag with no punchline yet: it is
+  meant to be asleep in the background of every coastal scene the show ever
+  stages, and to wake up in a later episode. The rule for anyone staging a beach
+  from here on is that it is scenery until it isn't — put it on the horizon,
+  never let a character talk to it.
 
 **Big Word cards, and a deliberate deviation.** STYLE.md allows at most one
 `WordCard` a minute. This episode teaches four things but only three of them
