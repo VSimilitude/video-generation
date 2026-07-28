@@ -5,7 +5,15 @@
 **Audience:** six-year-olds — and the grown-up in the room
 **Target:** ~10.5–12 minutes of finished video
 **Shape:** cold open, three acts, recap. Thirty-five scenes, one hundred and
-seventy-six spoken lines, one thousand six hundred spoken words.
+eighty-two spoken lines, one thousand six hundred and forty spoken words.
+
+> **Punch-up applied, 2026-07-28.** `punch-up.md` — the comedy density audit —
+> is wired in: four changes, six new lines, **+19.3s (11:58.6 -> 12:17.9)**.
+> They are Scene 11's seven blobs on the seven letters (visual only, zero
+> seconds), Scene 20's "Sorry, Violet.", Scene 28's second firing of the roll
+> call, and Sunny in the lunar sky in Scene 34. Every change is written into
+> its scene below; the audit itself is kept as the reasoning, and where the two
+> disagree this file wins.
 
 > **Title note.** The brief's working title was *Ray and the Color Thief*, and
 > it is the one thing here that is replaced rather than fleshed out. Two
@@ -50,6 +58,12 @@ would be seven auditions and twelve voices in the show. Giving them nothing to
 say costs nothing, because everything they need to communicate is a direction
 of travel.
 
+**And silent is not the same as absent.** Since the 2026-07-28 punch-up they
+carry a three-firing running gag with a name, an arc and a punchline (Violet,
+Scenes 11 / 20 / 28) for **one two-word clip and 1.8 seconds of runtime**. A
+crowd that has faces is a comedy cast that costs nothing, as long as nobody
+gives it a line.
+
 **Ray is cast: `Young_Knight`.** (The paragraph below is preserved as the
 original casting note.) `Decent_Boy` was the placeholder, written in so the file
 runs and the episode can be timed. It was the runner-up in Puff's audition
@@ -64,12 +78,13 @@ a free re-time that costs the acting and nothing else.
 the moment a line is reworded — **and so does Sunny**, who went back to
 `am_puck` after the MiniMax read was rejected. Ray, Drip and Puff are on MiniMax
 speech-2.8-hd (via Replicate), which is paid but takes an `emotion` per line and
-honours inline pause markers. Fifty-one MiniMax lines, ~1,840 characters, about
-twenty cents at current rates; Sunny's seventeen are free and re-time for
+honours inline pause markers. Fifty-four MiniMax lines, ~1,900 characters, about
+twenty-one cents at current rates; Sunny's nineteen are free and re-time for
 nothing whenever a word of his changes.
 
-**Fifty-one seasoned lines, and most of them are not.** Ray's forty-four are
-nineteen `auto`, twenty-four seasoned and one shared recording: two `sad` (the
+**Fifty-four MiniMax lines, and most of them are not seasoned.** Ray's
+forty-seven are twenty-one `auto`, twenty-five seasoned and one shared
+recording: two `sad` (the
 sulk, and nowhere else in the episode), `surprised` on the eight lines where a
 fact lands on him, `happy` from the rainbow onward, one `calm` at the sunset.
 Drip and Puff are `happy` throughout, which is all they are. Every non-`auto`
@@ -123,7 +138,7 @@ means: that line's `gapFrames` in `Video.tsx` is **45**, the picture is alone on
 screen for a second and a half, and **nothing** — no line, no entrance, no
 emotion change — starts inside it. Thirty frames is one second. These numbers
 are the script's, not the builder's; raising one is a note, lowering one is a
-change to the joke. There are forty-one of them here.
+change to the joke. There are forty-four of them here.
 
 ---
 
@@ -439,13 +454,27 @@ they have to separate or they are one noise.
 ---
 
 ### Scene 11 — Big Word One
-**On stage:** Narrator, Ray, Drip
+**On stage:** Narrator, Ray, Drip, **the seven** (silent)
 **Visual:** Hard freeze on the arc. **RAINBOW** slams on in wet, rain-streaked
 capitals, letters bouncing in one at a time so the word is spelled on screen
 (`WordCard`, house signature, identical treatment to the seven cards before it).
-The starburst stays behind the banner. Ray sits on the crossbar of the W; Drip
+The starburst stays behind the banner. Ray sits on the W; Drip
 sits on the dot of nothing at all, because there isn't one, so she sits on the
 B.
+
+**Visual addition (punch-up C1 — no lines, no beats, no frames):** RAINBOW has
+seven letters and Ray has seven colours. As the word lands, the seven blobs come
+up **out of the frozen garden** and take one letter each, in spectrum order —
+Red on the R, Orange on the a, and so on — one leaving every two and a half
+frames, which is the card's own letter stagger, so each colour arrives on the
+beat its letter does. **Violet arrives last, finds the W already occupied by
+Ray, and spends the rest of the card squeezed onto the far arm of it, half off
+the edge, holding on.** Nobody looks at him. Nobody mentions him. He is still
+there when the card cuts.
+
+The arc *empties* — the seven are drawn live and the freeze holds the garden
+they left, so nothing is duplicated and nothing is added: they were always going
+to be the rainbow, and now they are standing in the word for it.
 **Lines:** `a1_45_narrator`, `a1_46_narrator`, `a1_47_ray`, `a1_48_narrator`,
 `a1_49_drip`
 
@@ -464,7 +493,13 @@ make the card feel like a prompt to join in rather than a slide.
 chant is doing double duty: **rain + bow** is the word taken apart into the two
 things that actually made it, so the pronunciation drill and the definition are
 the same three seconds. Drip's line is the credit going where it belongs, and it
-sets up Scene 13's smirk.
+sets up Scene 13's smirk. C1 helps it for free: seven blobs on seven letters is
+one more picture of *seven, all of them Ray*, laid over the word that names it.
+
+**Violet, firing one.** This is the first of three (Scenes 11, 20, 28) and it is
+the one that costs nothing at all. He must be the **same blob every time** —
+seventh colour, seventh phase, same silhouette — or he is three different
+accidents rather than one character.
 
 ---
 
@@ -638,11 +673,20 @@ simultaneously fan service and the load-bearing fact of Act Two.
 ---
 
 ### Scene 18 — Red goes straight through
-**On stage:** Narrator
+**On stage:** Narrator, **Puff** (silent)
 **Visual:** A cross-section of the air as a wide corridor, drawn in the show's
 crayon style, with the faint air-puffs scattered through it like a ball pit. Red
 — big, round, unhurried — enters from the left, walks the whole width, clips one
 or two puffs without changing direction at all, and exits right.
+
+**Visual addition (punch-up §5, free):** Puff is down in the bottom of the
+corridor, and as Red comes over him he **reaches up for a bounce, misses, and
+shrugs**. No line, no bubble, no beat, no frame — the document's own answer to
+the soft spot at 5:24, taken as a picture rather than as a sixth Puff line. Five
+is his count and it stays five (`a2_20` and `a2_44` are the two to cut if that
+is one too many, and adding a sixth argues the wrong way). It does not fight the
+scene's deliberate boredom, it *is* the boredom: the air offers Red a bounce and
+Red does not deviate by a pixel.
 **Lines:** `a2_22_narrator`, `a2_23_narrator`, `a2_24_narrator`
 
 > **NARRATOR:** So watch what happens when Ray flies into all that air.
@@ -693,13 +737,21 @@ so the three pings are three pings.
 ---
 
 ### Scene 20 — Blue, from every direction
-**On stage:** Narrator, Ray
+**On stage:** Narrator, Ray, **Violet** (silent)
 **Visual:** Cut out of the diagram to a kid-height view of a real sky, and draw
 blue arrows arriving at the viewer from above, from the left, from the right,
 from behind — dozens of them, from everywhere at once, all converging on the
 lens. Then pull back to the whole dome of the sky, glowing.
+
+**Visual addition (punch-up C2):** from `a2_34_ray` onward, **Violet is in
+frame**, in the bottom corner of the dome, ricocheting harder and faster than
+anything else on screen and waving both arms at the lens. He is visibly working
+the hardest of any object in the picture. Nobody looks at him, no arrow points
+at him, and the Narrator's two lines play over the top of him as if he were not
+there. The blue he is being compared with is still a plain dot, up and to the
+right of him and barely moving — that asymmetry is the comparison.
 **Lines:** `a2_30_narrator`, `a2_31_narrator`, `a2_32_ray`, `a2_33_narrator`,
-`a2_34_ray`, `a2_35_narrator`, `a2_36_narrator`
+`a2_34_ray`, `a2_35_narrator`, `a2_36_narrator`, **`a2_36b_ray`**
 
 > **NARRATOR:** Blue is bouncing off the air above you, and beside you, and behind you.
 > **NARRATOR:** So wherever you look, blue is bouncing into your eyes.
@@ -714,6 +766,16 @@ first time and it deserves a look.
 > **NARRATOR:** It does. Our eyes are just not very good at violet.
 > **NARRATOR:** They are extremely good at blue. So blue is what we see.
 
+**HELD BEAT — 20f (0.7s) after `a2_36_narrator`.** Violet stops bouncing and
+droops. **Nothing else enters this beat** — no bubble, no arrow, no emotion
+change on Ray. Deadpan is stillness.
+
+> **RAY:** Sorry, Violet.
+
+Ray looks at him on that line and on no other frame in the episode. The joke is
+that nobody looked; the eye-line is the second half of it and must not arrive
+early.
+
 **Pedagogy:** The step that turns a bouncing ball into a sky — scattered light
 arrives from *every direction*, so the colour is not in one place, it is
 everywhere you look. `a2_30_narrator` runs at 0.92 so above, beside and behind
@@ -721,6 +783,11 @@ separate. The violet exchange is the episode's honesty tax and its best grown-up
 fact: violet really does scatter more, and the reason the sky is not violet is
 in the eye, not in the sky. It is two lines long and it is worth every frame,
 because the alternative is a confident lie a curious child will catch later.
+C2 makes it *kid*-legible as well: the claim is that the sky is not violet
+because of **our eyes**, not because of the sky, and the staging now shows
+violet doing the work and not being seen, which is the claim as a picture rather
+than as a concession. Nobody is pitied — Ray apologises on behalf of everybody's
+eyes, which is the same register as him handing Sunny back the half he owns.
 
 ---
 
@@ -958,7 +1025,14 @@ sideways at the first air-puff, then another blue, then another, and the beam
 visibly *loses* its blue as it goes — indigo and violet go with it — until what
 arrives at the right-hand edge is red and orange and nothing else. Land on an
 eye at the far end.
-**Lines:** `a3_12_narrator`, `a3_13_narrator`, `a3_14_narrator`, `a3_15_ray`,
+**Visual addition (punch-up C3):** the three blobs who leave the beam first are
+**Blue, Indigo and Violet**, in that order — which they already were. Each one
+now turns back on its way out and waves; Ray, riding the beam, waves back at
+each, with an eye-line, exactly as he did along the arc in Scene 10. **Violet is
+the last of the three to go and goes furthest.** Green and Yellow leave inside
+the 45f drain beat and do **not** wave: nothing enters that beat.
+**Lines:** `a3_12_narrator`, `a3_13_narrator`, `a3_14_narrator`,
+**`a3_14b_ray`**, **`a3_14c_narrator`**, **`a3_14d_ray`**, `a3_15_ray`,
 `a3_16_narrator`, `a3_17_ray`, `a3_18_narrator`
 
 > **NARRATOR:** And you know what blue does in air. Blue bounces.
@@ -970,6 +1044,19 @@ is Act Two's mechanism doing something *new*, and it needs to be watched rather
 than described. Nothing enters.
 
 > **NARRATOR:** By the time that light reaches you, the blue has all bounced away.
+> **RAY:** Bye Blue! Bye Indigo! Bye Violet!
+
+**HELD BEAT — 20f (0.7s) after `a3_14b_ray`.** The goodbye lands. Ray is still
+waving after them while the audience works out who just left.
+
+> **NARRATOR:** They did not go anywhere. They went everywhere else.
+
+**HELD BEAT — 24f (0.8s) after `a3_14c_narrator`.** **Nothing enters this.** No
+wave, no bubble, no entrance, no emotion change — Ray hangs there in a beam that
+is now red and orange, doing absolutely nothing. Same beat, same length and same
+reason as Scene 10's.
+
+> **RAY:** I will see me later.
 > **RAY:** So who is left?
 > **NARRATOR:** The ones that never bounced much. Red. And orange.
 > **RAY:** The calm ones.
@@ -981,6 +1068,17 @@ sunset is *the same mechanism as the blue sky*, run for longer — not a second
 effect, not a different light, and emphatically not somebody taking the colours
 away. `a3_13_narrator` runs at 0.88 so the three bounces are three bounces;
 `a3_16` at 0.92 so red and orange land separately.
+
+**The roll call, second firing** (punch-up C3), and it does four jobs. It is the
+series signature fired twice in an episode for the first time. It costs no new
+staging idea — the scene already loses Blue, Indigo and Violet in that order, so
+the gag is three eye-lines and a wave. It gives Ray his only *attitude* in Act
+Three instead of another question, and he is **not sad about it**, which is what
+keeps the sunset from reading as the light dying (the Scene 31 guardrail, five
+scenes early). And `a3_14c_narrator` is the one place in the episode where the
+physics-honesty rule above — *nothing is taken away* — is said out loud rather
+than trusted to the staging. Naming the three a beat before `a3_15` turns "So
+who is left?" into a question the audience can answer.
 
 ---
 
@@ -1122,26 +1220,43 @@ theory, and the title paying itself off.
 ---
 
 ### Scene 34 — The mind-blower
-**On stage:** Narrator, Ray
+**On stage:** Narrator, Ray, **Sunny**
 **Visual:** Cut to the Moon. An astronaut stands in blinding, obvious sunlight —
 their suit lit hard, a crisp black shadow beside them, a bright grey landscape
 running to a close horizon. And above all of it, filling three quarters of the
 frame, a completely **black** sky full of stars. Keep it wondrous: the
 astronaut waves, the Earth hangs in the black like a blue marble, and there is
 nothing frightening anywhere in the shot.
-**Lines:** `rc_08_narrator`, `rc_09_narrator`, `rc_10_narrator`, `rc_11_ray`,
-`rc_12_narrator`, `rc_13_narrator`, `rc_14_ray`, `rc_15_narrator`
+
+**Visual addition (punch-up C4):** something is already lighting this shot — the
+shadow is hard-edged and lies to the left — so the **sun is in the top right
+from the first frame**, a white blaze with the stars visible right up against
+it, because there is no air to smear it across a sky. On `rc_09b_sunny` it opens
+an eye: he is blazing, enormous, unmistakably Sunny, and he is **surrounded by
+stars, in the middle of the day**, which is the whole lesson. The astronaut's
+existing wave already points at him. Keep it wondrous, not lonely — nobody is
+alone in this shot, and Sunny in it is warmer than the astronaut on his own.
+(Two consequences: the Earth moved to the top **left**, and Ray shifted left to
+x=1210. Both are noted in `scenes/recap.tsx`.)
+**Lines:** `rc_08_narrator`, `rc_09_narrator`, **`rc_09b_sunny`**,
+`rc_10_narrator`, `rc_11_ray`, **`rc_11b_sunny`**, `rc_12_narrator`,
+`rc_13_narrator`, `rc_14_ray`, `rc_15_narrator`
 
 > **NARRATOR:** Now here is the amazing part.
 > **NARRATOR:** Somebody is standing on the Moon. The sun is shining right on them.
+> **SUNNY:** THAT IS ME! I am shining on the MOON as well!
 > **NARRATOR:** It is the middle of the day. And the sky above them is BLACK.
 
 **HELD BEAT — 60f (2.0s) after `rc_10_narrator`.** The impossible picture, alone
 on screen, for two full seconds. Bright sunlight and a black sky in the same
 frame is the single most counter-intuitive image in three episodes and the
-audience needs time to disbelieve it before anybody explains.
+audience needs time to disbelieve it before anybody explains. **Nothing enters
+it, including Sunny** — he is in the picture, blazing, and he does not move,
+react or change expression for the whole two seconds. His rays do not spin at
+all in this scene: nothing shimmers where there is no air.
 
 > **RAY:** Black? In the daytime? Why?
+> **SUNNY:** So where is the sky? I am RIGHT HERE.
 > **NARRATOR:** Because the Moon has no air. And no air means nothing to bounce blue off.
 > **NARRATOR:** The light is still there. There is nothing for it to scatter on.
 > **RAY:** So the blue sky is a thing the AIR does.
@@ -1152,6 +1267,19 @@ mind-blower — it is also **the proof**. Everything before this was a mechanism
 the audience was asked to accept; the Moon is the controlled experiment with the
 air taken out, and the result is the one the mechanism predicts. It only lands
 because Act Two spent seven scenes insisting the sky is full rather than empty.
+Since C4 the control experiment is **stated by the constant in it**: Sunny
+claims the Moon one line before the Moon turns out not to have a sky (the cold
+open's shape — state the wrong theory, then break it — compressed into ten
+seconds), and `rc_12`/`rc_13` are unchanged but now play as answers to a
+question rather than as narration over a picture. He is baffled, not upset, and
+he is not wrong: the sun really is visible in a black lunar sky.
+
+**Does this spend `rc_18_sunny` ("That is not me.")?** No — it sharpens it. Here
+he demands to be acknowledged; a minute later, offered a free claim on the
+biggest thing on the horizon, he declines it. Two firings of "that one is me as
+well" close together make the inversion read as a change in the character rather
+than as a one-off line. Neither new line uses "You're welcome!" (seven firings is
+the ceiling) and neither uses "EXCUSE ME" (`a2_45` is its only firing).
 
 ---
 
@@ -1218,7 +1346,7 @@ rule are already written down here:
   at 0.85; the slowest character line is the seven-name roll call at 0.88, tied
   with `a3_06` (the volcano), `a3_13` ("Bounce. Bounce. Bounce."), `a2_43` (the
   interlock) and `rc_05` (the summary).
-- **Held beats of silence**, forty-one of them, each written above with its
+- **Held beats of silence**, forty-four of them, each written above with its
   exact frame count and its reason. They become `gaps` in `Video.tsx`. The
   longest is the world turning (75f), and six two-second holds carry the
   episode's biggest pictures: the crayon choice, the middle of the eight-minute
@@ -1247,8 +1375,24 @@ rule are already written down here:
   (Puff). Both at 0.92, the same flat read as episode two's two firings.
 - *"You can't see me. But you can FEEL me."* — `a2_17`, once, on Puff's
   entrance.
-- *The roll call* — `a1_42`+`a1_43`+`a1_44`, Scene 10. The series signature,
-  third episode running.
+- *The roll call* — **twice**. `a1_42`+`a1_43`+`a1_44` in Scene 10 (a greeting)
+  and `a3_14b`+`a3_14c`+`a3_14d` in Scene 28 (a goodbye). The series signature,
+  third episode running, and the first episode to fire it twice — episode two's
+  punch-up found that re-firing it was the cheapest big laugh available, and the
+  finding transferred. Same fixed shape both times: a character cheerfully
+  naming near-identical strangers, one flat explanatory line from the Narrator,
+  an unbothered and deliberately unseasoned button.
+- *Nobody ever notices Violet* — **three firings, no lines, no clips, no
+  runtime**, carried entirely by a character who never speaks. Scene 10 plants
+  it (Ray greets him by name, last in the list of seven); Scene 11 fires it
+  (he gets to the RAINBOW card last and ends up half off the W); Scene 20 pays
+  it off (he out-bounces the entire frame, is ignored, droops — "Sorry,
+  Violet."); Scene 28 buttons it (last of the three to leave the sunset beam,
+  and goes furthest). **He must be the same blob every time** — same seventh
+  colour, same `SHARD_PHASE[6]`, same silhouette — or he is four different
+  accidents. He does not get a line, ever: the moment he speaks he is a sixth
+  voice, an audition and a cast-table row, and the joke stops being that nobody
+  notices him.
 - *The volcano is asleep.* — Scene 26 (`a3_06`, the only line anybody ever gives
   it) and Scene 35 (it stirs). Everywhere else on a coastal horizon it is
   scenery and nobody mentions it. See below.
@@ -1365,16 +1509,25 @@ npm run narration -- --audition sky-blue:a1_26_ray <dir> \
    man discovering a new sensation rather than as hurt. The three flat full
    stops are the whole read; the doubt is on his face, in the 36f beat in front
    of it.
-7. **`rc_18_sunny`** ("That is not me.") — three words carrying the last beat of
+7. **The six punch-up lines**, which are the only clips in the file nobody has
+   heard in context. Three of them are the ones that fail by being *sold*:
+   `a2_36b_ray` ("Sorry, Violet.") and `a3_14d_ray` ("I will see me later.") are
+   both unseasoned on purpose — same call as `a1_44_ray` — and if either sounds
+   like a punchline being delivered it is wrong. The third is
+   `a3_14b_ray` ("Bye Blue! Bye Indigo! Bye Violet!") at 0.9: three items, and
+   they have to separate or they are one noise. Sunny's two (`rc_09b`, `rc_11b`)
+   are free to reword on kokoro; listen for `rc_11b` reading as a genuine
+   question rather than as a brag.
+8. **`rc_18_sunny`** ("That is not me.") — three words carrying the last beat of
    the episode and the whole of episode four's premise. Flat and slow; if it
    plays as frightened, the tease has gone the wrong way.
-8. **The whole of Sunny, once**, now that he is back on `am_puck`: the greeting
+9. **The whole of Sunny, once**, now that he is back on `am_puck`: the greeting
    (`a1_03`), a brag at full volume (`co_08`, `a2_53`) and the four moments he
    stops. Episodes one and two are the reference — he should sound like the same
    character, not a quieter one. Then **Sunny against Ray back to back**
    (`a2_45` → `a2_46`, `a2_52` → `a2_53`): two engines in one exchange, and the
    thing to listen for is a level or timbre mismatch at the cut.
-9. **Ray's two `sad` lines** (`a1_24`, `a1_26`) back to back. Two is the whole
+10. **Ray's two `sad` lines** (`a1_24`, `a1_26`) back to back. Two is the whole
    sulk, and the failure mode is a hero who sounds miserable rather than small.
 
 **Grown-up smirks.** `co_04` ("Every kid on this whole planet picks blue"),
@@ -1405,8 +1558,12 @@ four.
   wallpaper. He also takes a recap panel, because there are three Big Words and
   three characters. If five is too many, `a2_20` and `a2_44` are the two to cut
   and nothing downstream moves.
-- **Thirty-five scenes, one hundred and seventy-six lines, one thousand six
-  hundred words** — the top of the brief's range rather than the middle. Act
+- **Thirty-five scenes, one hundred and eighty-two lines, one thousand six
+  hundred and forty words** — over the top of the brief's range rather than at
+  the middle, and knowingly: the delivered cut is **12:17.9**, eighteen seconds
+  past the stated ~10.5–12 min target. Six of those seconds and six of those
+  lines are the 2026-07-28 punch-up, which was a conscious trade (episode two
+  ran to 12:20 for the same reason). Act
   Two is the long act (eleven scenes) because it carries both myth-busts, the
   mechanism, the interlock and Sunny's concession. If the cut needs to lose
   ninety seconds, the honest place is Scene 12 (the rainbow homework, five

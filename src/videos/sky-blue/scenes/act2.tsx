@@ -24,6 +24,7 @@ import {
   RAY_SPECTRUM,
   Ray,
   RayShard,
+  SHARD_PHASE,
   SPECTRUM,
   SoftShade,
   Sunny,
@@ -1134,7 +1135,58 @@ const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         eyeLife={0.5}
         zIndex={20}
       />
+
+      {/* **The free visual from punch-up.md §5**, and the whole of it: Puff
+          reaches for Red as he goes past, misses, and shrugs. No line, no
+          bubble, no held beat, no frame — the document's own answer to the soft
+          spot at 5:24, taken as a picture rather than as a sixth Puff line
+          (five is the count, and `a2_20`/`a2_44` are already flagged as the two
+          to cut if that is one too many).
+
+          It does not fight the scene's boredom, it *is* the scene's boredom:
+          the air offers Red a bounce and Red does not deviate by a pixel, which
+          is exactly what Scene 19 is about to contradict. The reach is timed off
+          Red's own crossing, so it stays in step if the clip changes length. */}
+      <PuffMisses x={x} u={u} />
     </AbsoluteFill>
+  );
+};
+
+/**
+ * Puff, under the corridor, failing to interest Red in a bounce.
+ *
+ * `reach` is 0..1 across the frames Red is passing over him and back to 0
+ * after: arms up as he comes, a beat with them still up while Red carries
+ * straight on, and a shrug. He never moves off his mark and he never says a
+ * word about it.
+ */
+const S18_PUFF = { x: 1040, y: 856, scale: 0.86 } as const;
+
+const PuffMisses: React.FC<{ x: number; u: number }> = ({ x, u }) => {
+  // Where Red is, relative to Puff, as a fraction of the crossing.
+  const meet = (S18_PUFF.x - (CORRIDOR.x0 - 60)) / (CORRIDOR.x1 - CORRIDOR.x0 + 200);
+  const since = u - meet;
+  // Up over the twelve percent of the crossing before Red arrives, held for
+  // eight after, then down.
+  const reach =
+    since < -0.12 ? 0 : since < 0 ? (since + 0.12) / 0.12 : since < 0.08 ? 1 : Math.max(0, 1 - (since - 0.08) / 0.1);
+  const shrug = since > 0.18 ? Math.max(0, 1 - (since - 0.18) / 0.22) : 0;
+  return (
+    <Puff
+      x={S18_PUFF.x}
+      y={hover("puff", S18_PUFF.y - reach * 26 + shrug * 10, S18_PUFF.scale)}
+      scale={S18_PUFF.scale}
+      opacity={0.5}
+      phase={PHASE.puff}
+      // Hopeful, then not. Nothing else changes and nobody comments.
+      emotion={reach > 0.35 ? "excited" : shrug > 0.3 ? "grumpy" : "happy"}
+      look={reach > 0.2 ? { x: 0.1, y: -0.75 } : "camera"}
+      arms
+      pose={reach > 0.2 ? "cheer" : "rest"}
+      wisps={0.3}
+      idle={0.6}
+      zIndex={18}
+    />
   );
 };
 
@@ -1383,7 +1435,33 @@ const S20_RAY = { x: 1466, y: 686, scale: 0.56 };
 const S20_BUBBLES: Record<string, string> = {
   a2_32_ray: "From ALL of the sky!",
   a2_34_ray: "Violet bounces even more!",
+  // Two words, and the whole of the punch-up's C2. The clip says exactly this,
+  // so for once the bubble is a transcript rather than a summary — there is
+  // nothing to summarise.
+  a2_36b_ray: "Sorry, Violet.",
 };
+
+/**
+ * **Violet's ricochet, and the first thing on screen that is a joke about him.**
+ *
+ * Firing two of the silent-Violet running gag (Scene 11, here, Scene 28). Where
+ * he bounces, how hard, and how big he is drawn — all three are the gag, so they
+ * are named rather than buried in the component:
+ *
+ *   - **Bottom-left, clear of everything.** The eye owns the middle at (960,
+ *     726) and Ray owns the right at x=1466, so the corner is the one place a
+ *     body can work this hard without being *in the way* — which is the point:
+ *     nobody looks at him because nobody has to.
+ *   - **`ax`/`ay` are bigger than the blue dot's on purpose** — well over twice,
+ *     at more than twice the `speed`. "Violet bounces even more than Blue does"
+ *     is the line the picture has to be true to, and a still with the two
+ *     trails in it should make that obvious without the line.
+ *   - **`scale` is the findability lesson** (ep 2's backwards puff): a
+ *     background gag has to be findable in a paused frame or it is not in the
+ *     episode. He is drawn the same size as Ray, fully opaque, with his own
+ *     face, on the pale inside of the dome.
+ */
+const S20_VIOLET = { x: 300, y: 720, ax: 140, ay: 96, speed: 4.6, scale: 0.88 } as const;
 
 /**
  * Scene 20 — the step that turns a bouncing ball into a sky.
@@ -1395,6 +1473,15 @@ const S20_BUBBLES: Record<string, string> = {
  * small picture rather than a line of narration over the dome, because "our
  * eyes are not very good at violet" is a fact about an eye and there is an eye
  * available.
+ *
+ * **And then the punch-up's C2.** From `a2_34_ray` the violet dot is not a dot:
+ * it is Violet, with his face on, out-bouncing every other object in the frame
+ * and waving at the lens while two Narrator lines play over the top of him as
+ * if he were not there. On the 20f beat after `a2_36_narrator` he stops and
+ * droops — that is the only thing that enters the beat — and Ray, for the first
+ * and only time, looks at him. The fact was always that our eyes are the reason
+ * we do not see violet; this makes the fact have a victim, which is the version
+ * a six-year-old keeps.
  */
 const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -1405,6 +1492,10 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [violetFrom] = lineWindow(scene, "a2_34_ray");
   const [eyeFrom] = lineWindow(scene, "a2_35_narrator");
   const [blueEyeFrom] = lineWindow(scene, "a2_36_narrator");
+  // The 20f the punch-up bought. Violet stops on its first frame and stays
+  // stopped through the apology; nothing else in the scene moves either.
+  const [droopFrom] = heldBeat(scene, "a2_36_narrator");
+  const [sorryFrom, sorryTo] = lineWindow(scene, "a2_36b_ray");
 
   const t = frame / fps;
   const arrows = kidEase.easeInOutSine((frame - arrowFrom - 10) / 40);
@@ -1417,6 +1508,18 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const stage = useStage(scene);
   const rayEmotion = useEmotion(scene, "ray", { a2_32_ray: "amazed", a2_34_ray: "happy" }, "happy", NO_LEAD);
+  // He goes out on the first frame of the beat, not on the line — the droop is
+  // what the silence is *for*, and a face that waits for "Sorry, Violet." is a
+  // face reacting to an apology instead of earning one.
+  const violetEmotion = emotionAt(
+    frame,
+    [{ at: droopFrom, emotion: "sad", frames: 14 }],
+    "excited",
+  );
+  // Frozen clock: his whole ricochet is a function of `t`, so stopping him is
+  // stopping his clock rather than adding a second code path.
+  const violetT = frame >= droopFrom ? droopFrom / fps : t;
+  const droop = kidEase.easeOutCubic((frame - droopFrom) / 26);
 
   const rayMark: Mark = {
     x: S20_RAY.x,
@@ -1441,8 +1544,15 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       <BlueDome u={Math.max(0, Math.min(1, pull))} glow={glow} t={t} />
 
       {/* The honesty tax: violet really does bounce more, and the reason the
-          sky is not violet is in the eye. Two small pictures, two lines. */}
-      <VioletCase u={Math.max(0, Math.min(1, violet))} t={t} />
+          sky is not violet is in the eye. Two small pictures, two lines — and
+          one of the two pictures has a face on it and gets apologised to. */}
+      <VioletCase
+        u={Math.max(0, Math.min(1, violet))}
+        t={t}
+        violetT={violetT}
+        droop={droop}
+        emotion={violetEmotion}
+      />
       <WatchingEye
         u={Math.max(0, Math.min(1, eye))}
         blue={Math.max(0, Math.min(1, blueEye))}
@@ -1458,9 +1568,25 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.ray}
         emotion={rayEmotion}
         speaking={stage.speaking("ray")}
-        look={frame >= beatFrom && frame < beatTo ? "up" : { x: -0.4, y: -0.5 }}
-        // Nothing moves inside the dome beat, including him.
-        idle={frame >= beatFrom && frame < beatTo ? 0.4 : 1}
+        look={
+          frame >= beatFrom && frame < beatTo
+            ? "up"
+            : // **The one look Violet gets in the whole episode**, and it is on
+              // the apology rather than in the beat: the joke is that nobody
+              // looked, so the eye-line is the punchline's second half and it
+              // must not arrive early. Down and hard left, at (340, 706).
+              frame >= sorryFrom && frame < sorryTo
+              ? { x: -1, y: 0.2 }
+              : { x: -0.4, y: -0.5 }
+        }
+        // Nothing moves inside the dome beat, including him. Nor inside the
+        // droop beat — deadpan is stillness, and this one has a body in it that
+        // has just stopped.
+        idle={
+          (frame >= beatFrom && frame < beatTo) || (frame >= droopFrom && frame < sorryFrom)
+            ? 0.4
+            : 1
+        }
         streak={0.25}
         zIndex={26}
       />
@@ -1472,6 +1598,10 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         at={{
           a2_32_ray: { x: 1330, y: 264, tail: "right", tailAt: S20_RAY.x },
           a2_34_ray: { x: 1330, y: 264, tail: "right", tailAt: S20_RAY.x },
+          // Lower and nearer him than the other two: this bubble is not a
+          // caption on the dome, it is one character talking across the frame
+          // to another, and it wants to be on the same line of sight.
+          a2_36b_ray: { x: 1206, y: 470, tail: "right", tailAt: S20_RAY.x },
         }}
       />
     </AbsoluteFill>
@@ -1600,46 +1730,111 @@ const BlueDome: React.FC<{ u: number; glow: number; t: number }> = ({ u, glow, t
 };
 
 /**
- * Violet, bouncing harder than blue, in the left of the dome.
+ * Violet, bouncing harder than blue, in the bottom-left of the dome.
  *
- * Two dots and two trails, and the only thing being said is that the violet one
- * is the busier of the two — which is true, and is the setup for the honest
- * answer. No panel, no label: a bordered inset would read as a second diagram,
- * and this is a footnote.
+ * **Blue is a dot; Violet is a character.** That asymmetry is the punch-up's C2
+ * and it is deliberate on both sides: the blue dot is the control in a
+ * two-object comparison and wants no personality at all, and the violet one has
+ * to be somebody or "Sorry, Violet." is an apology to a circle. He carries the
+ * same trail the dot did — the trail is what makes "bounces even more" legible
+ * in a single still rather than only in motion — and he is drawn at Ray's own
+ * scale, fully opaque, on the pale inside of the dome, because a background gag
+ * that cannot be found in a paused frame is not in the episode (ep 2, the
+ * backwards puff).
+ *
+ * No panel, no label, no arrow: a bordered inset would read as a second
+ * diagram, and this is a footnote that waves.
+ *
+ * `violetT` is his own clock, frozen by the caller on the first frame of the
+ * held beat; `droop` 0..1 is the sag after it. Everything about the stop is
+ * *subtraction* — the clock stops, the arms fall, the face goes — because the
+ * beat is silent and the only thing allowed to happen in it is somebody giving
+ * up.
  */
-const VioletCase: React.FC<{ u: number; t: number }> = ({ u, t }) => {
+const VioletCase: React.FC<{
+  u: number;
+  t: number;
+  violetT: number;
+  droop: number;
+  emotion: Parameters<typeof RayShard>[0]["emotion"];
+}> = ({ u, t, violetT, droop, emotion }) => {
   if (u <= 0.01) return null;
-  // Where each one is at time `tt`, so the same function draws the dot and the
-  // few frames of path behind it. The trail is what makes "bounces even more"
-  // legible in a single still rather than only in motion.
+  // Where each one is at time `tt`, so the same function draws the body and the
+  // few frames of path behind it.
   const at = (
     tt: number,
     k: number,
     speed: number,
-    amp: number,
-    dy: number,
+    ax: number,
+    ay: number,
+    cx: number,
+    cy: number,
   ): { x: number; y: number } => ({
-    x: 392 + Math.sin(tt * speed + k) * amp + Math.sin(tt * speed * 2.3 + k) * amp * 0.3,
-    y: 452 + Math.cos(tt * speed * 1.37 + k * 2.1) * amp * 0.66 + dy,
+    x: cx + Math.sin(tt * speed + k) * ax + Math.sin(tt * speed * 2.3 + k) * ax * 0.3,
+    y: cy + Math.cos(tt * speed * 1.37 + k * 2.1) * ay,
   });
-  const trail = (k: number, speed: number, amp: number, dy: number): string =>
+  const V = S20_VIOLET;
+  const violetAt = (tt: number): { x: number; y: number } =>
+    at(tt, 0, V.speed, V.ax, V.ay, V.x, V.y);
+  // The control, and it is kept **out of Violet's lane**: he is a body now, not
+  // a dot, and his ricochet box is 380×280 — a still with the two of them
+  // overlapping is not a comparison, it is a collision. Up and to the right of
+  // him, with a fifth of the amplitude, which is the whole sentence.
+  const blueAt = (tt: number): { x: number; y: number } => at(tt, 2.4, 2, 58, 38, 700, 470);
+  const trail = (fn: (tt: number) => { x: number; y: number }, tt: number): string =>
     [0, 1, 2, 3, 4, 5]
       .map((i) => {
-        const p = at(t - i * 0.055, k, speed, amp, dy);
+        const p = fn(tt - i * 0.055);
         return `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
       })
       .join(" ");
-  const v = at(t, 0, 4.6, 132, 0);
-  const b = at(t, 2.4, 2, 58, 140);
+  const v = violetAt(violetT);
+  const b = blueAt(t);
+  // The lean he is travelling at, so the ricochet reads as effort rather than
+  // as float — and it unwinds to nothing as he droops.
+  const lean = (violetAt(violetT + 0.03).x - v.x) * 0.6 * (1 - droop);
   return (
-    <WideLayer zIndex={18} opacity={u}>
-      <path d={trail(0, 4.6, 132, 0)} stroke={SPECTRUM[6].fill} strokeWidth={11} fill="none" strokeLinecap="round" opacity={0.45} />
-      <path d={trail(2.4, 2, 58, 140)} stroke={SPECTRUM[4].fill} strokeWidth={11} fill="none" strokeLinecap="round" opacity={0.45} />
-      <circle cx={v.x} cy={v.y} r={34} fill={SPECTRUM[6].fill} />
-      <circle cx={v.x - 10} cy={v.y - 11} r={13} fill={SPECTRUM[6].light} />
-      <circle cx={b.x} cy={b.y} r={34} fill={SPECTRUM[4].fill} />
-      <circle cx={b.x - 10} cy={b.y - 11} r={13} fill={SPECTRUM[4].light} />
-    </WideLayer>
+    <>
+      <WideLayer zIndex={18} opacity={u}>
+        <path
+          d={trail(violetAt, violetT)}
+          stroke={SPECTRUM[6].fill}
+          strokeWidth={11}
+          fill="none"
+          strokeLinecap="round"
+          opacity={0.45 * (1 - droop)}
+        />
+        <path
+          d={trail(blueAt, t)}
+          stroke={SPECTRUM[4].fill}
+          strokeWidth={11}
+          fill="none"
+          strokeLinecap="round"
+          opacity={0.45}
+        />
+        <circle cx={b.x} cy={b.y} r={34} fill={SPECTRUM[4].fill} />
+        <circle cx={b.x - 10} cy={b.y - 11} r={13} fill={SPECTRUM[4].light} />
+      </WideLayer>
+      <RayShard
+        color={6}
+        x={v.x}
+        y={v.y + droop * 30}
+        scale={V.scale * (1 - droop * 0.06)}
+        // Violet is the seventh of the arc and keeps the seventh phase, so the
+        // same body blinks on the same clock in Scenes 9, 10, 11, 20 and 28.
+        // He is the same blob every time or he is three different accidents.
+        phase={SHARD_PHASE[6]}
+        emotion={emotion}
+        // Both arms out, at the lens, for as long as anybody might look.
+        arms
+        look={droop > 0.5 ? "down" : "camera"}
+        bank={lean}
+        idle={1 - droop}
+        eyeLife={1 - droop * 0.8}
+        opacity={u}
+        zIndex={19}
+      />
+    </>
   );
 };
 

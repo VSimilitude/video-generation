@@ -1005,12 +1005,31 @@ const BEAM = { x0: -1150, x1: 2600, y: 596, eyeX: 3010 };
 const TRACK_X = 690;
 
 const S28_BUBBLES: Record<string, string> = {
+  // A summary, not a transcript — exactly as Scene 10's seven-name roll call
+  // gets "Hi! Hi! Hi! Hi!". Three names, three goodbyes.
+  a3_14b_ray: "Bye! Bye! Bye!",
+  a3_14d_ray: "I will see me later.",
   a3_15_ray: "So who is left?",
   a3_17_ray: "The calm ones.",
 };
 
 /** The order the seven leave in: violet-ward first, red and orange never. */
 const LEAVERS = [4, 5, 6, 3, 2] as const;
+
+/**
+ * **The three the roll call names**, and they are the first three off the beam
+ * — Blue, Indigo and Violet, in that order, which is why `a3_14b_ray` can name
+ * them and be describing the picture rather than adding to it.
+ *
+ * Each of the three turns back on its way out and waves; Ray waves back, with
+ * an eye-line, which is Scene 10's roll call staged as a departure instead of
+ * as a greeting. Green and Yellow leave inside the 45f drain beat and do
+ * **not** wave: that beat is untouched, and a wave in it would be something
+ * entering it.
+ */
+const WAVERS = 3;
+/** Frames a leaver spends turned back, waving, before it faces its own path. */
+const WAVE_FOR = 30;
 
 const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -1065,11 +1084,39 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const emotion = useEmotion(
     scene,
     "ray",
-    { a3_15_ray: "amazed", a3_17_ray: "happy" },
+    // `a3_14d_ray` ("I will see me later.") is deliberately **not** in this map,
+    // exactly as `a1_44_ray` is not in Scene 10's: the face he ends the goodbye
+    // with is the face he says the button on, and the deflation is staged as
+    // stillness below rather than as an expression.
+    { a3_14b_ray: "excited", a3_15_ray: "amazed", a3_17_ray: "happy" },
     "happy",
     // 45f held beat in this scene.
     NO_LEAD,
   );
+
+  // --- the goodbye (punch-up C3) -------------------------------------------
+  const [byeFrom, byeTo] = lineWindow(scene, "a3_14b_ray");
+  const [stillFrom, stillTo] = heldBeat(scene, "a3_14c_narrator");
+  // He waves three times on the way out — once as each named colour leaves —
+  // and then once more, at all three of them, on the line that names them.
+  // Everything he does here is `WAVE_FOR` frames long, so the gesture is the
+  // same gesture every time and a child can see it is one joke fired four
+  // times.
+  const waveBursts = [departAt[0], departAt[1], departAt[2], byeFrom];
+  const wave = waveBursts.reduce((best, at) => {
+    const age = frame - at;
+    if (age < 0) return best;
+    const span = at === byeFrom ? byeTo - byeFrom + 20 : WAVE_FOR;
+    return Math.max(best, 1 - kidEase.easeInOutSine(age / Math.max(1, span)));
+  }, 0);
+  // **Nothing enters the 24f after `a3_14c`.** He hangs there in a beam that is
+  // now red and orange, doing absolutely nothing — same beat, same length and
+  // same reason as Scene 10's.
+  const inButtonBeat = frame >= stillFrom && frame < stillTo;
+  // Up and back, at whichever of the three has just left, and then up at the
+  // blue wash they turned into. The one place in Act Three where his eyes are
+  // somewhere other than on the diagram.
+  const watching = waveBursts.some((at) => frame >= at && frame < at + WAVE_FOR + 20);
 
   // He gets out of the way of the thing the beam is landing in. A still had him
   // sitting on the eye's own eyebrow.
@@ -1154,23 +1201,34 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // taken away, it is somewhere else now.
           const age = frame - at;
           const dir = slot % 2 === 0 ? -1 : 1;
+          // **Violet goes furthest**, which is the third firing of the running
+          // gag as geometry: he is the last of the three to go and he is still
+          // travelling after the other two have stopped.
+          const reach = slot === 2 ? 1.28 : 1;
           const p = moveAlong(
             origin,
-            { x: origin.x + dir * 620 + 120, y: origin.y - 1180 },
-            clamp01(age / 150),
+            { x: origin.x + (dir * 620 + 120) * reach, y: origin.y - 1180 * reach },
+            clamp01(age / (150 * reach)),
             { arc: 0.22 * dir, ease: kidEase.easeOutQuad },
           );
+          // The three the roll call names turn back and wave for their first
+          // second — a rock rather than a raised arm, because at 0.44 a shard's
+          // arm is nine pixels and a whole body tipping side to side is not.
+          const waving = slot < WAVERS ? 1 - kidEase.easeInOutSine(age / WAVE_FOR) : 0;
+          const rock = waving > 0 ? Math.sin(age * 0.62) * 15 * waving : 0;
           return (
             <RayShard
               key={c.name}
               color={i}
               x={p.x}
               y={hover("shard", p.y, 0.44)}
-              scale={0.44 * (1 - clamp01(age / 150) * 0.34)}
+              scale={0.44 * (1 - clamp01(age / 150) * 0.34) * (1 + waving * 0.22)}
               phase={SHARD_PHASE[i]}
               emotion="excited"
-              look={{ x: dir * 0.4, y: -0.5 }}
-              bank={p.angle * 0.3}
+              arms={waving > 0.05}
+              // Turned back at Ray while waving, then away down its own path.
+              look={waving > 0.3 ? { x: 0.7, y: 0.35 } : { x: dir * 0.4, y: -0.5 }}
+              bank={p.angle * 0.3 + rock}
               opacity={1 - clamp01((age - 40) / 110) * 0.55}
               zIndex={24 + i}
             />
@@ -1197,7 +1255,15 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           phase={PHASE.ray}
           emotion={emotion}
           speaking={stage.speaking("ray")}
-          look={{ x: -0.5, y: 0.35 }}
+          // Up and back at whoever has just left — and, on the goodbye, up at
+          // the blue wash across the top of the frame, which is where they went
+          // and is what `a3_14c_narrator` is about to say out loud.
+          look={inButtonBeat ? { x: -0.5, y: 0.35 } : watching ? { x: -0.35, y: -0.85 } : { x: -0.5, y: 0.35 }}
+          pose={wave > 0.04 && !inButtonBeat ? "wave" : "rest"}
+          wave={wave}
+          // Deadpan is stillness: inside the 24f button beat his idle drops and
+          // the wave is already dead.
+          idle={inButtonBeat ? 0.55 : 1}
           bank={-3}
           streak={0.85}
           zIndex={40}
@@ -1209,6 +1275,8 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cast={{ ray: { ...rayMark, x: rayMark.x + dx } } as Cast}
         text={S28_BUBBLES}
         at={{
+          a3_14b_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
+          a3_14d_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
           a3_15_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
           a3_17_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
         }}

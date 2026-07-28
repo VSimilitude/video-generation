@@ -471,10 +471,26 @@ the previous frame renders differently every time.
   kids' series lands a laugh every 22–25s and never goes more than ~45s without
   one; ep 2 landed one every 50s and had three stretches over 70s. Name the
   sags by timecode and put every change inside one.
-- **The mechanism act should be the funniest act, and the fix is structural.**
-  The density map will usually say the sag is where the teaching is, and the
-  temptation is to add jokes on top. Don't. Two moves, both of which make the
-  gag *be* the lesson:
+- **Track the max gap, not the average.** The average is the wrong number for a
+  long episode: chasing it means inventing ten more beats, and an episode can
+  sit at a healthy cadence overall while failing badly in two places. Ep 3
+  averaged one beat per 40s — between ep 1 and pre-punch-up ep 2 — and still had
+  a 79-second stretch in it. Name the stretches over ~45s and fix those; leave
+  the average alone.
+- **The sag follows the diagrams, not a fixed act.** "The mechanism act should
+  be the funniest act" is the *writing*-stage rule and it works — ep 3 followed
+  it and its mechanism act came out with the dry roller, the pinball and a
+  41-second scene with four beats in it. What the density map then found is that
+  the sag had simply **migrated to whichever act was carried by drawn
+  geometry**, which in that episode was Act Three: two cross-section diagrams
+  back to back, forty-five seconds of narrator over drawn geometry, and neither
+  of the two comedians on the payroll on screen. So the general rule is about
+  *stretches*, not acts: **any stretch carried by drawn geometry needs a
+  character beat inside it.** A diagram cannot be funny; a character standing in
+  one can. Audit by what is on screen, not by act number — and expect the answer
+  to move episode to episode.
+- **The fix is structural, not additive.** The temptation on any sag is to add
+  jokes on top. Don't. Two moves, both of which make the gag *be* the lesson:
   - **Put the funny characters inside the mechanism scenes and let them deliver
     the facts.** Ep 1's cloud-hotel manager being FULL is literally
     condensation; ep 2's sun objecting to "the sun does not warm the air" is
@@ -495,6 +511,24 @@ the previous frame renders differently every time.
   - Pick the one whose joke is also the lesson — four other Puffs is "this
     happens to *all* the warm air", made as a picture two scenes before the
     narration makes it as a sentence.
+  - **Fire it twice.** Ep 2's punch-up found re-firing it was the cheapest big
+    laugh available in the episode, and ep 3's found the same thing
+    independently: a greeting in Act One and a *goodbye* in Act Three, same
+    three-part shape both times, the second one built on a departure the scene
+    was already staging. Plan the second firing at script stage rather than
+    retrofitting it — it is the highest-value item in every audit so far.
+- **A crowd that has faces is a comedy cast that costs nothing, as long as
+  nobody gives it a line.** Ep 3's seven colour blobs were written silent (seven
+  speaking colours is seven auditions) and then used as diagram elements. They
+  are not: they have faces, they bob, wave, march and ricochet, and a sight gag
+  costs zero runtime, zero synthesis and zero voices. One of them — Violet, the
+  one nobody ever notices — carries a three-firing running gag with a name, an
+  arc and a punchline for one two-word clip. Two conditions, and both are hard:
+  - **The same body every time.** Same member of the crowd, same phase, same
+    silhouette, or it is three different accidents instead of one character.
+  - **Never give it a line.** The moment it speaks it is another voice, another
+    audition and another cast-table row — and for this gag the line would also
+    kill it, because the joke is that nobody notices him.
 
 ## Speech bubbles
 

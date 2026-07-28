@@ -34,7 +34,7 @@ import { RECAP_SCENES } from "./scenes/recap";
 // ---------------------------------------------------------------------------
 // THE GAPS ARE THE SCRIPT'S, NOT THE BUILDER'S.
 //
-// script.md carries **forty-one** held beats with exact frame counts and a
+// script.md carries **forty-four** held beats with exact frame counts and a
 // reason each, and they become the `gaps` below verbatim. Its own words:
 // "These numbers are the script's, not the builder's; raising one is a note,
 // lowering one is a change to the joke." Every number in a `gaps` block traces
@@ -336,11 +336,18 @@ const SCRIPT: SceneSpec[] = [
       "a2_34_ray",
       "a2_35_narrator",
       "a2_36_narrator",
+      "a2_36b_ray",
     ],
-    // 36f — "The full dome, glowing, with nothing over it. The answer to the
-    // cold open's question is on screen for the first time and it deserves a
-    // look."
-    gaps: { a2_33_narrator: 36 },
+    gaps: {
+      // 36f — "The full dome, glowing, with nothing over it. The answer to the
+      // cold open's question is on screen for the first time and it deserves a
+      // look."
+      a2_33_narrator: 36,
+      // 20f — "Violet stops bouncing and droops. **Nothing else enters this
+      // beat** — no bubble, no arrow, no emotion change on Ray. Deadpan is
+      // stillness."
+      a2_36_narrator: 20,
+    },
     tailFrames: 30,
   },
   {
@@ -448,15 +455,28 @@ const SCRIPT: SceneSpec[] = [
       "a3_12_narrator",
       "a3_13_narrator",
       "a3_14_narrator",
+      "a3_14b_ray",
+      "a3_14c_narrator",
+      "a3_14d_ray",
       "a3_15_ray",
       "a3_16_narrator",
       "a3_17_ray",
       "a3_18_narrator",
     ],
-    // 45f — "The blue drains out of the beam in silence, one ping at a time,
-    // over most of the width of the frame. This is Act Two's mechanism doing
-    // something *new*, and it needs to be watched rather than described."
-    gaps: { a3_13_narrator: 45 },
+    gaps: {
+      // 45f — "The blue drains out of the beam in silence, one ping at a time,
+      // over most of the width of the frame. This is Act Two's mechanism doing
+      // something *new*, and it needs to be watched rather than described."
+      a3_13_narrator: 45,
+      // 20f — "The goodbye lands. Ray is still waving after them while the
+      // audience works out who just left."
+      a3_14b_ray: 20,
+      // 24f — "**Nothing enters this.** No wave, no bubble, no entrance, no
+      // emotion change — Ray hangs there in a beam that is now red and orange,
+      // doing absolutely nothing. Same beat, same length and same reason as
+      // Scene 10's."
+      a3_14c_narrator: 24,
+    },
     tailFrames: 30,
   },
   {
@@ -518,8 +538,10 @@ const SCRIPT: SceneSpec[] = [
     lines: [
       "rc_08_narrator",
       "rc_09_narrator",
+      "rc_09b_sunny",
       "rc_10_narrator",
       "rc_11_ray",
+      "rc_11b_sunny",
       "rc_12_narrator",
       "rc_13_narrator",
       "rc_14_ray",

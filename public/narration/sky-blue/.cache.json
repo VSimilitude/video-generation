@@ -35,9 +35,9 @@
     "durationSeconds": 3.45
   },
   "co_08_sunny": {
-    "hash": "f3c4d8f80b1c9e97",
+    "hash": "6466a2edcb60b518",
     "outFile": "co_08_sunny.mp3",
-    "durationSeconds": 6.264
+    "durationSeconds": 3.7
   },
   "co_09_narrator": {
     "hash": "1d1c7853a5bcbceb",
@@ -55,9 +55,9 @@
     "durationSeconds": 2.575
   },
   "a1_03_sunny": {
-    "hash": "d56cde4602183bb9",
+    "hash": "9cbd67c038dd6f45",
     "outFile": "a1_03_sunny.mp3",
-    "durationSeconds": 1.476
+    "durationSeconds": 1.9
   },
   "a1_04_narrator": {
     "hash": "6513233b9763c250",
@@ -65,9 +65,9 @@
     "durationSeconds": 4.225
   },
   "a1_05_sunny": {
-    "hash": "e55d774b53ea4b44",
+    "hash": "fa54d6d1a6740424",
     "outFile": "a1_05_sunny.mp3",
-    "durationSeconds": 5.04
+    "durationSeconds": 3.95
   },
   "a1_06_narrator": {
     "hash": "be557b8f1eddf190",
@@ -85,9 +85,9 @@
     "durationSeconds": 3.075
   },
   "a1_09_sunny": {
-    "hash": "0744e78eb2f40773",
+    "hash": "615fb565ea08f023",
     "outFile": "a1_09_sunny.mp3",
-    "durationSeconds": 4.788
+    "durationSeconds": 3.775
   },
   "a1_10_ray": {
     "hash": "d53b76b025a64cfe",
@@ -95,9 +95,9 @@
     "durationSeconds": 3.564
   },
   "a1_11_sunny": {
-    "hash": "051183b2ae6d2719",
+    "hash": "c73c09d4a58f12e1",
     "outFile": "a1_11_sunny.mp3",
-    "durationSeconds": 2.34
+    "durationSeconds": 1.825
   },
   "a1_12_ray": {
     "hash": "713df918d2e2493e",
@@ -330,9 +330,9 @@
     "durationSeconds": 3.75
   },
   "a1_58_sunny": {
-    "hash": "463c853ab08e5884",
+    "hash": "6f2df632aebcc02b",
     "outFile": "a1_58_sunny.mp3",
-    "durationSeconds": 4.5
+    "durationSeconds": 2.775
   },
   "a1_59_narrator": {
     "hash": "90eee0ce5752ce52",
@@ -340,9 +340,9 @@
     "durationSeconds": 2.875
   },
   "a1_60_sunny": {
-    "hash": "28e54fc653140926",
+    "hash": "01f71b02728726f9",
     "outFile": "a1_60_sunny.mp3",
-    "durationSeconds": 2.772
+    "durationSeconds": 1.925
   },
   "a2_01_narrator": {
     "hash": "b162d9ebef56d330",
@@ -390,9 +390,9 @@
     "durationSeconds": 4.25
   },
   "a2_10_sunny": {
-    "hash": "f2ed77127bb302f3",
+    "hash": "1b1dc874dfd9b146",
     "outFile": "a2_10_sunny.mp3",
-    "durationSeconds": 5.184
+    "durationSeconds": 3.85
   },
   "a2_11_narrator": {
     "hash": "bf471715983dcefa",
@@ -400,9 +400,9 @@
     "durationSeconds": 2
   },
   "a2_12_sunny": {
-    "hash": "9e754dbdcdb6c06c",
+    "hash": "1e9647a7f9f0dadc",
     "outFile": "a2_12_sunny.mp3",
-    "durationSeconds": 2.952
+    "durationSeconds": 2.15
   },
   "a2_13_narrator": {
     "hash": "bf269eb0ccb73155",
@@ -524,6 +524,11 @@
     "outFile": "a2_36_narrator.mp3",
     "durationSeconds": 3.8
   },
+  "a2_36b_ray": {
+    "hash": "5822be114a03c646",
+    "outFile": "a2_36b_ray.mp3",
+    "durationSeconds": 1.764
+  },
   "a2_37_narrator": {
     "hash": "46168deb062fa837",
     "outFile": "a2_37_narrator.mp3",
@@ -565,9 +570,9 @@
     "durationSeconds": 1.8
   },
   "a2_45_sunny": {
-    "hash": "43a4f4da8e2b8464",
+    "hash": "9511d939515c61b4",
     "outFile": "a2_45_sunny.mp3",
-    "durationSeconds": 2.7
+    "durationSeconds": 2.2
   },
   "a2_46_ray": {
     "hash": "1d576190dd4fe721",
@@ -575,9 +580,9 @@
     "durationSeconds": 2.016
   },
   "a2_47_sunny": {
-    "hash": "5b103d7bbe7d7bd7",
+    "hash": "6b77efba740caca9",
     "outFile": "a2_47_sunny.mp3",
-    "durationSeconds": 5.328
+    "durationSeconds": 4.025
   },
   "a2_48_narrator": {
     "hash": "8f0b1dad4ef049a7",
@@ -590,9 +595,9 @@
     "durationSeconds": 1.75
   },
   "a2_50_sunny": {
-    "hash": "9f9de4d628b8cb13",
+    "hash": "b121f2ebaf74ebfe",
     "outFile": "a2_50_sunny.mp3",
-    "durationSeconds": 3.996
+    "durationSeconds": 2.3
   },
   "a2_51_narrator": {
     "hash": "96ccad686b2335fa",
@@ -605,9 +610,9 @@
     "durationSeconds": 3.996
   },
   "a2_53_sunny": {
-    "hash": "6e45a52a24d6ce99",
+    "hash": "d16a77403951d399",
     "outFile": "a2_53_sunny.mp3",
-    "durationSeconds": 6.444
+    "durationSeconds": 3.825
   },
   "a2_54_narrator": {
     "hash": "b5ca3720e8763996",
@@ -699,6 +704,21 @@
     "outFile": "a3_14_narrator.mp3",
     "durationSeconds": 4.125
   },
+  "a3_14b_ray": {
+    "hash": "62cc1cf7acd01529",
+    "outFile": "a3_14b_ray.mp3",
+    "durationSeconds": 3.996
+  },
+  "a3_14c_narrator": {
+    "hash": "3edc169f15c23a36",
+    "outFile": "a3_14c_narrator.mp3",
+    "durationSeconds": 3.425
+  },
+  "a3_14d_ray": {
+    "hash": "edd79c4f0850bf33",
+    "outFile": "a3_14d_ray.mp3",
+    "durationSeconds": 1.584
+  },
   "a3_15_ray": {
     "hash": "fff30302ef710d75",
     "outFile": "a3_15_ray.mp3",
@@ -735,9 +755,9 @@
     "durationSeconds": 5.2
   },
   "a3_22_sunny": {
-    "hash": "449b3be3d3ff0ceb",
+    "hash": "d21875bc0cb89e8d",
     "outFile": "a3_22_sunny.mp3",
-    "durationSeconds": 5.076
+    "durationSeconds": 3.55
   },
   "a3_23_narrator": {
     "hash": "13ab5f12a7710de9",
@@ -780,9 +800,9 @@
     "durationSeconds": 3.1
   },
   "a3_31_sunny": {
-    "hash": "6afd031c823aeb6d",
+    "hash": "f41de1ef2987c74e",
     "outFile": "a3_31_sunny.mp3",
-    "durationSeconds": 1.476
+    "durationSeconds": 1.9
   },
   "rc_01_narrator": {
     "hash": "f2a54bc401f67848",
@@ -800,9 +820,9 @@
     "durationSeconds": 4.5
   },
   "rc_04_sunny": {
-    "hash": "7f128ddbb024b81a",
+    "hash": "878a69c0e5de859d",
     "outFile": "rc_04_sunny.mp3",
-    "durationSeconds": 4.68
+    "durationSeconds": 3.775
   },
   "rc_05_narrator": {
     "hash": "d4634e10af4405ca",
@@ -829,6 +849,11 @@
     "outFile": "rc_09_narrator.mp3",
     "durationSeconds": 4.475
   },
+  "rc_09b_sunny": {
+    "hash": "484fef8f63bf8894",
+    "outFile": "rc_09b_sunny.mp3",
+    "durationSeconds": 2.975
+  },
   "rc_10_narrator": {
     "hash": "8c1b3d0cf5636d99",
     "outFile": "rc_10_narrator.mp3",
@@ -838,6 +863,11 @@
     "hash": "9776b2b368fb8f88",
     "outFile": "rc_11_ray.mp3",
     "durationSeconds": 2.952
+  },
+  "rc_11b_sunny": {
+    "hash": "0b35d47f86eef5c1",
+    "outFile": "rc_11b_sunny.mp3",
+    "durationSeconds": 2.6
   },
   "rc_12_narrator": {
     "hash": "2259676a2d7dcb15",
@@ -870,9 +900,9 @@
     "durationSeconds": 2.075
   },
   "rc_18_sunny": {
-    "hash": "14762e4cee1a2ce8",
+    "hash": "8d32db097353714c",
     "outFile": "rc_18_sunny.mp3",
-    "durationSeconds": 1.512
+    "durationSeconds": 1.75
   },
   "rc_19_ray": {
     "hash": "196ac42555203eaa",

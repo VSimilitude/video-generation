@@ -48,8 +48,9 @@
 // EMOTION IS SEASONING. A line only carries one when a stage direction in
 // `script.md` asks for it, and the comment on the line names the direction.
 // Everything else is "auto" — the model reading the words as written, and the
-// words were written to carry it. Ray's forty-four lines are nineteen "auto",
-// twenty-four seasoned and one shared recording, and the seasoning is his arc:
+// words were written to carry it. Ray's forty-seven lines are twenty-one
+// "auto", twenty-five seasoned and one shared recording, and the seasoning is
+// his arc:
 // two `sad` in Act One (the sulk, and nowhere else), `surprised` on the eight
 // lines where a fact lands on him, `happy` from the rainbow onward, and one
 // `calm` at the sunset. Drip and Puff are `happy` throughout, which is all they
@@ -126,7 +127,7 @@
 const NARRATOR = { voice: "af_heart", speed: 1.0 };
 
 // RAY'S CASTING IS NOT DECIDED. This block is the whole of it, on purpose:
-// one constant moves forty-four clips, which is what `PUFF_ENGINE` bought us in
+// one constant moves forty-seven clips, which is what `PUFF_ENGINE` bought us in
 // episode two. "kokoro" | "minimax" — kokoro ignores `emotion` entirely, so
 // flipping back gives a free re-time and costs the acting and nothing else.
 const RAY_ENGINE = "minimax";
@@ -666,6 +667,14 @@ export default {
       text: "They are extremely good at blue. So blue is what we see.",
       ...NARRATOR,
     },
+    // Scene 20: two words, and they are the episode's honesty tax made
+    // kid-legible. Violet really does scatter more and the reason we do not see
+    // a violet sky is our own eyes — which is a grown-up fact until somebody
+    // apologises to him for it. Third firing of Ray's pedantry (a2_34, a2_46)
+    // and a callback to the roll call, where he met Violet by name.
+    // Deliberately NOT seasoned: `happy` or `sad` would play it as a punchline
+    // being sold. Same call as a1_44_ray. The laugh is the 20f in front of it.
+    a2_36b_ray: { text: "Sorry, Violet.", ...RAY },
     a2_37_narrator: {
       text: "When light bounces off tiny things and goes everywhere, that is called scatter.",
       ...NARRATOR,
@@ -859,6 +868,33 @@ export default {
       text: "By the time that light reaches you, the blue has all bounced away.",
       ...NARRATOR,
     },
+    // THE ROLL CALL, SECOND FIRING — the series signature, and the picture the
+    // scene already draws. Three items rather than Scene 10's seven, so 0.9
+    // rather than 0.88; they still have to separate or they are one noise.
+    // The three named are exactly the three the scene's staging already loses
+    // (script.md, Scene 28: "indigo and violet go with it"), which is what makes
+    // a3_15_ray's "So who is left?" land as a question the audience can answer.
+    a3_14b_ray: {
+      text: "Bye Blue! Bye Indigo! Bye Violet!",
+      ...RAY,
+      speed: 0.9,
+      emotion: "happy",
+    },
+    // The flat explanatory line the roll call's shape requires — and it is the
+    // one place in the episode where the "nothing is taken away" rule
+    // (Production notes, Physics honesty) is said in words rather than trusted
+    // to the staging. Kokoro, so it re-times for free. 0.92, the house list
+    // speed, so the two halves separate.
+    a3_14c_narrator: {
+      text: "They did not go anywhere. They went everywhere else.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
+    // The unbothered button. Deliberately NOT seasoned — the exact call made on
+    // a1_44_ray ("I have never met me before."), which this is the sequel to,
+    // and the same 0.95. If it sounds like it is being sold, it is wrong: it is
+    // a mild fact about parts of himself having somewhere to be.
+    a3_14d_ray: { text: "I will see me later.", ...RAY, speed: 0.95 },
     a3_15_ray: { text: "So who is left?", ...RAY },
     a3_16_narrator: {
       text: "The ones that never bounced much. Red. And orange.",
@@ -989,6 +1025,15 @@ export default {
       text: "Somebody is standing on the Moon. The sun is shining right on them.",
       ...NARRATOR,
     },
+    // Scene 34: he claims the Moon one line before the Moon turns out not to
+    // have a sky. The cold open's shape (state the wrong theory, then break it)
+    // compressed into ten seconds, and his sixth claim of the episode.
+    // NO "You're welcome!" here — the catchphrase already fires seven times and
+    // an eighth is a tax on the three that matter.
+    rc_09b_sunny: {
+      text: "THAT IS ME! I am shining on the MOON as well!",
+      ...SUNNY,
+    },
     rc_10_narrator: {
       text: "It is the middle of the day. And the sky above them is BLACK.",
       ...NARRATOR,
@@ -1002,6 +1047,15 @@ export default {
       speed: 0.95,
       emotion: "surprised",
     },
+    // The objection, and it is the control experiment. He is not wrong and he
+    // is not complaining — the sun really is visible in a black lunar sky,
+    // which is the most counter-intuitive true thing in three episodes.
+    // rc_12_narrator already answers him word for word, so this line costs the
+    // scene nothing except the ten seconds it makes funny.
+    // Slowed a touch: it is a genuine question, not a brag. Kokoro, so free and
+    // free to reword. Deliberately NOT "EXCUSE ME" — that gag is at one firing
+    // in this episode (a2_45) and a second eleven minutes later is a tic.
+    rc_11b_sunny: { text: "So where is the sky? I am RIGHT HERE.", ...SUNNY, speed: 0.95 },
     rc_12_narrator: {
       text: "Because the Moon has no air. And no air means nothing to bounce blue off.",
       ...NARRATOR,

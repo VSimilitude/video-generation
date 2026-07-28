@@ -953,3 +953,66 @@ _Build-side notes (2026-07-28); watch-side retro pending._
 - **Ep-4 hero-arc rule** (from the ep-3 script's own self-flag): break
   the wrong-about-self shape — three episodes is a formula. Lava-drop
   hero gets a different arc (impatience vs the rock cycle's slowness).
+
+### The preemptive density audit (2026-07-28)
+
+Episodes one and two were audited for comedy density *after* a six-year-old
+watched them. Ep 3 was audited **before** — same method (`punch-up.md`, the
+scene-by-scene density map), run against a cut nobody outside the build had
+seen. Four findings worth keeping:
+
+- **The measurement is cheap and it is the whole value of the exercise.** Ep 3
+  came out at one kid-graded laugh every **40s** (ep 1: 22–25s; pre-punch-up
+  ep 2: 50s), acts one and two already at a healthy 32–35s. So the honest
+  answer to "does this need a punch-up?" was *mostly no* — and the pass that
+  followed spent **+19.3s across four changes** against ep 2's +41s across ten.
+  Writing the pacing rules into the script instead of retrofitting them did
+  most of the job; the audit's job was to find the two places it did not.
+- **The failure mode was max gap, not density**, and the max gap did not sit
+  where the last two episodes' did. Ep 2's rule ("the mechanism act should be
+  the funniest act") had been followed at the writing stage and Act Two came
+  out with four beats in one 41-second scene. **The sag had migrated to
+  whichever act was carried by drawn geometry** — here Act Three, two
+  cross-sections back to back with neither comedian on screen — and to the
+  recap, whose mind-blower was the longest scene in the episode with nothing in
+  it. Promoted to STYLE.md as *any stretch carried by drawn geometry needs a
+  character beat inside it*, replacing the act-shaped version of the rule.
+- **A silent crowd is free comedy.** Three of the four changes are carried by
+  the seven colour blobs, who have faces and no lines. Violet — the one nobody
+  ever notices — now fires three times (last onto the RAINBOW card and squeezed
+  half off the W; out-bouncing the entire dome shot and being ignored, then
+  drooping into "Sorry, Violet."; last out of the sunset beam and going
+  furthest) for **one two-word MiniMax clip**. The two conditions are hard and
+  both are in STYLE.md: it has to be the same body every time, and it must
+  never get a line.
+- **Cost: six clips, 67 MiniMax characters, ~$0.01.** Four of the six are free
+  (one Narrator, two Sunny on restored `am_puck`) and re-time for nothing.
+  11:58.6 → **12:17.9**. A seventh beat (Puff reaching for Red as he goes past,
+  missing, shrugging) went in for nothing at all — the audit's own "deliberately
+  not touched" section is where it was, which is an argument for reading these
+  documents to the end: the cheapest item in the pass was filed under the
+  changes that were declined.
+
+**Three staging notes, all of them found by looking at stills:**
+
+- **A house signature can be too short to hang a gag on.** The audit asked for
+  seven blobs on RAINBOW's seven letters. The `WordCard`'s capitals are on
+  screen for **twenty frames** and are still springing in for most of them — the
+  letters a child actually looks at for the other three hundred and thirty are
+  the syllable blocks, "Rain" and "Bow", which spell the same seven letters. So
+  the perches are block-relative (`syllableBlock()` reproduces
+  `SyllableBlocks`' own spring/hop/tilt arithmetic) rather than composition
+  coordinates, because a blob nailed to a fixed point slides off its own letter
+  the moment its block bounces. **Before staging business on a shared component,
+  check how long its parts are actually on screen.**
+- **If characters leave a frozen picture, they have to leave the freeze.** The
+  Big Word beat freezes the action behind the card; the seven were *in* that
+  freeze. Moving them to the live layer (and leaving the frozen plate behind
+  them) is what makes the arc visibly empty into the word instead of drawing
+  fourteen blobs. The corollary bit: everything about the pre-take-off frames —
+  scale, bank, look — has to start at the frozen values or the cut into the
+  scene jumps.
+- **`hover()` exists for exactly one bug and it is still the easiest one to
+  hit.** `RayShard`'s `y` is the top of its box; geometry helpers return
+  centres. Mixing them is a silent 64-pixel drop, which is precisely far enough
+  to park seven blobs on top of the word they were supposed to be sitting above.

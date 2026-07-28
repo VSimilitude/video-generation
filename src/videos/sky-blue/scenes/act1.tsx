@@ -35,6 +35,7 @@ import {
   lineWindow,
   projectMark,
   shardPoint,
+  spring,
   useCurrentFrame,
   useEmotion,
   useStage,
@@ -1507,17 +1508,74 @@ const CARD_Y = 300;
  * worth it for the same reason: it is the only piece of business in the beat.
  *
  * `W_BAR` is the crossbar of the W in the `WordCard`'s "RAINBOW"; `B_TOP` is
- * the top of the B. Ray hops from the W to the "Bow" block as the letters split
- * under him.
+ * Drip's mark on the B. Ray hops from the W of RAINBOW to the w of "Bow" as the
+ * letters split under him — a short hop, because since C1 he is **staying on
+ * his own letter** rather than moving to somebody else's, and because the
+ * letter he is sitting on is the one the seventh colour needs.
+ *
+ * `B_TOP` moved left and down (was 1010, 250) for the same change: Blue's perch
+ * is the top of the B, and Drip standing on it too put her head inside him.
  */
 const W_BAR = { x: 1272, y: 258 };
-const BOW_BLOCK = { x: 1128, y: 216 };
-const B_TOP = { x: 1010, y: 250 };
+/**
+ * **Over the w, not over the o** (it was 1128).
+ *
+ * The W of RAINBOW *becomes* the w of "Bow" when the word splits, so this is
+ * Ray staying on his own letter rather than hopping to a different one — and it
+ * is what makes the punch-up's C1 land: the last of the seven arrives to find
+ * the W taken, and there is nowhere else on the word to go.
+ */
+const BOW_BLOCK = { x: 1230, y: 216 };
+const B_TOP = { x: 990, y: 274 };
 const PERCH = 0.36;
 
 const S11_BUBBLES: Record<string, string> = {
   a1_49_drip: "That is you and me!",
 };
+
+// --- the seven, on the word (punch-up C1) ----------------------------------
+//
+// **RAINBOW has seven letters and Ray has seven colours.** The card is already
+// staged as a place characters sit (Ray on the W, Drip on the B), so the whole
+// change is that the other seven come up out of the frozen garden and take one
+// letter each, in spectrum order, and one of them does not get a seat.
+//
+// It costs nothing: no line, no clip, no held beat, not one frame of runtime.
+// It is the first firing of a **silent running gag** that Scenes 20 and 28 both
+// cash in, and Violet has to be the same blob every time — same seventh colour,
+// same seventh phase, same recognisable silhouette — or he is three different
+// accidents rather than one character.
+//
+// The geometry is measured off a still of the settled card at 1920×1080, in the
+// same spirit as `W_BAR`/`B_TOP` above, and expressed **relative to the two
+// syllable blocks** rather than as absolute marks: the blocks spring in, hop one
+// at a time through the chant, and sit at a two-degree tilt, and a blob nailed
+// to a composition coordinate would slide off its own letter the moment its
+// block bounced. `syllableBlock()` below is `SyllableBlocks`' own arithmetic
+// (src/lib/kid/BigWord.tsx), reproduced because a perch has to agree with the
+// thing it is perched on.
+
+/** Centre x of the "Rain" and "Bow" blocks, and the row's centre y. */
+const BLOCK_X = [768, 1160] as const;
+/** Which block each of the seven letters is in, and its x from that centre. */
+const LETTER_AT: ReadonlyArray<{ block: 0 | 1; dx: number }> = [
+  { block: 0, dx: -100 }, // R  — Red
+  { block: 0, dx: -27 }, //  a  — Orange
+  { block: 0, dx: 24 }, //   i  — Yellow
+  { block: 0, dx: 82 }, //   n  — Green
+  { block: 1, dx: -94 }, //  B  — Blue
+  { block: 1, dx: -21 }, //  o  — Indigo
+  { block: 1, dx: 69 }, //   w  — Violet, who does not get it
+];
+/** A perched blob straddles the top edge of its block. */
+const PERCH_DY = -86;
+/**
+ * Where Violet ends up: past the right-hand end of the "Bow" block, lower than
+ * a seat, tipped over, holding on. Nobody looks at him and nobody mentions him,
+ * and he is still there when the card cuts.
+ */
+const VIOLET_CLING = { dx: 182, dy: -48, bank: 26 } as const;
+const SHARD_PERCH = 0.36;
 
 const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -1558,6 +1616,17 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         y={CARD_Y}
         freeze={<ArcStill />}
       >
+        {/* The seven are drawn **live**, not inside the freeze, because they
+            leave: the frozen plate is the garden they came out of, and what a
+            child watches is the arc emptying into the word. They start at
+            exactly the positions `ArcStill` used to hold, so nothing changes
+            until they move. */}
+        <SevenOnTheWord
+          slamAt={slamAt}
+          splitAt={splitAt}
+          chantKey="a1_47_ray"
+          scene={scene}
+        />
         <Ray
           x={perch.x}
           y={hover("ray", perch.y + land * 8, PERCH)}
@@ -1599,13 +1668,146 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   );
 };
 
-/** The action the Big Word freezes: Scene 10's arc, rebuilt from its numbers. */
+/**
+ * The action the Big Word freezes: Scene 10's garden.
+ *
+ * **The seven are not in here any more.** They used to be — the freeze was the
+ * whole picture — but C1 has them climb out of the arc and onto the letters, so
+ * they moved to the live layer and this holds the world they left. Freezing
+ * them here as well would draw fourteen blobs.
+ */
 const ArcStill: React.FC = () => (
   <AbsoluteFill>
     <PaintedSky bg="garden_day" phase={6.8} vignette={0.2} />
-    <SevenArc u={1} from={EMERGE} look={{ x: 0.1, y: -0.15 }} />
   </AbsoluteFill>
 );
+
+/** One syllable block's live transform — `SyllableBlocks`' own arithmetic. */
+function syllableBlock(
+  j: number,
+  frame: number,
+  fps: number,
+  splitAt: number,
+  chantFrom: number,
+  chantLen: number,
+): { cx: number; cy: number; scale: number; rot: number } {
+  const land = spring({ frame: frame - splitAt - j * 3, fps, config: { damping: 11, mass: 0.6 } });
+  const per = chantLen / BLOCK_X.length;
+  const u = (frame - (chantFrom + j * per)) / per;
+  const hop = u >= 0 && u <= 1 ? Math.sin(u * Math.PI) : 0;
+  return {
+    cx: BLOCK_X[j],
+    cy: CARD_Y - hop * 56 + (1 - land) * -90,
+    scale: (0.4 + 0.6 * land) * (1 + hop * 0.14),
+    rot: ((1 - land) * 12 - 2 + hop * 3) * (Math.PI / 180),
+  };
+}
+
+/** A point at `(dx, dy)` from a block's centre, in composition coordinates. */
+function onBlock(
+  b: { cx: number; cy: number; scale: number; rot: number },
+  dx: number,
+  dy: number,
+): { x: number; y: number } {
+  const c = Math.cos(b.rot);
+  const s = Math.sin(b.rot);
+  return {
+    x: b.cx + (dx * c - dy * s) * b.scale,
+    y: b.cy + (dx * s + dy * c) * b.scale,
+  };
+}
+
+/**
+ * **C1 — the seven take a letter each, and one of them does not get one.**
+ *
+ * Spectrum order, one leaving every two and a half frames, which is the card's
+ * own letter stagger: each colour arrives on the beat its letter does. Red goes
+ * first and Violet goes last, and by the time Violet gets to the W, Ray is
+ * sitting on it — so he slides on to the far end of the block, half off the
+ * edge, and holds on there for the rest of the scene.
+ *
+ * Nothing looks at him, nothing points at him, and nobody says a word about it.
+ * That is the gag, and it is also the rule the ep-2 volcano note left behind: a
+ * background gag has to be **findable in a paused frame** and it has to be
+ * **continuously visible for the whole shot**, or it reads as a bug.
+ */
+const SevenOnTheWord: React.FC<{
+  scene: TimedScene;
+  slamAt: number;
+  splitAt: number;
+  chantKey: string;
+}> = ({ scene, slamAt, splitAt, chantKey }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const [chantFrom, chantTo] = lineWindow(scene, chantKey);
+  const chantLen = Math.max(1, chantTo - chantFrom);
+  // They set off before the slam and land as the word does. 44 frames of
+  // flight, so the last of them is still arriving after the split — which is
+  // the point: Violet is late.
+  const riseAt = slamAt - 22;
+  const blocks = BLOCK_X.map((_, j) =>
+    syllableBlock(j, frame, fps, splitAt, chantFrom, chantLen),
+  );
+  // Violet finds the W taken eight frames after he lands on it, and is squeezed
+  // off the end over the next sixteen.
+  const squeeze = kidEase.easeInOutSine((frame - (riseAt + 6 * 2.5 + 44 + 8)) / 16);
+
+  return (
+    <>
+      {SPECTRUM.map((c, i) => {
+        const seat = LETTER_AT[i];
+        const b = blocks[seat.block];
+        const seatAt = onBlock(b, seat.dx, PERCH_DY);
+        const clingAt = onBlock(b, VIOLET_CLING.dx, VIOLET_CLING.dy);
+        const centre =
+          i === 6
+            ? {
+                x: seatAt.x + (clingAt.x - seatAt.x) * squeeze,
+                y: seatAt.y + (clingAt.y - seatAt.y) * squeeze,
+              }
+            : seatAt;
+        // `onBlock` gives the blob's **centre**; `RayShard`'s `y` is the top of
+        // its box, which is what `shardPoint` is already in. Mixing the two is
+        // the classic 64-pixel error (`hover` exists for exactly this).
+        const target = { x: centre.x, y: hover("shard", centre.y, SHARD_PERCH) };
+        const from = shardPoint(i);
+        const u = kidEase.easeInOutSine((frame - (riseAt + i * 2.5)) / 44);
+        const p = moveAlong(from, target, u, { arc: -0.3, ease: kidEase.easeInOutSine });
+        // Settles onto the letter, then sits still: a blob that keeps bobbing
+        // on a Big Word card is competing with the letters for the eye.
+        const settle = u >= 1 ? settleWave((frame - (riseAt + i * 2.5) - 44) / 26, 1, 4.2) : 0;
+        // **Everything before take-off has to be the arc, exactly.** Scene 10
+        // ends on `SevenArc u={1}` at 0.9 with the arc's own tangent for a bank
+        // and its own look, and Scene 11 opens on the same frame — so scale,
+        // bank and look all start at those values and only then become the
+        // perch's. Getting this wrong is a visible jump on the cut.
+        const off = Math.min(1, Math.max(0, u * 2.5));
+        return (
+          <RayShard
+            key={c.name}
+            color={i}
+            x={p.x}
+            y={p.y - settle * 9}
+            scale={(0.9 + (SHARD_PERCH - 0.9) * u) * (1 + settle * 0.08)}
+            phase={SHARD_PHASE[i]}
+            emotion="happy"
+            look={off > 0.5 ? "camera" : { x: 0.1, y: -0.15 }}
+            bank={
+              from.angle * 0.25 * (1 - off) +
+              p.angle * 0.3 * off +
+              (i === 6 ? VIOLET_CLING.bank * squeeze : 0)
+            }
+            // Both arms out only while he is hanging off the end. Six seated
+            // blobs with arms is six pairs of arms on a word card.
+            arms={i === 6 && squeeze > 0.2}
+            idle={u >= 1 ? 0.45 : 1}
+            zIndex={53}
+          />
+        );
+      })}
+    </>
+  );
+};
 
 /** Rain running down the front of the card. */
 const RainStreaks: React.FC<{ from: number }> = ({ from }) => {

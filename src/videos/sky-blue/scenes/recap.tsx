@@ -461,11 +461,35 @@ const ThreeWords: React.FC<{ from: number }> = ({ from }) => {
 
 const S34_ASTRO = { x: 660, ground: 892, scale: 1 };
 
+/**
+ * **Sunny, in a black sky, in the middle of the day** — the punch-up's C4.
+ *
+ * He costs no new set, and that is the whole argument for him: the astronaut is
+ * lit hard from frame right with a crisp black shadow lying to the left, so
+ * something is already doing the lighting and the frame's top-right corner is
+ * where it has to be. The existing wave — the right arm, going up and to the
+ * right, inside the two-second hold — was already pointing at this mark before
+ * anybody put a face on it.
+ *
+ * Two consequences the picture had to absorb, both noted here because a later
+ * reader will otherwise "fix" them:
+ *
+ *   - **The Earth moved to the top *left*.** It was at (1682, 202), which is
+ *     inside Sunny. The marble is unchanged in every other way and the black is
+ *     as empty on one side as the other; what the swap buys is the two round
+ *     objects on opposite sides of the frame instead of stacked in one corner.
+ *   - **Ray shifted left**, from x=1360 to x=1210, for the same reason and by
+ *     the smallest amount that clears Sunny's rays.
+ */
+const S34_SUNNY = { x: 1706, y: 214, scale: 1.22 } as const;
+
 const S34_BUBBLES: Record<string, string> = {
   rc_11_ray: "Black? In the daytime? Why?",
   // A summary, not a transcript: the clip is "So the blue sky is a thing the
   // AIR does." Six words is the ceiling and this is five.
   rc_14_ray: "The AIR does the blue!",
+  rc_09b_sunny: "That is ME!",
+  rc_11b_sunny: "I am RIGHT HERE!",
 };
 
 const MindBlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
@@ -505,11 +529,42 @@ const MindBlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     NO_LEAD,
   );
 
+  // --- Sunny in the lunar sky (punch-up C4) --------------------------------
+  const [claimFrom, claimTo] = lineWindow(scene, "rc_09b_sunny");
+  const [whereFrom, whereTo] = lineWindow(scene, "rc_11b_sunny");
+  // The blaze is on from the first frame; the *face* arrives on his line, which
+  // is the ep-2 crayon-sun trick — the thing already lighting the shot turns out
+  // to be somebody.
+  const faceUp = kidEase.easeInOutSine((frame - claimFrom) / 18);
+  // **The 60f hold is sacred and he is in it.** He blazes and he does not move,
+  // react or change expression for two full seconds — so his idle is ramped to
+  // nothing across the beat rather than switched, and his rays do not spin at
+  // all in this scene (nothing shimmers where there is no air).
+  const holdStill =
+    kidEase.easeInOutSine((frame - beatFrom) / 12) *
+    (1 - kidEase.easeInOutSine((frame - beatTo) / 12));
+  const sunnyEmotion = useEmotion(
+    scene,
+    "sunny",
+    // Nothing changes inside [beatFrom, beatTo): the claim lands 130 frames
+    // before it and the objection 100 frames after.
+    { rc_09b_sunny: "proud", rc_11b_sunny: "amazed" },
+    "proud",
+    NO_LEAD,
+  );
+
   const rayMark: Mark = {
-    x: 1360,
+    x: 1210,
     y: hover("ray", 372, 0.6),
     scale: 0.6,
     who: "ray",
+    side: "left",
+  };
+  const sunnyMark: Mark = {
+    x: S34_SUNNY.x,
+    y: hover("sunny", S34_SUNNY.y, S34_SUNNY.scale),
+    scale: S34_SUNNY.scale,
+    who: "sunny",
     side: "left",
   };
 
@@ -527,8 +582,37 @@ const MindBlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       {/* Earth, out in the black. Small, and the one warm blue thing up there —
           which is the joke: the blue is over *there*, because that is where the
-          air is. */}
-      <BlueMarble x={1682} y={202} r={104} />
+          air is. **Top left since C4**; see `S34_SUNNY`. */}
+      <BlueMarble x={286} y={196} r={104} />
+
+      {/* The thing that has been lighting this shot all along. The blaze is on
+          from frame one; Sunny fades up inside it on his own line. Both live
+          outside the `Camera`, like Ray and the marble, so the slow push-in does
+          not drag the sky about. */}
+      <LunarBlaze x={S34_SUNNY.x} y={S34_SUNNY.y + 40} />
+      <div style={{ position: "absolute", inset: 0, opacity: clamp01(faceUp) }}>
+        <Sunny
+          x={sunnyMark.x}
+          y={sunnyMark.y}
+          scale={S34_SUNNY.scale}
+          phase={PHASE.sunny}
+          emotion={sunnyEmotion}
+          speaking={stage.speaking("sunny")}
+          look={
+            frame >= claimFrom && frame < claimTo
+              ? // Down at the astronaut he has just claimed.
+                { x: -0.55, y: 0.5 }
+              : frame >= whereFrom && frame < whereTo
+                ? { x: -0.3, y: 0.35 }
+                : "camera"
+          }
+          // No spin: there is no air here and nothing in this frame shimmers.
+          raySpeed={0}
+          idle={1 - 0.9 * holdStill}
+          eyeLife={1 - holdStill}
+          zIndex={20}
+        />
+      </div>
 
       {/* He is a warm white body on a black sky, which is the one background in
           the episode he is easy to see against — so no `SoftShade` here, and
@@ -551,11 +635,15 @@ const MindBlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Bubbles
         scene={scene}
-        cast={{ ray: rayMark } as Cast}
+        cast={{ ray: rayMark, sunny: sunnyMark } as Cast}
         text={S34_BUBBLES}
         at={{
-          rc_11_ray: { x: 1160, y: 190, tail: "right", tailAt: rayMark.x },
-          rc_14_ray: { x: 1160, y: 190, tail: "right", tailAt: rayMark.x },
+          rc_11_ray: { x: 1000, y: 190, tail: "right", tailAt: rayMark.x },
+          rc_14_ray: { x: 1000, y: 190, tail: "right", tailAt: rayMark.x },
+          // Under him rather than above: his crown is off the top of the frame,
+          // and a bubble clamped to y=170 would sit across his own rays.
+          rc_09b_sunny: { x: 1250, y: 640, tail: "right", tailAt: S34_SUNNY.x - 90 },
+          rc_11b_sunny: { x: 1250, y: 640, tail: "right", tailAt: S34_SUNNY.x - 90 },
         }}
       />
     </AbsoluteFill>
@@ -662,6 +750,27 @@ const MoonWorld: React.FC<{
       />
     ))}
   </WideLayer>
+);
+
+/**
+ * The sun, from the Moon: a hard white disc with no sky around it.
+ *
+ * On Earth the sun is a smear, because the air scatters its light across the
+ * whole dome — which is the episode. Here there is nothing to scatter on, so
+ * the glow stops dead a little way out and the black starts, and the stars are
+ * still visible right up against it. That contradiction is the scene's fact
+ * drawn a third way, after the black sky and the hard-edged shadow.
+ */
+const LunarBlaze: React.FC<{ x: number; y: number }> = ({ x, y }) => (
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      background: `radial-gradient(circle 460px at ${x}px ${y}px, rgba(255,244,214,0.95) 0%, rgba(255,224,138,0.55) 22%, rgba(255,196,80,0.22) 40%, rgba(255,180,60,0.07) 58%, rgba(255,180,60,0) 72%)`,
+      pointerEvents: "none",
+      zIndex: 6,
+    }}
+  />
 );
 
 /** Earth from the Moon: the blue marble, and where all the air went. */
