@@ -1,6 +1,6 @@
 import React from "react";
 import { CharacterFrame, Face, useRig, type CharacterProps } from "../Character";
-import { kidTheme } from "../theme";
+import { kidTheme, mixHex } from "../theme";
 
 // Ray — the hero of episode three. One beam of sunlight, eight minutes old.
 //
@@ -48,6 +48,39 @@ const CORE = "#fffdf2";
 const CORE_WARM = "#fff5d8";
 const GLOW = kidTheme.sunLight;
 const EDGE = kidTheme.sunDeep;
+
+/**
+ * **The brightness arc, as three channels rather than one.**
+ *
+ * The first version of this file put the whole of `brightness` into the halo —
+ * its size and its alpha — and a pair of stills says what that is worth: Act
+ * One's sulk at 0.48 and Act Two's full at 1.0 are the same drawing with a
+ * slightly different smudge behind it, on a character whose arc is *drawn and
+ * never spoken*. A change nobody is allowed to mention has to be a change the
+ * audience can see.
+ *
+ * So `brightness` now drives three things at once, in the order they read:
+ *
+ *   colour   the core goes from a cool flat white to a warm cream, and the ring
+ *            around it from a whisper to real warmth. This is the channel that
+ *            does the work — value contrast is what the eye reads first, and a
+ *            cool white against a cyan sky is a *dimmer* object in a way that a
+ *            bigger halo is not.
+ *   size     ±8% on the body. Small enough that no mark, bubble or ground line
+ *            moves (the character's box is untouched), big enough that a sulk
+ *            is a character taking up less room.
+ *   halo     the original channel, on a wider range.
+ *
+ * Every one of them is monotone in `brightness` and all three pass through
+ * roughly the same place at Act One's 0.6, so an episode that was staged
+ * against the old mapping still looks like itself — see the act-one stills in
+ * the ep-3 retro.
+ */
+/** The cool white of a beam who thinks he is the plain one. */
+const CORE_COOL = "#e9f0f8";
+/** The whisper of warmth the ring has left at zero. */
+const RING_COOL = "#eef2f7";
+const RING_HOT = "#ffeec2";
 
 /**
  * The seven, in order, red on the outside through to violet.
@@ -123,6 +156,10 @@ export const Ray: React.FC<RayProps> = (props) => {
     (emotion === "excited" ? "cheer" : emotion === "scared" ? "hug" : "rest");
 
   const b = Math.max(0, Math.min(1, brightness));
+  // The three channels of the arc (see the note by CORE_COOL).
+  const core = mixHex(CORE_COOL, CORE, b);
+  const ring = mixHex(RING_COOL, RING_HOT, b);
+  const size = 0.9 + 0.18 * b;
   const t = rig.frame / rig.fps;
   // His own clock, offset per character like everything else in the rig.
   const st = t + rig.phase * 1.7;
@@ -142,35 +179,36 @@ export const Ray: React.FC<RayProps> = (props) => {
       flip={props.flip}
       zIndex={props.zIndex}
     >
-      <g transform={`rotate(${bank})`} opacity={opacity}>
+      <g transform={`rotate(${bank}) scale(${size})`} opacity={opacity}>
         {/* The light he is trailing, behind everything. Not rays: three
             tapering streaks running back along the path he came in on, which
             is the one thing that separates a beam from a small sun. */}
-        {streak > 0.02 ? <Streaks t={st} lag={lag} strength={streak * (0.5 + 0.5 * b)} /> : null}
+        {streak > 0.02 ? <Streaks t={st} lag={lag} strength={streak * (0.4 + 0.6 * b)} /> : null}
 
         {/* Radiance. Concentric flat ellipses rather than a radial gradient:
             a gradient needs a per-instance id, and seven shards plus Ray share
             one document. Four rings read as soft at this size. */}
         <Halo b={b} t={st} />
 
-        <Body d={d} b={b} edge={edge} />
+        <Body d={d} b={b} core={core} edge={edge} />
         {spectrum > 0.01 ? <SpectrumEdge d={d} strength={spectrum} frame={rig.frame} /> : null}
 
         {arms ? <Arms pose={pose} swing={lag * 0.4} t={st} wave={wave} edge={edge} /> : null}
 
-        {/* The face, on a flat core. The core is what the eyelids are painted
-            in (Face's `skin` note), so it stays a single flat colour however
-            bright he is — the warmth lives in the ring *around* it. */}
+        {/* The face, on a flat core. The core is a single flat colour at any
+            one brightness — that is what the eyelids are painted in (Face's
+            `skin` note) — but *which* flat colour is the arc: cool white when
+            he thinks he is the plain one, warm cream when he is not. */}
         <g>
-          <ellipse cx={26} cy={-2} rx={80} ry={68} fill={CORE_WARM} opacity={0.35 + 0.45 * b} />
-          <ellipse cx={26} cy={-2} rx={62} ry={54} fill={CORE} />
+          <ellipse cx={26} cy={-2} rx={80} ry={68} fill={ring} opacity={0.3 + 0.55 * b} />
+          <ellipse cx={26} cy={-2} rx={62} ry={54} fill={core} />
           <Face
             rig={rig}
             x={26}
             y={-4}
             size={1.2}
             eyeScale={1.02}
-            skin={CORE}
+            skin={core}
             // Pink over near-white needs no help; the default strength puts two
             // hot spots on a pale face (the Puff finding, same problem).
             blushColor="#ffa06b"
@@ -184,14 +222,19 @@ export const Ray: React.FC<RayProps> = (props) => {
 
 // --- the body --------------------------------------------------------------
 
-const Body: React.FC<{ d: string; b: number; edge: string }> = ({ d, b, edge }) => (
+const Body: React.FC<{ d: string; b: number; core: string; edge: string }> = ({
+  d,
+  b,
+  core,
+  edge,
+}) => (
   <g>
-    <path d={d} fill={CORE_WARM} opacity={0.55 + 0.35 * b} />
+    <path d={d} fill={mixHex("#f2f6fb", CORE_WARM, b)} opacity={0.55 + 0.35 * b} />
     {/* An inner light, offset towards the nose, so the lozenge has a direction
         even when he is standing still. Big — it is most of his area, and it is
         what stops a warm-white body from reading as an orange one once the
         outline is on it. */}
-    <path d={beamBlobStatic(R * 0.8)} fill={CORE} opacity={0.9} transform="translate(18 -6)" />
+    <path d={beamBlobStatic(R * 0.8)} fill={core} opacity={0.9} transform="translate(18 -6)" />
     <path
       d={d}
       fill="none"
@@ -218,7 +261,10 @@ const Body: React.FC<{ d: string; b: number; edge: string }> = ({ d, b, edge }) 
  */
 const Halo: React.FC<{ b: number; t: number }> = ({ b, t }) => {
   const breathe = 1 + 0.035 * Math.sin(t * 1.1);
-  const size = (0.62 + 0.38 * b) * breathe;
+  // Wider than it was (0.62..1 -> 0.5..1): the halo is no longer carrying the
+  // arc on its own, but it is still the channel that says "brighter", so it is
+  // allowed to say it louder.
+  const size = (0.5 + 0.5 * b) * breathe;
   return (
     <g>
       {[
@@ -234,7 +280,7 @@ const Halo: React.FC<{ b: number; t: number }> = ({ b, t }) => {
           rx={R * k * size}
           ry={R * k * 0.82 * size}
           fill={GLOW}
-          opacity={a * (0.5 + 0.5 * b)}
+          opacity={a * (0.3 + 0.7 * b)}
         />
       ))}
     </g>
@@ -259,25 +305,58 @@ const SpectrumEdge: React.FC<{ d: string; strength: number; frame: number }> = (
   d,
   strength,
   frame,
-}) => (
-  <g opacity={Math.max(0, Math.min(1, strength)) * 0.75}>
-    {SPECTRUM.map((c, i) => (
-      <path
-        key={c.name}
-        d={d}
-        fill="none"
-        stroke={c.fill}
-        strokeWidth={10}
-        strokeLinecap="butt"
-        pathLength={1}
-        strokeDasharray={`${1 / SPECTRUM.length} ${1 - 1 / SPECTRUM.length}`}
+}) => {
+  // **The strength boost, and why there is one.** A still of Scene 13 onward
+  // showed two of the seven bands and no more: the caller's number is 0.5 (the
+  // script wants this *faint*), 0.5 × 0.75 is a 37%-opaque 10px band sitting on
+  // top of a 9px amber outline, and against a cyan sky only the two bands that
+  // happen to be warm have any value contrast at all. The bands were there;
+  // they were not *visible*, which is not the same thing and is not what the
+  // prop was asked for.
+  //
+  // So the caller's 0.5 is remapped rather than the caller being changed — a
+  // scene asking for "half" should get a findable half — and every band is
+  // drawn twice: a wide soft pass that bleeds the hue outside the amber edge
+  // (where it has a sky to be seen against) and a narrow solid one on the edge
+  // itself. Still faint enough that nobody in the script has to mention it.
+  const s = Math.min(1, Math.max(0, strength) ** 0.65 * 1.12);
+  const dash = `${1 / SPECTRUM.length} ${1 - 1 / SPECTRUM.length}`;
+  return (
+    <g>
+      {SPECTRUM.map((c, i) => {
         // A very slow crawl, about one turn a minute: the colours are
         // travelling together, which is the sentence Act One ends on.
-        strokeDashoffset={-(i / SPECTRUM.length + frame * 0.0006)}
-      />
-    ))}
-  </g>
-);
+        const offset = -(i / SPECTRUM.length + frame * 0.0006);
+        return (
+          <g key={c.name}>
+            <path
+              d={d}
+              fill="none"
+              stroke={c.fill}
+              strokeWidth={22}
+              strokeLinecap="butt"
+              pathLength={1}
+              strokeDasharray={dash}
+              strokeDashoffset={offset}
+              opacity={s * 0.3}
+            />
+            <path
+              d={d}
+              fill="none"
+              stroke={c.fill}
+              strokeWidth={11}
+              strokeLinecap="butt"
+              pathLength={1}
+              strokeDasharray={dash}
+              strokeDashoffset={offset}
+              opacity={s * 0.82}
+            />
+          </g>
+        );
+      })}
+    </g>
+  );
+};
 
 /** What he leaves behind him: light streaming back along his path. */
 const Streaks: React.FC<{ t: number; lag: number; strength: number }> = ({
