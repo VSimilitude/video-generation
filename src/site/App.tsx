@@ -9,6 +9,7 @@ import React from "react";
 import { Player } from "@remotion/player";
 import { theme } from "../lib/theme";
 import { BranchingPlayer } from "./BranchingPlayer";
+import { FullscreenStage } from "./FullscreenStage";
 import {
   PUBLIC_VIDEOS,
   findVideo,
@@ -246,8 +247,9 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
       </a>
       <ErrorBoundary onRetry={retry}>
         {video.branching ? (
-          // Same containment, different screen: the branching player owns its
-          // own letterbox because the choice card has to be positioned over it.
+          // Same containment, different screen: the branching player wraps the
+          // letterbox in its own stage, because the choice card has to sit over
+          // the picture and go fullscreen with it.
           <BranchingPlayer
             key={attempt}
             video={video}
@@ -256,22 +258,33 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
             errorFallback={() => <Hiccup onRetry={retry} />}
           />
         ) : (
-          <div key={attempt} style={letterbox}>
-            <Player
-              component={video.component}
-              durationInFrames={video.durationInFrames}
-              compositionWidth={video.width}
-              compositionHeight={video.height}
-              fps={video.fps}
-              controls
-              clickToPlay
-              doubleClickToFullscreen
-              allowFullscreen
-              acknowledgeRemotionLicense
-              errorFallback={() => <Hiccup onRetry={retry} />}
-              style={{ width: "100%" }}
-            />
-          </div>
+          // The stage owns the letterbox so the fullscreen button, and the
+          // portrait-phone rotation, work the same here as in the branching
+          // player. Remotion's own fullscreen stays on for mouse users (there
+          // is no overlay to leave behind on a linear video) and off on touch,
+          // where two fullscreen buttons would just fight.
+          <FullscreenStage
+            key={attempt}
+            letterboxStyle={letterbox}
+            label={video.title}
+          >
+            {(stage) => (
+              <Player
+                component={video.component}
+                durationInFrames={video.durationInFrames}
+                compositionWidth={video.width}
+                compositionHeight={video.height}
+                fps={video.fps}
+                controls
+                clickToPlay
+                doubleClickToFullscreen={stage.allowPlayerFullscreen}
+                allowFullscreen={stage.allowPlayerFullscreen}
+                acknowledgeRemotionLicense
+                errorFallback={() => <Hiccup onRetry={retry} />}
+                style={stage.playerStyle}
+              />
+            )}
+          </FullscreenStage>
         )}
       </ErrorBoundary>
       <h2 style={{ fontSize: 20, fontWeight: 700, margin: "18px 0 6px" }}>

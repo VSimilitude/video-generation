@@ -15,10 +15,10 @@
 // See docs/CYOA.md ("Player mechanics", phase 1).
 
 import React from "react";
-import { createPortal } from "react-dom";
 import { Player, type CallbackListener, type PlayerRef } from "@remotion/player";
 import { prefetch, staticFile } from "remotion";
 import { ChoiceCard, EndCard } from "./ChoiceCard";
+import { FullscreenStage } from "./FullscreenStage";
 import {
   choiceHoldFrame,
   firstChoiceSegment,
@@ -337,30 +337,6 @@ export const BranchingPlayer: React.FC<BranchingPlayerProps> = ({
     return made;
   }, [segments, path]);
 
-  // --- Fullscreen ---------------------------------------------------------
-  //
-  // The Player fullscreens its own container, which would leave an overlay
-  // rendered next to it invisible — and landscape fullscreen is exactly how a
-  // phone watches this. So while fullscreen is active the overlay is portalled
-  // *into* that container, where it is still a sibling of the composition (it
-  // never becomes an ancestor of the Player, so no typography can cascade in).
-  const [fullscreenElement, setFullscreenElement] =
-    React.useState<Element | null>(null);
-  React.useEffect(() => {
-    const onChange = () => {
-      const doc = document as Document & { webkitFullscreenElement?: Element };
-      setFullscreenElement(
-        document.fullscreenElement ?? doc.webkitFullscreenElement ?? null,
-      );
-    };
-    document.addEventListener("fullscreenchange", onChange);
-    document.addEventListener("webkitfullscreenchange", onChange);
-    return () => {
-      document.removeEventListener("fullscreenchange", onChange);
-      document.removeEventListener("webkitfullscreenchange", onChange);
-    };
-  }, []);
-
   const inputProps = React.useMemo(() => ({ path }), [path]);
 
   const overlayNode = openChoice ? (
@@ -380,28 +356,40 @@ export const BranchingPlayer: React.FC<BranchingPlayerProps> = ({
     />
   ) : null;
 
+  // --- Fullscreen ---------------------------------------------------------
+  //
+  // The card and the picture go fullscreen together because both are children
+  // of the stage, which is the element that gets fullscreened (or faked, on
+  // iPhone) — see FullscreenStage. The overlay stays a SIBLING of the Player,
+  // never an ancestor, so no typography can cascade into the composition.
+  //
+  // Remotion's own fullscreen is off unconditionally here, on every pointer
+  // type: it fullscreens the Player alone, which on a choice beat would show a
+  // paused frame and no way to answer it.
   return (
-    <div style={{ ...letterboxStyle, position: "relative" }}>
-      <Player
-        ref={attachPlayer}
-        component={video.component}
-        inputProps={inputProps}
-        durationInFrames={video.durationInFrames}
-        compositionWidth={video.width}
-        compositionHeight={video.height}
-        fps={video.fps}
-        initialFrame={startFrame}
-        controls
-        clickToPlay
-        doubleClickToFullscreen
-        allowFullscreen
-        acknowledgeRemotionLicense
-        errorFallback={errorFallback}
-        style={{ width: "100%" }}
-      />
-      {overlayNode && fullscreenElement
-        ? createPortal(overlayNode, fullscreenElement)
-        : overlayNode}
-    </div>
+    <FullscreenStage letterboxStyle={letterboxStyle} label={video.title}>
+      {(stage) => (
+        <>
+          <Player
+            ref={attachPlayer}
+            component={video.component}
+            inputProps={inputProps}
+            durationInFrames={video.durationInFrames}
+            compositionWidth={video.width}
+            compositionHeight={video.height}
+            fps={video.fps}
+            initialFrame={startFrame}
+            controls
+            clickToPlay
+            doubleClickToFullscreen={false}
+            allowFullscreen={false}
+            acknowledgeRemotionLicense
+            errorFallback={errorFallback}
+            style={stage.playerStyle}
+          />
+          {overlayNode}
+        </>
+      )}
+    </FullscreenStage>
   );
 };
