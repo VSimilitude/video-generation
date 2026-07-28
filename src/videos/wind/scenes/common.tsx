@@ -1,7 +1,6 @@
 import React from "react";
 import {
   AbsoluteFill,
-  Freeze,
   interpolate,
   spring,
   staticFile,
@@ -18,7 +17,6 @@ import {
   Puff,
   SpeechBubble,
   Sunny,
-  WordCard,
   EMOTION_EASE,
   kidEase,
   kidOutline,
@@ -26,13 +24,18 @@ import {
   kidShadow,
   kidTheme,
   kidType,
+  lineKeyOf,
   lookAt,
+  makeBodyGeometry,
+  makeWideLayer,
   settleWave,
   useRig,
+  type Cam,
   type Emotion,
   type EmotionInput,
   type KidPaintedBackdropProps,
   type LookDirection,
+  type Mark as KitMark,
 } from "../../../lib/kid";
 import { BACKGROUNDS, type BackgroundKey } from "../backgroundManifest";
 import {
@@ -68,11 +71,17 @@ import { NARRATION } from "../narrationManifest";
 //           rather than twice at either end of the file tree.
 //
 // This file deliberately does not import from water-cycle/scenes/common.tsx.
-// Nothing there is episode-agnostic in its current form — `Speaker`, `PHASE`,
-// `CHAR_BOX`, `ACT_COLOR` and `PLACEHOLDER_MARKS` are all ep-1 cast lists, and
-// `turnsOf` closes over ep-1's manifest. See the hand-off note in the report
-// for the three pieces that have now been written twice and should be promoted
-// to `src/lib/kid/` before episode three.
+// Nothing there is episode-specific *and* shareable: `Speaker`, `PHASE`,
+// `CHAR_BOX`, `ACT_COLOR` and `PLACEHOLDER_MARKS` are all cast lists, and
+// `turnsOf` closes over an episode's own manifest.
+//
+// What the two episodes *did* have in common was promoted to `src/lib/kid/`
+// before episode three: the line-key lookups (`lines.ts`), the staging
+// arithmetic and camera (`staging.tsx`), the Big Word signature
+// (`BigWord.tsx`), the thermometer / caption card / Cloudia's hat
+// (`props.tsx`), the faceless air blob (`characters/AirBlob.tsx`) and the rock
+// (`characters/Rock.tsx`). This file binds that kit to this episode's cast and
+// re-exports it, so the act files' `./common` imports did not change.
 
 export const FPS = 30;
 export const WIDTH = 1920;
@@ -158,12 +167,6 @@ export function speakerOf(lineKey: string): Speaker {
   return "narrator";
 }
 
-/** The line key a turn plays, recovered from its clip path. */
-export function lineKeyOf(turn: { clip: { file: string } }): string {
-  const base = turn.clip.file.split("/").pop() ?? "";
-  return base.replace(/\.mp3$/, "");
-}
-
 /**
  * Turn list for a scene, straight from script.md's line keys. The speaker is
  * derived from the key, so a scene's cast can never drift from its audio.
@@ -187,44 +190,10 @@ export function turnsOf(
   });
 }
 
-/** The timed turn that plays `lineKey`, for beats keyed to one line. */
-export function turnFor(scene: TimedScene, lineKey: string): TimedTurn | null {
-  return (scene.turns ?? []).find((t) => lineKeyOf(t) === lineKey) ?? null;
-}
-
-/** `[start, end)` of a line inside its scene; `[0, 0]` if the line isn't here. */
-export function lineWindow(scene: TimedScene, lineKey: string): [number, number] {
-  const turn = turnFor(scene, lineKey);
-  return turn ? [turn.from, turn.from + turn.durationInFrames] : [0, 0];
-}
-
-/**
- * The held beat *after* a line: `[start, end)` of the silence the script
- * bought with a `gapFrames`. This is how a scene stages a beat without
- * hard-coding its length — raise the gap in `Video.tsx` and the staging
- * follows, which is the whole point of the script owning those numbers.
- *
- * Returns `[end, end]` (an empty window) when the next line starts immediately.
- */
-export function heldBeat(scene: TimedScene, lineKey: string): [number, number] {
-  const turns = scene.turns ?? [];
-  const i = turns.findIndex((t) => lineKeyOf(t) === lineKey);
-  if (i < 0) return [0, 0];
-  const end = turns[i].from + turns[i].durationInFrames;
-  const next = turns[i + 1];
-  return [end, next ? next.from : scene.durationInFrames];
-}
-
-/** 0..1 progress through a line — the honest way to key a beat to a clause. */
-export function lineProgress(
-  scene: TimedScene,
-  lineKey: string,
-  frame: number,
-): number {
-  const [a, b] = lineWindow(scene, lineKey);
-  if (b <= a) return 0;
-  return Math.max(0, Math.min(1, (frame - a) / (b - a)));
-}
+// `lineKeyOf`, `turnFor`, `lineWindow`, `heldBeat` (the silence a `gapFrames`
+// bought, which is how this episode's twenty-two held beats are staged without
+// hard-coding a length) and `lineProgress` are the kit's
+// (`src/lib/kid/lines.ts`); they are re-exported at the foot of this file.
 
 // ---------------------------------------------------------------------------
 // API 2 — staging: who stands where, who is talking, who looks at whom
@@ -248,63 +217,24 @@ export const CHAR_BOX = {
 } as const;
 export type Body = keyof typeof CHAR_BOX;
 
-/** `y` prop for a body whose feet should land on `groundY`. */
-export function stand(who: Body, groundY: number): number {
-  return groundY - CHAR_BOX[who] / 2;
-}
-
-/**
- * `y` prop for a body whose *middle* should sit at `centreY` — the one Puff
- * actually needs, because he never stands on anything. At scale 1 it is the
- * same as `centreY`; below 1 the difference is most of the character.
- */
-export function hover(who: Body, centreY: number, scale = 1): number {
-  const h = CHAR_BOX[who];
-  return centreY - h / 2 + (h * scale) / 2;
-}
-
-/** Screen y of the top of a body's head — what a bubble has to clear. */
-export function crownOf(who: Body, y: number, scale = 1): number {
-  const h = CHAR_BOX[who];
-  return y + h / 2 - h * scale;
-}
-
-/** Screen y of a body's visual middle — what another character looks at. */
-export function midOf(who: Body, y: number, scale = 1): number {
-  const h = CHAR_BOX[who];
-  return y + h / 2 - (h * scale) / 2;
-}
-
 /**
  * Where a body stands. Pass exactly the `x`, `y` and `scale` you gave the
  * component and the helpers do the rest: bubbles clear the crown, looks aim at
  * the middle.
  */
-export type Mark = {
-  x: number;
-  y: number;
-  /** The component's own `scale` prop. */
-  scale?: number;
-  /** Which body's geometry to use. Default `puff`. */
-  who?: Body;
-  /** Override: bubble centre this far above `y` instead of above the crown. */
-  lift?: number;
-  /** Horizontal gap from the body to the bubble. Default 330. */
-  offset?: number;
-  /** Which side of the body the bubble sits on; default = towards centre. */
-  side?: "left" | "right";
-};
+export type Mark = KitMark<Body>;
 
-/** Bubble centre for a mark: clear of the crown, with room for the tail. */
-export function bubbleAbove(m: Mark): number {
-  if (m.lift !== undefined) return m.y - m.lift;
-  return crownOf(m.who ?? "puff", m.y, m.scale ?? 1) - 165;
-}
-
-/** The point another character should look at. */
-export function markCentre(m: Mark): { x: number; y: number } {
-  return { x: m.x, y: midOf(m.who ?? "puff", m.y, m.scale ?? 1) };
-}
+/**
+ * The staging arithmetic, bound to this episode's cast: `stand`, `hover`,
+ * `crownOf`, `midOf`, `bubbleAbove`, `markCentre`, `projectMark`.
+ *
+ * `hover` is the one Puff actually needs, because he never stands on anything.
+ * Puff is the default body for a mark that does not name one, and a bubble sits
+ * 165px above the crown.
+ */
+const geometry = makeBodyGeometry({ box: CHAR_BOX, body: "puff", bubbleLift: 165 });
+export const { stand, hover, crownOf, midOf, bubbleAbove, markCentre, projectMark } =
+  geometry;
 
 export type Cast = Partial<Record<Stage, Mark>>;
 
@@ -458,6 +388,11 @@ export function useLookAtSpeaker(
  *
  * `at` overrides one line's bubble — `{x, y}` there is the **bubble's own
  * centre**, not the character's.
+ *
+ * `tailAt` in that override is a composition x for the *tail*. Use it whenever
+ * `x` moved the bubble away from its speaker: the default tail sits at a fixed
+ * inset from the bubble's corner, and a tail pointing at nobody reads as
+ * narration rather than as somebody talking.
  */
 export const Bubbles: React.FC<{
   scene: TimedScene;
@@ -470,6 +405,8 @@ export const Bubbles: React.FC<{
       x?: number;
       y?: number;
       tail?: "left" | "right" | "none";
+      /** Composition x the tail points at; defaults to the bubble's corner. */
+      tailAt?: number;
       side?: "left" | "right";
       offset?: number;
     }
@@ -501,6 +438,7 @@ export const Bubbles: React.FC<{
           y={by}
           text={body}
           tail={tail}
+          tailAt={override?.tailAt}
           from={turn.from}
           until={turn.from + turn.durationInFrames}
           fontSize={fontSize}
@@ -518,221 +456,20 @@ function clamp(v: number, lo: number, hi: number): number {
 // ---------------------------------------------------------------------------
 // API 3 — the camera
 // ---------------------------------------------------------------------------
-
-/**
- * A camera move, as a transform on whatever is inside it. `x`/`y` is the point
- * that stays put (the thing you are pushing in on).
- *
- * Zooming *out* below 1 shows past the edge of the frame, so keep the sky
- * outside the camera in a pull-out shot and only put the world inside it.
- */
-export type Cam = {
-  x: number;
-  y: number;
-  zoom?: number;
-  /** Vertical zoom, when it differs — a squash, a stretch. */
-  zoomY?: number;
-  dx?: number;
-  dy?: number;
-  rotate?: number;
-};
-
-export const Camera: React.FC<{ cam: Cam; children: React.ReactNode }> = ({
-  cam,
-  children,
-}) => (
-  <AbsoluteFill
-    style={{
-      transformOrigin: `${cam.x}px ${cam.y}px`,
-      transform: [
-        `translate(${cam.dx ?? 0}px, ${cam.dy ?? 0}px)`,
-        `rotate(${cam.rotate ?? 0}deg)`,
-        `scale(${cam.zoom ?? 1}, ${cam.zoomY ?? cam.zoom ?? 1})`,
-      ].join(" "),
-    }}
-  >
-    {children}
-  </AbsoluteFill>
-);
-
-/**
- * World point -> screen point under a camera. Bubbles live *outside* the camera
- * (a zoomed bubble is unreadable), so a bubble on a character inside one is
- * placed with `project(cam, mark)`. Ignores `rotate`.
- */
-export function project(cam: Cam, p: { x: number; y: number }): { x: number; y: number } {
-  const z = cam.zoom ?? 1;
-  const zy = cam.zoomY ?? z;
-  return {
-    x: cam.x + (p.x - cam.x) * z + (cam.dx ?? 0),
-    y: cam.y + (p.y - cam.y) * zy + (cam.dy ?? 0),
-  };
-}
-
-/** A mark as it appears on screen under a camera move. */
-export function projectMark(cam: Cam, m: Mark): Mark {
-  const h = CHAR_BOX[m.who ?? "puff"];
-  const ground = project(cam, { x: m.x, y: m.y + h / 2 });
-  return {
-    ...m,
-    x: ground.x,
-    y: ground.y - h / 2,
-    scale: (m.scale ?? 1) * (cam.zoomY ?? cam.zoom ?? 1),
-  };
-}
+//
+// `Cam`, `Camera`, `project` and `projectMark` are the kit's
+// (`src/lib/kid/staging.tsx`) and are re-exported at the foot of this file.
+// Bubbles live *outside* the camera — a zoomed bubble is unreadable — so a
+// bubble on a character inside one is placed with `projectMark(cam, mark)`.
 
 // ---------------------------------------------------------------------------
 // API 4 — the Big Word signature, and the rule stamp that is deliberately not it
 // ---------------------------------------------------------------------------
 
-/**
- * The show's Big Word beat, identical to episode one's: the action behind
- * hard-freezes, the word slams on in capitals, then it splits into blocks that
- * bounce one at a time while Puff spells them.
- *
- * Three of these fire in episode two — AIR (Scene 10), WIND (Scene 19) and SEA
- * BREEZE (Scene 26) — roughly three minutes apart. **WARM AIR RISES is not one
- * of them**; see `RuleStamp`.
- *
- * `freeze` is frozen on the slam frame; `children` keep playing, because the
- * character chanting the letters has to be able to move their mouth.
- */
-export const BigWordBeat: React.FC<{
-  scene: TimedScene;
-  word: string;
-  syllables: string[];
-  chantKey: string;
-  /** Frame the freeze + slam happens. Default: 40 frames before the chant. */
-  slamAt?: number;
-  color?: string;
-  sub?: string;
-  /** Vertical centre of the banner. Default 300. */
-  y?: number;
-  freeze?: React.ReactNode;
-  children?: React.ReactNode;
-}> = ({
-  scene,
-  word,
-  syllables,
-  chantKey,
-  slamAt,
-  color = kidTheme.pink,
-  sub,
-  y = 300,
-  freeze,
-  children,
-}) => {
-  const frame = useCurrentFrame();
-  const chant = turnFor(scene, chantKey);
-  const chantFrom = chant ? chant.from : scene.durationInFrames;
-  const chantLen = chant ? chant.durationInFrames : 45;
-  const slam = slamAt ?? Math.max(0, chantFrom - 40);
-  const split = Math.max(slam + 20, chantFrom - 8);
-
-  return (
-    <>
-      {freeze ? (
-        <Freeze frame={slam} active={frame >= slam}>
-          {freeze}
-        </Freeze>
-      ) : null}
-      {children}
-      <CutFlash at={slam} />
-      <WordCard text={word} from={slam} until={split} y={y} bannerColor={color} sub={sub} />
-      <SyllableBlocks
-        syllables={syllables}
-        from={split}
-        chantFrom={chantFrom}
-        chantLen={chantLen}
-        y={y}
-        color={color}
-      />
-    </>
-  );
-};
-
-/** The impact flash under a slam, and the cheapest way to sell a hard cut. */
-export const CutFlash: React.FC<{ at: number; strength?: number }> = ({
-  at,
-  strength = 0.8,
-}) => {
-  const frame = useCurrentFrame();
-  const u = frame - at;
-  if (u < 0 || u > 8) return null;
-  return (
-    <AbsoluteFill
-      style={{
-        background: "#ffffff",
-        opacity: strength * Math.max(0, 1 - u / 8),
-        zIndex: 60,
-        pointerEvents: "none",
-      }}
-    />
-  );
-};
-
-const SyllableBlocks: React.FC<{
-  syllables: string[];
-  from: number;
-  chantFrom: number;
-  chantLen: number;
-  y: number;
-  color: string;
-}> = ({ syllables, from, chantFrom, chantLen, y, color }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  if (frame < from) return null;
-  const per = chantLen / syllables.length;
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: 0,
-        right: 0,
-        top: y,
-        transform: "translateY(-50%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 22,
-        zIndex: 50,
-        fontFamily: kidTheme.fontFamily,
-        pointerEvents: "none",
-      }}
-    >
-      {syllables.map((s, i) => {
-        const land = spring({
-          frame: frame - from - i * 3,
-          fps,
-          config: { damping: 11, mass: 0.6 },
-        });
-        const u = (frame - (chantFrom + i * per)) / per;
-        const hop = u >= 0 && u <= 1 ? Math.sin(u * Math.PI) : 0;
-        const hot = hop > 0.15;
-        return (
-          <div
-            key={`${s}-${i}`}
-            style={{
-              background: hot ? kidTheme.star : color,
-              color: hot ? kidTheme.ink : kidTheme.paper,
-              border: `9px solid ${kidTheme.ink}`,
-              borderRadius: kidRadius.card,
-              padding: "14px 34px",
-              fontSize: 116,
-              fontWeight: 900,
-              lineHeight: 1.05,
-              boxShadow: kidShadow(1.1),
-              transform: `translateY(${-hop * 56 + (1 - land) * -90}px) scale(${(0.4 + 0.6 * land) * (1 + hop * 0.14)}) rotate(${(1 - land) * 12 - 2 + hop * 3}deg)`,
-              opacity: Math.min(1, Math.max(0, (frame - from - i * 3) / 3)),
-            }}
-          >
-            {s}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+// `BigWordBeat` and `CutFlash` are the kit's (`src/lib/kid/BigWord.tsx`). Three
+// of these fire in episode two — AIR (Scene 10), WIND (Scene 19) and SEA BREEZE
+// (Scene 26) — roughly three minutes apart, dressed from `ACT_COLOR`. **WARM AIR
+// RISES is not one of them**; see `RuleStamp` below.
 
 /**
  * The rule stamp — **WARM AIR RISES**, and deliberately not a `WordCard`.
@@ -852,33 +589,13 @@ const RiseArrow: React.FC<{ color: string; landed: boolean; frame: number }> = (
 // ---------------------------------------------------------------------------
 
 /**
- * A scenery layer that extends far past the frame on every side. An `<svg>`
- * clips to its own viewport, so a plain full-frame one loses its edges the
- * moment a scene pulls out below 1×. Draw in ordinary composition coordinates.
+ * How far past the frame this episode's scenery has to reach — an `<svg>` clips
+ * to its own viewport, so a plain full-frame one loses its edges the moment a
+ * scene pulls out below 1×. Draw in ordinary composition coordinates.
  */
 export const WIDE = { x: -1200, y: -600, w: 4400, h: 2400 } as const;
 
-export const WideLayer: React.FC<{
-  opacity?: number;
-  zIndex?: number;
-  children: React.ReactNode;
-}> = ({ opacity = 1, zIndex, children }) => (
-  <svg
-    width={WIDE.w}
-    height={WIDE.h}
-    viewBox={`${WIDE.x} ${WIDE.y} ${WIDE.w} ${WIDE.h}`}
-    style={{
-      position: "absolute",
-      left: WIDE.x,
-      top: WIDE.y,
-      opacity,
-      zIndex,
-      pointerEvents: "none",
-    }}
-  >
-    {children}
-  </svg>
-);
+export const WideLayer = makeWideLayer(WIDE);
 
 /**
  * Ground height of the hill at composition `x` — a single broad crest.
@@ -1222,11 +939,12 @@ export const KiteString: React.FC<{
 
 /**
  * The kid, in silhouette. No face, ever, and not one word all episode — the
- * kite is the entire emotional readout, so the body has exactly four knobs and
+ * kite is the entire emotional readout, so the body has exactly three knobs and
  * nothing else.
  *
- * `hand` reports where the string is held, in composition coordinates, so the
- * kite line always starts in the right place whatever the pose.
+ * `kidHand(placement)` reports where the string is held, in composition
+ * coordinates, so the kite line always starts in the right place whatever the
+ * pose — pass it the *same* object you spread onto this component.
  */
 export type KidPose = {
   /** Lean and stride, 0..1. */
@@ -1237,9 +955,25 @@ export type KidPose = {
   armsUp?: number;
 };
 
-export const KidSilhouette: React.FC<
-  KidPose & { x: number; y: number; scale?: number; flip?: boolean; opacity?: number }
-> = ({ x, y, scale = 1, flip = false, opacity = 0.92, run = 0, slump = 0, armsUp = 0 }) => {
+/** A pose *and* where it is standing — everything `kidHand` needs to agree. */
+export type KidPlacement = KidPose & {
+  x: number;
+  y: number;
+  scale?: number;
+  flip?: boolean;
+  opacity?: number;
+};
+
+export const KidSilhouette: React.FC<KidPlacement> = ({
+  x,
+  y,
+  scale = 1,
+  flip = false,
+  opacity = 0.92,
+  run = 0,
+  slump = 0,
+  armsUp = 0,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -1307,20 +1041,50 @@ export const KidSilhouette: React.FC<
 };
 
 /**
- * Where the kid's string hand is, in composition coordinates, for the pose
- * given. Kept next to the component because it is derived from the same
- * numbers: the arm is 118 long off a shoulder at (34, -56).
+ * Where the kid's string hand is, in composition coordinates. Kept next to the
+ * component because it is derived from the same numbers: the arm is 118 long
+ * off a shoulder at (34, -56).
+ *
+ * **It takes the whole placement, not just the pose, and that is the fix for two
+ * real bugs.** It used to take `(x, y, scale, pose)` and know nothing about the
+ * rest of how the body is placed, so it was wrong twice over: it ignored `flip`
+ * — while every kid in the episode is drawn flipped, because the child faces
+ * up-hill — which put the string ~140px the wrong side of the body, and it
+ * ignored that the component scales about the box's *bottom*, which lifted the
+ * remaining attachment ~31px up the forearm. A taut line to nowhere, in the two
+ * shots the whole frame story rests on. Passing one object to both the component
+ * and this function is what makes the drawing and the measurement agree by
+ * construction:
+ *
+ *   const kid: KidPlacement = { x, y, scale: 0.85, flip: true, ...pose };
+ *   <KidSilhouette {...kid} />
+ *   <KiteString from={kidHand(kid)} to={kite} />
  */
-export function kidHand(
-  x: number,
-  y: number,
-  scale = 1,
-  pose: KidPose = {},
-): { x: number; y: number } {
-  const a = ((-110 * (pose.armsUp ?? 0) - 24 - (pose.run ?? 0) * 26) * Math.PI) / 180;
-  const sx = 34 + Math.sin(a) * -118;
-  const sy = -56 + (pose.slump ?? 0) * 30 + Math.cos(a) * 118;
-  return { x: x + sx * scale, y: y + sy * scale };
+export function kidHand(place: KidPlacement): { x: number; y: number } {
+  const { x, y, scale = 1, flip = false } = place;
+  const run = place.run ?? 0;
+  // The arm, in the drawing's own coordinates: 118 long, off a shoulder at
+  // (34, -56) that drops with the slump.
+  const a = ((-110 * (place.armsUp ?? 0) - 24 - run * 26) * Math.PI) / 180;
+  const hx = 34 + Math.sin(a) * -118;
+  const hy = -56 + (place.slump ?? 0) * 30 + Math.cos(a) * 118;
+  // …then the lean the whole body rides while running, about (0, 200).
+  const lean = (run * 13 * Math.PI) / 180;
+  const dx = hx;
+  const dy = hy - 200;
+  const lx = dx * Math.cos(lean) - dy * Math.sin(lean);
+  const ly = 200 + dx * Math.sin(lean) + dy * Math.cos(lean);
+  // And finally the component's own placement. Two things about it are easy to
+  // get wrong, and this function got both wrong until episode three:
+  //   flip   the body mirrors about its centre, so a flipped hand is the same
+  //          offset on the other side — not the same offset.
+  //   scale  it scales about the box's **bottom** (transform-origin 50% 100%),
+  //          the ground line, so a body drawn at 0.85 does not shrink towards
+  //          its centre: every local y is pulled down by half the box.
+  return {
+    x: x + (flip ? -lx : lx) * scale,
+    y: y + (CHAR_BOX.kid / 2) * (1 - scale) + ly * scale,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -1562,129 +1326,8 @@ export const PaintedSky: React.FC<
 // gradient because what they want is a *surface*, not a sky. `KidBackdrop`
 // itself is still the fallback for an unstaged scene (see `ScenePlaceholder`).
 
-/** The cartoon thermometer. `level` is 0..1 of the tube. */
-export const Thermometer: React.FC<{
-  x: number;
-  y: number;
-  level: number;
-  scale?: number;
-  label?: string;
-}> = ({ x, y, level, scale = 1, label }) => {
-  const frame = useCurrentFrame();
-  const u = Math.max(0, Math.min(1, level));
-  const tubeTop = -230;
-  const tubeBottom = 120;
-  const fillTop = tubeBottom - (tubeBottom - tubeTop) * u;
-  const shake = Math.sin(frame * 0.9) * 3 * u * u;
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        transform: `translate(-50%, -50%) scale(${scale}) rotate(${shake}deg)`,
-      }}
-    >
-      <svg width={220} height={520} viewBox="-110 -270 220 520" overflow="visible">
-        <g stroke={kidTheme.ink} strokeWidth={9} strokeLinecap="round">
-          <rect
-            x={-34}
-            y={tubeTop}
-            width={68}
-            height={tubeBottom - tubeTop + 40}
-            rx={34}
-            fill={kidTheme.paper}
-          />
-          <circle cx={0} cy={148} r={62} fill={kidTheme.paper} />
-        </g>
-        <rect x={-19} y={fillTop} width={38} height={tubeBottom - fillTop + 60} rx={19} fill={kidTheme.tomato} />
-        <circle cx={0} cy={148} r={46} fill={kidTheme.tomato} />
-        {[0, 0.25, 0.5, 0.75, 1].map((p) => {
-          const ty = tubeBottom - (tubeBottom - tubeTop) * p;
-          return (
-            <path
-              key={p}
-              d={`M 36 ${ty} L ${p === 0 || p === 1 ? 84 : 66} ${ty}`}
-              stroke={kidTheme.ink}
-              strokeWidth={8}
-              strokeLinecap="round"
-              opacity={0.85}
-            />
-          );
-        })}
-      </svg>
-      {label ? (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: -70,
-            transform: "translateX(-50%)",
-            fontSize: kidType.min,
-            fontWeight: 900,
-            letterSpacing: 2,
-            color: kidTheme.ink,
-            textShadow: kidOutline(4),
-            whiteSpace: "nowrap",
-          }}
-        >
-          {label}
-        </div>
-      ) : null}
-    </div>
-  );
-};
-
-/** A caption card — gag furniture, not a caption; the kids' series has none. */
-export const CaptionCard: React.FC<{
-  text: string;
-  from?: number;
-  until?: number;
-  y?: number;
-  color?: string;
-  align?: "left" | "center" | "right";
-}> = ({ text, from = 0, until, y = 150, color = kidTheme.paper, align = "center" }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - from, fps, config: { damping: 12, mass: 0.6 } });
-  const out = until === undefined ? 0 : Math.max(0, Math.min(1, (frame - until) / 6));
-  const scale = s * (1 - out);
-  if (scale <= 0.001) return null;
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: 0,
-        right: 0,
-        top: y,
-        display: "flex",
-        justifyContent:
-          align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center",
-        padding: align === "center" ? 0 : "0 96px",
-        transform: `translateY(-50%) scale(${scale})`,
-        zIndex: 45,
-        fontFamily: kidTheme.fontFamily,
-        pointerEvents: "none",
-      }}
-    >
-      <div
-        style={{
-          background: color,
-          border: `9px solid ${kidTheme.ink}`,
-          borderRadius: kidRadius.card,
-          padding: "16px 56px",
-          fontSize: kidType.title * 0.62,
-          fontWeight: 900,
-          color: kidTheme.ink,
-          boxShadow: kidShadow(1.2),
-          transform: `rotate(${-1.5 + (1 - s) * 5}deg)`,
-        }}
-      >
-        {text}
-      </div>
-    </div>
-  );
-};
+// `Thermometer` and `CaptionCard` are the kit's (`src/lib/kid/props.tsx`);
+// both are re-exported at the foot of this file.
 
 // ---------------------------------------------------------------------------
 // Placeholder scenes (Acts Two and Three, and the recap, until they are built)
@@ -1814,7 +1457,9 @@ const PlaceholderDrip: React.FC<{ scene: TimedScene; cast: Cast }> = ({ scene, c
   />
 );
 
-// Re-exported so an act file needs one import for the whole kit.
+// Re-exported so an act file needs one import for the whole kit — including
+// everything promoted to `src/lib/kid/`, which is why no scene file's imports
+// changed when it moved.
 export {
   interpolate,
   spring,
@@ -1827,4 +1472,23 @@ export {
   // never did over a flat gradient.
   KidContactShadow,
 };
+export {
+  AirBlob,
+  BigWordBeat,
+  CaptionCard,
+  CloudiaHat,
+  CutFlash,
+  Camera,
+  Rock,
+  Thermometer,
+  airBlobPath,
+  emotionAt,
+  heldBeat,
+  lineKeyOf,
+  lineProgress,
+  lineWindow,
+  project,
+  turnFor,
+} from "../../../lib/kid";
+export type { Cam };
 export type { TimedScene };

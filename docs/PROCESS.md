@@ -92,3 +92,27 @@ on a phone — not on a local mp4.
   to do differently next video.
 - Promote any rule-worthy conclusions into `docs/STYLE.md`, and any
   twice-needed code into `src/lib/`.
+
+### Verifying a promotion (code moving under an existing caller)
+
+A promotion is only safe if the videos that already used the code render
+*unchanged*. Prove it, don't assume it:
+
+1. Before touching anything, render a grid of frame-states of every affected
+   composition (`node scripts/frame-grid.mjs scratchpad/before 50` — every 50th
+   frame of both kids' episodes plus `DripChooses` is ~830 stills in four
+   minutes, in one browser).
+2. Do the promotion, keeping the moved names re-exported from wherever the
+   callers already import them, so no scene file's imports change.
+3. Render the same grid again and compare pixel by pixel
+   (`node scripts/frame-diff.mjs scratchpad/before scratchpad/after`).
+
+**Compare against a control, not against zero.** Chrome's rasterizer is not
+bit-deterministic across runs, so PNG hashes report differences that are
+nothing but antialiasing (22 frames in 831, rendering the *same* code twice).
+Render the grid twice from the final tree to measure that noise floor, then
+require every frame in the real comparison to sit at or below it — except the
+frames you deliberately changed, which get looked at by eye
+(`scripts/frame-crop.mjs` zooms a detail so it can be seen). Then the usual
+gates: `npm run typecheck`, `npm run lint:hooks`, and the every-frame
+validation render for each affected composition.

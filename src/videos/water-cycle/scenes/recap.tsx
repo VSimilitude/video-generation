@@ -17,6 +17,7 @@ import {
   Bubbles,
   Camera,
   CaptionCard,
+  CloudiaHat,
   PHASE,
   SteamWisps,
   WaterBand,
@@ -1094,11 +1095,11 @@ const Blowing: React.FC = () => {
           </g>
         );
       })}
-      {/* The manager's hat, last seen on a cloud. */}
+      {/* The manager's hat, last seen on a cloud. Drawn by the kit, because it
+          blows across episode two's ending too and the joke is that it is the
+          same hat. */}
       <g transform={`translate(${hatX} ${hatY}) rotate(${Math.sin(frame / 9) * 22})`}>
-        <ellipse cx={0} cy={40} rx={120} ry={30} fill={kidTheme.pinkDeep} stroke={kidTheme.ink} strokeWidth={9} />
-        <path d="M -66 40 L -50 -66 Q 0 -96 50 -66 L 66 40 Z" fill={kidTheme.pink} stroke={kidTheme.ink} strokeWidth={9} strokeLinejoin="round" />
-        <path d="M -58 -18 L 58 -18" stroke={kidTheme.ink} strokeWidth={9} />
+        <CloudiaHat />
       </g>
     </WideLayer>
   );

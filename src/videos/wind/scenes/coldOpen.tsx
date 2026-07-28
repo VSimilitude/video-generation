@@ -19,6 +19,7 @@ import {
   stand,
   useCurrentFrame,
   useVideoConfig,
+  type KidPlacement,
   type KidPose,
   type TimedScene,
 } from "./common";
@@ -86,6 +87,16 @@ const HillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // The shoulders drop *once*, well inside the second beat, and stay down.
   const slump = kidEase.easeOutQuad((frame - slumpFrom - 10) / 12);
   const pose: KidPose = { run: running, slump };
+  // The body and the string hand come out of one object: `kidHand` needs the
+  // flip as much as the pose (see its note), and two call sites that agree by
+  // construction cannot drift.
+  const kid: KidPlacement = {
+    x: kidX,
+    y: kidYAt(kidX),
+    scale: HILL_MARKS.kidScale,
+    flip: true,
+    ...pose,
+  };
 
   // --- the kite. Up on an arc, a hang, then gravity.
   const kite = kiteFlight(u, kidX);
@@ -96,8 +107,7 @@ const HillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // the only sound, so the picture has to carry the whole landing.
   const flump = since >= 0 ? settleWave(since / (fps * 0.8), 1.6, 5) : 0;
 
-  const kidY = kidYAt(kidX);
-  const hand = kidHand(kidX, kidY, HILL_MARKS.kidScale, pose);
+  const hand = kidHand(kid);
 
   // A very slow push in. The frame is otherwise motionless for eighteen
   // seconds; without this the cold open reads as a photograph with a voice
@@ -130,13 +140,7 @@ const HillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           to={{ x: kite.x, y: kite.y }}
           slack={kite.slack}
         />
-        <KidSilhouette
-          x={kidX}
-          y={kidY}
-          scale={HILL_MARKS.kidScale}
-          flip
-          {...pose}
-        />
+        <KidSilhouette {...kid} />
         <Kite
           x={kite.x}
           y={kite.y + Math.max(0, flump) * 6}

@@ -17,6 +17,7 @@ import {
   ACT_COLOR,
   AbsoluteFill,
   AirArcs,
+  AirBlob,
   BigWordBeat,
   Bubbles,
   Camera,
@@ -28,10 +29,13 @@ import {
   PHASE,
   PUFF_OPACITY,
   PaintedSky,
+  Rock,
   RuleStamp,
   SoftShade,
   Thermometer,
   WideLayer,
+  airBlobPath,
+  emotionAt,
   heldBeat,
   hover,
   interpolate,
@@ -86,96 +90,14 @@ const STILL_AIR = 0.05;
 // Shared drawing — air, drawn
 // ---------------------------------------------------------------------------
 
-/**
- * A puff of air as a shape: the same lobed comma the character is built from
- * (`puffBlob` in lib/kid/characters/Puff.tsx), at any size, without a face.
- *
- * Act Two needs hundreds of these — the puffs rising beside Puff in Scene 15,
- * the cool air pouring in sideways in Scene 18, the whole hillside circuit in
- * Scene 20, and the Puff-shaped hole in Scene 17, which is this outline with
- * nothing inside it. Drawing them from one function is what makes the hole in
- * Scene 17 legibly *him* and the crowd in Scene 20 legibly the same stuff.
- */
-function smoothClosed(pts: Array<[number, number]>): string {
-  const n = pts.length;
-  const mid = (a: [number, number], b: [number, number]): [number, number] => [
-    (a[0] + b[0]) / 2,
-    (a[1] + b[1]) / 2,
-  ];
-  const f = (p: [number, number]): string => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`;
-  let d = `M ${f(mid(pts[n - 1], pts[0]))}`;
-  for (let i = 0; i < n; i++) {
-    const cur = pts[i];
-    const next = pts[(i + 1) % n];
-    d += ` Q ${f(cur)} ${f(mid(cur, next))}`;
-  }
-  return `${d} Z`;
-}
-
-function blobPath(r: number, t: number, seed = 0, points = 22): string {
-  const pts: Array<[number, number]> = [];
-  for (let i = 0; i < points; i++) {
-    const a = (i / points) * Math.PI * 2;
-    const wob =
-      0.15 * Math.sin(3 * a + t * 0.9 + seed) +
-      0.075 * Math.sin(5 * a - t * 0.62 + seed * 1.7) +
-      0.04 * Math.sin(7 * a + t * 1.31 + seed * 0.7);
-    // 1 at the far left, 0 at the far right — the wing that makes a puff a
-    // comma travelling to the right rather than a pearl.
-    const back = (0.5 - 0.5 * Math.cos(a)) ** 1.7;
-    const rr = r * (1 + wob) * (1 + 0.22 * back);
-    const sy = 0.9 * (1 - 0.26 * back);
-    pts.push([Math.cos(a) * rr, Math.sin(a) * rr * sy]);
-  }
-  return smoothClosed(pts);
-}
-
-/** One faceless puff, for drawing inside a `WideLayer` or any other `<svg>`. */
-const AirBlob: React.FC<{
-  x: number;
-  y: number;
-  r: number;
-  t: number;
-  seed?: number;
-  fill?: string;
-  edge?: string;
-  opacity?: number;
-  flip?: boolean;
-  rotate?: number;
-  points?: number;
-}> = ({
-  x,
-  y,
-  r,
-  t,
-  seed = 0,
-  fill = kidTheme.air,
-  edge = kidTheme.airEdge,
-  opacity = 1,
-  flip = false,
-  rotate = 0,
-  points = 18,
-}) => {
-  const d = blobPath(r, t, seed, points);
-  return (
-    <g
-      transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rotate.toFixed(1)}) ${flip ? "scale(-1 1)" : ""}`}
-      opacity={opacity}
-    >
-      <path d={d} fill={fill} opacity={0.82} />
-      <path
-        d={d}
-        fill="none"
-        stroke={edge}
-        strokeWidth={Math.max(3, r * 0.1)}
-        strokeLinecap="round"
-        strokeDasharray={`${r * 1.1} ${r * 0.26} ${r * 0.66} ${r * 0.22}`}
-        strokeDashoffset={-t * 12}
-        opacity={0.85}
-      />
-    </g>
-  );
-};
+// `AirBlob` / `airBlobPath` (src/lib/kid/characters/AirBlob.tsx) are a puff of
+// air as a shape: the same lobed comma the character is built from, at any size,
+// without a face. Act Two needs hundreds of them — the puffs rising beside Puff
+// in Scene 15, the cool air pouring in sideways in Scene 18, the whole hillside
+// circuit in Scene 20, and the Puff-shaped hole in Scene 17, which is that
+// outline with nothing inside it. Drawing them all from one function is what
+// makes the hole in Scene 17 legibly *him* and the crowd in Scene 20 legibly the
+// same stuff.
 
 // ---------------------------------------------------------------------------
 // Shared drawing — the crayon diagram kit (Scenes 14 and 21)
@@ -610,6 +532,7 @@ const RockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           y={S13_ROCK.y}
           scale={S13_ROCK.scale}
           speaking={stage.speaking("rock")}
+          phase={PHASE.rock}
         />
         {/* The one thing on screen allowed to move after the line lands. */}
         <HeatShimmer x={S13_ROCK.x} y={S13_ROCK.y - 96} width={470} strength={0.35 + heat * 0.65} />
@@ -633,85 +556,6 @@ const RockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           frames into the silence, and after that line the rock is furniture. */}
       <Bubbles scene={scene} cast={{ puff: projectMark(cam, puffMark) }} text={S13_BUBBLES} />
     </AbsoluteFill>
-  );
-};
-
-/**
- * The rock. Wide, flat, grey, eyes shut, and — for the whole scene — utterly
- * motionless: `idle={0}` kills the breath, `eyeLife={0}` the saccades, the
- * closed eyes are drawn rather than blinked, and the emotion is a bare string
- * so there is no morph and no head settle. The only thing wired to anything is
- * the mouth, and only while its own line plays.
- *
- * This is the moose's successor (episode one's best-loved gag) and the
- * mechanism is identical: restraint. Nothing here is animated on purpose.
- */
-const Rock: React.FC<{ x: number; y: number; scale: number; speaking: boolean }> = ({
-  x,
-  y,
-  scale,
-  speaking,
-}) => {
-  const rig = useRig({
-    x,
-    y,
-    emotion: "happy",
-    speaking,
-    phase: PHASE.rock,
-    idle: 0,
-    eyeLife: 0,
-    look: "camera",
-  });
-  const grey = "#9aa3ad";
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        width: 620,
-        height: 340,
-        marginLeft: -310,
-        marginTop: -170,
-        transform: `scale(${scale})`,
-        transformOrigin: "50% 100%",
-      }}
-    >
-      <svg width={620} height={340} viewBox="-310 -170 620 340" overflow="visible">
-        <ellipse cx={10} cy={132} rx={280} ry={26} fill={kidTheme.ink} opacity={0.16} />
-        <path
-          d="M -262 118 Q -286 24 -196 -34 Q -108 -96 22 -92 Q 168 -88 244 -28 Q 292 12 268 118 Z"
-          fill={grey}
-          stroke={kidTheme.ink}
-          strokeWidth={11}
-          strokeLinejoin="round"
-        />
-        {/* Two flat highlights, not a gradient — the lids are painted in body
-            colour and a ramp cannot be matched (Character.tsx, `skin`). */}
-        <path d="M -184 -28 Q -96 -70 8 -66 Q -78 -34 -142 4 Z" fill="#b6bec7" opacity={0.85} />
-        <path d="M 96 -70 Q 190 -56 232 -14 Q 172 -40 92 -46 Z" fill="#b6bec7" opacity={0.55} />
-        <path
-          d="M -212 66 Q -80 44 96 62"
-          stroke="#7c858f"
-          strokeWidth={9}
-          strokeLinecap="round"
-          fill="none"
-          opacity={0.7}
-        />
-        {/* Eyes shut, drawn as two content little arcs, so no blink can fire. */}
-        {[-1, 1].map((s) => (
-          <path
-            key={s}
-            d={`M ${s * 66 - 26} -18 q 26 26 52 0`}
-            stroke={kidTheme.ink}
-            strokeWidth={9}
-            strokeLinecap="round"
-            fill="none"
-          />
-        ))}
-        <Face rig={rig} x={0} y={-14} size={1.28} eyes={false} skin={grey} blushColor="#ff9a86" blushStrength={1.5} />
-      </svg>
-    </div>
   );
 };
 
@@ -1342,14 +1186,16 @@ const UpScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // rig's squiggle mouth hard-cuts the moment a line opens), and it has already
   // morphed away before his first line starts. The delight arrives between his
   // two lines, which is where script.md puts it.
-  const emotion: EmotionInput =
-    frame >= upTo + 2
-      ? { emotion: "excited", from: "amazed", at: upTo + 2, frames: 8 }
-      : frame >= LIFT_AT
-        ? { emotion: "amazed", from: "scared", at: LIFT_AT, frames: 8 }
-        : frame >= 74
-          ? { emotion: "scared", from: "happy", at: 74, frames: 8 }
-          : "happy";
+  const emotion: EmotionInput = emotionAt(
+    frame,
+    [
+      { at: 74, emotion: "scared" },
+      { at: LIFT_AT, emotion: "amazed" },
+      { at: upTo + 2, emotion: "excited" },
+    ],
+    "happy",
+    8,
+  );
 
   const scale = 1.05;
   const puffY = hover("puff", py, scale);
@@ -1542,7 +1388,7 @@ function holePath(r: number): string {
   }
   inner.reverse();
   return (
-    `${blobPath(r, 3.2, 0, 34)} ` +
+    `${airBlobPath(r, 3.2, 0, 34)} ` +
     `M ${outer[0]} L ${outer.slice(1).join(" L ")} L ${inner.join(" L ")} Z`
   );
 }
@@ -2202,10 +2048,12 @@ const SunnyCorrectScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // scene and only widens into the grin on the first frame of the held beat —
   // the Narrator's concession has finished, and the grown-up laugh goes into
   // the silence after it, not into the line.
-  const sunnyEmotion: EmotionInput =
-    frame >= beatFrom
-      ? { emotion: "excited", from: "proud", at: beatFrom, frames: 10 }
-      : "proud";
+  const sunnyEmotion: EmotionInput = emotionAt(
+    frame,
+    [{ at: beatFrom, emotion: "excited" }],
+    "proud",
+    10,
+  );
   const puffEmotion = useEmotion(scene, "puff", { a2_40_puff: "neutral" }, "happy", NO_LEAD);
 
   const puffMark: Mark = {

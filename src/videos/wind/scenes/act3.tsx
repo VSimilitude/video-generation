@@ -16,6 +16,7 @@ import {
   AirArcs,
   Beetle,
   BigWordBeat,
+  CloudiaHat,
   Bubbles,
   Camera,
   CutFlash,
@@ -31,6 +32,7 @@ import {
   Thermometer,
   WIDE,
   WideLayer,
+  airBlobPath,
   heldBeat,
   hillY,
   hover,
@@ -46,7 +48,7 @@ import {
   useVideoConfig,
   type Cam,
   type Cast,
-  type KidPose,
+  type KidPlacement,
   type Mark,
   type SpeakerVisual,
   type TimedScene,
@@ -87,48 +89,12 @@ const clamp01 = (v: number): number => Math.max(0, Math.min(1, v));
 // Air, drawn — the same shape Act Two draws it with
 // ---------------------------------------------------------------------------
 //
-// A puff of air as a bare shape: the lobed comma the character is built from
-// (`puffBlob` in lib/kid/characters/Puff.tsx), at any size, without a face.
-//
-// Act Two needs hundreds of these and derives them the same way; this is that
-// derivation, copied rather than re-invented, so that the gap in Scene 25 is
-// visibly the same hole as the Big Empty in Scene 17 and the cool air off the
-// sea is visibly the stuff that came rushing in during the FWOOSH. It has now
-// been written twice and belongs in `src/lib/kid/` — see the report.
-
-function smoothClosed(pts: Array<[number, number]>): string {
-  const n = pts.length;
-  const mid = (a: [number, number], b: [number, number]): [number, number] => [
-    (a[0] + b[0]) / 2,
-    (a[1] + b[1]) / 2,
-  ];
-  const f = (p: [number, number]): string => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`;
-  let d = `M ${f(mid(pts[n - 1], pts[0]))}`;
-  for (let i = 0; i < n; i++) {
-    const cur = pts[i];
-    const next = pts[(i + 1) % n];
-    d += ` Q ${f(cur)} ${f(mid(cur, next))}`;
-  }
-  return `${d} Z`;
-}
-
-function blobPath(r: number, t: number, seed = 0, points = 22): string {
-  const pts: Array<[number, number]> = [];
-  for (let i = 0; i < points; i++) {
-    const a = (i / points) * Math.PI * 2;
-    const wob =
-      0.15 * Math.sin(3 * a + t * 0.9 + seed) +
-      0.075 * Math.sin(5 * a - t * 0.62 + seed * 1.7) +
-      0.04 * Math.sin(7 * a + t * 1.31 + seed * 0.7);
-    // 1 at the far left, 0 at the far right — the wing that makes a puff a
-    // comma travelling to the right rather than a pearl.
-    const back = (0.5 - 0.5 * Math.cos(a)) ** 1.7;
-    const rr = r * (1 + wob) * (1 + 0.22 * back);
-    const sy = 0.9 * (1 - 0.26 * back);
-    pts.push([Math.cos(a) * rr, Math.sin(a) * rr * sy]);
-  }
-  return smoothClosed(pts);
-}
+// `airBlobPath` (src/lib/kid/characters/AirBlob.tsx) is the bare silhouette the
+// character is built from, without a face. Act Two draws hundreds of them from
+// the same function, which is what makes the gap in Scene 25 visibly the same
+// hole as the Big Empty in Scene 17, and the cool air off the sea visibly the
+// stuff that came rushing in during the FWOOSH. It was written twice — once
+// here, once there — and is now the kit's.
 
 // ---------------------------------------------------------------------------
 // The beach — one place, shared by Scenes 23 to 27
@@ -973,8 +939,8 @@ const WarmRise: React.FC<{ x: number; strength: number }> = ({ x, strength }) =>
         const fade = u < 0.12 ? u / 0.12 : Math.max(0, 1 - (u - 0.12) / 0.55) ** 1.6;
         return (
           <g key={i} transform={`translate(${px} ${py})`} opacity={strength * fade}>
-            <path d={blobPath(r, t, i)} fill={kidTheme.sun} />
-            <path d={blobPath(r, t, i)} fill="none" stroke={kidTheme.sunDark} strokeWidth={7} />
+            <path d={airBlobPath(r, t, i)} fill={kidTheme.sun} />
+            <path d={airBlobPath(r, t, i)} fill="none" stroke={kidTheme.sunDark} strokeWidth={7} />
           </g>
         );
       })}
@@ -1012,10 +978,10 @@ const GapOnTheSand: React.FC<{ open: number }> = ({ open }) => {
       <g transform={`translate(${GAP.x} ${GAP.y}) scale(${s})`}>
         {/* The same outline the Big Empty is drawn with in Act Two: a hole in
             the world exactly the shape of the air that used to be in it. */}
-        <path d={blobPath(178, frame / 30, 3)} fill={SAND_DARK} opacity={0.9} />
-        <path d={blobPath(150, frame / 30, 3)} fill="#a98d55" opacity={0.55} />
+        <path d={airBlobPath(178, frame / 30, 3)} fill={SAND_DARK} opacity={0.9} />
+        <path d={airBlobPath(150, frame / 30, 3)} fill="#a98d55" opacity={0.55} />
         <path
-          d={blobPath(178, frame / 30, 3)}
+          d={airBlobPath(178, frame / 30, 3)}
           fill="none"
           stroke={kidTheme.ink}
           strokeWidth={9}
@@ -1073,8 +1039,8 @@ const CoolInflow: React.FC<{ at: number }> = ({ at }) => {
               opacity={0.5}
             />
             <g transform={`translate(${p.x} ${p.y})`}>
-              <path d={blobPath(r, f / fps, i)} fill={kidTheme.airCool} />
-              <path d={blobPath(r, f / fps, i)} fill="none" stroke={kidTheme.airDeep} strokeWidth={7} />
+              <path d={airBlobPath(r, f / fps, i)} fill={kidTheme.airCool} />
+              <path d={airBlobPath(r, f / fps, i)} fill="none" stroke={kidTheme.airDeep} strokeWidth={7} />
             </g>
           </g>
         );
@@ -2261,21 +2227,7 @@ const ManagerHat: React.FC<{ x: number; y: number; stream: number }> = ({ x, y, 
   return (
     <WideLayer zIndex={25}>
       <g transform={`translate(${x} ${y}) rotate(${tilt}) scale(0.9)`}>
-        <ellipse cx={0} cy={40} rx={120} ry={30} fill={kidTheme.pinkDeep} stroke={kidTheme.ink} strokeWidth={9} />
-        <path d="M -66 40 L -50 -66 Q 0 -96 50 -66 L 66 40 Z" fill={kidTheme.pink} stroke={kidTheme.ink} strokeWidth={9} strokeLinejoin="round" />
-        <path d="M -58 -18 L 58 -18" stroke={kidTheme.ink} strokeWidth={9} />
-        {/* Ribbons, going the way the wind is. */}
-        {[0, 1].map((i) => (
-          <path
-            key={i}
-            d={`M 60 ${-20 + i * 26} q ${80 + stream * 120} ${-10 + i * 18} ${150 + stream * 220} ${4 + i * 26}`}
-            stroke={kidTheme.pink}
-            strokeWidth={12}
-            fill="none"
-            strokeLinecap="round"
-            opacity={0.9}
-          />
-        ))}
+        <CloudiaHat stream={stream} />
       </g>
     </WideLayer>
   );
@@ -2400,13 +2352,18 @@ const TheHillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const t = frame - flyFrom;
   const flying = t >= 0;
   const kite = kiteClimb(t);
-  const kid: KidPose = {
+  const kidX = HILL_MARKS.kidX;
+  // One object for the body and the hand that holds the string: `kidHand` needs
+  // the flip as much as the pose (see its note in ./common).
+  const kid: KidPlacement = {
+    x: kidX,
+    y: kidYAt(kidX),
+    scale: HILL_MARKS.kidScale,
+    flip: true,
     slump: flying ? 1 - kidEase.easeOutQuad((t - 6) / 26) : 1,
     armsUp: flying ? kidEase.easeOutBack(clamp01((t - 10) / 34), 1.15) : 0,
   };
-  const kidX = HILL_MARKS.kidX;
-  const kidY = kidYAt(kidX);
-  const hand = kidHand(kidX, kidY, HILL_MARKS.kidScale, kid);
+  const hand = kidHand(kid);
 
   // The camera holds the cold open's framing until the kite leaves, then eases
   // out and up to keep it and the kid in one shot. It is the only camera move
@@ -2468,7 +2425,7 @@ const TheHillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           slack={kite.slack}
           thrumFrom={flying ? flyFrom + 8 : undefined}
         />
-        <KidSilhouette x={kidX} y={kidY} scale={HILL_MARKS.kidScale} flip {...kid} />
+        <KidSilhouette {...kid} />
         <Kite
           x={kite.x}
           y={kite.y}
@@ -2643,9 +2600,14 @@ const WhatTheyCanSeeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   );
 
   const kidX = HILL_MARKS.kidX;
-  const kidY = kidYAt(kidX);
-  const kid: KidPose = { armsUp: 0.42 };
-  const hand = kidHand(kidX, kidY, HILL_MARKS.kidScale, kid);
+  const kid: KidPlacement = {
+    x: kidX,
+    y: kidYAt(kidX),
+    scale: HILL_MARKS.kidScale,
+    flip: true,
+    armsUp: 0.42,
+  };
+  const hand = kidHand(kid);
 
   const puffY = hover("puff", S32_PUFF.y, S32_PUFF.scale);
   const cast: Cast = {
@@ -2659,7 +2621,7 @@ const WhatTheyCanSeeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       <Hill wind={0.5} crest={HILL_MARKS.crest} />
       <KidContactShadow x={kidX} y={hillY(kidX, HILL_MARKS.crest)} rx={104} ry={20} />
       <KiteString from={hand} to={S32_KITE} slack={0.05} />
-      <KidSilhouette x={kidX} y={kidY} scale={HILL_MARKS.kidScale} flip {...kid} />
+      <KidSilhouette {...kid} />
       <Kite x={S32_KITE.x} y={S32_KITE.y} scale={0.55} rot={-12} life={1} />
       <Puff
         x={S32_PUFF.x}

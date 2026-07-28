@@ -343,6 +343,61 @@ const NO_TRANSITION: EmotionPose = {
   settle: 0,
 };
 
+/** One staged face change: "wear `emotion` from frame `at` onwards". */
+export type EmotionChange = {
+  /** Frame the change lands on, on the same clock as `useCurrentFrame()`. */
+  at: number;
+  emotion: Emotion;
+  /** Morph length for this one change. Default `frames` of the call. */
+  frames?: number;
+};
+
+/**
+ * The face a character is wearing at `frame`, given a list of changes — the
+ * cue-form `EmotionInput`, built for you.
+ *
+ * `useEmotion` (per episode) covers the common case: faces that change *with*
+ * lines. This covers the other one — a change staged in the **silence**, where
+ * there is no line to hang it on: the frame a character sees the thing, the
+ * first frame of a held beat, the moment a gag lands. Those were being written
+ * out as nested ternaries of hand-built cues, which is three chances to get the
+ * `from` wrong and no way to see the sequence at a glance:
+ *
+ *   const emotion = emotionAt(frame, [
+ *     { at: 74, emotion: "scared" },       // the ground leaves
+ *     { at: LIFT_AT, emotion: "amazed" },  // …and he is flying
+ *     { at: upTo + 2, emotion: "excited" },
+ *   ], "happy", 8);
+ *
+ * `changes` must be in ascending `at` order; each one's `from` is whatever the
+ * previous one left on the face, so the morph is always between the two faces
+ * the audience actually saw. Before the first change the resting face is
+ * returned as a bare string — no cue, nothing to morph.
+ */
+export function emotionAt(
+  frame: number,
+  changes: EmotionChange[],
+  resting: Emotion = "happy",
+  frames: number = EMOTION_EASE,
+): EmotionInput {
+  let current = resting;
+  let previous = resting;
+  let at = -1;
+  let dur = frames;
+  for (const change of changes) {
+    if (frame < change.at) break;
+    // Two changes to the same face are not a change: the morph belongs to the
+    // frame the face actually moved.
+    if (change.emotion !== current) {
+      previous = current;
+      at = change.at;
+      dur = change.frames ?? frames;
+    }
+    current = change.emotion;
+  }
+  return at < 0 ? current : { emotion: current, from: previous, at, frames: dur };
+}
+
 /**
  * Turn an `emotion` prop into the pose to draw this frame: the morphed spec,
  * plus the follow-through the change leaves behind.

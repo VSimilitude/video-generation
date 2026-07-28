@@ -22,6 +22,21 @@ export type SpeechBubbleProps = {
   text: string;
   /** Which side the tail leaves from — put it on the speaker's side. */
   tail?: "left" | "right" | "none";
+  /**
+   * Point the tail at this composition x instead of parking it at the usual
+   * inset from the bubble's edge.
+   *
+   * The default placement assumes the speaker is roughly under one corner of
+   * the bubble, which is true whenever the bubble was placed by its own
+   * speaker's mark. It stops being true when the bubble had to be pushed
+   * somewhere else (a crowded frame, a character who moves through their own
+   * line, a body at the edge of frame): the tail then points at nobody, and a
+   * bubble whose tail points at nobody reads as narration.
+   *
+   * Clamped to inside the bubble, so a speaker far off to one side gets the
+   * tail as far over as it can go rather than a tail floating in space.
+   */
+  tailAt?: number;
   variant?: "speech" | "thought";
   /** Frame the bubble pops in on (local to the enclosing sequence). */
   from?: number;
@@ -41,6 +56,7 @@ export const SpeechBubble: React.FC<SpeechBubbleProps> = ({
   y,
   text,
   tail = "left",
+  tailAt,
   variant = "speech",
   from = 0,
   until,
@@ -96,9 +112,19 @@ export const SpeechBubble: React.FC<SpeechBubbleProps> = ({
     >
       {tail !== "none" ? (
         isThought ? (
-          <ThoughtTrail side={tail} outline={outline} background={background} />
+          <ThoughtTrail
+            side={tail}
+            outline={outline}
+            background={background}
+            at={tailAt === undefined ? undefined : tailAt - x}
+          />
         ) : (
-          <Tail side={tail} outline={outline} background={background} />
+          <Tail
+            side={tail}
+            outline={outline}
+            background={background}
+            at={tailAt === undefined ? undefined : tailAt - x}
+          />
         )
       ) : null}
       <div
@@ -131,11 +157,31 @@ export const SpeechBubble: React.FC<SpeechBubbleProps> = ({
 const TAIL_W = 104;
 const TAIL_H = 78;
 
-const Tail: React.FC<{ side: "left" | "right"; outline: string; background: string }> = ({
-  side,
-  outline,
-  background,
-}) => (
+/**
+ * Horizontal placement for a tail asked to point at a particular x, `at` px
+ * from the bubble's centre. Kept in CSS rather than measured in JS: the bubble
+ * is laid out by the browser (its width depends on the text and the font), so
+ * `clamp` is the only thing that knows how wide it ended up.
+ */
+function tailPlacement(
+  at: number,
+  side: "left" | "right",
+  inset: number,
+): React.CSSProperties {
+  return {
+    left: `clamp(${inset}px, calc(50% + ${Math.round(at)}px), calc(100% - ${inset}px))`,
+    right: undefined,
+    transform: side === "right" ? "translateX(-50%) scaleX(-1)" : "translateX(-50%)",
+  };
+}
+
+const Tail: React.FC<{
+  side: "left" | "right";
+  outline: string;
+  background: string;
+  /** Tail x relative to the bubble's centre; omit for the default corner. */
+  at?: number;
+}> = ({ side, outline, background, at }) => (
   <svg
     width={TAIL_W}
     height={TAIL_H}
@@ -148,6 +194,7 @@ const Tail: React.FC<{ side: "left" | "right"; outline: string; background: stri
       zIndex: 0,
       transform: side === "right" ? "scaleX(-1)" : undefined,
       overflow: "visible",
+      ...(at === undefined ? null : tailPlacement(at, side, 40)),
     }}
   >
     <path
@@ -164,7 +211,8 @@ const ThoughtTrail: React.FC<{
   side: "left" | "right";
   outline: string;
   background: string;
-}> = ({ side, outline, background }) => (
+  at?: number;
+}> = ({ side, outline, background, at }) => (
   <svg
     width={120}
     height={130}
@@ -177,6 +225,7 @@ const ThoughtTrail: React.FC<{
       zIndex: 0,
       transform: side === "right" ? "scaleX(-1)" : undefined,
       overflow: "visible",
+      ...(at === undefined ? null : tailPlacement(at, side, 30)),
     }}
   >
     {[

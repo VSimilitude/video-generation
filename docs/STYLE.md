@@ -243,6 +243,38 @@ lives in `src/lib/kid/` and imports neither `src/lib/theme.ts` nor
 `src/lib/components/`; keep it that way, so a kid scene can never half-inherit
 slate-and-cyan. First audience: a six-year-old.
 
+## Where the kit lives
+
+An episode is `src/videos/<slug>/scenes/`: `common.tsx` binds the shared kit to
+*this* episode's cast and re-exports it, and the act files import everything
+from `./common`. Anything an episode invents lives there until a second episode
+needs it; then it moves down to `src/lib/kid/`, which is the show, not a video:
+
+| what | home |
+| --- | --- |
+| theme, type scale, radii, shadows | `theme.ts` |
+| the rig: emotions, easing, idle, blink, look, travel | `rig.ts` |
+| characters + cameo bodies (`Drip`, `Puff`, `Sunny`, `Cloudia`, `Blobby`, `Rock`, `AirBlob`) | `characters/` |
+| backdrops, painted plates, contact shadow | `KidBackdrop.tsx`, `PaintedBackdrop.tsx` |
+| speech bubbles, `WordCard` | `SpeechBubble.tsx`, `WordCard.tsx` |
+| the Big Word beat (`BigWordBeat`, `CutFlash`) | `BigWord.tsx` |
+| line-key lookups (`lineKeyOf`, `turnFor`, `lineWindow`, `heldBeat`, `lineProgress`) | `lines.ts` |
+| staging arithmetic + camera (`makeBodyGeometry`, `Mark`, `Camera`, `project`, `makeWideLayer`) | `staging.tsx` |
+| recurring drawn props (`Thermometer`, `CaptionCard`, `CloudiaHat`) | `props.tsx` |
+
+- **What stays in the episode is its cast, not its craft.** `Speaker`/`Stage`,
+  `PHASE`, `CHAR_BOX`, `ACT_COLOR`, `turnsOf` (bound to that video's narration
+  manifest), the per-episode marks and worlds. Everything the two episodes had
+  written *identically* is now below the line.
+- **Promote by parameterising the data, not by generalising the art.** The two
+  copies of the staging maths differed only in a cast table, a default body and
+  ten pixels of bubble lift, so `makeBodyGeometry({ box, body, bubbleLift })`
+  hands an episode back the same seven helpers it already had. Same for
+  `makeWideLayer(WIDE)`: the box is per episode, the component is not.
+- **Keep the episode's re-export.** A promotion that rewrites six act files'
+  imports is a promotion that will not be verified; re-export the moved names
+  from `scenes/common.tsx` and the scene files do not change at all.
+
 ## Palette philosophy
 
 - **Daylight, not darkness.** `kidTheme` (`src/lib/kid/theme.ts`) is built
@@ -360,7 +392,10 @@ the previous frame renders differently every time.
   The two mouths that cannot be lerped (amazed's O, scared's squiggle) flatten
   through a straight line at the midpoint rather than swapping.
   `useEmotion()` in a scene file returns cues already; when a scene places an
-  emotion by hand, it knows the frame — pass it.
+  emotion by hand, it knows the frame — pass it. For a face that turns in the
+  *silence* (no line to hang it on), `emotionAt(frame, changes, resting)` builds
+  the cue from a list of `{ at, emotion }`: each change's `from` is whatever the
+  last one left on the face, which is the part a nested ternary gets wrong.
 - **The rig cannot detect the change itself.** It only ever sees the current
   frame's props, so whoever *decides* the emotion has to hand over the frame it
   changed on. That is the whole reason `EmotionCue` exists.
@@ -425,7 +460,11 @@ the previous frame renders differently every time.
   60px. This is deliberately above the financial series' 34px.
 - **The tail points at the speaker.** It leaves the bubble's bottom edge, so
   the bubble goes *above* whoever is talking, on their side. A bubble below the
-  speaker has its tail aimed at the ground.
+  speaker has its tail aimed at the ground. When a crowded frame forces the
+  bubble away from its speaker (`at: { x }` in `Bubbles`), move the tail with
+  it — `tailAt` takes the speaker's composition x and the tail lands under
+  them, clamped to stay on the bubble. A tail pointing at nobody reads as
+  narration.
 - Bubbles pop with a spring and grow *out of the tail* (`transformOrigin`), so
   the line looks like it came from the mouth. They never fade in like captions.
 
@@ -433,6 +472,12 @@ the previous frame renders differently every time.
 
 - One `WordCard` per vocabulary word the episode is actually teaching, and at
   most one a minute. Two in quick succession stop meaning "learn this".
+- **Build one only with `BigWordBeat`** (`src/lib/kid/BigWord.tsx`): freeze the
+  action, slam the word under a `CutFlash`, split it into syllable blocks that
+  hop as the character chants them. Identical every time is the point — a
+  six-year-old learns the format and shouts along. A *rule* is not a word: give
+  it its own treatment (episode two stamps `WARM AIR RISES`), or the signature
+  stops meaning "learn this word".
 - Letters bounce in one at a time so the word is *spelled*, not revealed.
 - The starburst stays behind the banner. It is decoration, and because the card
   owns a z-index, anything that overflows the banner draws on top of the

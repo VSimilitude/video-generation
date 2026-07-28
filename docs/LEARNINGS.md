@@ -513,11 +513,8 @@ _Build-side notes (2026-07-26); watch-side retro pending._
   test for "does it go in this scene" is *continuously visible for the whole
   shot*, not *visible at all*.
 
-**Ep-3 cleanup list (before next build)**: promote to src/lib/kid/ —
-BigWordBeat/Camera/Thermometer/CaptionCard/WideLayer (now written twice),
-puffSilhouettePath, Rock + CHAR_BOX cameo bodies, Cloudia's hat, emotionAt()
-helper for in-silence cues; fix kidHand() flip bug (common+coldOpen
-together); Bubbles tailAt option.
+**Ep-3 cleanup list**: done, 2026-07-27 — see "The consolidation before episode
+three" below.
 
 **Watch-fors on review**: Puff is now cast (MiniMax `Exuberant_Girl`, see
 below) and the whole cast is off placeholders, but nobody has watched the
@@ -594,6 +591,95 @@ roll call is worth it, but that is a real trade). The rising shot needed a new
 high-cloud parallax band to have anything left to climb past; **a shot that
 gets longer needs its world checked, not just its timing** — the parallax
 layers had all scrolled off the bottom by the old scene's end.
+
+### The consolidation before episode three (2026-07-27)
+
+The ep-3 cleanup list, cleared: everything episodes one and two had each
+written for themselves moved into `src/lib/kid/`, so episode three starts from a
+kit instead of from a copy of episode two.
+
+**What moved** — `lines.ts` (the line-key lookups: `lineKeyOf`, `turnFor`,
+`lineWindow`, `heldBeat`, `lineProgress`), `staging.tsx` (`makeBodyGeometry`,
+`Mark`, `Camera`/`Cam`/`project`, `makeWideLayer`), `BigWord.tsx`
+(`BigWordBeat` + `CutFlash` + the syllable blocks), `props.tsx` (`Thermometer`,
+`CaptionCard`, `CloudiaHat`), `characters/Rock.tsx`, `characters/AirBlob.tsx`
+(`airBlobPath` + `AirBlob`). Plus two new pieces of kit the list asked for:
+`emotionAt(frame, changes, resting)` in the rig, for a face that turns in the
+silence, and `tailAt` on `SpeechBubble`/`Bubbles`, for a bubble that had to be
+pushed away from its speaker.
+
+- **Promote by parameterising the data, not by generalising the art.** The two
+  copies of the staging maths were formula-for-formula identical and differed
+  only in a cast table, a default body and ten pixels of bubble lift. So the
+  kit exports a *factory*: `makeBodyGeometry({ box, body, bubbleLift })` hands
+  an episode back the same seven helpers it already had, and
+  `makeWideLayer(WIDE)` binds the one number that is per episode (how far out a
+  scene ever pulls). Nothing in the library learned what a puff or a raindrop
+  is.
+- **The re-export is what made it verifiable.** Every promoted name is
+  re-exported from each episode's `scenes/common.tsx`, so not one of the twelve
+  act/recap/coldOpen files changed an import line. The diff is two `common.tsx`
+  files plus the four call sites that were genuinely being deduplicated — which
+  is small enough to read, and small enough to trust the render check.
+- **Two things were left as duplicates on purpose.** `Vignette` exists twice
+  with different strengths and different colours (one sells "deep underwater",
+  the other "the edges pulled down"), which is a different component with the
+  same name — promoting it would have meant one caller silently changing look.
+  And `airBlobPath` is deliberately *not* `puffBlob`: the hero's outline smooths
+  with Catmull-Rom cubics through 44 samples, the crowd's with quadratic
+  midpoints through 18, and hundreds of blobs a frame is exactly where that
+  difference is worth keeping. Both are recorded in the code.
+- **Still per episode, and correctly so:** the cast lists themselves
+  (`Speaker`/`Stage`, `PHASE`, `CHAR_BOX`, `ACT_COLOR`), `turnsOf` (bound to a
+  video's own manifest), `Bubbles`/`useEmotion`/`useLookAtSpeaker` (their types
+  *are* the cast), and every single-episode prop — the kite, the kid, the hill,
+  the grass world, the beetle and the leaf. **Episode three should copy episode
+  two's staging API, not episode one's**: `useStage` + `SpeakerVisual` (a
+  per-line "this narrator line comes out of *that* body's mouth" override) is
+  strictly the better one, and it is the thing to hoist next, when a third
+  episode proves the shape.
+
+**The kidHand bug was two bugs, and the fix was to stop re-deriving the
+drawing.** `kidHand()` computed where the kid's string hand is by repeating the
+arithmetic in `KidSilhouette` — and got the placement wrong twice: it ignored
+`flip` (every kid in the episode is drawn flipped, so the string left a point
+~140px the wrong side of the body) and it ignored that the component scales
+about the box's **bottom**, not its centre (a further 31px, `210 × (1 − scale)`,
+so the string attached partway up the forearm). Both shots it broke are the ones
+the frame story rests on: the cold open's flop and Scene 31's payoff. The fix is
+not better arithmetic, it is one object — `KidPlacement` (pose *plus* x/y/scale/
+flip) is spread onto the component and passed to `kidHand`, so the drawing and
+the measurement cannot disagree. **Any "where is that bit of the character"
+helper should take the same props the character does.** Related, found while
+checking it, and deliberately **not** fixed here because it is a look decision
+rather than a defect: the cold open seats the kid's `KidContactShadow` at
+`y + (box/2) × scale` — the same mistaken arithmetic, ~31px above the drawn feet
+— while Scene 31, which is the same frame five minutes later and says so in a
+comment ("seated the same way"), seats it on `hillY()`. One of the two is wrong
+and they are the pair the whole frame story rests on. Worth a look, by eye, next
+time someone has both shots open.
+
+**The render-neutrality check needed rebuilding, and the old one would have
+lied.** Episode one's promotion diffed SSR markup byte-for-byte; that does not
+reach here, because half of what moved is only correct once a browser has laid
+it out. So this rendered 831 stills — every 50th frame of both episodes plus
+`DripChooses`, which shares episode one's kit through drip-fork — before and
+after, in one browser, and compared them. **PNG hashes turned out not to be a
+valid oracle**: two runs of *identical* code disagreed on 22 of the 831. Chrome's
+rasterizer antialiases edges and dithers gradients slightly differently
+depending on how warm the tab is, and a hash cannot tell that from a prop that
+moved. What works is a **control**: render the grid twice from the same code to
+measure the noise floor (here, at most 125 pixels in a frame changing by
+≥8/255, scattered, never contiguous), then hold the real comparison to it. Every
+episode-one and `DripChooses` frame came in at or below that floor; the only
+frames above it were the two windows the kidHand fix was meant to touch
+(PuffWind 0–750 and 17050–18450 — the cold open's flop and Scenes 31–32, which
+is every frame in the episode with a kite string in it), and those were then
+looked at, at 4×, on a crop. The harness is `scripts/frame-grid.mjs` +
+`frame-diff.mjs` + `frame-crop.mjs` and the procedure is now PROCESS.md §7.
+Gates after: `typecheck` clean, `lint:hooks` 0 findings, and full every-frame
+validation renders of `DripWaterCycle` and `PuffWind` at `--scale=0.25`, both
+exit 0.
 
 ### Tier-2 graphics: painted backgrounds, piloted on this episode (2026-07-26)
 
