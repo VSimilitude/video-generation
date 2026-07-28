@@ -15,8 +15,10 @@
 //                                             literal, convinced he is the
 //                                             boring one. * PLACEHOLDER — see
 //                                             the RAY block below
-//   Sunny     minimax  Imposing_Manner  1.0   the Sun. Enormous ego. THIS is
-//                                             the episode he is wrong
+//   Sunny     kokoro   am_puck          1.0   the Sun. Enormous ego. THIS is
+//                                             the episode he is wrong. Series
+//                                             voice since episode one; the
+//                                             MiniMax audition was rejected
 //   Drip      minimax  Lively_Girl      1.0   three lines. The rainbow is hers
 //   Puff      minimax  Exuberant_Girl   1.0   five short lines. He is the air
 //                                             that does the scattering
@@ -29,9 +31,15 @@
 //
 // TWO ENGINES. The Narrator stays on kokoro — free, local, and re-synthesized
 // the instant a line is reworded, which is the whole reason narration text can
-// be the source of truth. Everybody with a body on screen is on MiniMax
-// speech-2.8-hd (Replicate, ~$0.11/1000 characters), which is paid but can
-// *act*: it takes an `emotion` and honours inline pause markers.
+// be the source of truth. AND SO DOES SUNNY: `am_puck` is what he has sounded
+// like for three episodes, the MiniMax `Imposing_Manner` read was auditioned
+// here and rejected (it plays the ego as menace, and he is a show-off), and a
+// returning character does not change voice for one episode. Everybody else
+// with a body on screen is on MiniMax speech-2.8-hd (Replicate, ~$0.11/1000
+// characters), which is paid but can *act*: it takes an `emotion` and honours
+// inline pause markers. Neither reaches a kokoro line — the generator rejects
+// a pause marker there outright, and `emotion` is simply not a field kokoro
+// has, so no Sunny line carries one.
 //
 //   engine: "minimax", voiceId: "<id>", emotion: "<enum>"
 //   emotions: auto happy sad angry fearful disgusted surprised calm fluent
@@ -44,20 +52,21 @@
 // twenty-four seasoned and one shared recording, and the seasoning is his arc:
 // two `sad` in Act One (the sulk, and nowhere else), `surprised` on the eight
 // lines where a fact lands on him, `happy` from the rainbow onward, and one
-// `calm` at the sunset. Sunny's seventeen are twelve `happy` — bragging is his
-// entire character — three `auto`, one `surprised` and one shared recording;
-// the `auto`s and the `surprised` are the three moments he stops, and they are
-// the episode. Drip and Puff are `happy` throughout, which is all they are.
+// `calm` at the sunset. Drip and Puff are `happy` throughout, which is all they
+// are. SUNNY HAS NONE — he is on kokoro, and the four moments he stops
+// (`a2_12`, `a2_45`, `a2_50`, `rc_18`) are carried by the words, by a slower
+// `speed`, and by the face, which is where Scene 23 was staging them anyway.
 //
 // PAUSE MARKERS (`<#0.3#>`) are seconds of silence *inside* a MiniMax line and
 // are only allowed where `script.md` already asks for intra-line timing.
-// Exactly one line qualifies here — `a2_47_sunny`, whose script note (Scene 23)
-// says the three halves of the brag must land separately. The Narrator's
-// equivalents (`a2_27`, `a3_13`) are on kokoro, which cannot take a marker at
-// all, so their separation is bought with `speed` instead. Every other silence
-// in the show is a held beat *between* lines and belongs to `gaps` in
-// `Video.tsx`. The generator errors if a marker reaches a kokoro line, where
-// the model would read the punctuation out loud.
+// THERE ARE NOW NONE IN THIS FILE. The one line that qualified was
+// `a2_47_sunny`, whose script note (Scene 23) says the three halves of the brag
+// must land separately — and Sunny went back to kokoro, which cannot take a
+// marker at all (the generator errors rather than let the model read the
+// punctuation out loud). Its separation is now bought with `speed`, exactly as
+// the Narrator's two equivalents (`a2_27`, `a3_13`) have always bought theirs.
+// Every other silence in the show is a held beat *between* lines and belongs to
+// `gaps` in `Video.tsx`.
 //
 // RAY IS NOT CAST. `Decent_Boy` is a PLACEHOLDER, written in so the file runs
 // and the episode can be timed — it was the runner-up in Puff's audition
@@ -127,7 +136,10 @@ const RAY_ENGINE = "minimax";
 // Cast by Mike 2026-07-27 from the four-voice audition: Young_Knight's
 // youthful-earnest read fits an eight-minute-old sunbeam; Decent_Boy's
 // cooler, lower timbre both fought the earnestness and sat too close to
-// Sunny (Imposing_Manner) for adjacent-line clarity.
+// Sunny (then on MiniMax Imposing_Manner) for adjacent-line clarity. Sunny has
+// since gone back to kokoro `am_puck`, which puts even more air between the
+// two of them — Young_Knight still stands, and the separation argument only
+// got stronger.
 const RAY_MINIMAX_VOICE = "Young_Knight";
 const RAY =
   RAY_ENGINE === "minimax"
@@ -135,7 +147,17 @@ const RAY =
     : { voice: "am_liam", speed: 1.0 }; // kokoro stand-in, for free re-timing
 
 // Returning, unchanged, and finally wrong about something.
-const SUNNY = { engine: "minimax", voiceId: "Imposing_Manner", speed: 1.0 };
+//
+// BACK ON KOKORO, AND THIS IS THE SERIES VOICE. `am_puck` is what Sunny has
+// sounded like since episode one (`water-cycle`, `drip-fork`); the MiniMax
+// `Imposing_Manner` read was auditioned here and rejected by Mike — it plays
+// the ego as *menace*, and Sunny is a show-off, not a villain. Three episodes
+// of the same character cannot change voice for one of them, so he is back on
+// the free, local, deterministic engine he has always been on. That means: no
+// `emotion` on a single Sunny line (kokoro has none, and the generator rejects
+// the field), no pause markers (see `a2_47_sunny`), and every Sunny line
+// re-times for nothing the moment it is reworded.
+const SUNNY = { voice: "am_puck", speed: 1.0 };
 // Returning for three lines. The rainbow is hers and she knows it.
 const DRIP = { engine: "minimax", voiceId: "Lively_Girl", speed: 1.0 };
 // Returning for five short lines, and doing real work: Puff is the air, and
@@ -184,7 +206,6 @@ export default {
     co_08_sunny: {
       text: "I DID! It was ME! I painted it! You're welcome! HA! HA!",
       ...SUNNY,
-      emotion: "happy",
     },
     co_09_narrator: {
       text: "Sunny has a theory. Keep hold of it. We need it later.",
@@ -208,7 +229,6 @@ export default {
     a1_03_sunny: {
       text: "GOOD MORNING, EVERYBODY!",
       ...SUNNY,
-      emotion: "happy",
     },
     a1_04_narrator: {
       text: "And these are his sunbeams. All of them. Every single one.",
@@ -220,7 +240,6 @@ export default {
     a1_05_sunny: {
       text: "I MADE these! Every one of you! Off you go! Light something up!",
       ...SUNNY,
-      emotion: "happy",
     },
     a1_06_narrator: {
       text: "There are more sunbeams than there are grains of sand. Here is one.",
@@ -238,7 +257,6 @@ export default {
     a1_09_sunny: {
       text: "RAY! You are going to EARTH! Ninety three million miles! GO!",
       ...SUNNY,
-      emotion: "happy",
     },
     // Scene 4: the number lands on him. First of the seven facts that do.
     a1_10_ray: {
@@ -246,7 +264,7 @@ export default {
       ...RAY,
       emotion: "surprised",
     },
-    a1_11_sunny: { text: "Eight minutes! HA! HA!", ...SUNNY, emotion: "happy" },
+    a1_11_sunny: { text: "Eight minutes! HA! HA!", ...SUNNY },
     // WHOOSH is the house sound word and the only one on a character line in
     // this episode. Single letter runs; verified on both engines in episodes
     // one and two. Still ear-check it on whoever ends up playing Ray.
@@ -482,7 +500,6 @@ export default {
     a1_58_sunny: {
       text: "I MAKE RAINBOWS! You're welcome! HA! HA!",
       ...SUNNY,
-      emotion: "happy",
     },
     // Grown-up smirk, and true — the bending is the raindrop's doing.
     a1_59_narrator: {
@@ -490,7 +507,7 @@ export default {
       ...NARRATOR,
       speed: 0.9,
     },
-    a1_60_sunny: { text: "WE ARE A TEAM! HA! HA!", ...SUNNY, emotion: "happy" },
+    a1_60_sunny: { text: "WE ARE A TEAM! HA! HA!", ...SUNNY },
 
     // ---------------------------------------------------------------
     // ACT TWO — THE AIR. Big Word: SCATTER
@@ -531,12 +548,11 @@ export default {
     a2_10_sunny: {
       text: "It was PAINT! I painted it! I am extremely good at painting!",
       ...SUNNY,
-      emotion: "happy",
     },
     a2_11_narrator: { text: "Sunny. Show us the paint.", ...NARRATOR },
-    // Scene 16's button, after 45f of him holding an empty roller. "auto" —
-    // this is Sunny being caught out and covering, and no emotion on the list
-    // plays a cover. The words do it, and the silence in front of it does more.
+    // Scene 16's button, after 45f of him holding an empty roller. This is Sunny
+    // being caught out and covering, which no seasoning on any engine plays
+    // anyway — the words do it, and the silence in front of it does more.
     a2_12_sunny: { text: "I keep the paint somewhere else.", ...SUNNY, speed: 0.95 },
     a2_13_narrator: {
       text: "We will come back to Sunny.",
@@ -700,13 +716,24 @@ export default {
     a2_45_sunny: { text: "EXCUSE ME. Whose light is that?", ...SUNNY },
     a2_46_ray: { text: "Um. Yours.", ...RAY },
     // The brag, and the one line in the episode whose script note asks for
-    // separation INSIDE the line (script.md, Scene 23) — so it carries the only
-    // two pause markers in the file. Everything else silent belongs to `gaps`.
+    // separation INSIDE the line (script.md, Scene 23): the three halves must
+    // land separately, because Scene 23 builds one third of his diagram on each.
+    //
+    // IT USED TO CARRY THE FILE'S ONLY TWO PAUSE MARKERS (`<#0.3#>`). Sunny is
+    // back on kokoro, which has no such feature — it would read the punctuation
+    // out loud, and the generator rejects the line outright rather than let it
+    // through. So the separation is bought the way the Narrator's two equivalent
+    // lines (`a2_27`, `a3_13`) have always bought it: with `speed`. 0.92, the
+    // house list speed, and the exclamation marks do the rest.
+    //
+    // EAR-CHECK. If the three halves still run together, the fix is `speed`
+    // (0.88, as `a1_42` and `a2_43` use) — NOT rewriting the line, which is
+    // approved script, and NOT splitting it into three clips, which would move
+    // the beat into `gaps` and change what Scene 23's diagram is built on.
     a2_47_sunny: {
-      text: "So I painted the sky! <#0.3#> With my sky paint! <#0.3#> Obviously!",
+      text: "So I painted the sky! With my sky paint! Obviously!",
       ...SUNNY,
-      speed: 0.95,
-      emotion: "happy",
+      speed: 0.92,
     },
     // Episode two's concession, verbatim as far as the full stop — and then it
     // goes the other way. Flattest possible delivery, both halves.
@@ -718,13 +745,15 @@ export default {
     a2_49_narrator: { text: "He is wrong.", ...NARRATOR, speed: 0.85 },
     // THE MOMENT. Two episodes of being insufferably correct end here, and it
     // is the only line in the series where Sunny doubts himself twice in a row.
-    // `surprised` is the same seasoning as "Wait. What?" in episode two, which
-    // is deliberate — this is that joke's punchline, four minutes long.
+    // On kokoro there is no seasoning to give it — the three flat full stops are
+    // the read, and Scene 23 stages the doubt on his face instead (the grin
+    // comes apart in the 36f beat *before* this line). Slowed so the three
+    // sentences separate. EAR-CHECK: this is the one Sunny line whose meaning
+    // depends on the delivery.
     a2_50_sunny: {
       text: "Wrong. Me. I have never been wrong.",
       ...SUNNY,
       speed: 0.95,
-      emotion: "surprised",
     },
     a2_51_narrator: {
       text: "There is no paint. There never was. The air does all of it.",
@@ -738,7 +767,6 @@ export default {
     a2_53_sunny: {
       text: "MY LIGHT! THE SKY IS MADE OF MY LIGHT! YOU'RE WELCOME! HA! HA!",
       ...SUNNY,
-      emotion: "happy",
     },
     a2_54_narrator: {
       text: "He is wrong about the sky. He is right about the light.",
@@ -864,7 +892,6 @@ export default {
     a3_22_sunny: {
       text: "I do this bit ON PURPOSE! For the drama! You're welcome!",
       ...SUNNY,
-      emotion: "happy",
     },
     a3_23_narrator: {
       text: "A sunset is not different light. It is the same light, taking the long way.",
@@ -908,8 +935,15 @@ export default {
     },
     // SAME RECORDING as a1_03, heard faintly from over the far horizon — the
     // second and last `sameAs` in the file, and the better one. The joke only
-    // works if it is audibly the identical take of the identical greeting, and
-    // this engine would not give us that twice for free. Do not reword a1_03.
+    // works if it is audibly the identical take of the identical greeting.
+    //
+    // KEPT DELIBERATELY, NOW THAT SUNNY IS BACK ON KOKORO. Kokoro is
+    // deterministic, so two keys with the same words in the same voice at the
+    // same speed would come back byte-identical anyway — but `sameAs` is
+    // engine-agnostic (it copies the source's bytes under this key's filename,
+    // see scripts/generate-narration.mjs) and it *states* the intent, so nobody
+    // can later reword one of the two greetings and quietly break the gag.
+    // Do not reword a1_03.
     a3_31_sunny: { sameAs: "a1_03_sunny" },
 
     // ---------------------------------------------------------------
@@ -934,7 +968,6 @@ export default {
     rc_04_sunny: {
       text: "SUNSET! That is my light taking the long way! You're welcome!",
       ...SUNNY,
-      emotion: "happy",
     },
     // The three-word summary. Slowest line in the recap, on purpose.
     rc_05_narrator: {
@@ -997,9 +1030,9 @@ export default {
       speed: 0.9,
     },
     // THE RUNNING GAG, INVERTED. Three episodes of "that one is me as well!"
-    // end on him squinting at the horizon and disclaiming it. Deliberately
-    // unseasoned — he is not scared and he is not joking, he is just, for once,
-    // not sure it is his. Nothing enters the 45f beat after it.
+    // end on him squinting at the horizon and disclaiming it. Flat and slow —
+    // he is not scared and he is not joking, he is just, for once, not sure it
+    // is his. Nothing enters the 45f beat after it.
     rc_18_sunny: { text: "That is not me.", ...SUNNY, speed: 0.9 },
     // Third and last firing of the catchphrase, waving from the corner of the
     // episode four card.

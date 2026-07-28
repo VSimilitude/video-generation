@@ -36,8 +36,8 @@ change it in both files.
 | Character | Engine | Voice | Speed | Who they are |
 |---|---|---|---|---|
 | **Narrator** | kokoro | `af_heart` | 1.0 | Warm storyteller, returning. Voice only — no body, ever. Third episode of deadpanning at Sunny; first episode of contradicting him. |
-| **Ray** | minimax | `Decent_Boy` **(placeholder)** | 1.0 | **New hero.** One sunbeam, eight minutes old. Earnest, literal, and completely convinced he is the boring plain one. **NOT CAST** — see below. |
-| **Sunny** | minimax | `Imposing_Manner` | 1.0 | The Sun, returning, unchanged, insufferable — and the proud boss of a zillion sunbeams. This is the episode where *"that one is me as well!"* finally fails. |
+| **Ray** | minimax | `Young_Knight` | 1.0 | **New hero.** One sunbeam, eight minutes old. Earnest, literal, and completely convinced he is the boring plain one. Cast 2026-07-27 (Mike, from the four-voice audition): youthful-earnest over cool-guy, and maximum timbre separation from Sunny. |
+| **Sunny** | kokoro | `am_puck` | 1.0 | The Sun, returning, unchanged, insufferable — and the proud boss of a zillion sunbeams. This is the episode where *"that one is me as well!"* finally fails. **Back on his series voice**: `am_puck` since episode one, and the MiniMax `Imposing_Manner` read was auditioned here and rejected — it plays the ego as menace, and Sunny is a show-off, not a villain. No `emotion` on any of his lines (kokoro has none) and no pause markers. |
 | **Drip** | minimax | `Lively_Girl` | 1.0 | Returning for three lines. The rainbow is **hers** — rain plus light — and she knows it. |
 | **Puff** | minimax | `Exuberant_Girl` | 1.0 | Returning for five short lines, and doing real work: Puff is the air, and the air is what does the scattering. Catchphrase fires once. |
 
@@ -50,7 +50,8 @@ would be seven auditions and twelve voices in the show. Giving them nothing to
 say costs nothing, because everything they need to communicate is a direction
 of travel.
 
-**Ray is not cast.** `Decent_Boy` is a **placeholder**, written in so the file
+**Ray is cast: `Young_Knight`.** (The paragraph below is preserved as the
+original casting note.) `Decent_Boy` was the placeholder, written in so the file
 runs and the episode can be timed. It was the runner-up in Puff's audition
 (`docs/LEARNINGS.md`, 2026-07-26) and it is a plausible young-earnest-boy read,
 which is not the same as being the right one. **Audition before any visual work
@@ -60,19 +61,25 @@ the `RAY_ENGINE` toggle back to kokoro is kept for the same reason it was there:
 a free re-time that costs the acting and nothing else.
 
 **Two engines.** The Narrator stays on Kokoro — free, local, and re-synthesized
-the moment a line is reworded. Everybody with a body is on MiniMax
+the moment a line is reworded — **and so does Sunny**, who went back to
+`am_puck` after the MiniMax read was rejected. Ray, Drip and Puff are on MiniMax
 speech-2.8-hd (via Replicate), which is paid but takes an `emotion` per line and
-honours inline pause markers. Sixty-nine MiniMax lines, ~2,570 characters,
-about twenty-eight cents at current rates.
+honours inline pause markers. Fifty-one MiniMax lines, ~1,840 characters, about
+twenty cents at current rates; Sunny's seventeen are free and re-time for
+nothing whenever a word of his changes.
 
-**Sixty-nine seasoned lines, and most of them are not.** Ray's forty-four are
+**Fifty-one seasoned lines, and most of them are not.** Ray's forty-four are
 nineteen `auto`, twenty-four seasoned and one shared recording: two `sad` (the
 sulk, and nowhere else in the episode), `surprised` on the eight lines where a
 fact lands on him, `happy` from the rainbow onward, one `calm` at the sunset.
-Sunny's seventeen are twelve `happy`, three `auto`, one `surprised` and one
-shared recording — and the four that are not `happy` are the four moments he
-stops, which is the whole of his arc this episode. Every non-`auto` line names
-its stage direction in a comment in `narration.mjs`.
+Drip and Puff are `happy` throughout, which is all they are. Every non-`auto`
+line names its stage direction in a comment in `narration.mjs`.
+
+**Sunny carries no seasoning at all**, because kokoro has none to give. The four
+moments he stops (`a2_12`, `a2_45`, `a2_50`, `rc_18`) — which are the whole of
+his arc this episode — are carried by the words, by a slower `speed`, and by his
+face; Scene 23 was already staging the doubt with `emotionAt` in the silence
+rather than under a line, so nothing there had to change.
 
 ## The three Big Words
 
@@ -819,10 +826,21 @@ and then corrected — sun to *air*, not sun to sky. Structurally this is episod
 two's "I checked. Then I checked again. He is right. Again." escalated in the
 only direction left: same two-beat concession, opposite verdict, and then a
 second concession going the other way, because he *is* right about the source
-and the show does not cheat to get its joke. `a2_47_sunny` carries the file's
-only two pause markers (`<#0.3#>`) because this scene note asks for the three
-halves of the brag to land separately; every other silence in the episode is a
-held beat between lines and lives in `Video.tsx`.
+and the show does not cheat to get its joke.
+
+**`a2_47_sunny`'s three halves, and how they are now separated.** This scene
+note asks for the three halves of the brag to land separately — Sunny builds one
+third of his diagram on each. That used to be bought with the file's only two
+pause markers (`<#0.3#>`, a MiniMax feature). Sunny is back on kokoro, which
+cannot take a marker at all (the generator rejects the line rather than let the
+model read the punctuation out loud), so the separation is bought with
+**`speed: 0.92`** instead, exactly as the Narrator's two equivalents (`a2_27`,
+`a3_13`) have always bought theirs. **There are now no pause markers anywhere in
+the episode.** If the ear-check finds the three halves still running together,
+the fix is a slower `speed` (0.88, as `a1_42` and `a2_43` use) — not a rewrite
+of an approved line, and not three separate clips, which would move the timing
+into `gaps` and change what the diagram is built on. Every other silence in the
+episode is a held beat between lines and lives in `Video.tsx`.
 
 Episode two's `a2_45_narrator` — *"One day Sunny will be wrong about something.
 It is not today."* — is the promise this scene keeps. It was planted four
@@ -1274,11 +1292,15 @@ episode two's own ear-check list called "the highest risk in the episode".
 
 **Sound-word spellings** are locked to the exact strings in `narration.mjs` —
 WHOOSH, Ping, and the three chants. Do not "correct" them. **And the shaping is
-per engine.** There is not one stretched vowel on a character line in this file,
-because every character is on MiniMax and MiniMax reads a repeated letter as
-separate syllables; where episode two would have written "Ohhh" or "Whoaaa", the
-length here comes from `emotion` and `speed`. "Ping. Ping. Ping." survives only
-because it is a Narrator line and stays on kokoro. **If Ray is recast, sweep his
+per engine.** There is not one stretched vowel on a character line in this file:
+Ray, Drip and Puff are on MiniMax, which reads a repeated letter as separate
+syllables, so where episode two would have written "Ohhh" or "Whoaaa" the length
+comes from `emotion` and `speed` instead. "Ping. Ping. Ping." survives because
+it is a Narrator line and stays on kokoro. **Sunny is now on kokoro too**, so a
+stretched vowel would in fact work on his lines — he does not have one, and he
+should not grow one, because he has not had one in three episodes and a
+character who suddenly starts saying "HAAA" is a different character.
+**If Ray is recast, sweep his
 sound words before assuming the clips are the same clips** — that is a rule
 episode two learned twice, once on Puff and once on a rock.
 
@@ -1290,7 +1312,11 @@ scene file where it happens, or the next reader will "fix" one of them.
 `a1_03_sunny`, both through the generator's `sameAs`. Neither is a
 re-recording, and neither may become one: MiniMax returned episode two's one
 repeated sentence at 2.20s and then 2.84s, a thirty percent swing in the line
-whose entire job was to sound identical. Both gags here are *only* the sameness
+whose entire job was to sound identical. `a3_31_sunny` is **kept on `sameAs`
+even though Sunny is back on kokoro**, where two identical specs would come back
+byte-identical anyway — `sameAs` is engine-agnostic (it copies the source's
+bytes) and it *states* the intent, so nobody can reword one of the two greetings
+without the other following. Both gags here are *only* the sameness
 — a second take of "Are we there yet?" is not the joke, and a second take of
 "GOOD MORNING, EVERYBODY!" from over the far horizon is not the ending. Reword
 either source line and the alias re-copies automatically; there is nothing to
@@ -1327,16 +1353,28 @@ npm run narration -- --audition sky-blue:a1_26_ray <dir> \
    wrong; it is a mild fact about having met himself.
 4. **`a2_27_narrator`** ("Ping. Ping. Ping.") — a sound word alone in a clip, on
    kokoro, so it is free to re-cut but it has never been said.
-5. **`a2_47_sunny`** — the file's only pause markers, and the only line whose
-   internal timing is not a `gap`.
+5. **`a2_47_sunny`** — the only line whose internal timing is not a `gap`, and
+   the one the pause markers used to buy. On kokoro at 0.92, listen for **three
+   halves, not one sentence**: "So I painted the sky!" / "With my sky paint!" /
+   "Obviously!" Scene 23 builds a third of his diagram on each, so if they run
+   together the diagram assembles as one move. Fix is `speed` (0.88), never the
+   text.
 6. **Sunny's concession run** (`a2_48` → `a2_49` → `a2_50` → `a2_53`). Listen
    for two things: that `a2_49` ("He is wrong.") at 0.85 is flat rather than
-   sad, and that `a2_50` at `surprised` reads as a man discovering a new
-   sensation rather than as hurt.
+   sad, and that `a2_50` at 0.95 — **now unseasoned, on kokoro** — reads as a
+   man discovering a new sensation rather than as hurt. The three flat full
+   stops are the whole read; the doubt is on his face, in the 36f beat in front
+   of it.
 7. **`rc_18_sunny`** ("That is not me.") — three words carrying the last beat of
-   the episode and the whole of episode four's premise. Unseasoned on purpose;
-   if it plays as frightened, the tease has gone the wrong way.
-8. **Ray's two `sad` lines** (`a1_24`, `a1_26`) back to back. Two is the whole
+   the episode and the whole of episode four's premise. Flat and slow; if it
+   plays as frightened, the tease has gone the wrong way.
+8. **The whole of Sunny, once**, now that he is back on `am_puck`: the greeting
+   (`a1_03`), a brag at full volume (`co_08`, `a2_53`) and the four moments he
+   stops. Episodes one and two are the reference — he should sound like the same
+   character, not a quieter one. Then **Sunny against Ray back to back**
+   (`a2_45` → `a2_46`, `a2_52` → `a2_53`): two engines in one exchange, and the
+   thing to listen for is a level or timbre mismatch at the cut.
+9. **Ray's two `sad` lines** (`a1_24`, `a1_26`) back to back. Two is the whole
    sulk, and the failure mode is a hero who sounds miserable rather than small.
 
 **Grown-up smirks.** `co_04` ("Every kid on this whole planet picks blue"),

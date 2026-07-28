@@ -825,6 +825,17 @@ _Build-side notes (2026-07-28); watch-side retro pending._
 - **Casting**: Ray = Young_Knight (earnest-young beats cool-guy for an
   8-minute-old hero; timbre separation from Sunny matters for adjacent
   lines — the Claire cameo-voice lesson applied at cast level).
+- **A returning character does not get a new engine**: Sunny was cast to
+  MiniMax `Imposing_Manner` for depth and rejected on hearing it (plays
+  the ego as menace; he is a show-off, not a villain) — reverted to his
+  series voice, kokoro `am_puck`, at zero cost. Two lessons: audition a
+  *returning* voice against the old episodes, not against the brief; and
+  seasoning that only one engine has (here `emotion` plus `a2_47_sunny`'s
+  two pause markers, the file's only ones) is a dependency on the casting
+  decision, so keep the intent recoverable in `speed` and in the staging
+  — Scene 23 survived because its beats were `lineWindow`/`heldBeat`
+  derived and the grin came apart via `emotionAt` in a silence, not under
+  a line. Revert cost: 16 free clips, -523 frames, no staging edits.
 - **Ep-4 cleanup list**: promote SleepingVolcano to src/lib/kid (now
   written twice: wind/act3 + sky-blue/act3); export coldOpen's
   PageShadow/CrayonBox/OverheadKid/Hand/palmFor (reproduced in sky-blue

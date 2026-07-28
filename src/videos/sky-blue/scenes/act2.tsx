@@ -2016,8 +2016,11 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [landFrom, landTo] = heldBeat(scene, "a2_52_ray");
   const [backFrom] = lineWindow(scene, "a2_53_sunny");
 
-  // He builds it as he brags, one element per third of the line — which is what
-  // the two pause markers in `a2_47_sunny` bought.
+  // He builds it as he brags, one element per third of the line. The three
+  // halves of `a2_47_sunny` used to be separated by two MiniMax pause markers;
+  // Sunny is back on kokoro, which has no such thing, so the separation is
+  // bought with `speed: 0.92` instead. Nothing here changes either way — the
+  // build is `bragFrom`..`bragTo`, so it simply spans whatever the clip is.
   const build = kidEase.easeInOutSine((frame - bragFrom) / Math.max(1, (bragTo - bragFrom) * 0.94));
   // And it stops, and sags, on "He is wrong".
   const droop = kidEase.easeOutCubic((frame - wrongFrom - Math.round((wrongTo - wrongFrom) * 0.45)) / 22);
