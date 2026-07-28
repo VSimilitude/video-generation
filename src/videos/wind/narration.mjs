@@ -13,7 +13,7 @@
 //                                             ever
 //   Puff      minimax  Exuberant_Girl   1.0   our hero. Small, apologetic,
 //                                             then unstoppable
-//   Sunny     minimax  Imposing_Manner  1.0   the Sun. Enormous ego, and
+//   Sunny     kokoro   am_puck          1.0   the Sun. Enormous ego, and
 //                                             entirely correct
 //   Cloudia   minimax  Abbess           1.0   one-scene cameo, delivered by wind
 //   Drip      minimax  Lively_Girl      1.0   one fan-service line, waving from
@@ -31,12 +31,28 @@
 //
 // TWO ENGINES. The Narrator stays on kokoro — it is the storyteller voice the
 // series was built on, it is free, and it re-synthesizes instantly when a line
-// is reworded. Everybody with a body on screen is cast on MiniMax
+// is reworded. Everybody else with a body on screen is cast on MiniMax
 // speech-2.8-hd (Replicate, ~$0.11/1000 characters), which is paid but can
-// *act*: it takes an `emotion` and honours inline pause markers. The four
+// *act*: it takes an `emotion` and honours inline pause markers. The
 // principals were picked by ear from auditions (public/narration/auditions-mm,
 // and auditions-mm-puff for Puff) and approved 2026-07-26; the three cameos
 // were cast on description on 2026-07-27 and are unheard.
+//
+// SUNNY IS BACK ON KOKORO (`am_puck` @1.0), decided 2026-07-28. He was moved to
+// MiniMax `Imposing_Manner` with the rest of the cast and it was the one recast
+// that lost something: the ep-1 voice *is* the character — the brag reads as
+// delight rather than as authority, "HA! HA!" is its own idiom on that voice,
+// and the register is the one two episodes of the running gag were written for.
+// Consequences, all of them deliberate:
+//   - Every Sunny line here is kokoro, so all thirteen are free and re-time
+//     instantly when a word changes. Nothing about him is a paid call any more.
+//   - `emotion` is a MiniMax field and kokoro ignores it, so his lines carry
+//     none. The seasoning that used to be `happy` is in the words and the
+//     staging; his speed overrides survive because kokoro honours those.
+//   - Pause markers are a MiniMax instruction and are ERRORS on a kokoro line
+//     (the generator refuses the file). `a2_41_sunny` carried the episode's
+//     only two; they are gone and the line is back at 0.95, which is the speed
+//     it separated its three links at in the ep-1 register.
 //
 //   engine: "minimax", voiceId: "<id>", emotion: "<enum>"
 //   emotions: auto happy sad angry fearful disgusted surprised calm fluent
@@ -46,8 +62,9 @@
 // `script.md` asks for it, and the comment on the line names the direction.
 // Everything else stays "auto", which is the model reading the words as
 // written — the same instinct as not adding a `speed` override to a line that
-// does not need one. Sunny's are nearly all `happy` because bragging is his
-// entire character; the two that are not are the two moments he stops.
+// does not need one. Sunny's used to be nearly all `happy`, because bragging is
+// his entire character; he went back to kokoro on 2026-07-28 and now carries
+// none — the engine has no such field, and the brag is in am_puck's own read.
 // Puff's sixty-two lines are thirty-five `auto` and twenty-seven seasoned, and
 // the seasoning is the arc: six `sad` in Act One (every one of them a stage
 // direction that says deflation or "sad, not tragic"), `surprised` on the six
@@ -57,10 +74,14 @@
 //
 // PAUSE MARKERS (`<#0.3#>`) are seconds of silence *inside* a MiniMax line,
 // and they are only allowed where `script.md` already marks an intra-line
-// timing need — one line in this episode (`a2_41_sunny`). Every other silence
-// in the show is a held beat *between* lines and belongs to `gaps` in
-// `Video.tsx`, not here. The generator errors if a marker appears on a kokoro
-// line, where the model would read the punctuation out loud.
+// timing need. **There are none left in this episode.** The one line that had
+// them (`a2_41_sunny`, two markers between the three links of the causal chain)
+// went back to kokoro with the rest of Sunny, where a marker is an error rather
+// than an instruction — the generator refuses the file, because the model would
+// read the punctuation out loud. The separation that bought is bought instead
+// by 0.95, which is what the line ran at before it was ever on MiniMax. Every
+// other silence in the show is a held beat *between* lines and belongs to
+// `gaps` in `Video.tsx`, not here.
 //
 // PUFF IS CAST: MiniMax `Exuberant_Girl`, approved 2026-07-26, the last actor
 // off a placeholder. Auditioned on both engines and on the three lines that ask
@@ -146,7 +167,13 @@ const PUFF =
     ? { engine: "minimax", voiceId: PUFF_MINIMAX_VOICE, speed: 1.0 }
     : { voice: "af_sky", speed: 1.05 }; // the old placeholder, for re-timing
 
-const SUNNY = { engine: "minimax", voiceId: "Imposing_Manner", speed: 1.0 };
+// SUNNY, back where he started. `am_puck` at 1.0 is episode one's Sunny, note
+// for note — the MiniMax recast (`Imposing_Manner`) was reverted 2026-07-28
+// because the imposing read made him an authority, and the joke is that he is a
+// delighted show-off who happens to be right. Kokoro, so: no `emotion` on any
+// of his lines (the field does not exist here), no pause markers (they are an
+// error), and all thirteen clips are free and re-time instantly.
+const SUNNY = { voice: "am_puck", speed: 1.0 };
 const CLOUDIA = { engine: "minimax", voiceId: "Abbess", speed: 1.0 };
 // Was af_bella @1.1 on kokoro, where the 1.1 bought the bounce. Lively_Girl
 // comes with it, so her one line sits at the engine's own speed.
@@ -443,7 +470,7 @@ export default {
     },
     // Scene 12: "Sunny fills the sky, mid-pose, lens flares he has clearly
     // added himself." An entrance he is delighted with.
-    a2_02_sunny: { text: "GOOD MORNING, EVERYBODY!", ...SUNNY, emotion: "happy" },
+    a2_02_sunny: { text: "GOOD MORNING, EVERYBODY!", ...SUNNY },
     a2_03_puff: { text: "Oh no. Oh, he is enormous.", ...PUFF },
     a2_04_narrator: {
       text: "This is Sunny. You may remember him. He remembers himself constantly.",
@@ -454,7 +481,6 @@ export default {
     a2_05_sunny: {
       text: "I invented mornings! You're welcome! HA! HA!",
       ...SUNNY,
-      emotion: "happy",
     },
     a2_06_narrator: {
       text: "Sunny did what Sunny does. He poured sunshine all over the ground.",
@@ -491,9 +517,20 @@ export default {
       text: "Now here is the important bit. The sun does not warm the air very much.",
       ...NARRATOR,
     },
+    // C1. Scene 14: the fact is about him, so he gets to be wrong about it for
+    // one line and then right about it forever. No seasoning — this is the same
+    // call as a2_39_sunny; nothing marks it as anger and nobody in this show is
+    // unkind. He speaks from the diagram: the crayon sun turns and objects.
+    a2_11b_sunny: { text: "EXCUSE ME. I warm EVERYTHING.", ...SUNNY },
     a2_12_narrator: {
       text: "The sun warms the GROUND. And then the warm ground warms the air.",
       ...NARRATOR,
+    },
+    // C1, the brag — the causal chain in six words, and a plant for a2_41.
+    // Ends on "HA! HA!", which is am_puck's own idiom from episode one.
+    a2_12b_sunny: {
+      text: "So I DO warm everything! Through the GROUND! HA! HA!",
+      ...SUNNY,
     },
     // "auto" although the next narrator line says "Puff was enjoying himself":
     // that is a joke about his feet, not a direction for the read, and the line
@@ -578,6 +615,26 @@ export default {
       ...PUFF,
       emotion: "happy",
     },
+    // C2. Scene 16: Cloudia's one Act Two appearance. The hotel is full
+    // *because* warm air rises, which is a2_22_narrator's point made as a
+    // picture — and it is the missing first step of episode one's Cloud Hotel.
+    // "auto" rather than the `angry` imperious read approved for a3_38: she is
+    // grand at a passing stranger, not making a demand.
+    a2_21b_cloudia: { text: "No vacancies, darling! We are FULL!", ...CLOUDIA },
+    // Mid-lift, still delighted — the same seasoning a2_19 and a2_21 carry.
+    a2_21c_puff: {
+      text: "Cloudia! I am not staying! I am going PAST!",
+      ...PUFF,
+      emotion: "happy",
+    },
+    // The button, and deliberately NOT seasoned — same call as a2_19d_puff and
+    // a1_43_puff. The laugh is in the 24f of silence in front of it. Slowed
+    // slightly so the deadpan has weight.
+    a2_21d_cloudia: {
+      text: "They all say that, darling.",
+      ...CLOUDIA,
+      speed: 0.95,
+    },
     a2_22_narrator: {
       text: "Every warm puff on that whole hill was going up with him.",
       ...NARRATOR,
@@ -590,11 +647,22 @@ export default {
       text: "Puff left a gap. An empty space, exactly Puff shaped.",
       ...NARRATOR,
     },
-    // "auto", though it is an apology: Scene 17 calls it "the second-to-last of
-    // the episode", thrown over his shoulder mid-flight. Sheepish, not sad —
-    // the `sad` run ended in Act One and putting one here re-deflates him two
-    // scenes after he stopped being deflated.
-    a2_25_puff: { text: "Oops. Sorry about the hole.", ...PUFF },
+    // C3 — TEXT CHANGED (was "Oops. Sorry about the hole."). Still "auto",
+    // still the second-to-last apology of the episode, still sheepish rather
+    // than sad — the `sad` run ended in Act One and putting one here
+    // re-deflates him two scenes after he stopped being deflated. He is now
+    // addressing the hole, which is the joke and also the scene's whole idea:
+    // an empty space is a thing.
+    a2_25_puff: { text: "Sorry, hole! I did not mean to leave!", ...PUFF },
+    // C3's button. Deliberate rhyme with episode one's moose ("The moose did
+    // not move. Moose rarely do.") — the narrator deadpanning about obvious
+    // behaviour is the only ironic register this show allows, and this is the
+    // same joke in the same words five months later. Slowed for the deadpan.
+    a2_25b_narrator: {
+      text: "The hole did not answer. Holes rarely do.",
+      ...NARRATOR,
+      speed: 0.95,
+    },
     a2_26_narrator: {
       text: "And air does not like a gap. Not one bit.",
       ...NARRATOR,
@@ -617,6 +685,15 @@ export default {
       text: "Cool air. In a very big hurry.",
       ...NARRATOR,
       speed: 0.95,
+    },
+    // C4. The button on the FWOOSH's one physical gag — one cool puff arrives
+    // backwards, overshoots, reverses in and stays upside down for the rest of
+    // the scene. Flat, slow, and about obviously silly behaviour, which is the
+    // permitted deadpan register. Kokoro, so it re-times for free.
+    a2_30b_narrator: {
+      text: "One of them came in backwards.",
+      ...NARRATOR,
+      speed: 0.9,
     },
     a2_31_narrator: {
       text: "And that rushing, hurrying, sideways air has a name. Wind.",
@@ -644,31 +721,43 @@ export default {
       text: "Because of you. And about a hundred million friends.",
       ...NARRATOR,
     },
-    // Deliberately "auto": nothing in Scene 21 marks this as anger, and the
+    // C5. Second firing of the roll call, five minutes after Scene 15's — the
+    // shape episode one proved (beetle/leaf/Scene 32) applied to the gag the
+    // audience actually asked for more of. A genuine question, so unseasoned;
+    // slowed a touch so it reads as a thought rather than a punchline being
+    // set up.
+    a2_38b_puff: { text: "Are they all called Puff?", ...PUFF, speed: 0.95 },
+    // One word, flat, after a full second of silence. Kokoro. Do not add a
+    // second sentence to this line; the whole joke is that there is not one.
+    a2_38c_narrator: { text: "Yes.", ...NARRATOR, speed: 0.9 },
+    // Deliberately unseasoned: nothing in Scene 21 marks this as anger, and the
     // tone guardrail is that nobody in this show is unkind. It is an
     // interruption, and the words carry it.
     a2_39_sunny: { text: "EXCUSE ME. Who warmed the ground?", ...SUNNY },
     a2_40_puff: { text: "Um. You did.", ...PUFF },
     // Sunny's causal chain — this is the pedagogy and the punchline at once.
-    // Slowed a touch so a six-year-old can follow all three links, and the one
-    // line in the episode whose script.md note asks for separation *inside* the
-    // line ("runs at 0.95 so all three links land separately", Scene 21) — so
-    // the only pause markers in the file are these two. Emotion: the diagram
-    // assembles itself out of his own beams as he lists. This is the brag.
+    // Slowed so a six-year-old can follow all three links: script.md asks for
+    // separation *inside* this line ("runs at 0.95 so all three links land
+    // separately", Scene 21). It briefly carried the episode's only two pause
+    // markers, which were a MiniMax instruction; back on kokoro they are an
+    // error, and 0.95 plus am_puck's own cadence is what separated the links in
+    // episode one. The diagram assembles out of his beams as he lists. The brag.
     a2_41_sunny: {
-      text: "I warm the ground! <#0.3#> The ground warms the air! <#0.3#> The air goes UP!",
+      text: "I warm the ground! The ground warms the air! The air goes UP!",
       ...SUNNY,
       speed: 0.95,
-      emotion: "happy",
     },
+    // C6. Puff's only attitude line in Act Two, and an anticipation gag — the
+    // audience has heard three brags and is ahead of him. Deliberately NOT
+    // seasoned: he is reporting an inevitability, not performing dread.
+    a2_41b_puff: { text: "Oh no. He is going to say it.", ...PUFF },
     // Scene 21: "On the last brag the diagram goes planetary and every wind
     // arrow on Earth lights up at once."
     a2_42_sunny: {
       text: "SO I MAKE ALL THE WIND. EVERYWHERE. ON THE ENTIRE PLANET.",
       ...SUNNY,
-      emotion: "happy",
     },
-    a2_43_sunny: { text: "You're welcome! HA! HA!", ...SUNNY, emotion: "happy" },
+    a2_43_sunny: { text: "You're welcome! HA! HA!", ...SUNNY },
     // The sequel to episode one's "annoyingly, he is completely right".
     // Flattest possible delivery.
     a2_44_narrator: {
@@ -747,6 +836,11 @@ export default {
       ...NARRATOR,
       speed: 0.9,
     },
+    // C7. Two words, and they are the scene's control variable: the sun is
+    // identical over both halves and the surfaces are not, which is the whole
+    // of differential heating. Fifth firing of the interrupt gag. He leans in
+    // over the seam of the split screen, one half of his face in each panel.
+    a3_09b_sunny: { text: "Same me!", ...SUNNY },
     a3_10_narrator: {
       text: "Sand heats up fast. Water takes ages and ages and ages.",
       ...NARRATOR,
@@ -793,7 +887,6 @@ export default {
     a3_19_sunny: {
       text: "I make the beach windy AND I make the waves sparkle! You're welcome!",
       ...SUNNY,
-      emotion: "happy",
     },
     a3_20_narrator: { text: "Him again.", ...NARRATOR, speed: 0.9 },
     a3_21_narrator: {
@@ -802,6 +895,13 @@ export default {
     },
     a3_22_puff: { text: "There is a boat. Should I push the boat?", ...PUFF },
     a3_23_narrator: { text: "Push the boat, Puff.", ...NARRATOR },
+    // C8. The polite version, and a try-fail-succeed built in front of the
+    // clip that already existed. Unseasoned, quiet, and short — this is the
+    // same sentence a3_24 says at full volume, which is the joke. Do NOT
+    // season it; a timid read sells the gag and a played one kills it.
+    a3_23b_puff: { text: "Okay, boat. Push.", ...PUFF },
+    // Two flat words from the Narrator. Kokoro.
+    a3_23c_narrator: { text: "Bigger, Puff.", ...NARRATOR, speed: 0.95 },
     // "auto", and it is the smaller sibling of a3_49. The exertion read that
     // won the audition for the big shout (`angry`) reads as cross when it has
     // "Okay, boat." in front of it — the shove is Scene 27's staging, both arms
@@ -940,6 +1040,22 @@ export default {
       text: "They still can't see me. But look what they CAN see.",
       ...PUFF,
     },
+    // C9 — THE ROCK CALLBACK, new Scene 32b. Same clip, not a re-recording:
+    // `sameAs` shares the Scene 13 file byte for byte, which is the rule for
+    // any repetition gag on a paid remote model (see the beetle, a3_51). Costs
+    // nothing and is guaranteed identical, which is what makes it funny.
+    // The key keeps the `_narrator` suffix: it means "not one of the four
+    // principals", and the staged speaker is a SPEAKER_VISUAL override.
+    a3_55_narrator: { sameAs: "a2_08_narrator" },
+    // The button. a2_10_narrator was "The rock is having the best day of its
+    // life."; this is the same sentence plus one word, five minutes later —
+    // the beetle/leaf rule (identical text, identical speed) applied to the
+    // narrator's own line. Speed matches a2_10's 0.95 exactly.
+    a3_56_narrator: {
+      text: "The rock is still having the best day of its life.",
+      ...NARRATOR,
+      speed: 0.95,
+    },
 
     // ---------------------------------------------------------------
     // RECAP — the chant, the mind-blower, the tease
@@ -960,7 +1076,6 @@ export default {
     rc_03_sunny: {
       text: "WARM AIR RISES! Because I warm the ground! That is also me!",
       ...SUNNY,
-      emotion: "happy",
     },
     rc_04_cloudia: {
       text: "WIND! Air in a hurry! It delivers me door to door, darling!",
@@ -1003,6 +1118,12 @@ export default {
       speed: 0.95,
       emotion: "surprised",
     },
+    // C10. Third firing of Cloudia's catchphrase, out of Puff's mouth, over a
+    // very small version of her grand two-handed presenting gesture. Nobody
+    // comments. Deliberately NOT seasoned — rc_11 carries the `surprised` awe
+    // and this is the flat button after it. If it is played, it is a kid doing
+    // an impression badly; unplayed, it is a kid doing one perfectly.
+    rc_11b_puff: { text: "Door to door, darling.", ...PUFF },
     rc_12_narrator: {
       text: "And the trees grow better because of it. That is the wind, doing a job.",
       ...NARRATOR,
@@ -1010,7 +1131,7 @@ export default {
     rc_13_narrator: { text: "Next time. Why is the sky BLUE?", ...NARRATOR },
     // Scene 36: the running gag's last confident firing, twelve seconds before
     // it breaks.
-    rc_14_sunny: { text: "OH, that one is me as well! HA! HA!", ...SUNNY, emotion: "happy" },
+    rc_14_sunny: { text: "OH, that one is me as well! HA! HA!", ...SUNNY },
     rc_15_narrator: {
       text: "Sunny has a theory. It is wrong.",
       ...NARRATOR,
@@ -1018,8 +1139,9 @@ export default {
     },
     // Scene 36: "Sunny holds his pose while the sentence catches up with him."
     // The whole joke is the delay and then the dawning — the one line in two
-    // episodes where he is not sure of himself.
-    rc_16_sunny: { text: "Wait. What?", ...SUNNY, emotion: "surprised" },
+    // episodes where he is not sure of himself. Kokoro carries no emotion, so
+    // the dawning is entirely the 45f beat in front of it and his face.
+    rc_16_sunny: { text: "Wait. What?", ...SUNNY },
     // Scene 36: the catchphrase's third and last firing, waving from the corner
     // of the episode-three card. The sign-off, and he is at full opacity.
     rc_17_puff: {

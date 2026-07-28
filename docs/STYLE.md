@@ -159,6 +159,20 @@ our theme palette overrides its colors:
   `angry`, which that engine plays as effort and volume, not temper). Single
   letter runs — WHOOSH, FWOOSH — are fine on both. When a line moves engines,
   sweep its sound words before assuming the clip is the same clip.
+- **A recast is a sweep of every per-line field, not just the voice id.** The
+  two engines do not have the same fields, and the failure modes are asymmetric:
+  an `emotion` on a kokoro line is silently ignored (so the seasoning a line was
+  leaning on quietly disappears), while a pause marker on one is a hard error
+  (the generator refuses the file). Before moving a character, list what its
+  lines carry — emotion, pause markers, sound-word spellings, speed — and decide
+  each one. Then ask what the seasoning was *doing*: a line whose beat was being
+  carried by `surprised` needs the beat carried by the staging instead.
+- **Moving a character toward kokoro is free and instant; moving toward minimax
+  costs money and a re-listen.** Keep the engine behind one constant per
+  character so a reversal is a one-line change — the wind episode recast Sunny
+  to MiniMax and moved him back to his episode-one kokoro voice two days later,
+  because the new read made him an authority and the joke is a show-off who
+  happens to be right. A recast can simply be wrong; make it cheap to undo.
 - **The drawn word and the spoken word are allowed to disagree.** A speech
   bubble may keep "PUUUSH!" while the clip says "PUSH!": on screen the extra
   letters are a picture of a long loud noise, which is exactly what a
@@ -206,6 +220,18 @@ our theme palette overrides its colors:
   (swap-basics' `hedge`, caught only by rendering stills across the beat).
   Derive text-block heights from font size × leading × line count rather than
   assuming one line, and re-render a few frames *inside* every animated beat.
+- **A background gag has to be findable in a paused frame, or it is not in the
+  video.** A joke hidden in a crowd of its own kind is the wrong place for it:
+  the wind episode's one cool puff that arrived backwards was, at crowd size
+  and crowd colour, invisible in every still — fifty-two identical blue blobs
+  is exactly where a fifty-third disappears. What made it read: half again the
+  size of the biggest one, fully opaque where they are translucent, a hard ink
+  outline instead of their soft one, and a clear lane to travel in. The show's
+  own outline weight is the signal for "this one is a character, not scenery".
+- **An `easeOut` handing over to a constant velocity stalls.** An easing ends
+  with zero slope, so anything that eases into position and then drifts will
+  visibly stop and restart. If a move has to hand over to a steady rate, solve
+  a quadratic for that rate as its end slope instead of reaching for an easing.
 - **Springs for entrances**, `interpolate` for continuous motion (growth,
   progress, sweeps). Stagger multi-element entrances so each lands on its
   own beat, as `PipelineDiagram` does. Entrances are the cheap half of the
@@ -438,6 +464,25 @@ the previous frame renders differently every time.
     under a flat line is the character selling the joke, and the button itself
     stays unseasoned (`emotion: "auto"`); the laugh is in the silence in front
     of it, not in the read.
+- **"Not enough funny moments" is a measurement, not a taste note.** Before
+  proposing a single joke, tabulate the episode scene by scene: start time,
+  length, every laugh beat, and a grade for each *at the target age* (mark the
+  parent-only ones and exclude them). What comes out is actionable — ep 1 of the
+  kids' series lands a laugh every 22–25s and never goes more than ~45s without
+  one; ep 2 landed one every 50s and had three stretches over 70s. Name the
+  sags by timecode and put every change inside one.
+- **The mechanism act should be the funniest act, and the fix is structural.**
+  The density map will usually say the sag is where the teaching is, and the
+  temptation is to add jokes on top. Don't. Two moves, both of which make the
+  gag *be* the lesson:
+  - **Put the funny characters inside the mechanism scenes and let them deliver
+    the facts.** Ep 1's cloud-hotel manager being FULL is literally
+    condensation; ep 2's sun objecting to "the sun does not warm the air" is
+    the ground-heating fact, said by the character it is about.
+  - **Give the reactor an attitude or three.** A hero whose every line is the
+    audience's line said for them ("Whoa!", "Wait, I am going UP!") is good
+    pedagogy and zero comedy. Two or three lines of *opinion* across an act
+    cost nothing and no new sets.
 - **The roll-call gag is a kids'-series signature — give every episode one.**
   Ep 1's most-quoted joke was Drip greeting a queue of identical raindrops by
   name; the six-year-old's request for ep 2 was literally "more Hi Drop, Hi
@@ -467,6 +512,16 @@ the previous frame renders differently every time.
   narration.
 - Bubbles pop with a spring and grow *out of the tail* (`transformOrigin`), so
   the line looks like it came from the mouth. They never fade in like captions.
+- **A bubble outranks every graphic in the scene.** Word cards, rule stamps and
+  full-width banners all own a z-index; a bubble behind one is unreadable, and a
+  banner parked where a speaker's headroom should be is not a stacking
+  preference, it is the scene not working. If a persistent graphic owns the top
+  of frame for the whole scene, that fixes where every speaker under it can
+  stand and how fast they can move through — solve for it before staging.
+- **Per-line `fontSize` exists for one gag: the same words, twice.** A
+  try-fail-succeed where the character says the identical line small and then
+  huge is the punchline drawn in the medium a pre-reader reads fastest. Use it
+  for that and not for emphasis, and never go below `kidType.min`.
 
 ## Big Word cards
 

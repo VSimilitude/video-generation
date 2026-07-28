@@ -591,11 +591,19 @@ const MindBlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const settle = clamp01((frame - crossFrom - 120) / 90);
   const onLeaf = frame >= leafFrom - 6;
 
-  const emotion = useEmotion(scene, "puff", { rc_11_puff: "amazed" }, "happy");
+  // C10 — nothing is mapped to `rc_11b_puff`, and that is the joke: he keeps
+  // the amazed face `rc_11` landed on and does the impression flat over the top
+  // of it. Held-beat scene now (12f), so the lead comes off as well.
+  const emotion = useEmotion(scene, "puff", { rc_11_puff: "amazed" }, "happy", NO_LEAD);
   // Hoisted out of the JSX: the leaf close-up replaces the whole shot, so an
   // inline `useStage()` would sit inside a ternary and change the hook count on
   // the frame we cut to it.
-  const speaking = useStage(scene).speaking("puff");
+  const stage = useStage(scene);
+  const speaking = stage.speaking("puff");
+  // C10 — Puff does Cloudia: a very small version of the grand two-handed
+  // presenting gesture she makes in Scene 30. `cheer` is the rig's both-arms-up
+  // pose and it is the nearest thing to it. Nobody comments.
+  const presenting = stage.lineKey === "rc_11b_puff";
 
   const puffY = hover("puff", 250, 0.8);
 
@@ -614,15 +622,23 @@ const MindBlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             phase={PHASE.puff}
             emotion={emotion}
             speaking={speaking}
-            look={{ x: 0.5, y: 0.6 }}
+            pose={presenting ? "cheer" : "rest"}
+            look={presenting ? "camera" : { x: 0.5, y: 0.6 }}
             idle={0.9}
             wisps={3}
           />
           <Bubbles
             scene={scene}
             cast={{ puff: { x: 250, y: puffY, scale: 0.8, who: "puff", side: "right" } }}
-            text={{ rc_11_puff: "Sand. Across a whole OCEAN." }}
-            at={{ rc_11_puff: { x: 620, y: 210, tail: "left" } }}
+            text={{
+              rc_11_puff: "Sand. Across a whole OCEAN.",
+              // C10. Cloudia's catchphrase, third firing, out of Puff's mouth.
+              rc_11b_puff: "Door to door, darling.",
+            }}
+            at={{
+              rc_11_puff: { x: 620, y: 210, tail: "left" },
+              rc_11b_puff: { x: 620, y: 210, tail: "left" },
+            }}
           />
         </>
       )}

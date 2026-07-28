@@ -34,7 +34,7 @@ import { RECAP_SCENES } from "./scenes/recap";
 // THE GAPS ARE THE SCRIPT'S, NOT THE BUILDER'S.
 //
 // Episode two writes down every silence in it. script.md's stage directions
-// carry twenty-four held beats with exact frame counts and a reason each, and
+// carry thirty-eight held beats with exact frame counts and a reason each, and
 // they become the `gaps` below verbatim. Its own words: "raising one is a note,
 // lowering one is a change to the joke." Every number in a `gaps` block traces
 // to a `HELD BEAT` line in the screenplay; the comment names it.
@@ -188,7 +188,17 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s14_ground_heats",
-    lines: ["a2_11_narrator", "a2_12_narrator", "a2_13_puff", "a2_14_narrator"],
+    // C1 — Sunny brackets the fact, from inside the diagram. No gaps: the joke
+    // is the interruption landing on the beat, and a silence here would fight
+    // a2_14_narrator's existing button ("Puff does not have feet.").
+    lines: [
+      "a2_11_narrator",
+      "a2_11b_sunny",
+      "a2_12_narrator",
+      "a2_12b_sunny",
+      "a2_13_puff",
+      "a2_14_narrator",
+    ],
     tailFrames: 32,
   },
   {
@@ -215,21 +225,62 @@ const SCRIPT: SceneSpec[] = [
     },
     tailFrames: 30,
   },
-  { id: "s16_rule_warm_air_rises", lines: ["a2_20_narrator", "a2_21_puff", "a2_22_narrator"], tailFrames: 32 },
+  {
+    id: "s16_rule_warm_air_rises",
+    // C2 — Cloudia's one Act Two appearance. The rise carries the frame up into
+    // the cloud band and the Cloud Hotel slides down past a Puff who never
+    // stops climbing; the hotel being FULL is a2_22_narrator's point made as a
+    // picture.
+    lines: [
+      "a2_20_narrator",
+      "a2_21_puff",
+      "a2_21b_cloudia",
+      "a2_21c_puff",
+      "a2_21d_cloudia",
+      "a2_22_narrator",
+    ],
+    // 24f — Cloudia watches him go up past the awning and looks at camera.
+    // Nothing enters this beat: no bell, no clipboard, no emotion change.
+    gaps: { a2_21c_puff: 24 },
+    tailFrames: 32,
+  },
   {
     id: "s17_big_empty",
-    lines: ["a2_23_narrator", "a2_24_narrator", "a2_25_puff", "a2_26_narrator"],
-    // 45f — the gap alone on screen, silent. A six-year-old needs time to see
-    // an emptiness: it has no edges to catch the eye and no motion to follow.
-    gaps: { a2_23_narrator: 45 },
+    // C3 — Puff calls down at the hole; the hole declines to comment.
+    lines: [
+      "a2_23_narrator",
+      "a2_24_narrator",
+      "a2_25_puff",
+      "a2_25b_narrator",
+      "a2_26_narrator",
+    ],
+    gaps: {
+      // 45f — the gap alone on screen, silent. A six-year-old needs time to see
+      // an emptiness: it has no edges to catch the eye and no motion to follow.
+      a2_23_narrator: 45,
+      // 24f — the hole. Nothing happens. The grass leans in around its edge and
+      // does not move. Nothing enters this beat.
+      a2_25_puff: 24,
+    },
     tailFrames: 32,
   },
   {
     id: "s18_fwoosh",
-    lines: ["a2_27_narrator", "a2_28_narrator", "a2_29_puff", "a2_30_narrator"],
-    // 36f — the rush happens under the silence. The first time the audience
-    // sees wind, and it should arrive as a physical event.
-    gaps: { a2_28_narrator: 36 },
+    // C4 — one of them came in backwards.
+    lines: [
+      "a2_27_narrator",
+      "a2_28_narrator",
+      "a2_29_puff",
+      "a2_30_narrator",
+      "a2_30b_narrator",
+    ],
+    gaps: {
+      // 36f — the rush happens under the silence. The first time the audience
+      // sees wind, and it should arrive as a physical event.
+      a2_28_narrator: 36,
+      // 24f — hold on the backwards puff, which does not fix itself.
+      a2_30_narrator: 24,
+    },
     tailFrames: 30,
   },
   {
@@ -241,8 +292,27 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s20_am_i_the_wind",
-    lines: ["a2_35_puff", "a2_36_narrator", "a2_37_puff", "a2_38_narrator"],
-    tailFrames: 32,
+    // C5 — the roll call fires a second time, on a wide shot that is already
+    // hundreds of identical puffs. Two lines, no new staging.
+    lines: [
+      "a2_35_puff",
+      "a2_36_narrator",
+      "a2_37_puff",
+      "a2_38_narrator",
+      "a2_38b_puff",
+      "a2_38c_narrator",
+    ],
+    gaps: {
+      // 30f — Puff looks out across the whole turning circuit. Nothing else
+      // moves in the foreground.
+      a2_38_narrator: 30,
+      // 30f — nothing enters this. No reaction, no bob, no emotion change; the
+      // crowd keeps circulating behind him and he waits.
+      a2_38b_puff: 30,
+    },
+    // Scripted: one flat word needs somewhere to land — same call as
+    // a3_20_narrator ("Him again.").
+    tailFrames: 40,
   },
   {
     id: "s21_sunny_correct",
@@ -250,6 +320,9 @@ const SCRIPT: SceneSpec[] = [
       "a2_39_sunny",
       "a2_40_puff",
       "a2_41_sunny",
+      // C6 — Puff sees the fourth brag coming. No gap: the anticipation only
+      // works if a2_42 lands on top of it.
+      "a2_41b_puff",
       "a2_42_sunny",
       "a2_43_sunny",
       "a2_44_narrator",
@@ -283,11 +356,15 @@ const SCRIPT: SceneSpec[] = [
       "a3_07_narrator",
       "a3_08_puff",
       "a3_09_narrator",
+      // C7 — "Same me!", leaning in over the seam of the split screen.
+      "a3_09b_sunny",
       "a3_10_narrator",
     ],
-    // 24f — both thermometers on screen, nobody talking. The comparison is the
-    // fact; let it be looked at.
-    gaps: { a3_09_narrator: 24 },
+    // 24f — both thermometers on screen, Sunny gone, nobody talking. The
+    // comparison is the fact; let it be looked at. MOVED from a3_09_narrator to
+    // the line C7 inserted after it, so the thermometers still get their
+    // silence.
+    gaps: { a3_09b_sunny: 24 },
     tailFrames: 30,
   },
   {
@@ -306,14 +383,22 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s27_sailboat",
+    // C8 — try-fail-succeed, built in front of the clip that already existed.
+    // `a3_24_puff` is untouched; the polite push and the flat correction go in
+    // ahead of it, and the small bubble is the same words as the big one.
     lines: [
       "a3_21_narrator",
       "a3_22_puff",
       "a3_23_narrator",
+      "a3_23b_puff",
+      "a3_23c_narrator",
       "a3_24_puff",
       "a3_25_narrator",
       "a3_26_puff",
     ],
+    // 30f — the boat travels about an inch and stops. The sail hangs. Nothing
+    // else happens. Nothing enters this beat.
+    gaps: { a3_23b_puff: 30 },
     tailFrames: 30,
   },
   {
@@ -382,6 +467,19 @@ const SCRIPT: SceneSpec[] = [
     },
     tailFrames: 40,
   },
+  {
+    // C9 — the cutaway. Scene 13's exact framing, five minutes later, re-lit
+    // late afternoon: the rock has not moved a muscle. `a3_55_narrator` is not
+    // a re-recording, it is the Scene 13 clip shared through `sameAs`, which is
+    // what makes the repeat identical rather than merely similar.
+    id: "s32b_the_rock_again",
+    lines: ["a3_55_narrator", "a3_56_narrator"],
+    // 45f — the rock does nothing. Same length as Scene 13's beat, same reason:
+    // the length of the silence is the entire mechanism.
+    gaps: { a3_55_narrator: 45 },
+    // Hold on the rock, then cut to the recap.
+    tailFrames: 45,
+  },
 
   // --- RECAP --------------------------------------------------------------
   {
@@ -392,7 +490,18 @@ const SCRIPT: SceneSpec[] = [
   { id: "s34_all_four", lines: ["rc_06_narrator", "rc_07_narrator"], tailFrames: 44 },
   {
     id: "s35_mind_blower",
-    lines: ["rc_08_narrator", "rc_09_narrator", "rc_10_narrator", "rc_11_puff", "rc_12_narrator"],
+    // C10 — Puff does Cloudia. `rc_11_puff` is kept: the awe is the pedagogy,
+    // and this is the flat button after it.
+    lines: [
+      "rc_08_narrator",
+      "rc_09_narrator",
+      "rc_10_narrator",
+      "rc_11_puff",
+      "rc_11b_puff",
+      "rc_12_narrator",
+    ],
+    // 12f — short. Just enough for the awe to finish before the joke starts.
+    gaps: { rc_11_puff: 12 },
     tailFrames: 36,
   },
   {

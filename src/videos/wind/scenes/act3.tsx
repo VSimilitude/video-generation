@@ -6,6 +6,7 @@ import {
   Sunny,
   kidEase,
   kidTheme,
+  kidType,
   mixHex,
   moveAlong,
   settleWave,
@@ -29,6 +30,7 @@ import {
   PHASE,
   PUFF_OPACITY,
   PaintedSky,
+  Rock,
   Thermometer,
   WIDE,
   WideLayer,
@@ -54,6 +56,10 @@ import {
   type TimedScene,
 } from "./common";
 import { HILL_MARKS } from "./coldOpen";
+// Scene 32b is Scene 13's shot, re-lit. The ground and the rock's mark come
+// from act two rather than being redrawn, because "the same picture" is the
+// entire mechanism of the gag.
+import { S13_GROUND, S13_ROCK, SunnyGround } from "./act2";
 
 // ACT THREE — AIR WITH A JOB. Scenes 23–32 of script.md: the beach, the sea
 // breeze, four jobs, and the kite.
@@ -573,6 +579,8 @@ const S24_SEA_HORIZON = 606;
 const S24_BUBBLES: Record<string, string> = {
   a3_06_puff: "Ow! That sand is HOT.",
   a3_08_puff: "The sea is lovely and cool.",
+  // C7. Two words, and they are the scene's control variable.
+  a3_09b_sunny: "Same me!",
 };
 
 const HotSandCoolSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
@@ -580,7 +588,17 @@ const HotSandCoolSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [, sandTo] = lineWindow(scene, "a3_06_puff");
   const [, seaTo] = lineWindow(scene, "a3_08_puff");
   const [splitFrom] = lineWindow(scene, "a3_09_narrator");
-  const [beatFrom, beatTo] = heldBeat(scene, "a3_09_narrator");
+  const [meFrom, meTo] = lineWindow(scene, "a3_09b_sunny");
+  // The 24f beat moved with C7: it now sits after Sunny's line rather than
+  // after the Narrator's, so the thermometers still get their silence.
+  const [beatFrom, beatTo] = heldBeat(scene, "a3_09b_sunny");
+
+  // C7 — the sun that has been straddling the seam all through the split leans
+  // *down* over it to take the credit, and is back to being scenery before the
+  // silence opens. He does not exit: he cannot, because he is the control
+  // variable the whole comparison rests on. What leaves is the character.
+  const lean =
+    clamp01((frame - (meFrom - 16)) / 22) - clamp01((frame - (meTo - 14)) / 14);
 
   // Three phases, cut on the narration: sand, sea, and the two side by side.
   const seaAt = sandTo + 4;
@@ -603,7 +621,8 @@ const HotSandCoolSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     // 24f held beat in this scene.
     NO_LEAD,
   );
-  const speaking = useStage(scene).speaking("puff");
+  const stage = useStage(scene);
+  const speaking = stage.speaking("puff");
   const hop = Math.abs(Math.sin(frame * 0.55)) * (onSand ? 1 : 0);
   const sink = onSea ? Math.sin(frame * 0.1) * 7 : 0;
 
@@ -682,15 +701,19 @@ const HotSandCoolSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           <Thermometer x={430} y={640} level={sandLevel} scale={0.92} label="SAND" />
           <Thermometer x={1490} y={640} level={seaLevel} scale={0.92} label="SEA" />
           {/* One sun over both halves, straddling the seam. It is the same sun;
-              that is the entire point of the comparison. */}
+              that is the entire point of the comparison — and on C7's line he
+              leans down into the frame to say so, one half of his face in each
+              panel, which is the visual argument. */}
           <Sunny
             x={960}
-            y={150}
-            scale={0.44}
+            y={150 + lean * 172}
+            scale={0.44 + lean * 0.22}
             phase={PHASE.sunny}
             emotion="proud"
+            speaking={stage.speaking("sunny")}
             look={{ x: 0, y: 0.5 }}
-            raySpeed={0.12}
+            raySpeed={0.12 + lean * 0.5}
+            zIndex={40}
           />
         </>
       ) : null}
@@ -698,9 +721,23 @@ const HotSandCoolSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       {frame >= seaAt && frame < seaAt + 8 ? <CutFlash at={seaAt} strength={0.35} /> : null}
       {frame >= splitAt && frame < splitAt + 8 ? <CutFlash at={splitAt} strength={0.35} /> : null}
       {/* The 24f beat is two thermometers and no voice. Nothing is scheduled
-          inside [beatFrom, beatTo): the only thing still moving is the sand's
+          inside [beatFrom, beatTo): Sunny's lean is back to zero fourteen
+          frames before it opens, and the only thing still moving is the sand's
           mercury, which is the thing being looked at. */}
-      <Bubbles scene={scene} cast={{ puff: mark }} text={S24_BUBBLES} />
+      <Bubbles
+        scene={scene}
+        cast={{ puff: mark, sunny: { x: 960, y: 150, scale: 0.44, who: "sunny" } }}
+        text={S24_BUBBLES}
+        at={{
+          // Tailless and directly under him — a bubble tail leaves the bottom
+          // edge, so a speaker leaning in from the top of frame cannot be
+          // pointed at by one (same call as `a3_19_sunny` in Scene 26).
+          // Low enough to clear his mouth at full lean — a bubble across the
+          // one thing on screen that is moving in sync with the clip is the
+          // mouth-sync cue lost.
+          a3_09b_sunny: { x: 960, y: 596, tail: "none" },
+        }}
+      />
     </AbsoluteFill>
   );
 };
@@ -1248,6 +1285,10 @@ const BayWorld: React.FC<{ swell: number }> = ({ swell }) => {
 
 const S27_BUBBLES: Record<string, string> = {
   a3_22_puff: "Should I push the boat?",
+  // C8 — deliberately the *same* words as a3_24_puff's, drawn small so the
+  // second one can be drawn huge. That is the whole gag in the medium a
+  // pre-reader reads fastest.
+  a3_23b_puff: "Okay, boat. Push.",
   a3_24_puff: "Okay, boat. PUSH!",
   a3_26_puff: "I am a BOAT ENGINE!",
 };
@@ -1256,10 +1297,21 @@ const SailboatScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const [pushFrom, pushTo] = lineWindow(scene, "a3_24_puff");
+  const [, nudgeTo] = lineWindow(scene, "a3_23b_puff");
   // The whump: the last frames of "PUSH!". Five frames of snap, then the boat
   // is a different boat.
   const snap = pushTo - 5;
   const since = frame - snap;
+
+  // C8 — the polite version, six frames before the end of his own line. One
+  // hand, barely a nudge; the boat travels about an inch and stops, the sail
+  // does not so much as twitch, and the gull on the mast does not wake up.
+  // Everything about it is finished before the 30f held beat opens, which then
+  // holds on a boat that has not gone anywhere.
+  const nudgeAt = nudgeTo - 6;
+  const nudge = clamp01((frame - nudgeAt) / 22);
+  const drift = 26 * kidEase.easeOutCubic(nudge);
+  const nudging = frame >= nudgeAt - 14 && frame < nudgeAt + 16;
 
   // Taut is a spring, not a ramp: the sail overshoots into its own curve and
   // rings out, which is what a sheet of fabric taking a load actually does.
@@ -1268,7 +1320,7 @@ const SailboatScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // to nineteen and the boat read as going over.
   const heel = taut * 8 + (since >= 0 ? settleWave(since / (fps * 0.9), 1.6, 4.4) * 3 : 0);
   const run = since > 0 ? kidEase.easeInQuad(clamp01(since / 150)) : 0;
-  const boatX = BOAT_START + run * 940;
+  const boatX = BOAT_START + drift + run * 940;
 
   // He braces and fills up across his own line, and lets go on the snap.
   const swell =
@@ -1278,8 +1330,11 @@ const SailboatScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const emotion = useEmotion(
     scene,
     "puff",
+    // Nothing on `a3_23b_puff`: he is not performing timid, he just does a very
+    // small push. Held-beat scene now, so the lead comes off as well.
     { a3_22_puff: "happy", a3_24_puff: "excited", a3_26_puff: "proud" },
     "happy",
+    NO_LEAD,
   );
 
   // Puff follows the boat once it goes, a little behind and below the sail —
@@ -1298,7 +1353,18 @@ const SailboatScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         {/* The bay is glassy until the wind arrives: a mirror under the boat,
             and nothing else on the water at all. */}
         <GlassyBay y={BAY_Y} x={boatX} calm={1 - taut} />
-        <Boat x={boatX} y={BAY_Y - 96} scale={1} taut={taut} heel={heel} speed={run} />
+        <Boat
+          x={boatX}
+          y={BAY_Y - 96}
+          scale={1}
+          taut={taut}
+          heel={heel}
+          speed={run}
+          // The gull sleeps through the polite push and is put up by the snap.
+          // It is the scene's cheapest possible readout of "that did nothing"
+          // followed by "that did something".
+          wake={taut}
+        />
       </Camera>
       {/* The push itself, drawn because he cannot be: a blast leaving him and
           arriving in the sail on the frame it fills. */}
@@ -1311,6 +1377,17 @@ const SailboatScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           count={3}
         />
       ) : null}
+      {/* C8's polite push, at a tenth the size of the real one. Same shape,
+          same place, and it is over before the beat opens. */}
+      {nudging ? (
+        <AirArcs
+          x={puffX + 110}
+          y={690}
+          scale={0.38}
+          strength={Math.sin(clamp01((frame - (nudgeAt - 14)) / 30) * Math.PI) * 0.55}
+          count={2}
+        />
+      ) : null}
       <Puff
         x={puffX}
         y={puffY}
@@ -1320,12 +1397,38 @@ const SailboatScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         emotion={emotion}
         speaking={useStage(scene).speaking("puff")}
         swell={clamp01(swell)}
-        pose={swell > 0.45 ? "brace" : run > 0.02 ? "cheer" : "rest"}
+        pose={
+          swell > 0.45
+            ? "brace"
+            : run > 0.02
+              ? "cheer"
+              : // One hand out. `point` is the rig's single-arm reach, which is
+                // as close to "the most polite little push imaginable" as a
+                // character with one arm path gets.
+                nudging
+                ? "point"
+                : "rest"
+        }
         look={{ x: 0.85, y: -0.1 }}
         idle={swell > 0.45 ? 0.3 : 1}
-        wisps={run > 0.02 ? 4 : 2}
+        wisps={run > 0.02 ? 4 : nudging ? 3 : 2}
       />
-      <Bubbles scene={scene} cast={{ puff: mark }} text={S27_BUBBLES} />
+      <Bubbles
+        scene={scene}
+        cast={{ puff: mark }}
+        text={S27_BUBBLES}
+        at={{
+          // Small. `kidType.min` is the floor and this sits on it — the second
+          // firing of the same three words is drawn at more than double.
+          //
+          // Both are pushed left off their default mark so they clear the
+          // masthead: the sleeping gull is the readout for "that did nothing",
+          // and the sail snapping taut is the readout for "that did something".
+          // A bubble parked over either one costs the gag it belongs to.
+          a3_23b_puff: { x: 470, y: 400, tail: "left", tailAt: 450, fontSize: kidType.min },
+          a3_24_puff: { x: 470, y: 300, tail: "left", tailAt: 450, fontSize: 92 },
+        }}
+      />
     </AbsoluteFill>
   );
 };
@@ -1367,7 +1470,9 @@ const Boat: React.FC<{
   taut: number;
   heel: number;
   speed: number;
-}> = ({ x, y, scale = 1, taut, heel, speed }) => {
+  /** 0 = the gull on the masthead is asleep, 1 = it has been put up. */
+  wake?: number;
+}> = ({ x, y, scale = 1, taut, heel, speed, wake = 0 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -1391,6 +1496,30 @@ const Boat: React.FC<{
       }}
     >
       <svg width={760} height={760} viewBox="-300 -420 760 760" overflow="visible">
+        {/* The gull on the masthead. Asleep — eyes drawn shut, not blinked —
+            and it stays asleep through C8's polite push, which is what makes
+            that push read as having done nothing at all. The snap puts it up. */}
+        <g
+          transform={`translate(${-6 + wake * 150} ${-376 - wake * 210}) rotate(${wake * -18})`}
+          opacity={1 - Math.max(0, wake * 1.4 - 0.4)}
+        >
+          <ellipse rx={30} ry={20} fill={kidTheme.paper} stroke={kidTheme.ink} strokeWidth={6} />
+          <circle cx={20} cy={-10} r={13} fill={kidTheme.paper} stroke={kidTheme.ink} strokeWidth={6} />
+          <path d="M 31 -10 l 16 4 l -16 5 Z" fill={kidTheme.sunDark} stroke={kidTheme.ink} strokeWidth={3} />
+          {/* Shut, or flapping. */}
+          {wake < 0.15 ? (
+            <path d="M 15 -12 q 6 4 11 0" stroke={kidTheme.ink} strokeWidth={3.5} fill="none" strokeLinecap="round" />
+          ) : (
+            <circle cx={20} cy={-12} r={3.4} fill={kidTheme.ink} />
+          )}
+          <path
+            d={`M -10 -6 q -18 ${-14 - wake * 34} -34 ${-2 - wake * 30}`}
+            stroke={kidTheme.ink}
+            strokeWidth={6}
+            fill="none"
+            strokeLinecap="round"
+          />
+        </g>
         {/* Mast and boom. */}
         <path d="M 0 -344 L 0 -4" stroke={kidTheme.ink} strokeWidth={13} strokeLinecap="round" />
         <path d={`M -18 -8 L ${clewX + 16} ${-8 + sag * 0.2}`} stroke={kidTheme.ink} strokeWidth={11} strokeLinecap="round" />
@@ -2700,6 +2829,109 @@ const ForegroundTuft: React.FC<{ x: number }> = ({ x }) => {
 };
 
 // ---------------------------------------------------------------------------
+// Scene 32b — Meanwhile (C9)
+// ---------------------------------------------------------------------------
+//
+// A hard cut away from the kite hill to the *first* hill, eight minutes later,
+// to check on a character who has done absolutely nothing in the interval. It
+// is the purest deadpan-stillness gag the show has, and it fills the episode's
+// longest gagless stretch at exactly the point episode one puts a laugh.
+//
+// Everything that makes it work is a reuse rather than a redraw: `SunnyGround`
+// and the rock's mark come straight from Scene 13 in act2.tsx, `Rock` is the
+// kit's, and the camera sits at the same push Scene 13 ended on. What is new is
+// only the light — long, gold, raking from frame left — and the fact that the
+// heat shimmer is gone, because the day is nearly over.
+//
+// `a3_55_narrator` is not a re-recording of `a2_08_narrator`. It is that clip,
+// shared through the generator's `sameAs`, which is what makes the repeat
+// identical rather than merely similar. Do not "improve" the line.
+
+const S32B_VISUAL: SpeakerVisual = { a3_55_narrator: "rock" };
+
+const TheRockAgainScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const t = frame / fps;
+  const stage = useStage(scene, S32B_VISUAL);
+  const [beatFrom] = heldBeat(scene, "a3_55_narrator");
+
+  // Scene 13's final framing, held: that shot pushed in to 1.3 and stopped, so
+  // this one opens there and does not move at all. A push here would be a thing
+  // happening, and the whole gag is that nothing is.
+  const cam: Cam = { x: S13_ROCK.x, y: S13_ROCK.y, zoom: 1.3 };
+
+  return (
+    <AbsoluteFill>
+      <PaintedSky bg="sky_gold" phase={5.2} drift={4} />
+      <Camera cam={cam}>
+        {/* `warm` at 1: the ground had all day. */}
+        <SunnyGround ground={S13_GROUND} warm={1} />
+        {/* The long shadow. It is the only thing in the frame that says how
+            late it is, and it does not move either. */}
+        <WideLayer>
+          <ellipse
+            cx={S13_ROCK.x - 300}
+            cy={S13_GROUND + 40}
+            rx={470}
+            ry={64}
+            fill="#4a3a24"
+            opacity={0.3}
+          />
+        </WideLayer>
+        <Rock
+          x={S13_ROCK.x}
+          y={S13_ROCK.y}
+          scale={S13_ROCK.scale}
+          speaking={stage.speaking("rock")}
+          phase={PHASE.rock}
+        />
+      </Camera>
+      {/* Late afternoon, raking in from frame left. Warm, low and flat — the
+          opposite of Scene 13's overhead gold ropes, which is the only thing
+          that has changed about this shot in eight minutes. */}
+      <AbsoluteFill
+        style={{
+          background:
+            "linear-gradient(100deg, rgba(255,196,104,0.42) 0%, rgba(255,214,150,0.16) 44%, rgba(120,86,48,0.18) 100%)",
+          pointerEvents: "none",
+        }}
+      />
+      {/* One moth, crossing. It is out of frame long before the held beat: the
+          silence after the rock's line has nothing in it whatsoever, same rule
+          and same reason as Scene 13. */}
+      <Moth from={22} until={Math.min(beatFrom - 20, 118)} t={t} />
+      {/* The cut in from the kite hill. */}
+      <CutFlash at={0} strength={0.35} />
+      {/* No bubble, for either line. The rock had none in Scene 13 — its bubble
+          would still be shrinking six frames into the silence — and the
+          Narrator has never had one in two episodes. */}
+    </AbsoluteFill>
+  );
+};
+
+/** One moth, drifting across a still frame. The only motion in the scene. */
+const Moth: React.FC<{ from: number; until: number; t: number }> = ({ from, until, t }) => {
+  const frame = useCurrentFrame();
+  const u = (frame - from) / Math.max(1, until - from);
+  if (u < 0 || u > 1) return null;
+  const p = moveAlong({ x: -140, y: 430 }, { x: 2060, y: 300 }, u, {
+    arc: 0.1,
+    ease: kidEase.easeInOutSine,
+  });
+  const flap = Math.abs(Math.sin(t * 11));
+  return (
+    <WideLayer zIndex={26}>
+      <g transform={`translate(${p.x} ${p.y + Math.sin(t * 2.6) * 14})`} opacity={0.75}>
+        <ellipse rx={16} ry={5} fill="#e8dcc0" stroke={kidTheme.ink} strokeWidth={3} />
+        <ellipse cx={-4} cy={-8} rx={13 * (0.35 + 0.65 * flap)} ry={16} fill="#f2ead6" stroke={kidTheme.ink} strokeWidth={3} />
+        <ellipse cx={6} cy={-8} rx={13 * (0.35 + 0.65 * (1 - flap))} ry={16} fill="#f2ead6" stroke={kidTheme.ink} strokeWidth={3} />
+      </g>
+    </WideLayer>
+  );
+};
+
+// ---------------------------------------------------------------------------
 
 export const ACT3_SCENES: Record<string, React.FC<{ scene: TimedScene }>> = {
   s23_beach: BeachScene,
@@ -2712,6 +2944,7 @@ export const ACT3_SCENES: Record<string, React.FC<{ scene: TimedScene }>> = {
   s30_door_to_door: DoorToDoorScene,
   s31_the_hill: TheHillScene,
   s32_what_they_can_see: WhatTheyCanSeeScene,
+  s32b_the_rock_again: TheRockAgainScene,
 };
 
 // Shared with recap.tsx: Scene 33's sea-breeze panel is this act's beach, and

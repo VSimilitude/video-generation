@@ -191,7 +191,7 @@ export function turnsOf(
 }
 
 // `lineKeyOf`, `turnFor`, `lineWindow`, `heldBeat` (the silence a `gapFrames`
-// bought, which is how this episode's twenty-two held beats are staged without
+// bought, which is how this episode's thirty-eight held beats are staged without
 // hard-coding a length) and `lineProgress` are the kit's
 // (`src/lib/kid/lines.ts`); they are re-exported at the foot of this file.
 
@@ -319,7 +319,7 @@ export function useLineKey(scene: TimedScene): string | null {
  * **`lead` is 0 on every held-beat scene in this episode.** script.md makes
  * that a rule rather than a note: the default eight-frame lead lands a reaction
  * inside the silence the joke is being held for, which spends the beat early.
- * Scenes 4, 5, 21 and 36 say so explicitly; treat it as true of all twenty-two
+ * Scenes 4, 5, 21 and 36 say so explicitly; treat it as true of all thirty-eight
  * held beats.
  *
  * Never map a line to `scared`: the rig's wobble-mouth hard-cuts to a talking
@@ -393,6 +393,13 @@ export function useLookAtSpeaker(
  * `x` moved the bubble away from its speaker: the default tail sits at a fixed
  * inset from the bubble's corner, and a tail pointing at nobody reads as
  * narration rather than as somebody talking.
+ *
+ * `fontSize` in that override sizes **one** bubble against the scene's others.
+ * It exists for exactly one thing and should not be used for anything else: a
+ * try-fail-succeed where the same words are said twice (Scene 27's two "Okay,
+ * boat. Push."), where drawing the first small and the second huge *is* the
+ * joke in the medium a pre-reader reads fastest. `kidType.min` (44) is still
+ * the floor — a bubble below it is unreadable at phone size, small joke or not.
  */
 export const Bubbles: React.FC<{
   scene: TimedScene;
@@ -409,11 +416,20 @@ export const Bubbles: React.FC<{
       tailAt?: number;
       side?: "left" | "right";
       offset?: number;
+      /** This bubble's own type size. Never below `kidType.min`. */
+      fontSize?: number;
     }
   >;
   fontSize?: number;
   maxWidth?: number;
-}> = ({ scene, cast, text, visual, at, fontSize, maxWidth }) => (
+  /**
+   * Stacking for every bubble in the scene. The default (40, `SpeechBubble`'s
+   * own) sits above the world and below the characters' own high z-indexes,
+   * which is right everywhere except a scene carrying a full-width graphic —
+   * Scene 16's rule stamp is at 50 and a bubble behind it is unreadable.
+   */
+  zIndex?: number;
+}> = ({ scene, cast, text, visual, at, fontSize, maxWidth, zIndex }) => (
   <>
     {(scene.turns ?? []).map((turn, i) => {
       const key = lineKeyOf(turn);
@@ -441,8 +457,9 @@ export const Bubbles: React.FC<{
           tailAt={override?.tailAt}
           from={turn.from}
           until={turn.from + turn.durationInFrames}
-          fontSize={fontSize}
+          fontSize={override?.fontSize ?? fontSize}
           maxWidth={maxWidth}
+          zIndex={zIndex}
         />
       );
     })}

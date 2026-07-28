@@ -488,7 +488,8 @@ _Build-side notes (2026-07-26); watch-side retro pending._
   beats (exact frame counts + reasons) and 40 per-line speed overrides
   already specified — zero pacing retrofits needed. The rule from ep 1's
   audience test transferred cleanly. (24 and 42 after the roll call went in;
-  the *format* absorbed the addition without argument, which is the point.)
+  38 and 48 after the 2026-07-28 punch-up — the *format* absorbed both
+  additions without argument, which is the point.)
 - **The hook-order gate worked in anger, twice**: lint:hooks caught two
   React #300 patterns in act3 while it was being written (one flagged
   across agents mid-flight), and the every-frame render confirmed clean.
@@ -519,11 +520,14 @@ three" below.
 **Watch-fors on review**: Puff is now cast (MiniMax `Exuberant_Girl`, see
 below) and the whole cast is off placeholders, but nobody has watched the
 episode end to end with his voice in it; the recast character lines all want an
-ear, particularly
-Cloudia's `angry` demand and Sunny's `surprised` "Wait. What?"; spelled
+ear, particularly Cloudia's `angry` demand; spelled
 "A. I. R." / "W. I. N. D." clips need an ear; scene 30 is prop-crowded;
 scene 35 map has place-name text (cut for pre-readers?); the 75f kite payoff
-and the rock's stillness are timing bets pending playback.
+and the rock's stillness are timing bets pending playback. Since the punch-up
+(2026-07-28), add: **all thirteen Sunny lines**, which are new recordings on the
+restored kokoro `am_puck`, and the sixteen new punch-up lines — the four
+deadpans among them (`a2_21d_cloudia`, `a2_38c_narrator`, `a3_23b_puff`,
+`rc_11b_puff`) are the ones that fail by being *sold*.
 
 ### The six-year-old's two notes (2026-07-27)
 
@@ -586,11 +590,112 @@ Two things made it cheap to add, and both are reusable:
   picture two scenes before it is made as a sentence. The best gags in this
   series are the ones that are also the lesson.
 
-Cost: 12.6s of runtime (ep 2 is 11:40 now, over the 10–11 min target — the
-roll call is worth it, but that is a real trade). The rising shot needed a new
+Cost: 12.6s of runtime (11:40 at the time, over the 10–11 min target — the
+roll call is worth it, but that is a real trade; the punch-up below took it to
+12:20 and fired the gag a second time). The rising shot needed a new
 high-cloud parallax band to have anything left to climb past; **a shot that
 gets longer needs its world checked, not just its timing** — the parallax
-layers had all scrolled off the bottom by the old scene's end.
+layers had all scrolled off the bottom by the old scene's end. That warning
+paid off again immediately: Scene 16 nearly doubled in the punch-up and had to
+be re-checked for the same failure.
+
+### The comedy punch-up, and a recast reversed (2026-07-28)
+
+The six-year-old's third note on ep 2 was *"it didn't have enough funny
+moments"*, and engagement sagged. That is not a note you can act on directly,
+so the first half of the work was turning it into a measurement.
+
+**The density map is the reusable part.** Before proposing a single joke, the
+episode was tabulated scene by scene — start time, length, every laugh beat in
+it, and a grade for each (*for the six-year-old*, with parent-only smirks
+marked `(adult)` and excluded). Three numbers fell straight out and they made
+the note actionable:
+
+- Ep 1 lands a laugh roughly **every 22–25s** and never goes more than ~45s
+  without one. Ep 2 landed one roughly **every 50s** and had three stretches
+  over 70s. The complaint was not a taste difference; it was a measurable
+  halving of gag density in a longer episode.
+- The three sags were nameable and locatable: 4:28→5:40, 7:35→8:45 and
+  8:53→10:48. Every change went into one of them.
+- The diagnosis the map produced was sharper than "act two needs jokes":
+  **ep 1's mechanism act is its funniest act** (Cloudia's hotel-management
+  stress *is* condensation), and **ep 2's is its least funny** — its two
+  comedians are offstage for the whole of it and the Narrator explains a
+  crayon diagram to an earnest Puff. Puff is a *reactor*: his Act Two lines
+  are all the audience's line said for them, which is good pedagogy and zero
+  comedy.
+
+**So the fix was structural, not additive.** Both moves are general:
+
+1. **Put the funny characters back inside the mechanism scenes and let them
+   deliver the facts.** Sunny now brackets the ground-heating fact (it is a
+   fact *about him*, and the crayon sun in the diagram grows a face and objects
+   to it); Cloudia gets one Act Two scene where her hotel is FULL *because*
+   warm air rises; Sunny takes the "same sun" control variable in the sea-
+   breeze comparison with two words. Every one of those is the lesson said by
+   the funny character instead of by the Narrator.
+2. **Give the reactor two or three attitudes instead of only wonder.** Puff now
+   apologises to a hole, predicts Sunny's fourth brag before it lands, tries a
+   polite little push before the big one, and does Cloudia's catchphrase in her
+   voice. Four attitudes, no new sets.
+
+Ten changes went in (+41s; **11:39 → 12:20**). The estimate was +51s; the
+difference is the Sunny revert below, which shortened thirteen existing lines.
+
+**A recast can be wrong, and reverting one is cheap in exactly one direction.**
+Sunny went to MiniMax `Imposing_Manner` with the rest of the cast and went back
+to Kokoro `am_puck` — ep 1's voice — here. Imposing made him an *authority*;
+the joke is a delighted show-off who happens to be right. Three things about
+the move are worth writing down because they are the shape of every future
+one:
+
+- **Moving toward Kokoro is free and instant** (thirteen clips, no API calls),
+  where moving toward MiniMax costs money and a re-listen. Keep the engine
+  behind a single constant per character, as `PUFF_ENGINE` already was.
+- **The two engines do not have the same fields, and the generator enforces
+  it.** `emotion` is silently ignored on a Kokoro line, but an inline pause
+  marker is a hard error — Kokoro would read the punctuation aloud. Sunny's
+  `a2_41` carried the episode's only two markers; they came out and the line
+  went back to the 0.95 that separated its three links in ep 1. **A recast is a
+  sweep of every per-line field, not just the voice id** — same lesson as the
+  sound-word spellings, one field further along.
+- **Re-check what the seasoning was carrying.** `rc_16_sunny` ("Wait. What?")
+  was leaning on `emotion: "surprised"`. On Kokoro the dawning is entirely the
+  45f beat in front of it and his face, which is where it should have been.
+
+**Four staging lessons, all of them found by looking at stills:**
+
+- **A full-width graphic owns the frame for as long as it is up.** The WARM AIR
+  RISES stamp stays on screen by script, which meant Cloudia's whole drive-by
+  had to fit *under* it — 490px of usable band, for 279 frames of dialogue,
+  which fixed her drift at ~1.5px/frame and put her bubbles beside her rather
+  than above her. First pass had the banner across her face and across both her
+  bubbles. **Speech bubbles must outrank every graphic in the scene**; `Bubbles`
+  grew a `zIndex` for it.
+- **Hiding a joke in a crowd is a real risk.** The backwards cool puff was
+  invisible in a still at crowd size and crowd colour — fifty-two identical
+  blue blobs is exactly the wrong place to put a fifty-third. It reads now at
+  1.5× the biggest one, fully opaque, with a hard ink outline instead of a soft
+  blue one, travelling in a clear lane above the stream. **A background gag has
+  to be findable in a paused frame or it is not in the episode.**
+- **`sameAs` is a staging tool, not just a cost saving.** The new Scene 32b
+  cuts away to the rock eight minutes later and re-fires `a2_08_narrator` — the
+  same recording, byte for byte — over Scene 13's own components (`SunnyGround`
+  and the rock's mark are imported from act two rather than redrawn), re-lit
+  late afternoon with the heat shimmer gone. The gag *is* that nothing has
+  changed, so nothing may be allowed to change by accident.
+- **Type size can be the punchline.** The sailboat's try-fail-succeed says the
+  same three words twice; the first bubble is drawn at `kidType.min` and the
+  second at 92. That is the joke in the medium a pre-reader reads fastest, and
+  it needed one new per-line `fontSize` override in `Bubbles`. Both bubbles had
+  to be pushed off their default mark to clear the masthead — the sleeping gull
+  is the readout for "that did nothing" and the sail snapping taut is the
+  readout for "that did something", and a bubble over either costs its gag.
+
+**Cost:** 26 clips synthesized — thirteen Sunny lines and five new Narrator
+lines free on Kokoro, eight on MiniMax for 235 characters, about **$0.03**
+total. The rock's callback (`a3_55_narrator`) cost nothing at all: it is an
+alias, not a recording.
 
 ### The consolidation before episode three (2026-07-27)
 

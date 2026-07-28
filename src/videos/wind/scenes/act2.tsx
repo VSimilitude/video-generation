@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Cloudia,
   Face,
   Puff,
   Sunny,
@@ -8,6 +9,7 @@ import {
   kidTheme,
   kidType,
   lookAt,
+  mixHex,
   moveAlong,
   settleWave,
   useRig,
@@ -467,8 +469,13 @@ const SunFlares: React.FC<{ at: number; from: { x: number; y: number }; live: bo
 // Scene 13 — A rock, having a lovely time
 // ---------------------------------------------------------------------------
 
-const S13_GROUND = 800;
-const S13_ROCK = { x: 1150, y: 700, scale: 1 };
+/**
+ * Scene 13's geography — and Scene 32b's, which is the same shot in the late
+ * afternoon. Exported so the two framings cannot drift: C9's cutaway only works
+ * if a six-year-old recognises the picture instantly.
+ */
+export const S13_GROUND = 800;
+export const S13_ROCK = { x: 1150, y: 700, scale: 1 };
 const S13_PUFF_X = 640;
 const S13_PUFF_SCALE = 0.62;
 
@@ -580,8 +587,15 @@ const SunBeams: React.FC<{ strength: number }> = ({ strength }) => {
   );
 };
 
-/** The ground at animal scale: soil, a warm dirt patch, tufts along the top. */
-const SunnyGround: React.FC<{ ground: number; warm: number }> = ({ ground, warm }) => {
+/**
+ * The ground at animal scale: soil, a warm dirt patch, tufts along the top.
+ *
+ * Exported because Scene 32b is Scene 13's shot five minutes later, and the
+ * whole joke is that it is *the same picture* — same ground, same rock, same
+ * camera, different light. A redraw would only have to be a few pixels out to
+ * spend that, exactly as the cold open's hill would.
+ */
+export const SunnyGround: React.FC<{ ground: number; warm: number }> = ({ ground, warm }) => {
   const w = Math.max(0, Math.min(1, warm));
   return (
     <WideLayer>
@@ -662,6 +676,10 @@ const S14_PUFF = { x: 1656, y: 636, scale: 0.72 };
 
 const S14_BUBBLES: Record<string, string> = {
   a2_13_puff: "Ooh. That is toasty.",
+  // C1. Sunny speaks from inside the diagram, and the diagram is a drawing, so
+  // these are the crayon sun's lines rather than the character's.
+  a2_11b_sunny: "I warm EVERYTHING!",
+  a2_12b_sunny: "Through the GROUND!",
 };
 
 const GroundHeatsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
@@ -671,6 +689,23 @@ const GroundHeatsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [downFrom] = lineWindow(scene, "a2_11_narrator");
   const [warmFrom, warmTo] = lineWindow(scene, "a2_12_narrator");
   const [toastyFrom] = lineWindow(scene, "a2_13_puff");
+  // C1 — the crayon sun turns and objects. It wakes six frames before its own
+  // first line and stays awake for the rest of the scene: a face that appeared
+  // and vanished would read as a rendering fault (2026-07-26 volcano note).
+  const [objectFrom] = lineWindow(scene, "a2_11b_sunny");
+  const awake = kidEase.easeOutBack(
+    Math.max(0, Math.min(1, (frame - objectFrom + 6) / 16)),
+    1.4,
+  );
+  // Wrong for one line, right about it forever after — which is the joke and
+  // also the pedagogy. No `NO_LEAD` here: Scene 14 has no held beat, so the
+  // default lead is doing its usual job of letting the face arrive first.
+  const sunEmotion = useEmotion(
+    scene,
+    "sunny",
+    { a2_11b_sunny: "grumpy", a2_12b_sunny: "proud" },
+    "grumpy",
+  );
 
   // "The sun does not warm the air very much" — the arrows draw down and
   // through, and nothing about the air layer changes.
@@ -808,7 +843,14 @@ const GroundHeatsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <DiagramTag x={168} y={(S14_AIR_TOP + S14_AIR_BOTTOM) / 2} text="AIR" from={16} />
       <DiagramTag x={210} y={S14_GROUND_TOP + 168} text="GROUND" from={warmFrom} />
-      <CrayonSun x={S14_SUN.x} y={S14_SUN.y} tick={tick} />
+      <CrayonSun
+        x={S14_SUN.x}
+        y={S14_SUN.y}
+        tick={tick}
+        awake={awake}
+        speaking={stage.speaking("sunny")}
+        emotion={sunEmotion}
+      />
 
       <Puff
         x={S14_PUFF.x}
@@ -837,46 +879,95 @@ const GroundHeatsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         cast={{
           puff: { x: S14_PUFF.x, y: puffY, scale: S14_PUFF.scale, who: "puff", side: "left", offset: 330 },
+          sunny: { x: S14_SUN.x, y: S14_SUN.y, who: "sunny" },
         }}
         text={S14_BUBBLES}
+        at={{
+          // Tailless, and directly under the crayon sun — the same call (and
+          // the same reason) as `a3_19_sunny` in Scene 26. A bubble tail leaves
+          // the bottom edge, so a speaker this near the top of frame cannot be
+          // pointed at by one; proximity and the moving crayon mouth do the
+          // pointing instead. Both of his lines sit on the same mark, so the
+          // second reads as the same speaker carrying on.
+          a2_11b_sunny: { x: 640, y: 468, tail: "none" },
+          a2_12b_sunny: { x: 640, y: 468, tail: "none" },
+        }}
       />
     </AbsoluteFill>
   );
 };
 
-/** The sun as a child would draw it in the corner of a diagram. */
-const CrayonSun: React.FC<{ x: number; y: number; tick: number }> = ({ x, y, tick }) => (
-  <svg
-    width={520}
-    height={520}
-    viewBox="-260 -260 520 520"
-    style={{ position: "absolute", left: x - 260, top: y - 260 }}
-    overflow="visible"
-  >
-    {Array.from({ length: 10 }, (_, i) => {
-      const a = (i / 10) * Math.PI * 2;
-      return (
-        <path
-          key={i}
-          d={crayonLine(
-            Math.cos(a) * 106,
-            Math.sin(a) * 106,
-            Math.cos(a) * 168,
-            Math.sin(a) * 168,
-            4,
-            i + 2,
-            tick,
-          )}
-          stroke={kidTheme.sunDark}
-          strokeWidth={15}
-          strokeLinecap="round"
-          fill="none"
-        />
-      );
-    })}
-    <circle cx={0} cy={0} r={96} fill={kidTheme.sun} stroke={kidTheme.sunDeep} strokeWidth={9} />
-  </svg>
-);
+/**
+ * The sun as a child would draw it in the corner of a diagram — and, from C1,
+ * the sun as a character who can hear what is being said about him.
+ *
+ * `awake` 0 is the plain diagram sun this scene opened with. As it goes to 1 the
+ * ring of crayon rays turns to face camera and a face appears **drawn on the
+ * disc in the same crayon**: it never becomes the real `Sunny`, because the joke
+ * is that a diagram is objecting to its own caption. Once it is awake it stays
+ * awake — a face that vanished mid-shot would read as a bug.
+ */
+const CrayonSun: React.FC<{
+  x: number;
+  y: number;
+  tick: number;
+  awake?: number;
+  speaking?: boolean;
+  emotion?: EmotionInput;
+}> = ({ x, y, tick, awake = 0, speaking = false, emotion = "proud" }) => {
+  const rig = useRig({
+    x,
+    y,
+    emotion,
+    speaking,
+    phase: PHASE.sunny,
+    // He is a drawing: almost no breath, and eyes that hold rather than wander.
+    idle: 0.25,
+    eyeLife: 0.35,
+    look: { x: 0.25, y: 0.3 },
+  });
+  return (
+    <svg
+      width={520}
+      height={520}
+      viewBox="-260 -260 520 520"
+      style={{ position: "absolute", left: x - 260, top: y - 260 }}
+      overflow="visible"
+    >
+      {/* The rays turn with him — eighteen degrees is enough to read as "the
+          drawing rotated" without the ring looking like a fan. */}
+      <g transform={`rotate(${awake * 18})`}>
+        {Array.from({ length: 10 }, (_, i) => {
+          const a = (i / 10) * Math.PI * 2;
+          return (
+            <path
+              key={i}
+              d={crayonLine(
+                Math.cos(a) * 106,
+                Math.sin(a) * 106,
+                Math.cos(a) * (168 + awake * 12),
+                Math.sin(a) * (168 + awake * 12),
+                4,
+                i + 2,
+                tick,
+              )}
+              stroke={kidTheme.sunDark}
+              strokeWidth={15}
+              strokeLinecap="round"
+              fill="none"
+            />
+          );
+        })}
+      </g>
+      <circle cx={0} cy={0} r={96} fill={kidTheme.sun} stroke={kidTheme.sunDeep} strokeWidth={9} />
+      {awake > 0.01 ? (
+        <g opacity={Math.min(1, awake)} transform={`scale(${Math.min(1, awake)})`}>
+          <Face rig={rig} x={0} y={6} size={0.92} skin={kidTheme.sun} blushStrength={0.9} />
+        </g>
+      ) : null}
+    </svg>
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Scenes 15 and 16 — the rising shot
@@ -1290,12 +1381,77 @@ const UpScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
 const S16_BUBBLES: Record<string, string> = {
   a2_21_puff: "And I am the warm air!",
+  // C2. Three words each, and the third is the whole joke.
+  a2_21b_cloudia: "No vacancies, darling!",
+  a2_21c_puff: "I am going PAST!",
+  a2_21d_cloudia: "They all say that.",
 };
+
+// --- C2: the Cloud Hotel drive-by -----------------------------------------
+//
+// Cloudia's one Act Two appearance, and the missing first step of episode one:
+// this is *how Drip got to the hotel*. She is full because all the warm air
+// went up, which is `a2_22_narrator`'s line made as a picture.
+//
+// The hotel is a parallax layer, not a character entrance: it descends past a
+// Puff who never stops climbing, at 0.42 of his own rise rate — nearer than the
+// wisp band (0.30) and further off than he is, which is what makes him read as
+// going *past* it rather than as stopping at it. Everything about her is hung
+// off `hotelYAt`, so the awning, the bell, the sign, the windows and her body
+// cannot drift apart.
+// The rule stamp owns the top third of this frame and, per the script, stays
+// there for the whole scene. That fixes the hotel's whole descent, and it is
+// worth writing down because it is not free choice:
+//
+//   - Her *usable band* is everything under the banner, from about y 500 (a
+//     bubble above her has to clear it) to about y 990 (any lower and her face
+//     is off the bottom). That is 490px.
+//   - She has to stay in it for 279 frames — her line, Puff's, the 24f held
+//     beat and her button — which caps the drift at about 1.5 px/frame.
+//
+// So the pass is in two parts. Before she speaks the hotel comes down out of
+// frame quickly and *decelerates* into the band, which is what an object being
+// caught up with looks like; from her first line it drifts at the slow rate,
+// and Puff — who is riding the arrow between y 510 and 760 — is level with her
+// on her first line and well above her by her last. He goes past her.
+const HOTEL_X = 430;
+/** Her drift, in screen px per frame, once she is in the band. */
+const HOTEL_DRIFT = 1.54;
+/** Where she sits on the first frame of her own line. */
+const HOTEL_SPEAKS_AT_Y = 560;
+
+/** Where the hotel starts, clear of the top of frame. */
+const HOTEL_ENTER_Y = -520;
+
+/**
+ * Cloudia's own centre, in screen px, at local frame `f` of Scene 16.
+ *
+ * The approach is a quadratic rather than an easing, and that is the point: an
+ * `easeOut` finishes with **zero** velocity, so the hotel would coast to a stop
+ * and then snap to 1.54px/frame on the first frame of her line. This one is
+ * solved for the drift rate as its end slope, so it decelerates smoothly into
+ * the band and hands over without a visible stall.
+ */
+function hotelYAt(f: number, speaksAt: number): number {
+  const s = Math.max(1, speaksAt);
+  if (f >= s) return HOTEL_SPEAKS_AT_Y + (f - s) * HOTEL_DRIFT;
+  const d = HOTEL_SPEAKS_AT_Y - HOTEL_ENTER_Y;
+  const c = (HOTEL_DRIFT * s - d) / (s * s);
+  const b = HOTEL_DRIFT - 2 * c * s;
+  return HOTEL_ENTER_Y + b * f + c * f * f;
+}
+// Under the stamp (50), so the approach is partly masked by the banner and she
+// emerges from behind it; over the world, and under Puff (55), who is nearer to
+// camera and passes in front of the awning. Her *bubbles* go over everything —
+// a banner across a speech bubble is not a stacking preference, it is the scene
+// not working.
+const HOTEL_Z = 44;
 
 const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const stage = useStage(scene);
   const [ruleFrom, ruleTo] = lineWindow(scene, "a2_20_narrator");
+  const [hotelFrom] = lineWindow(scene, "a2_21b_cloudia");
 
   // The stamp lands on the first "Warm air rises" of the line, so the "say it
   // with me" has the picture to sit against.
@@ -1314,13 +1470,63 @@ const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const scale = 0.62;
   const puffY = hover("puff", frame >= stampAt ? rideY : 640, scale);
 
-  const emotion = useEmotion(scene, "puff", { a2_21_puff: "excited" }, "excited");
+  const emotion = useEmotion(
+    scene,
+    "puff",
+    { a2_21_puff: "excited", a2_21c_puff: "excited" },
+    "excited",
+  );
+  // Held-beat scene now (24f after `a2_21c_puff`), so no lead: her face must
+  // not start on the button before the silence in front of it is over.
+  const cloudiaEmotion = useEmotion(
+    scene,
+    "cloudia",
+    { a2_21b_cloudia: "proud", a2_21d_cloudia: "neutral" },
+    "proud",
+    NO_LEAD,
+  );
+
+  // The hotel's descent. It is on screen from about eighty frames before her
+  // first line and clears the bottom of frame under `a2_22_narrator` — she
+  // arrives during Puff's line and leaves during the Narrator's, so nothing
+  // enters or exits inside the 24f held beat between them.
+  const hotelY = hotelYAt(frame, hotelFrom);
+  const hotelLive = hotelY > -420 && hotelY < 1480;
+  // He watches her go by, and then goes back to riding the arrow.
+  const watching = frame >= hotelFrom - 40 && frame < hotelFrom + 360;
 
   return (
     <AbsoluteFill>
       <PaintedSky bg="sky_high" phase={3.7} />
       <RisingWorld rise={rise} grassWind={STILL_AIR} showGrass={false} />
       <WarmCrowd />
+      {/* The Cloud Hotel, sliding down through the wisp band. Drawn *under*
+          Puff's z-index (55), so he passes in front of the awning rather than
+          behind it — he is nearer to camera than she is. */}
+      {hotelLive ? <CloudHotel x={HOTEL_X} y={hotelY} zIndex={HOTEL_Z} /> : null}
+      {hotelLive ? (
+        <Cloudia
+          x={HOTEL_X + 40}
+          // `hover`, not the raw y: CharacterFrame scales about the bottom of
+          // the natural box, so a raw y at 0.8 would drop her 38px off her own
+          // awning (see CHAR_BOX in common.tsx).
+          y={hover("cloudia", hotelY, 0.8)}
+          scale={0.8}
+          phase={PHASE.cloudia}
+          emotion={cloudiaEmotion}
+          speaking={stage.speaking("cloudia")}
+          // Packed, and about to have a very busy afternoon.
+          fill={0.62}
+          bowTie
+          clipboard
+          // She watches him climb past — and then, on the button, looks at
+          // camera instead. That is the only thing that changes on the button,
+          // and it changes on its first frame, not inside the silence before it.
+          look={stage.lineKey === "a2_21d_cloudia" ? "camera" : "upRight"}
+          idle={0.8}
+          zIndex={HOTEL_Z + 1}
+        />
+      ) : null}
       <RuleStamp text="WARM AIR RISES" from={stampAt} y={330} tilt={-3.5} />
       <Puff
         x={px}
@@ -1330,18 +1536,185 @@ const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.puff}
         emotion={emotion}
         speaking={stage.speaking("puff")}
-        look="camera"
+        look={watching && hotelLive ? lookAt({ x: px, y: puffY }, { x: HOTEL_X, y: hotelY }) : "camera"}
         idle={1.1}
         wisps={2}
         zIndex={55}
       />
       <Bubbles
         scene={scene}
-        cast={{ puff: { x: px, y: puffY, scale, who: "puff", side: "right" } }}
+        cast={{
+          puff: { x: px, y: puffY, scale, who: "puff", side: "right" },
+          cloudia: { x: HOTEL_X + 40, y: hotelY, scale: 0.8, who: "cloudia", side: "right" },
+        }}
         text={S16_BUBBLES}
-        at={{ a2_21_puff: { x: 1330, y: 810, tail: "left" } }}
+        // Over the rule stamp. Every other scene can leave this alone; this one
+        // has a full-width banner parked across the frame for its whole length.
+        zIndex={60}
+        at={{
+          a2_21_puff: { x: 1330, y: 810, tail: "left" },
+          a2_21c_puff: { x: 1400, y: 560, tail: "right", tailAt: px },
+          // Her bubbles ride down with her rather than sitting at a fixed mark:
+          // she is a moving layer, and a bubble that stayed put while its
+          // speaker descended past it would read as somebody else's.
+          a2_21b_cloudia: {
+            x: 1120,
+            // Beside her rather than over her: the banner is parked where her
+            // headroom would be, so the bubble rides at her own height and the
+            // tail reaches back down-left to find her.
+            y: Math.max(500, Math.min(780, hotelY - 60)),
+            tail: "left",
+            tailAt: HOTEL_X + 40,
+          },
+          a2_21d_cloudia: {
+            x: 1120,
+            // Beside her rather than over her: the banner is parked where her
+            // headroom would be, so the bubble rides at her own height and the
+            // tail reaches back down-left to find her.
+            y: Math.max(500, Math.min(780, hotelY - 60)),
+            tail: "left",
+            tailAt: HOTEL_X + 40,
+          },
+        }}
       />
     </AbsoluteFill>
+  );
+};
+
+/**
+ * The Cloud Hotel, as seen from underneath by somebody going past it: awning,
+ * brass bell, hand-lettered sign, and every window full.
+ *
+ * Episode one built the hotel as a place; this is the same business seen for
+ * three seconds from outside, so it is drawn rather than staged — the point is
+ * that a returning viewer recognises the awning and the bell, and that a new
+ * one reads "hotel, full" without being told.
+ *
+ * `y` is Cloudia's own centre; everything hangs off it.
+ */
+const CloudHotel: React.FC<{ x: number; y: number; zIndex?: number }> = ({ x, y, zIndex }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const t = frame / fps;
+  return (
+    <WideLayer zIndex={zIndex}>
+      <g transform={`translate(${x} ${y})`}>
+        {/* The cloud bank the hotel is built into — wider than she is, so the
+            business reads as bigger than the manager. */}
+        <g opacity={0.95}>
+          {[
+            [-300, 40, 210, 92],
+            [-40, 10, 250, 108],
+            [250, 56, 190, 84],
+          ].map(([cx, cy, rx, ry]) => (
+            <ellipse
+              key={cx}
+              cx={cx}
+              cy={cy}
+              rx={rx}
+              ry={ry}
+              fill={kidTheme.cloud}
+              stroke={kidTheme.cloudGreyShade}
+              strokeWidth={7}
+            />
+          ))}
+        </g>
+        {/* Windows, every one of them occupied. The drop-faces are drawn rather
+            than staged: they are wallpaper with eyes, and at this size a real
+            body would cost more than it reads. */}
+        {[-286, -166, 168, 286].map((wx, i) => (
+          <g key={wx} transform={`translate(${wx} ${34 + (i % 2) * 30})`}>
+            <ellipse
+              rx={44}
+              ry={38}
+              fill={mixHex(kidTheme.cloud, kidTheme.cloudGrey, 0.55)}
+              stroke={kidTheme.cloudGreyShade}
+              strokeWidth={6}
+            />
+            {/* One raindrop guest, leaning on the sill. */}
+            <g transform={`translate(0 ${4 + Math.sin(t * 1.4 + i) * 3})`}>
+              <path
+                d="M 0 -28 C 20 -6 26 6 26 14 A 26 26 0 1 1 -26 14 C -26 6 -20 -6 0 -28 Z"
+                fill={kidTheme.water}
+                stroke={kidTheme.ink}
+                strokeWidth={5}
+                transform="scale(0.78)"
+              />
+              <circle cx={-7} cy={4} r={3.4} fill={kidTheme.ink} />
+              <circle cx={7} cy={4} r={3.4} fill={kidTheme.ink} />
+            </g>
+          </g>
+        ))}
+        {/* The awning, under her: a canopy with a scalloped hem, the same
+            stripe as Scene 30's. */}
+        <g transform="translate(40 148)">
+          {Array.from({ length: 8 }, (_, i) => {
+            const u0 = -1 + (i * 2) / 8;
+            const u1 = -1 + ((i + 1) * 2) / 8;
+            return (
+              <path
+                key={i}
+                d={`M ${u0 * 150} 0 L ${u1 * 150} 0 L ${u1 * 210} 74 L ${u0 * 210} 74 Z`}
+                fill={i % 2 ? kidTheme.paper : kidTheme.pink}
+                stroke={kidTheme.ink}
+                strokeWidth={5}
+                strokeLinejoin="round"
+              />
+            );
+          })}
+          {Array.from({ length: 8 }, (_, i) => {
+            const w = 420 / 8;
+            const cx = -210 + w * (i + 0.5);
+            return (
+              <path
+                key={`h${i}`}
+                d={`M ${cx - w / 2} 74 a ${w / 2} ${w / 2.6} 0 0 0 ${w} 0 Z`}
+                fill={i % 2 ? kidTheme.paper : kidTheme.pink}
+                stroke={kidTheme.ink}
+                strokeWidth={5}
+                strokeLinejoin="round"
+              />
+            );
+          })}
+          <path d="M -158 0 L 158 0" stroke={kidTheme.ink} strokeWidth={10} strokeLinecap="round" />
+        </g>
+        {/* The brass bell. Dead still: it hangs inside the scene's held beat and
+            nothing is allowed to move in there. */}
+        <g transform="translate(300 196)">
+          <path d="M 0 -26 L 0 0" stroke={kidTheme.ink} strokeWidth={6} />
+          <path d="M -34 36 Q -34 -6 0 -6 Q 34 -6 34 36 Z" fill={kidTheme.sun} stroke={kidTheme.sunDeep} strokeWidth={6} strokeLinejoin="round" />
+          <ellipse cx={0} cy={36} rx={39} ry={10} fill={kidTheme.sunDark} stroke={kidTheme.sunDeep} strokeWidth={5} />
+          <circle cx={0} cy={49} r={7} fill={kidTheme.sunDeep} />
+        </g>
+        {/* The sign, hand-lettered, hanging off the awning. It says the thing
+            the picture is already saying, which is how a pre-reader learns to
+            read a word off a shape. */}
+        <g transform="translate(-278 214) rotate(-6)">
+          <rect
+            x={-146}
+            y={-40}
+            width={292}
+            height={80}
+            rx={14}
+            fill={kidTheme.paper}
+            stroke={kidTheme.ink}
+            strokeWidth={7}
+          />
+          <path d="M -110 -40 L -110 -76 M 110 -40 L 110 -76" stroke={kidTheme.ink} strokeWidth={6} strokeLinecap="round" />
+          <text
+            x={0}
+            y={16}
+            textAnchor="middle"
+            fontFamily={kidTheme.fontFamily}
+            fontSize={52}
+            fontWeight={900}
+            fill={kidTheme.ink}
+          >
+            NO ROOM
+          </text>
+        </g>
+      </g>
+    </WideLayer>
   );
 };
 
@@ -1474,13 +1847,16 @@ const GapWorld: React.FC<{
 };
 
 const S17_BUBBLES: Record<string, string> = {
-  a2_25_puff: "Oops. Sorry about the hole.",
+  // C3 — two words, and they are addressed to a hole. Verbatim rather than a
+  // summary, which is the rule the running "Sorry." gag has had all episode.
+  a2_25_puff: "Sorry, hole!",
 };
 
 const BigEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const stage = useStage(scene);
   const [gapFrom] = lineWindow(scene, "a2_24_narrator");
+  const [sorryFrom, sorryTo] = lineWindow(scene, "a2_25_puff");
 
   // The camera is dead still for the whole beat. The most important image in
   // the episode is a picture of nothing, and nothing is hard to find: a push,
@@ -1495,11 +1871,21 @@ const BigEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   // He arrives from above, well after the silence has done its work — nothing
   // enters inside a held beat.
+  //
+  // C3 restages him: a *speck at the top* of a frame the hole otherwise fills,
+  // turned round in mid-air and calling back down at it. So he is smaller than
+  // he was (0.34 rather than 0.5), higher, and nearer the middle — the hole is
+  // the shot and he is an aside in the corner of it. He turns on the last
+  // frames of `a2_24_narrator`, i.e. before his own line and long before the
+  // beat: the only thing on screen inside the 24f is the hole not answering.
   const dropIn = kidEase.easeOutCubic((frame - (gapFrom + 74)) / 34);
-  const puffScale = 0.5;
-  const puffY = hover("puff", -180 + dropIn * 420, puffScale);
+  const puffScale = 0.34;
+  const puffY = hover("puff", -180 + dropIn * 350, puffScale);
+  // Round to face the hole: he comes in facing out of frame and turns back.
+  const turn = kidEase.easeInOutSine((frame - (sorryFrom - 22)) / 26);
+  const calling = frame >= sorryFrom - 10 && frame < sorryTo + 4;
   const puffMark: Mark = {
-    x: 1580,
+    x: 1400,
     y: puffY,
     scale: puffScale,
     who: "puff",
@@ -1537,7 +1923,14 @@ const BigEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.puff}
         emotion={emotion}
         speaking={stage.speaking("puff")}
-        look={{ x: -0.65, y: 0.55 }}
+        // Down and to his left, at the hole — hard down once he is calling.
+        look={calling ? { x: -0.4, y: 0.95 } : { x: -0.65, y: 0.55 }}
+        // Both hands up to his mouth. `hug` is the one arm path in the rig that
+        // brings the hands in to the face, which is what a small character
+        // shouting down a long way does with them.
+        pose={calling ? "hug" : "rest"}
+        // Turning round in mid-air: the body rolls through as he comes about.
+        bank={-24 + 24 * Math.max(0, Math.min(1, turn))}
         idle={0.8}
         wisps={2}
       />
@@ -1569,7 +1962,12 @@ const BigEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         cast={{ puff: puffMark }}
         text={S17_BUBBLES}
-        at={{ a2_25_puff: { x: 1060, y: Math.max(190, puffY - 130), tail: "right" } }}
+        at={{
+          // Beside him rather than above: he is at the top of frame and there
+          // is no headroom left. The tail is aimed back at his own x so it is
+          // unmistakably his, not the Narrator's.
+          a2_25_puff: { x: 1010, y: Math.max(180, puffY - 40), tail: "right", tailAt: puffMark.x },
+        }}
       />
       {/* Nothing else is on screen between beatFrom and the next line. That is
           the point of the beat and it is enforced by everything above starting
@@ -1617,6 +2015,8 @@ const FwooshScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       <CoolRush from={rushAt} frame={frame} fps={fps} />
       {/* One leaf, tumbling past under the silence. */}
       <TumblingLeaf at={rushAt + 8} />
+      {/* C4 — and one of them came in backwards. */}
+      <BackwardsPuff from={rushAt + 22} />
       <Puff
         x={puffMark.x}
         y={puffY}
@@ -1728,6 +2128,102 @@ const CoolRush: React.FC<{
           </g>
         );
       })}
+    </WideLayer>
+  );
+};
+
+/**
+ * C4 — the cool puff that came in backwards.
+ *
+ * The FWOOSH is thirteen seconds of pure wonder and the audience's first sight
+ * of wind, so the gag has to *reinforce* the sideways pedagogy rather than
+ * dilute it: this one is travelling horizontally like all the others, only so
+ * fast it goes straight past the gap and has to reverse in. If anything it
+ * makes the direction more legible.
+ *
+ * Making it *findable* took three passes and is the whole engineering problem:
+ * a first version at r 52 in the crowd's own lanes was invisible in a still,
+ * because fifty-two soft blue blobs is exactly the wrong place to hide a
+ * fifty-third. What works:
+ *   - it is half again the size of the biggest one in the crowd (r 90 against
+ *     30–60), fully opaque where they are at 0.82;
+ *   - it carries a hard ink outline instead of their soft blue one, which is
+ *     the show's own signal for "this one is a character, not scenery";
+ *   - it travels in a clear lane *above* the stream (y 380 against 560–940),
+ *     so the run-past happens in empty sky;
+ *   - and its speed streak comes out of the **front** rather than trailing
+ *     behind, which is the one cue that says "backwards" without a word.
+ *
+ * And it never fixes itself. It parks upside down where the gap was and stays
+ * there for the rest of the scene — a background gag that vanishes mid-shot
+ * reads as a rendering fault (2026-07-26 volcano note), which is exactly what
+ * the Narrator's line exists to rule out.
+ */
+const BackwardsPuff: React.FC<{ from: number }> = ({ from }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const u = frame - from;
+  if (u < 0) return null;
+  const t = frame / fps;
+
+  const LANE_Y = 380;
+  const OVERSHOOT = 1700;
+  // On top of the gap rather than down in the stream that is still pouring
+  // through it: it has to be the thing the Narrator is obviously talking about.
+  const PARK = { x: 940, y: GAP.y - 70 };
+
+  // Five beats, in local frames: the run past, the skid, a moment of nothing,
+  // the reverse, and the settle. Everything is finished by u = 136, which is
+  // well before the 24f held beat this gag's line is fired from.
+  let x: number;
+  let y = LANE_Y;
+  let rot = 0;
+  if (u < 46) {
+    // Straight through, decelerating into the skid.
+    x = -340 + (OVERSHOOT + 340) * kidEase.easeOutCubic(u / 46);
+  } else if (u < 64) {
+    x = OVERSHOOT;
+  } else if (u < 112) {
+    x = OVERSHOOT + (PARK.x + 30 - OVERSHOOT) * kidEase.easeInOutSine((u - 64) / 48);
+  } else {
+    const s = Math.min(1, (u - 112) / 24);
+    x = PARK.x + 30 - 30 * kidEase.easeOutCubic(s);
+    y = LANE_Y + (PARK.y - LANE_Y) * kidEase.easeInOutSine(s);
+    // It ends up upside down, and that is where it stays.
+    rot = 180 * kidEase.easeOutCubic(s);
+  }
+  // Travelling right for the first two beats, left for the reverse.
+  const dir = u < 64 ? 1 : -1;
+  const moving = u < 136;
+  const r = 90;
+  return (
+    <WideLayer zIndex={25}>
+      <g transform={`translate(${x} ${y})`}>
+        {/* The streak, out of the FRONT. This is the whole joke, drawn. */}
+        {moving ? (
+          <path
+            d={`M ${dir * (r + 30)} 0 l ${dir * 240} 0`}
+            stroke={kidTheme.ink}
+            strokeWidth={11}
+            strokeLinecap="round"
+            opacity={0.55}
+          />
+        ) : null}
+        <AirBlob
+          x={0}
+          y={moving ? Math.sin(t * 2.4) * 6 : 0}
+          r={r}
+          t={t}
+          seed={3.7}
+          fill={kidTheme.airCool}
+          edge={kidTheme.ink}
+          opacity={1}
+          rotate={rot}
+          // Facing the way it came from, which is the point.
+          flip={dir > 0}
+          points={16}
+        />
+      </g>
     </WideLayer>
   );
 };
@@ -1891,6 +2387,10 @@ function circuitAt(u: number): { x: number; y: number; warm: number } {
 const S20_BUBBLES: Record<string, string> = {
   a2_35_puff: "Am I the wind?",
   a2_37_puff: "Everybody gets wind. Because of me.",
+  // C5. Verbatim: five words, and the question is the joke.
+  // Nothing for a2_38c on purpose — the Narrator has no body, the answer is one
+  // word, and a bubble popping on it would be a thing entering the beat.
+  a2_38b_puff: "Are they all called Puff?",
 };
 
 const AmIWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
@@ -1899,6 +2399,13 @@ const AmIWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stage = useStage(scene);
   const t = frame / fps;
   const [outFrom] = lineWindow(scene, "a2_37_puff");
+  // C5 — the roll call's second firing. On the 30f beat after `a2_38_narrator`
+  // he turns his head slowly across the whole circulating crowd, taking it in,
+  // and the sweep finishes with his own line. After that he simply waits: the
+  // second 30f beat has nothing in it at all, which is the joke.
+  const [scaleBeat] = heldBeat(scene, "a2_38_narrator");
+  const [, askTo] = lineWindow(scene, "a2_38b_puff");
+  const sweep = Math.max(0, Math.min(1, (frame - scaleBeat) / Math.max(1, askTo - scaleBeat)));
 
   // The pull-back: he does not move, the frame does. By the last line he is a
   // dot in a pattern that covers the hill, which is the honest scale.
@@ -1916,8 +2423,11 @@ const AmIWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const emotion = useEmotion(
     scene,
     "puff",
+    // Nothing is mapped to `a2_38b_puff`: this is a held-beat scene now, and
+    // the face he asks the question with is the face he already had.
     { a2_35_puff: "amazed", a2_37_puff: "excited" },
     "happy",
+    NO_LEAD,
   );
 
   return (
@@ -1937,8 +2447,18 @@ const AmIWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           phase={PHASE.puff}
           emotion={emotion}
           speaking={stage.speaking("puff")}
-          look={frame < outFrom ? "up" : "camera"}
-          idle={0.9}
+          look={
+            frame < outFrom
+              ? "up"
+              : frame < scaleBeat
+                ? "camera"
+                : // Right across the whole turning circuit, slowly, and then
+                  // held there while he waits for an answer.
+                  { x: -0.85 + 1.7 * kidEase.easeInOutSine(sweep), y: -0.2 }
+          }
+          // Nearly still through the two beats: nothing moves in the foreground
+          // but the crowd behind him, and his eyes.
+          idle={frame >= scaleBeat ? 0.5 : 0.9}
           wisps={3}
           bank={Math.sin(t * 0.7) * 5}
           zIndex={20}
@@ -1995,6 +2515,9 @@ const GLOBE = { x: 700, y: 560, r: 250 };
 const S21_BUBBLES: Record<string, string> = {
   a2_39_sunny: "Who warmed the ground?",
   a2_40_puff: "Um. You did.",
+  // C6. Six words, which is exactly the limit; "He's going to say it." is the
+  // pre-written fallback if the component ever starts warning.
+  a2_41b_puff: "He is going to say it.",
   a2_42_sunny: "I MAKE ALL THE WIND.",
 };
 
@@ -2041,8 +2564,15 @@ const SunnyCorrectScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     dx: -300 * closeIn,
     dy: 70 * closeIn,
   };
+  // C6 — he sinks down the left of frame while the chain assembles above him,
+  // and delivers his one attitude line from the bottom of the shot, to camera.
+  // The move is finished before his line opens and the scene's 45f held beat is
+  // 280 frames later, so nothing here is happening inside a silence.
+  const [braceFrom] = lineWindow(scene, "a2_41b_puff");
+  const sink = kidEase.easeInOutSine((frame - chainFrom - 24) / 76);
+  const puffBase = S21_PUFF.y + 560 * Math.max(0, Math.min(1, sink));
   const puffOut = kidEase.easeInOutSine((frame - concedeFrom - 20) / 40);
-  const puffY = hover("puff", S21_PUFF.y - puffOut * 520, S21_PUFF.scale);
+  const puffY = hover("puff", puffBase - puffOut * 900, S21_PUFF.scale);
 
   // **Emotion lead 0, by construction.** Sunny's face is `proud` for the whole
   // scene and only widens into the grin on the first frame of the held beat —
@@ -2111,7 +2641,9 @@ const SunnyCorrectScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.puff}
         emotion={puffEmotion}
         speaking={stage.speaking("puff")}
-        look={{ x: 0.85, y: -0.2 }}
+        // He does not look at Sunny for this one. The anticipation gag only
+        // works if he is telling the audience, not reacting to the character.
+        look={frame >= braceFrom - 10 ? "camera" : { x: 0.85, y: -0.2 }}
         idle={0.8}
         wisps={2}
       />
@@ -2123,6 +2655,9 @@ const SunnyCorrectScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           a2_39_sunny: { x: 900, y: 180, tail: "right" },
           a2_42_sunny: { x: 900, y: 180, tail: "right" },
           a2_40_puff: { x: 620, y: 210, tail: "left" },
+          // Low and left with him, tail aimed back at his own x — he is at the
+          // bottom of frame by now and the diagram owns the middle of it.
+          a2_41b_puff: { x: 700, y: 520, tail: "left", tailAt: S21_PUFF.x },
         }}
       />
       {/* Frames 578–623 are his and nothing else's. */}

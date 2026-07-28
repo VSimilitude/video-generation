@@ -27,8 +27,8 @@ change it in both files.
 |---|---|---|---|---|
 | **Narrator** | kokoro | `af_heart` | 1.0 | Warm storyteller, returning. Deadpans at Sunny for a living. Voice only — no body, ever. |
 | **Puff** | minimax | `Exuberant_Girl` | 1.0 | Our hero. One small puff of air. Convinced he is invisible and therefore *nothing*. Apologises constantly at the start and not once after Act Two. Emerging catchphrase: *"You can't see me. But you can FEEL me."* Cast 2026-07-26 — **pending a full-context ear check**. |
-| **Sunny** | minimax | `Imposing_Manner` | 1.0 | The Sun, returning, unchanged, insufferable. This is the episode where *"that one is me as well!"* turns out to be literally true for everything on screen. |
-| **Cloudia** | minimax | `Abbess` | 1.0 | Returning for one scene. Gets delivered across the sky like a parcel and could not be happier about it. |
+| **Sunny** | kokoro | `am_puck` | 1.0 | The Sun, returning, unchanged, insufferable. This is the episode where *"that one is me as well!"* turns out to be literally true for everything on screen. **Episode one's voice, restored 2026-07-28**: he was recast to MiniMax `Imposing_Manner` with everybody else and it was the one move that lost something — imposing makes him an authority, and the joke is a delighted show-off who happens to be right. Kokoro carries no `emotion` and no pause markers, so his thirteen lines have neither; his `speed` overrides survive. |
+| **Cloudia** | minimax | `Abbess` | 1.0 | Returning for **two** scenes — the Cloud Hotel drive-by in Scene 16 and the lift in Scene 30. Full in both, and delivered across the sky like a parcel in the second, which she could not be happier about. |
 | **Drip** | minimax | `Lively_Girl` | 1.0 | Returning for exactly one line, waving from inside Cloudia. Fan service, deliberately. |
 | **Beetle** | minimax | `Patient_Man` | 0.92 | Two lines, fired three times across the episode. Calm, unhurried, and genuinely unable to perceive Puff. |
 | **Leaf** | minimax | `Calm_Woman` | 0.92 | The same two lines one scene later, in a different voice. That difference is the whole point of casting her. |
@@ -53,12 +53,21 @@ them would be a rename of the episode for no gain. The suffix now means "not
 one of the four principals".
 
 **Two engines.** The Narrator stays on Kokoro — free, local, and re-synthesized
-the moment a line is reworded. Everybody with a body on screen is cast on
+the moment a line is reworded. Everybody else with a body on screen is cast on
 MiniMax speech-2.8-hd (via Replicate), which is paid but takes an `emotion` per
 line and honours inline pause markers. Emotions are set in `narration.mjs`, one
 comment per line naming the stage direction below that justified it, and every
-unmarked line stays `auto`. The only pause markers in the episode are the two
-in `a2_41_sunny` — see Scene 21.
+unmarked line stays `auto`.
+
+**Sunny is the exception, and it is a reversal.** He was recast to MiniMax with
+everybody else on 2026-07-26 and moved back to Kokoro `am_puck` — episode one's
+voice, unchanged — on 2026-07-28. The consequences are worth stating because
+they are the shape of every future recast: his thirteen lines are free and
+re-time instantly, they carry **no `emotion`** (Kokoro has no such field), and
+they carry **no pause markers** (on a Kokoro line a marker is a hard error, not
+an instruction). `a2_41_sunny` briefly had the only two in the episode; there
+are now none anywhere in it, and every silence in the show is a held beat
+between lines, in `Video.tsx`.
 
 **Puff is cast: MiniMax `Exuberant_Girl` at 1.0**, the last actor off a
 placeholder (2026-07-26). Auditioned on both engines on the three lines that
@@ -460,7 +469,9 @@ mouth may move on the line; after it, the rock is furniture.
 everyone skips when they say "the sun heats the air". Played as a character
 having a nice lie-down, so the fact arrives as a joke and stays as an image.
 `a2_07_narrator` runs at 0.95 so its three items separate; `a2_08_narrator` at
-0.85, because the rock is in no hurry whatsoever. That line lost its stretched
+0.85, because the rock is in no hurry whatsoever. **That clip fires twice** —
+Scene 32b's `a3_55_narrator` is not a re-recording of it, it *is* it, shared
+through `sameAs`. Re-wording this line re-copies that one. That line lost its stretched
 spelling when the rock was cast — "Ohhh yeah" was a Kokoro instruction and this
 engine reads a repeated letter as separate syllables, so it is "Ohh yeah" now
 and the length comes from 0.85 and `happy` instead. See Sound-word spellings.
@@ -468,24 +479,39 @@ and the length comes from 0.85 and `happy` instead. See Sound-word spellings.
 ---
 
 ### Scene 14 — The ground does the heating
-**On stage:** Narrator, Puff
+**On stage:** Narrator, Puff, Sunny (as the diagram's own crayon sun)
 **Visual:** A cross-section diagram in the show's crayon style — sun, arrows
 down to the ground, the ground glowing orange, and *then* short wiggly arrows
 going up from the ground into the air. The sun's arrows pass straight through
 the air layer without lighting it. Puff sits on the warm ground going pink at
-the edges.
-**Lines:** `a2_11_narrator`, `a2_12_narrator`, `a2_13_puff`, `a2_14_narrator`
+the edges. **On `a2_11b_sunny` the crayon sun in the corner rotates to face
+camera, grows a face and objects.** It stays a crayon drawing throughout; it
+never becomes the real Sunny, because the joke is that a diagram is arguing
+with its own caption. Once it is awake it stays awake.
+**Lines:** `a2_11_narrator`, `a2_11b_sunny`, `a2_12_narrator`,
+`a2_12b_sunny`, `a2_13_puff`, `a2_14_narrator`
 
 > **NARRATOR:** Now here is the important bit. The sun does not warm the air very much.
+> **SUNNY:** EXCUSE ME. I warm EVERYTHING.
 > **NARRATOR:** The sun warms the GROUND. And then the warm ground warms the air.
+> **SUNNY:** So I DO warm everything! Through the GROUND! HA! HA!
 > **PUFF:** Ooh. Ooh, that is toasty. I can feel it on my feet.
 > **NARRATOR:** Puff does not have feet. Puff was enjoying himself.
+
+**No held beat, and that is a decision.** The joke is the interruption landing
+on the beat, and a silence here would fight `a2_14`'s existing button.
 
 **Pedagogy:** The real mechanism, and the one genuinely surprising fact of the
 episode for most adults in the room. Sunlight mostly passes through air; the
 ground absorbs it and heats the air from below. Everything after this — the
 lift, the gap, the sea breeze — depends on it, which is why it gets a diagram
 of its own instead of a line inside another scene.
+
+Sunny's two lines *strengthen* that rather than decorating it. The chain is now
+stated twice — once as a fact and once as a boast — and the boast is the
+version a six-year-old repeats. He is also still never wrong: he does warm
+everything, through the ground, and he says so. It pre-plants Scene 21, so the
+big brag lands as a callback rather than as more shouting.
 
 ---
 
@@ -543,16 +569,43 @@ reports it as a mild fact about naming trends, which is the joke.
 ---
 
 ### Scene 16 — The rule
-**On stage:** Narrator, Puff
+**On stage:** Narrator, Puff, Cloudia
 **Visual:** *Not* a `WordCard`. A rule stamp: a wide banner with a big fat
 upward arrow behind it, thumping onto the frame like a passport stamp and
 staying there while the shot keeps rising behind it. **WARM AIR RISES**. The
-arrow animates upward on a loop. Puff rides the arrow.
-**Lines:** `a2_20_narrator`, `a2_21_puff`, `a2_22_narrator`
+arrow animates upward on a loop. Puff rides the arrow. **The stamp stays on
+screen through the whole scene.**
+
+Then the rise carries the frame up into the thin high cloud band, and the
+**Cloud Hotel** — awning, brass bell, hand-lettered NO ROOM sign — slides down
+past Puff. Cloudia is leaning out over the awning with her clipboard. She is
+*packed*: drop-faces jammed in every window behind her. Puff never stops
+rising. He goes past her, still climbing, and she is out of frame under the
+Narrator's last line.
+**Lines:** `a2_20_narrator`, `a2_21_puff`, `a2_21b_cloudia`, `a2_21c_puff`,
+`a2_21d_cloudia`, `a2_22_narrator`
 
 > **NARRATOR:** Warm air rises. Say it with me. Warm air rises.
 > **PUFF:** Warm air RISES! And I am the warm air!
+> **CLOUDIA:** No vacancies, darling! We are FULL!
+> **PUFF:** Cloudia! I am not staying! I am going PAST!
+
+**HELD BEAT — 24f (0.8s) after `a2_21c_puff`.** Cloudia watches him go up past
+the awning. She does not follow him with her head; she looks at the camera.
+**Nothing enters this beat** — no bell, no clipboard move, no emotion change.
+Deadpan is stillness. (The hotel's own descent continues through it, because
+that descent *is* the shot — the same exemption Scene 13 gives its heat
+shimmer.)
+
+> **CLOUDIA:** They all say that, darling.
 > **NARRATOR:** Every warm puff on that whole hill was going up with him.
+
+**Staging note — the banner owns the top third.** Because the stamp stays put,
+Cloudia's usable band is everything under it, and she has to stay in it for all
+279 frames of the exchange. That fixes her drift at about 1.5px/frame and puts
+her bubbles *beside* her rather than above her, tails reaching back down to
+find her. It also puts her bubbles over the stamp's z-index: a banner across a
+speech bubble is not a stacking preference, it is the scene not working.
 
 **Pedagogy:** The episode's central rule, said twice inside one line so the
 "say it with me" has something to sit between, then chanted back. The
@@ -560,6 +613,13 @@ deliberately different card treatment is explained in Production notes. The
 closing line matters more than it looks: this is happening to *all* the warm
 air at once, not to one special puff — the same correction episode one made
 with its whip-pan of puddles.
+
+Cloudia is that correction as a picture, and she does three jobs with it. The
+hotel is **full** *because* all the warm air went up, which is exactly
+`a2_22_narrator`'s point. It ties the two episodes' mechanisms together — this
+is how Drip got to the Cloud Hotel, and "warm air rises" is the missing first
+step of episode one. And it sets up Scene 30: Puff goes *past* her here and
+*pushes* her there, so the favour reads as a friendship rather than a cameo.
 
 ---
 
@@ -570,7 +630,8 @@ patch Puff left is drawn as a genuine hole in the world — a Puff-shaped
 absence, outlined, slightly darker, with the grass leaning in around its edges.
 Hold on it. It is the most important image in the episode and it is a picture
 of nothing.
-**Lines:** `a2_23_narrator`, `a2_24_narrator`, `a2_25_puff`, `a2_26_narrator`
+**Lines:** `a2_23_narrator`, `a2_24_narrator`, `a2_25_puff`,
+`a2_25b_narrator`, `a2_26_narrator`
 
 > **NARRATOR:** But look down at the grass. Look where Puff used to be.
 
@@ -580,7 +641,18 @@ the eye and no motion to follow. If this beat is cut, the next three scenes
 explain a thing the audience never actually looked at.
 
 > **NARRATOR:** Puff left a gap. An empty space, exactly Puff shaped.
-> **PUFF:** Oops. Sorry about the hole.
+
+**New staging.** Puff, far above, turns round in mid-air and calls back *down*
+at the hole, both hands cupped. The hole is centre frame and fills most of it;
+he is a speck at the top. He turns on the last frames of `a2_24_narrator`, i.e.
+before his own line and long before the beat.
+
+> **PUFF:** Sorry, hole! I did not mean to leave!
+
+**HELD BEAT — 24f (0.8s) after `a2_25_puff`.** The hole. Nothing happens. The
+grass leans in around its edge and does not move. **Nothing enters this beat.**
+
+> **NARRATOR:** The hole did not answer. Holes rarely do.
 > **NARRATOR:** And air does not like a gap. Not one bit.
 
 **Pedagogy:** The hinge of the whole episode. Wind is not "air deciding to
@@ -591,6 +663,15 @@ difference between a child repeating "wind is moving air" and a child knowing
 and it is about a hole he made by existing, which is very much his whole
 problem.
 
+The new pair is also, quietly, the misconception-buster. The whole scene exists
+to make a six-year-old believe an empty space is a *thing*; a character talking
+to it, and a narrator treating it as a person who chose not to reply, is that
+idea told as a joke. `a2_25b_narrator` is a deliberate rhyme with episode one's
+moose ("The moose did not move. Moose rarely do.") — the narrator deadpanning
+about obvious behaviour is the only ironic register this show allows, and this
+is the same joke in the same words five months later. **The apology ledger is
+unchanged**: `a2_25` is still one apology, just a funnier one.
+
 ---
 
 ### Scene 18 — FWOOSH
@@ -599,22 +680,46 @@ problem.
 along the ground and slam into the gap, filling it. Grass flattens in a wave as
 they arrive. Direction is everything here: they travel horizontally, they do
 not fall in from above.
-**Lines:** `a2_27_narrator`, `a2_28_narrator`, `a2_29_puff`, `a2_30_narrator`
+
+**Visual addition:** one of the fifty-odd cool puffs comes in **facing the
+wrong way** — back first, its speed streak coming out of its *front* — in a
+clear lane above the stream. It overshoots the gap entirely, skids to a stop on
+the far side, and has to reverse back in. It arrives last, settles upside down
+on top of the filled gap, and **stays that way for the rest of the scene**. It
+is half again the size of the biggest one in the crowd and carries a hard ink
+outline instead of their soft blue one; a first pass at crowd size and crowd
+colour was simply invisible, which is what fifty-two identical blue blobs do to
+a fifty-third.
+**Lines:** `a2_27_narrator`, `a2_28_narrator`, `a2_29_puff`, `a2_30_narrator`,
+`a2_30b_narrator`
 
 > **NARRATOR:** So all the cool air nearby came rushing in sideways to fill it.
 > **NARRATOR:** FWOOSH.
 
 **HELD BEAT — 36f (1.2s) after `a2_28_narrator`.** The rush happens under the
-silence — grass flattening, seeds and one leaf tumbling past, no voice. This is
-the first time in the episode the audience sees wind and it should arrive as a
-physical event, not as an illustration of a sentence.
+silence — grass flattening, seeds and one leaf tumbling past, the backwards one
+going by overhead, no voice. This is the first time in the episode the audience
+sees wind and it should arrive as a physical event, not as an illustration of a
+sentence.
 
 > **PUFF:** Whoa! Who are all these guys?
 > **NARRATOR:** Cool air. In a very big hurry.
 
+**HELD BEAT — 24f (0.8s) after `a2_30_narrator`.** Hold on the backwards puff,
+which does not fix itself.
+
+> **NARRATOR:** One of them came in backwards.
+
 **Pedagogy:** The sideways-ness is the point. Warm air going up is only half a
 wind; the half you feel on your face is the cool air coming in at ground level
-to replace it. Staging it horizontally is not a style choice.
+to replace it. Staging it horizontally is not a style choice — and the
+backwards one is horizontal travel *exaggerated*: it comes in sideways so fast
+it goes past. If anything it makes the direction more legible.
+
+The line and the visual are one item. A background gag that vanishes mid-shot
+reads as a rendering fault (2026-07-26 volcano note), and the line is what
+makes an upside-down puff read as a joke rather than as a bug — so they are
+dropped together or not at all.
 
 ---
 
@@ -646,17 +751,40 @@ fallback spelling is pre-written in `narration.mjs`.
 hundreds of other puffs all doing the same rise-and-rush in a slow visible
 circuit. Pull back until Puff is one dot in a pattern that covers the whole
 hillside.
-**Lines:** `a2_35_puff`, `a2_36_narrator`, `a2_37_puff`, `a2_38_narrator`
+**Lines:** `a2_35_puff`, `a2_36_narrator`, `a2_37_puff`, `a2_38_narrator`,
+`a2_38b_puff`, `a2_38c_narrator`
 
 > **PUFF:** Hold on. Am I the wind?
 > **NARRATOR:** You are air. Wind is what air DOES.
 > **PUFF:** So when I move, everybody gets wind. Because of me.
 > **NARRATOR:** Because of you. And about a hundred million friends.
 
+**HELD BEAT — 30f (1.0s) after `a2_38_narrator`.** Puff turns his head slowly
+right across the whole turning circuit, taking it in. Nothing else moves in the
+foreground.
+
+> **PUFF:** Are they all called Puff?
+
+**HELD BEAT — 30f (1.0s) after `a2_38b_puff`.** **Nothing enters this.** No
+reaction, no bob, no emotion change — the crowd keeps circulating behind him
+and he waits.
+
+> **NARRATOR:** Yes.
+
+**Scene tail: 40f** (was 32f). One flat word needs somewhere to land — same
+call as `a3_20_narrator` ("Him again.").
+
 **Pedagogy:** Corrects a misconception the story itself could easily have
 created — wind is not a substance, it is a behaviour of one. "Wind is what air
 does" is the most precise sentence in the script and it is six words long. The
 last line keeps the scale honest without deflating the hero.
+
+The roll call's **second firing** goes here and it is the cheapest big laugh in
+the episode: two lines, no new staging, and it re-fires the joke the six-year-
+old named as her favourite on a wide shot that is already hundreds of identical
+puffs. It also helps the fact — "all of them are Puffs" is the same scale
+correction `a2_38_narrator` makes, restated as a picture. Do not add a second
+sentence to `a2_38c`; the whole joke is that there is not one.
 
 ---
 
@@ -667,12 +795,13 @@ diagram assembles itself from his beams as he lists the chain — sun to ground,
 ground to air, air upward, cool air sideways — until the whole circuit is
 turning, visibly driven from his side of the frame. On the last brag the
 diagram goes planetary and every wind arrow on Earth lights up at once.
-**Lines:** `a2_39_sunny`, `a2_40_puff`, `a2_41_sunny`, `a2_42_sunny`,
-`a2_43_sunny`, `a2_44_narrator`, `a2_45_narrator`
+**Lines:** `a2_39_sunny`, `a2_40_puff`, `a2_41_sunny`, `a2_41b_puff`,
+`a2_42_sunny`, `a2_43_sunny`, `a2_44_narrator`, `a2_45_narrator`
 
 > **SUNNY:** EXCUSE ME. Who warmed the ground?
 > **PUFF:** Um. You did.
 > **SUNNY:** I warm the ground! The ground warms the air! The air goes UP!
+> **PUFF:** Oh no. He is going to say it.
 > **SUNNY:** SO I MAKE ALL THE WIND. EVERYWHERE. ON THE ENTIRE PLANET.
 > **SUNNY:** You're welcome! HA! HA!
 > **NARRATOR:** I checked. Then I checked again. He is right. Again.
@@ -684,15 +813,30 @@ Narrator finishes conceding.
 
 > **NARRATOR:** One day Sunny will be wrong about something. It is not today.
 
+**Staging for `a2_41b_puff`:** Puff says it to camera, small, at the bottom of
+frame, while Sunny's diagram assembles behind him. He sinks down the left of
+the shot across `a2_41_sunny` and is on his mark before he opens his mouth. He
+does not look at Sunny. The existing 45f beat after `a2_44_narrator` is
+untouched.
+
 **Pedagogy:** The causal chain, said in one breath by the character who is the
-first link — sun, ground, air, up. `a2_41_sunny` runs at 0.95 so all three links
-land separately, and — since Sunny is a MiniMax voice — carries the episode's
-only two pause markers, `<#0.3#>` between the links, for the same reason. That
-is intra-line timing the script asked for; every other silence in this episode
-is a held beat between lines and lives in `Video.tsx`. This is episode one's "annoyingly, he is completely right"
+first link — sun, ground, air, up. `a2_41_sunny` runs at 0.95 so all three
+links land separately. It briefly carried the episode's only two pause markers
+(`<#0.3#>` between the links) while Sunny was on MiniMax; back on kokoro a
+marker is an error rather than an instruction, and 0.95 plus `am_puck`'s own
+cadence is what separated the links in episode one. **There are no pause
+markers left anywhere in this episode** — every silence in it is now a held
+beat between lines and lives in `Video.tsx`. This is episode one's "annoyingly, he is completely right"
 grown up: it concedes twice, deadpans the concession, and then plants the
 series' next joke, because `a2_45` is a promise the recap pays off and episode
 three collects.
+
+`a2_41b_puff` is Puff's only *attitude* line in Act Two, and it earns its 2.7
+seconds twice over: it is an anticipation gag a six-year-old reads instantly
+(they have heard three brags and are ahead of him), and it turns `a2_42` into a
+payoff rather than more shouting. It is not unkind — he is not mocking Sunny,
+he is bracing — and the Narrator's two concessions still make Sunny right,
+twice.
 
 ---
 
@@ -754,16 +898,23 @@ Then a split screen with a thermometer in each half — sand's climbing fast,
 sea's barely moving — and the same sun over both. The sleeping volcano is out
 on the horizon of the sea shot, same spot and same size as Scene 23, still
 asleep, still unmentioned.
+**Visual addition:** on `a3_09b_sunny`, the sun that has been straddling the
+seam all through the split leans *down* over it to take the credit — one half
+of his face in each panel, which is the visual argument — and is back to being
+scenery before the silence opens. He does not leave; he cannot, because he *is*
+the control variable the comparison rests on. What leaves is the character.
 **Lines:** `a3_05_narrator`, `a3_06_puff`, `a3_07_narrator`, `a3_08_puff`,
-`a3_09_narrator`, `a3_10_narrator`
+`a3_09_narrator`, `a3_09b_sunny`, `a3_10_narrator`
 
 > **NARRATOR:** Puff. Go and sit on the sand, and tell me how it feels.
 > **PUFF:** Ow. Ow ow ow. That sand is HOT.
 > **NARRATOR:** Now go and sit on the sea.
 > **PUFF:** Ooh. The sea is lovely and cool.
 > **NARRATOR:** Same sun. Same morning. Sand hot. Sea cool.
+> **SUNNY:** Same me!
 
-**HELD BEAT — 24f (0.8s) after `a3_09_narrator`.** Both thermometers on screen,
+**HELD BEAT — 24f (0.8s) after `a3_09b_sunny`.** *(Moved from
+`a3_09_narrator`.)* Both thermometers on screen, Sunny back up out of it,
 nobody talking. The comparison is the fact; let it be looked at.
 
 > **NARRATOR:** Sand heats up fast. Water takes ages and ages and ages.
@@ -773,6 +924,12 @@ Act Three. Every child who has ever burnt their feet running to the water has
 already collected this data — the scene just tells them what it was for.
 `a3_09_narrator` runs at 0.9, the slowest narrator line outside the recap,
 because four two-word clauses at speed are a blur.
+
+Sunny's two words are the best ratio in the episode: about 1.3 seconds for a
+real laugh, and the joke *is* the lesson. The pedagogy of the scene is that the
+sun is the control variable and the surfaces are what differ; "Same sun" is the
+line that does that work, and handing him a two-word interruption on it is the
+ep-1 trick in its smallest possible form. Fifth firing of the interrupt gag.
 
 ---
 
@@ -830,20 +987,46 @@ interruption is the running gag's fourth firing and is, once again, true.
 slack — visually rhyming the flopped kite from the cold open, which is the
 point. Puff braces both arms. The sail snaps taut with a *whump*, heels over,
 and the boat goes carving off across the water throwing spray.
-**Lines:** `a3_21_narrator`, `a3_22_puff`, `a3_23_narrator`, `a3_24_puff`,
-`a3_25_narrator`, `a3_26_puff`
+
+**New: he tries it small first.** On `a3_23b_puff` Puff gives the most polite
+little push imaginable — one hand, barely a nudge. The boat drifts about an
+inch. The sail does not so much as twitch. A gull asleep on the masthead does
+not wake up. *Then* the braced two-arm shove and the snap, and the gull is put
+up by it.
+**Lines:** `a3_21_narrator`, `a3_22_puff`, `a3_23_narrator`, `a3_23b_puff`,
+`a3_23c_narrator`, `a3_24_puff`, `a3_25_narrator`, `a3_26_puff`
 
 > **NARRATOR:** And then Puff found out what a wind can do for a living.
 > **PUFF:** There is a boat. Should I push the boat?
 > **NARRATOR:** Push the boat, Puff.
+> **PUFF:** Okay, boat. Push.
+
+**HELD BEAT — 30f (1.0s) after `a3_23b_puff`.** The boat travels about an inch
+and stops. The sail hangs. Nothing else happens. **Nothing enters this beat.**
+
+> **NARRATOR:** Bigger, Puff.
 > **PUFF:** Okay, boat. PUSH!
 > **NARRATOR:** The sail went tight, and the boat went whizzing across the bay.
 > **PUFF:** I am a BOAT ENGINE!
+
+**Bubbles.** `a3_23b_puff`'s bubble is deliberately the *same words* as
+`a3_24_puff`'s, drawn at `kidType.min` so the second one can be drawn at 92 —
+that is the whole gag in the medium a pre-reader reads fastest. Both are pushed
+left off Puff's default mark so they clear the masthead: the sleeping gull is
+the readout for "that did nothing" and the sail snapping taut is the readout
+for "that did something", and a bubble parked over either one costs the gag it
+belongs to.
 
 **Pedagogy:** First job. A sail is the most legible machine humans have ever
 built for catching air, and the slack-to-taut moment shows a child that the
 invisible thing has *force*, not just presence. The visual rhyme with the kite
 is also a quiet promise that the cold open is coming back.
+
+The try-fail-succeed does something structural for free: the small push and
+then the big push rehearse Scene 31's **PUSH!**, so the ending's biggest moment
+has a comic setup five minutes earlier using the same word. **Arc check: no
+apology.** The Act Three count stays at zero — Puff is not sorry the small push
+failed, he just does a bigger one.
 
 ---
 
@@ -996,6 +1179,50 @@ actually use.
 
 ---
 
+### Scene 32b — Meanwhile
+**On stage:** Rock (Narrator carries the button)
+**Visual:** Hard cut away from the kite hill to **the first hill** — Scene 13's
+exact framing, same angle, same distance, same rock, and the same drawn ground,
+because the components are literally the ones act two uses. The light is late
+afternoon now, long and gold and raking in from frame left, with a shadow
+stretching away from the rock and the heat shimmer gone. The rock has not moved
+a muscle. One moth crosses the frame. Nothing else in the shot moves at all.
+Cut back out to the kite hill for the recap.
+**Lines:** `a3_55_narrator` (staged as the Rock), `a3_56_narrator`
+
+> **ROCK:** Ohh yeah. That is the stuff.
+
+**HELD BEAT — 45f (1.5s) after `a3_55_narrator`.** The rock does nothing. Its
+mouth may move on the line; after it, the rock is furniture. **Nothing enters
+this beat** — no moth, no shimmer, no emotion change. Same rule as Scene 13,
+same reason, and the length of the silence is the entire mechanism.
+
+> **NARRATOR:** The rock is still having the best day of its life.
+
+**Scene tail: 45f.** Hold on the rock. Then cut to the recap.
+
+**No bubble**, for either line. The rock had none in Scene 13 — its bubble
+would still be shrinking six frames into the silence — and the Narrator has
+never had one in two episodes. The picture is the joke.
+
+**Why it exists.** It fills the episode's longest gagless stretch (Drip's cameo
+to the tease, nearly two minutes) at exactly the point episode one puts a laugh
+— water-cycle's own Scene 32 sits in precisely this slot, between the emotional
+close and the recap. It is also the confirmed-hit gag type: the rock is the
+moose's heir and it fires once, and cutting away eight minutes later to check
+on a character who has done absolutely nothing in the interval is the purest
+deadpan-stillness gag the show has. It sits *after* Scene 32, so the emotional
+close still gets its full silence before the cutaway.
+
+**`a3_55_narrator` is not a re-recording.** It is `a2_08_narrator`, shared
+through the generator's `sameAs` — no synthesis, no API call, no dice roll.
+Identical delivery five minutes later is not a nice-to-have here, it is the
+joke, and it is the same mechanism `a3_51_narrator` uses for the beetle. The
+key keeps its `_narrator` suffix because that suffix means "not one of the four
+principals"; the staged speaker is a `SPEAKER_VISUAL` override.
+
+---
+
 # RECAP
 
 *Roughly seventy seconds. Chant, mind-blower, tease.*
@@ -1047,19 +1274,37 @@ Sahara, streaming west across the Atlantic over several days of time-lapse, and
 settling as a fine golden haze over the Amazon. Finish on one green leaf with a
 few grains of desert sand on it.
 **Lines:** `rc_08_narrator`, `rc_09_narrator`, `rc_10_narrator`, `rc_11_puff`,
-`rc_12_narrator`
+`rc_11b_puff`, `rc_12_narrator`
 
 > **NARRATOR:** Now here is the amazing part.
 > **NARRATOR:** Right this minute, the wind is picking up sand from a desert called the Sahara.
 > **NARRATOR:** It carries that sand all the way across an ocean, and sprinkles it on a rainforest.
 > **PUFF:** Sand. Across a whole OCEAN. In the sky.
+
+**HELD BEAT — 12f (0.4s) after `rc_11_puff`.** Short. Just enough for the awe to
+finish before the joke starts.
+
+> **PUFF:** Door to door, darling.
 > **NARRATOR:** And the trees grow better because of it. That is the wind, doing a job.
+
+**Staging:** on `rc_11b_puff` Puff does a very small version of Cloudia's grand
+two-handed presenting gesture — the one she makes in Scene 30 — and looks at
+camera. Nobody comments. `rc_11_puff` is **kept**: the awe is the pedagogy and
+the audience's line said for them, and this is the flat button after it.
 
 **Pedagogy:** The fact the child repeats at dinner, and it is true and
 checkable: Saharan dust crosses the Atlantic every year in enormous quantities
 and fertilises the Amazon basin, carrying the phosphorus its soils lack. It
 only works as a payoff because Act Three spent four scenes establishing that
 carrying things is what wind *does for a living*.
+
+`rc_11b_puff` is the third firing of Cloudia's catchphrase, out of Puff's
+mouth. Episode one's mind-blower gives Drip a *joke* on the dinosaur puddle
+("That is the coolest thing anybody has ever said about me!"); this adds the
+same thing without touching the fact. The plant was laid by accident: Cloudia
+says "door to door" at `a3_40` and again in the chant at `rc_04`, so by here
+the audience has heard it twice in the last two minutes and a small character
+doing a grand character's voice is the payoff.
 
 ---
 
@@ -1113,11 +1358,12 @@ rather quickly". This script answers that in two places at once, and both are
 already written down:
 
 - **Slower per-line speeds** for every list, roll call and repeated
-  straight-line, set in `narration.mjs` with a comment on each. Forty-two lines
-  carry an override, the newest two being Scene 15's roll call. The deadpan floor is `a2_08_narrator` (the rock) at 0.85;
-  the slowest narration is `rc_06_narrator` at 0.88.
-- **Held beats of silence**, twenty-four of them, each written above with its
-  exact frame count and its reason. They become `gaps` in `Video.tsx`. The
+  straight-line, set in `narration.mjs` with a comment on each. Forty-eight
+  lines carry an override. The deadpan floor is `a2_08_narrator` (the rock) at
+  0.85; the slowest narration is `rc_06_narrator` at 0.88.
+- **Held beats of silence**, thirty-eight of them (thirty-six stage directions
+  above; the two Big Word scenes each declare a pair in one), each written with
+  its exact frame count and its reason. They become `gaps` in `Video.tsx`. The
   three longest are the kite soaring (75f), the dandelion hillside (60f) and
   the cold open flop (60f) — the episode's payoff, its heart and its hook.
 - **No emotion lead on held-beat scenes.** The staging kit's default eight-frame
@@ -1139,20 +1385,37 @@ already written down:
   the sentence 2.20s the first time and 2.84s the second, which is a thirty
   percent difference in the one line whose whole job is to sound exactly like it
   did five minutes earlier.
-- *The roll call* — `a2_19b`+`a2_19c`+`a2_19d`, Scene 15. The series signature
-  now, not a one-off: episode one had Drip greeting a queue of identical
-  raindrops ("Hi Drop, Hi Droppy") and it was the six-year-old's favourite joke
-  in the show, so episode two greets four identical Puffs. The shape is fixed —
-  a character cheerfully naming near-identical strangers, a flat one-line
-  explanation from the Narrator, and an unbothered button from the character.
-  Episode three should have one.
-- *"You're welcome!" / "HA! HA!"* — `a2_05`, `a2_43`, `a3_19`, `rc_03`, `rc_14`.
+- *The roll call* — `a2_19b`+`a2_19c`+`a2_19d` in Scene 15, and
+  `a2_38b`+`a2_38c` in Scene 20. **Two firings**, five minutes apart, because
+  it is the joke the six-year-old actually asked for more of. The series
+  signature now, not a one-off: episode one had Drip greeting a queue of
+  identical raindrops ("Hi Drop, Hi Droppy") and it was her favourite joke in
+  the show, so episode two greets four identical Puffs and then asks whether
+  they are *all* called that. The shape is fixed — a character cheerfully
+  naming (or wondering about) near-identical strangers, a flat one-line
+  explanation from the Narrator, and an unbothered button. The second firing
+  costs nothing: it re-uses a wide shot that is already hundreds of identical
+  puffs. Episode three should have one.
+- *The rock* — `a2_08` in Scene 13 and `a3_55` in Scene 32b, and the second is
+  the *same recording* as the first. Two firings: the gag is set up as a
+  deadpan-stillness beat and paid off eight minutes later by cutting away to
+  discover that absolutely nothing has happened in the interval.
+- *"darling"* — `a2_21b`, `a2_21d`, `a3_38`, `a3_40`, `rc_04`, and `rc_11b`.
+  Cloudia's, until Puff takes it: the third firing a six-year-old hears in the
+  last two minutes is out of the small character's mouth, doing the grand
+  character's voice.
+- *"You're welcome!" / "HA! HA!"* — `a2_05`, `a2_12b`, `a2_43`, `a3_19`,
+  `rc_03`, `rc_14`.
+- *Sunny interrupts a scene that is not about him* — `a2_11b`, `a2_12b`,
+  `a2_39`, `a3_09b`, `a3_19`. **Five firings**, and every one of them is true.
 - *"That one is me as well!"* — `rc_14`, paid off across the whole episode and
   finally broken in the last twelve seconds.
 - *"Different show. Same sun." / "Same sky."* — `a2_18`, `a3_42`.
-- **Sunny is always right.** `a2_41`, `a2_42`, `a2_44` ("I checked. Then I
-  checked again."), `a2_45`, `a3_19`. Episode three's premise is planted in
-  `a2_45`.
+- **Sunny is always right.** `a2_11b`, `a2_12b`, `a2_41`, `a2_42`, `a2_44` ("I
+  checked. Then I checked again."), `a2_45`, `a3_09b`, `a3_19`. He is wrong for
+  exactly one line in the episode (`a2_11b`, "I warm EVERYTHING") and corrects
+  himself into being right on the next one. Episode three's premise is planted
+  in `a2_45`.
 - *The volcano is asleep.* Scenes 23 and 24, on the sea horizon, snoring smoke
   rings on a three-second loop. **Nobody mentions it** — no line, no bubble, no
   narration, and the only acknowledgement in the episode is one four-frame flick
@@ -1183,7 +1446,8 @@ shaped for the text-to-speech model, not for a copy editor. **And the shaping
 is per engine.** A stretched vowel is a kokoro instruction: it reads "Ohhh" as
 one long sound, and MiniMax reads it as separated syllables. Every stretch in
 this episode has now lost that argument, because everything with a body is on
-MiniMax: Puff's two went when he was cast (`a1_25_puff` "Poooof!" → "Poof!",
+MiniMax except Sunny — and Sunny had none: Puff's two went when he was cast
+(`a1_25_puff` "Poooof!" → "Poof!",
 `a3_49_puff` "PUUUSH!" → "PUSH!" with `emotion: "angry"`, which is where the
 length went), and the rock's went when it was (`a2_08_narrator` "Ohhh yeah" →
 "Ohh yeah" at 0.85 and `happy`). WHOOSH and FWOOSH are single-letter runs and
@@ -1224,3 +1488,21 @@ generated. What is left is listening, in this order:
    `a1_20`) — six in one act is the most concentrated seasoning in the file, and
    the failure mode is a hero who sounds miserable rather than small.
 8. `a3_19_sunny`, the longest exclamation run in the script.
+9. **All thirteen Sunny lines, as a run** — he went back to kokoro `am_puck`
+   on 2026-07-28 and every one of them was re-synthesized. What to listen for:
+   that "HA! HA!" still lands (it is this voice's own idiom from episode one,
+   so it should, and it now ends `a2_12b_sunny` as well as `a2_05`, `a2_43` and
+   `rc_14`); that `a2_41_sunny` separates its three links at 0.95 without the
+   pause markers it briefly carried; and that `rc_16_sunny` ("Wait. What?")
+   still reads as the dawning, now that the 45f beat in front of it is doing
+   all the work an `emotion` used to share.
+10. **The punch-up's sixteen new lines**, in order: `a2_11b_sunny`,
+   `a2_12b_sunny`, `a2_21b_cloudia`, `a2_21c_puff`, `a2_21d_cloudia`, the
+   rewritten `a2_25_puff`, `a2_25b_narrator`, `a2_30b_narrator`,
+   `a2_38b_puff`, `a2_38c_narrator`, `a2_41b_puff`, `a3_09b_sunny`,
+   `a3_23b_puff`, `a3_23c_narrator`, `a3_56_narrator`, `rc_11b_puff`. The four
+   that carry the most risk are the deadpans, because a sold deadpan is a dead
+   one: `a2_21d_cloudia` ("They all say that, darling."), `a2_38c_narrator`
+   ("Yes." — one word, and it must be flat), `a3_23b_puff` ("Okay, boat.
+   Push." — timid, not *played* timid) and `rc_11b_puff` ("Door to door,
+   darling." — a kid doing an impression, unplayed).
