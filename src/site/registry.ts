@@ -13,6 +13,12 @@ export {
   findVideo,
   type VideoEntry,
   type VideoEntry as SiteVideo,
+  // The branching (CYOA) contract. The site plays a path through a branching
+  // composition by seeking; these are the shapes it reads to do it.
+  type BranchingSpec,
+  type BranchSegment,
+  type BranchNext,
+  type BranchChoiceOption,
 } from "../videos/registry";
 
 /** mm:ss for a frame count, for the gallery/player labels. */

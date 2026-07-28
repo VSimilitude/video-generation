@@ -1,0 +1,127 @@
+{
+  "in_01_narrator": {
+    "hash": "6e44bb5099a54eaa",
+    "outFile": "in_01_narrator.mp3",
+    "durationSeconds": 4.525
+  },
+  "in_02_drip": {
+    "hash": "d8b8e3cefe959694",
+    "outFile": "in_02_drip.mp3",
+    "durationSeconds": 3.075
+  },
+  "in_03_drip": {
+    "hash": "86ad24d7e36e3f58",
+    "outFile": "in_03_drip.mp3",
+    "durationSeconds": 5.8
+  },
+  "in_04_sunny": {
+    "hash": "a44f9854a0807788",
+    "outFile": "in_04_sunny.mp3",
+    "durationSeconds": 5.1
+  },
+  "in_05_narrator": {
+    "hash": "158502c074e84855",
+    "outFile": "in_05_narrator.mp3",
+    "durationSeconds": 5.875
+  },
+  "in_06_drip": {
+    "hash": "84dd1cc02c5bf2ab",
+    "outFile": "in_06_drip.mp3",
+    "durationSeconds": 3.25
+  },
+  "in_07_narrator": {
+    "hash": "67b78ceac4d49766",
+    "outFile": "in_07_narrator.mp3",
+    "durationSeconds": 2.65
+  },
+  "sa_01_sunny": {
+    "hash": "30586a89e05a4247",
+    "outFile": "sa_01_sunny.mp3",
+    "durationSeconds": 3.625
+  },
+  "sa_02_drip": {
+    "hash": "fceedad24b185238",
+    "outFile": "sa_02_drip.mp3",
+    "durationSeconds": 2.525
+  },
+  "sa_03_narrator": {
+    "hash": "9b87d430e8ef8a5c",
+    "outFile": "sa_03_narrator.mp3",
+    "durationSeconds": 4.425
+  },
+  "sa_04_sunny": {
+    "hash": "29ec83daf75476e2",
+    "outFile": "sa_04_sunny.mp3",
+    "durationSeconds": 4.275
+  },
+  "sa_05_drip": {
+    "hash": "e6a4d4b164b490cc",
+    "outFile": "sa_05_drip.mp3",
+    "durationSeconds": 2.9
+  },
+  "fl_01_narrator": {
+    "hash": "23cf022b962c3c69",
+    "outFile": "fl_01_narrator.mp3",
+    "durationSeconds": 6.275
+  },
+  "fl_02_drip": {
+    "hash": "bd72673c1dbaeece",
+    "outFile": "fl_02_drip.mp3",
+    "durationSeconds": 4.075
+  },
+  "fl_03_narrator": {
+    "hash": "8012a91774e578a2",
+    "outFile": "fl_03_narrator.mp3",
+    "durationSeconds": 5.4
+  },
+  "fl_04_drip": {
+    "hash": "9341ec16073d8444",
+    "outFile": "fl_04_drip.mp3",
+    "durationSeconds": 3.825
+  },
+  "fl_05_narrator": {
+    "hash": "51ce283b3d3447f6",
+    "outFile": "fl_05_narrator.mp3",
+    "durationSeconds": 2.65
+  },
+  "en_01a_cloudia": {
+    "hash": "65659a4a36450bec",
+    "outFile": "en_01a_cloudia.mp3",
+    "durationSeconds": 4.675
+  },
+  "en_01b_cloudia": {
+    "hash": "c329cf5c2c9c6349",
+    "outFile": "en_01b_cloudia.mp3",
+    "durationSeconds": 4.45
+  },
+  "en_02_drip": {
+    "hash": "499b3b1a175acfe2",
+    "outFile": "en_02_drip.mp3",
+    "durationSeconds": 4.225
+  },
+  "en_03_narrator": {
+    "hash": "f095b7003dca82c3",
+    "outFile": "en_03_narrator.mp3",
+    "durationSeconds": 4.375
+  },
+  "en_04_narrator": {
+    "hash": "671f250a63a208f0",
+    "outFile": "en_04_narrator.mp3",
+    "durationSeconds": 4.4
+  },
+  "ch_01_narrator": {
+    "hash": "2d7bd788e47de6c1",
+    "outFile": "ch_01_narrator.mp3",
+    "durationSeconds": 2.425
+  },
+  "ch_02_narrator": {
+    "hash": "727f93fc4b61b50b",
+    "outFile": "ch_02_narrator.mp3",
+    "durationSeconds": 1.7
+  },
+  "ch_03_narrator": {
+    "hash": "cf4738cbb955edba",
+    "outFile": "ch_03_narrator.mp3",
+    "durationSeconds": 1.65
+  }
+}

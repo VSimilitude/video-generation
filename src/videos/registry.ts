@@ -56,6 +56,72 @@ import {
   WIDTH as KID_DEMO_WIDTH,
   HEIGHT as KID_DEMO_HEIGHT,
 } from "./kid-demo/Video";
+import {
+  DripForkVideo,
+  branching as dripForkBranching,
+  timeline as dripForkTimeline,
+  FPS as DRIP_FORK_FPS,
+  WIDTH as DRIP_FORK_WIDTH,
+  HEIGHT as DRIP_FORK_HEIGHT,
+} from "./drip-fork/Video";
+
+// --- Branching (CYOA) ------------------------------------------------------
+//
+// A branching video is ONE composition whose timeline is laid out as segments
+// at fixed offsets; the site player plays a path through it by seeking, so a
+// segment handoff is a seek inside one mounted Player, never a remount. The
+// composition itself stays a pure function of frame — the viewer's choices
+// reach it only through Player inputProps (`{ path }`), which variant scenes
+// read to pick a clip or prop. See docs/CYOA.md (phase 1).
+
+export type BranchChoiceOption = {
+  /** Stable id recorded in the path state (localStorage) — never rename. */
+  id: string;
+  /** Kid-readable, four words max — pre-readers get the emoji + narration. */
+  label: string;
+  emoji: string;
+  /** Segment to seek to when picked. */
+  to: string;
+  /** Site-relative audio (e.g. "narration/<slug>/<key>.mp3") that reads the
+   * option aloud when the card shows. Played by the site, not Remotion. */
+  narrationFile?: string;
+};
+
+export type BranchNext =
+  | {
+      kind: "choice";
+      /** Stable id for the path state, e.g. "wayUp". */
+      id: string;
+      prompt: string;
+      promptNarrationFile?: string;
+      options: BranchChoiceOption[];
+    }
+  /** Merge: seek to another segment (e.g. branch end -> shared trunk). */
+  | { kind: "jump"; to: string }
+  /** Fall through — the next segment is adjacent in the composition. */
+  | { kind: "continue" }
+  | { kind: "end" };
+
+export type BranchSegment = {
+  id: string;
+  /** Offset of the segment inside the composition, in frames. */
+  from: number;
+  durationInFrames: number;
+  /** What the player does when playback reaches the segment's last frame. */
+  next: BranchNext;
+  /**
+   * Site-relative assets (narration mp3s, plates) this segment plays, so the
+   * player can prefetch a branch while the previous segment is still on
+   * screen and the seek lands with its audio already cached.
+   */
+  preload?: string[];
+};
+
+export type BranchingSpec = {
+  /** Segment playback starts on. */
+  start: string;
+  segments: BranchSegment[];
+};
 
 export type VideoEntry = {
   /** Composition id: used by Remotion, by `remotion render`, and as the site's URL hash. */
@@ -63,7 +129,9 @@ export type VideoEntry = {
   title: string;
   /** One line, shown in the gallery and above the player. */
   description: string;
-  component: React.FC;
+  /** Branching compositions receive `{ path }` via Player inputProps; linear
+   * ones take no props. */
+  component: React.FC<{ path?: Record<string, string> }>;
   fps: number;
   width: number;
   height: number;
@@ -74,6 +142,13 @@ export type VideoEntry = {
    * component showcases — anything renderable that isn't a video to watch.
    */
   hidden?: boolean;
+  /**
+   * Present only on choose-your-own-adventure entries. The site swaps in the
+   * branching player screen; Studio and `remotion render` still see the whole
+   * composition (every segment, in layout order), which is what the
+   * every-frame validation gate renders.
+   */
+  branching?: BranchingSpec;
 };
 
 export const VIDEOS: VideoEntry[] = [
@@ -131,6 +206,18 @@ export const VIDEOS: VideoEntry[] = [
     width: WIND_WIDTH,
     height: WIND_HEIGHT,
     durationInFrames: windTimeline().durationInFrames,
+  },
+  {
+    id: "DripChooses",
+    title: "Drip Chooses the Way Up",
+    description:
+      "Drip needs to get to the Cloud Hotel, and you decide how: a sunbeam at high speed, or the slow gentle float. A Little Big World choose-your-own-adventure demo.",
+    component: DripForkVideo,
+    fps: DRIP_FORK_FPS,
+    width: DRIP_FORK_WIDTH,
+    height: DRIP_FORK_HEIGHT,
+    durationInFrames: dripForkTimeline().durationInFrames,
+    branching: dripForkBranching(),
   },
   {
     id: "KidDemo",

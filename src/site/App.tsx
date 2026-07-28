@@ -8,6 +8,7 @@
 import React from "react";
 import { Player } from "@remotion/player";
 import { theme } from "../lib/theme";
+import { BranchingPlayer } from "./BranchingPlayer";
 import {
   PUBLIC_VIDEOS,
   findVideo,
@@ -134,6 +135,28 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+// Branching entries advertise themselves in the gallery and under the player.
+// They deliberately do NOT show a duration: a CYOA composition's
+// `durationInFrames` is the sum of every branch laid end to end, so the honest
+// mm:ss is roughly double what anyone actually watches.
+const BranchingChip: React.FC = () => (
+  <span
+    style={{
+      display: "inline-block",
+      flexShrink: 0,
+      color: theme.outline,
+      background: theme.accent,
+      borderRadius: 999,
+      padding: "3px 10px",
+      fontSize: 12,
+      fontWeight: 800,
+      whiteSpace: "nowrap",
+    }}
+  >
+    you choose the story
+  </span>
+);
+
 const Header: React.FC<{ subtitle: string }> = ({ subtitle }) => (
   <header style={{ marginBottom: 22 }}>
     <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px" }}>
@@ -160,11 +183,15 @@ const Gallery: React.FC = () => (
           <h2 style={{ fontSize: 19, fontWeight: 700, margin: 0 }}>
             {video.title}
           </h2>
-          <span
-            style={{ color: theme.accentSoft, fontSize: 14, flexShrink: 0 }}
-          >
-            {formatDuration(video.durationInFrames, video.fps)}
-          </span>
+          {video.branching ? (
+            <BranchingChip />
+          ) : (
+            <span
+              style={{ color: theme.accentSoft, fontSize: 14, flexShrink: 0 }}
+            >
+              {formatDuration(video.durationInFrames, video.fps)}
+            </span>
+          )}
         </div>
         <p
           style={{
@@ -218,22 +245,34 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
         ← All videos
       </a>
       <ErrorBoundary onRetry={retry}>
-        <div key={attempt} style={letterbox}>
-          <Player
-            component={video.component}
-            durationInFrames={video.durationInFrames}
-            compositionWidth={video.width}
-            compositionHeight={video.height}
-            fps={video.fps}
-            controls
-            clickToPlay
-            doubleClickToFullscreen
-            allowFullscreen
-            acknowledgeRemotionLicense
+        {video.branching ? (
+          // Same containment, different screen: the branching player owns its
+          // own letterbox because the choice card has to be positioned over it.
+          <BranchingPlayer
+            key={attempt}
+            video={video}
+            spec={video.branching}
+            letterboxStyle={letterbox}
             errorFallback={() => <Hiccup onRetry={retry} />}
-            style={{ width: "100%" }}
           />
-        </div>
+        ) : (
+          <div key={attempt} style={letterbox}>
+            <Player
+              component={video.component}
+              durationInFrames={video.durationInFrames}
+              compositionWidth={video.width}
+              compositionHeight={video.height}
+              fps={video.fps}
+              controls
+              clickToPlay
+              doubleClickToFullscreen
+              allowFullscreen
+              acknowledgeRemotionLicense
+              errorFallback={() => <Hiccup onRetry={retry} />}
+              style={{ width: "100%" }}
+            />
+          </div>
+        )}
       </ErrorBoundary>
       <h2 style={{ fontSize: 20, fontWeight: 700, margin: "18px 0 6px" }}>
         {video.title}
@@ -248,11 +287,36 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
       >
         {video.description}
       </p>
-      <p style={{ marginTop: 10, color: theme.textMuted, fontSize: 13 }}>
-        {formatDuration(video.durationInFrames, video.fps)} ·{" "}
-        {video.width}×{video.height} @ {video.fps} fps · has narration — unmute or
-        raise the volume.
-      </p>
+      {video.branching ? (
+        <>
+          <p style={{ marginTop: 10, color: theme.textMuted, fontSize: 14 }}>
+            This one has a choice in it — when the cards appear, tap one.
+          </p>
+          <p
+            style={{
+              marginTop: 10,
+              color: theme.textMuted,
+              fontSize: 13,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexWrap: "wrap",
+            }}
+          >
+            <BranchingChip />
+            <span>
+              ~1–2 min · {video.width}×{video.height} @ {video.fps} fps · has
+              narration — unmute or raise the volume.
+            </span>
+          </p>
+        </>
+      ) : (
+        <p style={{ marginTop: 10, color: theme.textMuted, fontSize: 13 }}>
+          {formatDuration(video.durationInFrames, video.fps)} ·{" "}
+          {video.width}×{video.height} @ {video.fps} fps · has narration — unmute or
+          raise the volume.
+        </p>
+      )}
     </main>
   );
 };
