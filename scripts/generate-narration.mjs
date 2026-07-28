@@ -805,7 +805,9 @@ async function runAudition(target, outDir, opts = {}) {
           emotion,
           speed,
         });
-        const outFile = `audition_${voiceId}_${emotion}.mp3`;
+        // Include the line key: two lines auditioned with the same emotion
+        // into one dir must not overwrite each other.
+        const outFile = `audition_${key}_${voiceId}_${emotion}.mp3`;
         await writeFile(path.join(outDir, outFile), bytes);
         console.log(
           `  ${voiceId.padEnd(20)} ${mp3DurationSeconds(bytes).toFixed(2)}s  ` +
@@ -835,7 +837,7 @@ async function runAudition(target, outDir, opts = {}) {
       audio.audio,
       audio.sampling_rate,
       outDir,
-      `audition_${voice}`,
+      `audition_${key}_${voice}`,
       encMode,
     );
     console.log(
