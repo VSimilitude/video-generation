@@ -124,7 +124,11 @@ const RAY_ENGINE = "minimax";
 // PLACEHOLDER, UNHEARD. Runner-up in Puff's audition; picked here because a
 // young, earnest, slightly literal boy is the brief and this is the closest
 // description on the list. It has never been heard saying any of these words.
-const RAY_MINIMAX_VOICE = "Decent_Boy";
+// Cast by Mike 2026-07-27 from the four-voice audition: Young_Knight's
+// youthful-earnest read fits an eight-minute-old sunbeam; Decent_Boy's
+// cooler, lower timbre both fought the earnestness and sat too close to
+// Sunny (Imposing_Manner) for adjacent-line clarity.
+const RAY_MINIMAX_VOICE = "Young_Knight";
 const RAY =
   RAY_ENGINE === "minimax"
     ? { engine: "minimax", voiceId: RAY_MINIMAX_VOICE, speed: 1.0 }

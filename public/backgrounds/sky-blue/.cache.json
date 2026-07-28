@@ -1,0 +1,74 @@
+{
+  "grass_overhead": {
+    "hash": "dfb3ed106b090762",
+    "outFile": "grass_overhead.webp",
+    "aspectRatio": "16:9",
+    "prompt": "looking straight down at a patch of summer lawn from directly above, soft painted green grass filling the whole frame with gentle brush texture and a few darker clover leaves near the edges, warm late afternoon light, completely empty and open through the middle of the frame, no objects, no path, no flowers, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "sun_surface": {
+    "hash": "f8ea8a074a164b67",
+    "outFile": "sun_surface.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the churning surface of a friendly storybook sun seen up close, painted in thick gouache with visible brush strokes, big soft rounded convection cells of pale cream yellow and bright gold separated by deep burnt amber seams, strong contrast between the bright cells and the dark seams between them, a band of deep burnt orange across the bottom quarter of the frame, two gentle looping flares curling up at the far edges, warm and inviting and not frightening, no fire, no smoke, flat simplified shapes, not photographic, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "space_stars": {
+    "hash": "04f9d6d2c7ad4e76",
+    "outFile": "space_stars.webp",
+    "aspectRatio": "16:9",
+    "prompt": "deep space, a smooth very dark navy blue to black painted field filling the whole frame, scattered small soft white and pale blue stars of different sizes, one faint dusty violet nebula wash low in the corner, calm and quiet and empty through the middle, no planets, no moons, no spacecraft, no bright light source, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "garden_day": {
+    "hash": "66dfeeaa3e965e31",
+    "outFile": "garden_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a sunny back garden on a bright summer morning seen from lawn level, painted in thick gouache with visible brush strokes and flat simplified storybook shapes, a broad plain sunlit yellow-green lawn across the bottom third with no detail in it at all, one soft rounded green hedge shape and one simple round leafy tree crown in the middle distance painted as flat blocks of green with no individual leaves, warm sunlight from the left, a big clear cyan blue sky with two soft rounded white clouds filling the upper half, empty uncluttered foreground, no flowers, no pond, no fence, no furniture, not photographic, not a 3d render, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "sky_dome_day": {
+    "hash": "6609ed41357ebf05",
+    "outFile": "sky_dome_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "an enormous clear summer sky filling the entire frame, deep cyan blue at the top softening to pale warm blue near the bottom, three small soft rounded white clouds low near the bottom edge, completely open and empty through the whole middle of the frame, no ground, no horizon, no sun, calm and airy, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "street_day": {
+    "hash": "53e514703f488fbd",
+    "outFile": "street_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "an ordinary quiet suburban street on a bright day seen from a child's eye level, two simple soft painted houses with pitched roofs low in the bottom third of the frame, a small front garden hedge, a big open cyan blue sky with a few soft white clouds filling the top three quarters, warm friendly light, empty road, no cars, no signs, no lamp posts, no wires, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "bay_blue": {
+    "hash": "52249ebba18fd2a2",
+    "outFile": "bay_blue.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a postcard-perfect sunlit bay seen from the shore, calm deep blue sea filling the lower half with soft painted ripples, a low soft green headland far away on the right horizon, a straight clear horizon line just below the middle of the frame, brilliant cyan blue sky with a few small white clouds above, no boats, empty foreground, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "bay_grey": {
+    "hash": "f91ab96fa8e77083",
+    "outFile": "bay_grey.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the same calm bay on an overcast grey day, flat grey-green sea filling the lower half with soft painted ripples, a low soft green headland far away on the right horizon, a straight clear horizon line just below the middle of the frame, a low soft grey and white overcast sky above with no blue in it at all, no boats, empty foreground, muted desaturated palette, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "desert_day": {
+    "hash": "55119c04dddacc87",
+    "outFile": "desert_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide empty desert of soft rolling orange and apricot sand dunes under a brilliant cyan blue sky, the dunes across the bottom third with smooth painted crests and long soft shadows, a flat empty horizon, enormous clear blue sky filling the upper two thirds, no plants, no rocks, no tracks, no buildings, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "sea_sunset": {
+    "hash": "d13ed94d8268b94e",
+    "outFile": "sea_sunset.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide calm open sea seen from just above the water, painted in gouache with visible brush strokes, one perfectly straight clear horizon line across the middle of the frame with nothing on it, and above it a sky completely covered edge to edge in soft flat horizontal bands of warm coral and tangerine and deep orange cloud, evenly coloured all the way across with no round shapes in it, the water below reflecting the same warm colours in soft painted ripples, empty foreground, no boats, no islands, no land, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "sea_dusk": {
+    "hash": "83402a20993524ea",
+    "outFile": "sea_dusk.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide calm open sea at late dusk seen from just above the water, one perfectly straight clear horizon line across the middle of the frame with nothing standing on it, a deep indigo and plum sky above fading to a low band of dim ember orange right along the horizon, the first few faint stars high up, dark still water below with soft painted ripples, empty foreground, no boats, no islands, no land, no moon, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  },
+  "moon_surface": {
+    "hash": "90077264ab5f97f3",
+    "outFile": "moon_surface.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the surface of the moon in blinding direct sunlight, a bright pale grey dusty plain with soft shallow craters filling the bottom third and running to a close curved horizon, and above it a completely solid pitch black sky filling the top two thirds scattered with small sharp white stars, hard bright light on the ground, wondrous and calm and not frightening, empty foreground, no earth, no planets, no spacecraft, no flag, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no text, no watermark"
+  }
+}

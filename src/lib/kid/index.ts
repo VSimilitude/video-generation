@@ -41,6 +41,17 @@ export { AirBlob, airBlobPath } from "./characters/AirBlob";
 export { Drip, type DripProps } from "./characters/Drip";
 export { Rock } from "./characters/Rock";
 export { Puff, type PuffProps, type PuffPose } from "./characters/Puff";
+export {
+  Ray,
+  RayShard,
+  SPECTRUM,
+  RAY_BOX,
+  RAY_SHARD_BOX,
+  type RayProps,
+  type RayPose,
+  type RayShardProps,
+  type SpectrumColor,
+} from "./characters/Ray";
 export { Sunny, type SunnyProps } from "./characters/Sunny";
 export { Cloudia, type CloudiaProps } from "./characters/Cloudia";
 export { Blobby, BlobbyCrowd, type BlobbyProps } from "./characters/Blobby";

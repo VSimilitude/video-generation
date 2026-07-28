@@ -50,6 +50,13 @@ import {
   HEIGHT as WIND_HEIGHT,
 } from "./wind/Video";
 import {
+  SkyBlueVideo,
+  timeline as skyBlueTimeline,
+  FPS as SKY_BLUE_FPS,
+  WIDTH as SKY_BLUE_WIDTH,
+  HEIGHT as SKY_BLUE_HEIGHT,
+} from "./sky-blue/Video";
+import {
   KidDemoVideo,
   timeline as kidDemoTimeline,
   FPS as KID_DEMO_FPS,
@@ -64,6 +71,14 @@ import {
   WIDTH as DRIP_FORK_WIDTH,
   HEIGHT as DRIP_FORK_HEIGHT,
 } from "./drip-fork/Video";
+import {
+  AppIconVideo,
+  AppIconMaskableVideo,
+  DURATION_IN_FRAMES as APP_ICON_DURATION,
+  FPS as APP_ICON_FPS,
+  WIDTH as APP_ICON_WIDTH,
+  HEIGHT as APP_ICON_HEIGHT,
+} from "./app-icon/Video";
 
 // --- Branching (CYOA) ------------------------------------------------------
 //
@@ -208,6 +223,17 @@ export const VIDEOS: VideoEntry[] = [
     durationInFrames: windTimeline().durationInFrames,
   },
   {
+    id: "RaySkyBlue",
+    title: "Ray and the Sky Nobody Painted",
+    description:
+      "Why is the sky blue? A brand-new sunbeam finds out he was never plain — and that nobody painted anything. Episode three of Little Big World.",
+    component: SkyBlueVideo,
+    fps: SKY_BLUE_FPS,
+    width: SKY_BLUE_WIDTH,
+    height: SKY_BLUE_HEIGHT,
+    durationInFrames: skyBlueTimeline().durationInFrames,
+  },
+  {
     id: "DripChooses",
     title: "Drip Chooses the Way Up",
     description:
@@ -229,6 +255,33 @@ export const VIDEOS: VideoEntry[] = [
     width: KID_DEMO_WIDTH,
     height: KID_DEMO_HEIGHT,
     durationInFrames: kidDemoTimeline().durationInFrames,
+    hidden: true,
+  },
+  // The player site's home-screen icon, rendered to PNG by `npm run icons`
+  // (which bundles src/videos/app-icon/entry.tsx directly rather than this
+  // registry). Listed here so Studio and `remotion still` can reach it too.
+  {
+    id: "AppIcon",
+    title: "Player site — app icon",
+    description:
+      "The 1024×1024 home-screen icon for the web player. Rendered to site/icons/*.png by `npm run icons`. Not a video.",
+    component: AppIconVideo,
+    fps: APP_ICON_FPS,
+    width: APP_ICON_WIDTH,
+    height: APP_ICON_HEIGHT,
+    durationInFrames: APP_ICON_DURATION,
+    hidden: true,
+  },
+  {
+    id: "AppIconMaskable",
+    title: "Player site — app icon (maskable)",
+    description:
+      "The same mark with Android's maskable safe zone respected. Rendered by `npm run icons`. Not a video.",
+    component: AppIconMaskableVideo,
+    fps: APP_ICON_FPS,
+    width: APP_ICON_WIDTH,
+    height: APP_ICON_HEIGHT,
+    durationInFrames: APP_ICON_DURATION,
     hidden: true,
   },
 ];
