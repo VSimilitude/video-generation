@@ -88,3 +88,20 @@ npm run typecheck
   the kids' section of `docs/STYLE.md`.
 - After finishing a video: add a dated entry to `docs/LEARNINGS.md` and
   update `docs/STYLE.md` with anything that should become a rule.
+
+## Multi-session etiquette
+
+Multiple Claude sessions may work in this tree concurrently (e.g. episode
+production vs. player/site engineering). Rules that keep them from colliding:
+
+- Ownership: `src/videos/` + `src/lib/kid/` belong to the production session;
+  `src/site/` + the branching player belong to the technical session. Registries
+  are shared — add entries with minimal diffs, never reorganize concurrently.
+- Commit selectively (never `git add -A` while another session has uncommitted
+  work) and PUSH after committing — a local-only commit is invisible to the
+  other session's deploys.
+- To deploy while the tree contains another session's WIP: build from a clean
+  worktree of committed main —
+  `git worktree add --detach <tmp> origin/main && ln -s $(pwd)/node_modules
+  <tmp>/node_modules && (cd <tmp> && npm run deploy)` — then remove the
+  worktree (from OUTSIDE it).
