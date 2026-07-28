@@ -810,3 +810,30 @@ straight out of doing it, and are now in STYLE.md:
   lines went from 33.7 s to 46.8 s (+39%), and the episode from 9:14 to 9:27 of
   narration. Nothing needed re-timing — audio-driven pacing absorbed all of it,
   which is the clearest payoff yet from never hand-timing a scene.
+
+---
+
+## Next: sky-blue (Ray and the Sky Nobody Painted — kids ep 3)
+
+_Build-side notes (2026-07-28); watch-side retro pending._
+
+- **Third-episode pipeline maturity**: script approved zero-edit; wave 1
+  survived a mid-build quota kill with zero paid-work loss (plates + rig
+  intact; successor agent audited-not-trusted and found 12 real staging
+  bugs); act waves consumed wave-1's flagged plate/rig quirks from their
+  briefs instead of rediscovering them.
+- **Casting**: Ray = Young_Knight (earnest-young beats cool-guy for an
+  8-minute-old hero; timbre separation from Sunny matters for adjacent
+  lines — the Claire cameo-voice lesson applied at cast level).
+- **Ep-4 cleanup list**: promote SleepingVolcano to src/lib/kid (now
+  written twice: wind/act3 + sky-blue/act3); export coldOpen's
+  PageShadow/CrayonBox/OverheadKid/Hand/palmFor (reproduced in sky-blue
+  act3 — one careless edit from divergence); AirBlob reads papery at
+  small radius (vapor look needs a real fix, touches ep 2); plate style
+  drifted within the episode (garden/street/sun = gouache, seas/desert =
+  smooth gradient — tighten the style anchor per-episode next time);
+  rig emotion vocab lacks "surprised"/"curious" (add or keep mapping to
+  amazed — decide before ep 4's script seasons lines).
+- **Ep-4 hero-arc rule** (from the ep-3 script's own self-flag): break
+  the wrong-about-self shape — three episodes is a formula. Lava-drop
+  hero gets a different arc (impatience vs the rock cycle's slowness).
