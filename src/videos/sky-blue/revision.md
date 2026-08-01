@@ -1943,3 +1943,25 @@ hellos from Ray, six replies — hang the lantern). Violet's gag is now
 load-bearing across episodes: he is the ONLY one who never speaks.
 Cast decided: Blue=Decent_Boy (happy 1.05), Red=Patient_Man (calm 0.9).
 Middle four pending audition.
+
+---
+
+# ADDENDUM 3 (Mike, 2026-08-01) — RAY IS F2; THE FREQUENCY LADDER
+
+**Ray's body: round-2 candidate F2** (pure Cheshire — features floating in
+a feathered glow over an independent wave ribbon; no head disc; the face
+bobs on the wave's crest a beat late). Implementation carries the round-2
+report's mitigations: feature/glow contrast bumped so blink + mouth-sync
+stay legible at 0.44 crowd scale; F2's silhouette-test disc-flattening
+noted; render talking tests early and iterate.
+
+**The seven shards: an ASCENDING FREQUENCY LADDER, made obvious.** Mike:
+"Red doesn't have to be symmetrical even — a single trough and peak — and
+each progression more and more wavey." Spec: Red = one trough + one peak
+(half-wave, the minimum possible wave; visibly can't-be-bothered); each
+color up the ladder adds visible waviness stepwise (Orange a touch more,
+… Blue tight, Indigo tighter, Violet a fizzing blur). One shared wave
+speed so frequency IS temperament (the round-1 f = v/λ analysis, now the
+explicit drawing). The ladder must read as ascending at a glance when the
+seven stand in spectrum order — the split reveal and the race both become
+frequency diagrams wearing faces.
