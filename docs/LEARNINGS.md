@@ -1058,3 +1058,30 @@ seen. Four findings worth keeping:
   hit.** `RayShard`'s `y` is the top of its box; geometry helpers return
   centres. Mixing them is a silent 64-pixel drop, which is precisely far enough
   to park seven blobs on top of the word they were supposed to be sitting above.
+
+## 2026-08-01 — phone audio dropouts (site infra, debugged on wind)
+
+Ep 2 developed random speech dropouts — phone only, laptop fine, worse in the
+installed PWA. Two stacked causes, both worth remembering:
+
+- **Regenerating a clip in place is a cache invalidation event.** Narration
+  files keep their line-key URL forever, so every revision (recasts, punch-ups)
+  ships new audio under an old name. The service worker's iOS path (Range
+  requests) never revalidated, so phones played *old* audio against *new*
+  manifest durations — chopped phrases where the clip got shorter, dead air
+  where it got longer. Fixed in `site/sw.js` (range hits revalidate, runtime
+  cache bumped to v2). Rule: any change to how media is cached must be tested
+  against a clip that changed content under a stable URL, on the phone.
+- **Just-in-time audio mounts lose the race on a phone.** `<Audio>` elements
+  created exactly at their start frame have zero preload headroom; desktop
+  hides this, iPhone doesn't, and a dialogue-dense episode (wind after the
+  punch-up: 189 clips, lots of 1–2s turns) hits it constantly. Fixes now in
+  the shared layer: dialogue turns premount 90 frames, all narration uses
+  `pauseWhenBuffering` (hold beats skip), and both players warm
+  `numberOfSharedAudioTags={10}` for mobile Safari's gesture rules. The
+  branching player had already learned this lesson (it prefetches every
+  segment) — the linear player just hadn't inherited it.
+
+Symptom fingerprint for next time: "random" audio glitches that are
+device-specific and episode-specific are usually *cache-state*-specific —
+ask what changed under a stable URL, and what the slowest device has cached.
