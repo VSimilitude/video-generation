@@ -17,13 +17,18 @@
 
 const VERSION = "__BUILD_VERSION__";
 const SHELL_CACHE = `vg-shell-${VERSION}`;
-const RUNTIME_CACHE = "vg-runtime-v1";
+// v2: v1 caches were filled by a worker that never revalidated on the Range
+// path (see handleRuntime), so any clip regenerated in place is stale there.
+// The bump flushes them once; the cache still deliberately survives deploys.
+const RUNTIME_CACHE = "vg-runtime-v2";
 
 /**
- * Cap on cached media entries. The suite is a few hundred small mp3s and webp
- * plates; this keeps a phone from hoarding every episode ever deployed.
+ * Cap on cached media entries. Sized so one episode cannot churn the whole
+ * cache: a single kids' episode is ~200 assets (wind: 189 clips + 9 plates),
+ * and at the old cap of 200 a playthrough evicted everything else — and then
+ * its own opening scenes.
  */
-const RUNTIME_MAX_ENTRIES = 200;
+const RUNTIME_MAX_ENTRIES = 600;
 
 const SHELL = [
   "./",
@@ -161,6 +166,14 @@ async function handleShell(request) {
  */
 const warming = new Set();
 
+/**
+ * URLs already revalidated in this worker's lifetime. iOS fires dozens of
+ * Range requests per clip; one conditional GET per clip per worker life is
+ * plenty, and the set dying with the (short-lived) worker means the next
+ * session revalidates afresh.
+ */
+const revalidated = new Set();
+
 async function handleRuntime(event, request, url) {
   const cache = await caches.open(RUNTIME_CACHE);
   // Key on the bare URL: the Range header must not become part of the key, and
@@ -171,7 +184,13 @@ async function handleRuntime(event, request, url) {
     const cached = await cache.match(key);
     if (cached) {
       const partial = await sliceResponse(cached, request.headers.get("range"));
-      if (partial) return partial;
+      if (partial) {
+        // Revalidate on this path too. iOS asks ONLY in ranges, so without
+        // this a clip regenerated under the same URL stayed stale forever —
+        // playing old audio against the new manifest's scene durations.
+        event.waitUntil(revalidate(cache, key));
+        return partial;
+      }
     }
     event.waitUntil(warmUp(cache, key));
     return fetch(request);
@@ -183,7 +202,7 @@ async function handleRuntime(event, request, url) {
     // — so entries that are actually being played drift to the back of the
     // queue and the eviction below takes the coldest ones. Offline use never
     // reorders anything, which is harmless: offline use also never adds.
-    event.waitUntil(refresh(cache, key));
+    event.waitUntil(revalidate(cache, key));
     return cached;
   }
 
@@ -203,6 +222,12 @@ async function warmUp(cache, key) {
   } finally {
     warming.delete(key);
   }
+}
+
+async function revalidate(cache, key) {
+  if (revalidated.has(key)) return;
+  revalidated.add(key);
+  await refresh(cache, key);
 }
 
 async function refresh(cache, key) {
@@ -239,13 +264,17 @@ async function sliceResponse(response, rangeHeader) {
   const match = /^bytes=(\d*)-(\d*)$/.exec(String(rangeHeader).trim());
   if (!match) return null;
 
-  let buffer;
+  // Blob, not arrayBuffer: the Cache API backs bodies on disk and Blob.slice
+  // is lazy, while the old full-file arrayBuffer copy ran once per Range
+  // request — dozens of times per clip on iOS, right when the phrase was due
+  // to start.
+  let blob;
   try {
-    buffer = await response.clone().arrayBuffer();
+    blob = await response.clone().blob();
   } catch {
     return null;
   }
-  const size = buffer.byteLength;
+  const size = blob.size;
 
   let start;
   let end;
@@ -261,14 +290,14 @@ async function sliceResponse(response, rangeHeader) {
   if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
   if (start < 0 || end < start || end >= size) return null;
 
-  const body = buffer.slice(start, end + 1);
+  const body = blob.slice(start, end + 1);
   return new Response(body, {
     status: 206,
     statusText: "Partial Content",
     headers: {
       "Content-Type":
         response.headers.get("Content-Type") ?? "application/octet-stream",
-      "Content-Length": String(body.byteLength),
+      "Content-Length": String(body.size),
       "Content-Range": `bytes ${start}-${end}/${size}`,
       "Accept-Ranges": "bytes",
     },

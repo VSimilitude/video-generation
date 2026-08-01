@@ -279,6 +279,10 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
                 clickToPlay
                 doubleClickToFullscreen={stage.allowPlayerFullscreen}
                 allowFullscreen={stage.allowPlayerFullscreen}
+                // Mobile Safari only reliably plays audio elements unlocked by
+                // a user gesture; the shared pool is warmed on first tap and
+                // reused, instead of minting a fresh <audio> per line mid-play.
+                numberOfSharedAudioTags={10}
                 acknowledgeRemotionLicense
                 errorFallback={() => <Hiccup onRetry={retry} />}
                 style={stage.playerStyle}

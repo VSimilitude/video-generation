@@ -204,12 +204,28 @@ export function beats(
   return fractions.map((f) => Math.round(f * frames));
 }
 
+// `pauseWhenBuffering` on every narration clip: on a phone, a clip that is
+// still loading when its frame arrives must hold the video, not get its first
+// words skipped. Desktop never notices; iPhone playback is where an episode's
+// dozens of just-in-time <audio> mounts otherwise race the network.
+
 // Mounts a scene's narration clip (no-op for silent scenes). Place inside the
 // scene's <Series.Sequence> so the audio starts with the scene.
 export const SceneAudio: React.FC<{ clip?: NarrationClip }> = ({ clip }) => {
   if (!clip) return null;
-  return React.createElement(Audio, { src: staticFile(clip.file) });
+  return React.createElement(Audio, {
+    src: staticFile(clip.file),
+    pauseWhenBuffering: true,
+  });
 };
+
+/**
+ * How far ahead a dialogue turn mounts (silently) before it plays. Three
+ * seconds is enough for the phone to fetch a short mp3 through the service
+ * worker; turns earlier than that in a scene simply get whatever headroom the
+ * scene's own start gives them.
+ */
+const TURN_PREMOUNT_FRAMES = 90;
 
 /**
  * Mounts every turn of a dialogue scene at its own offset. Drop it in place of
@@ -228,8 +244,12 @@ export const DialogueAudio: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           key: `${turn.speaker}-${i}`,
           from: turn.from,
           durationInFrames: turn.durationInFrames,
+          premountFor: TURN_PREMOUNT_FRAMES,
         },
-        React.createElement(Audio, { src: staticFile(turn.clip.file) }),
+        React.createElement(Audio, {
+          src: staticFile(turn.clip.file),
+          pauseWhenBuffering: true,
+        }),
       ),
     ),
   );

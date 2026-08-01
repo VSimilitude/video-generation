@@ -383,6 +383,8 @@ export const BranchingPlayer: React.FC<BranchingPlayerProps> = ({
             clickToPlay
             doubleClickToFullscreen={false}
             allowFullscreen={false}
+            // Same iOS audio-unlock pool as the linear player in App.tsx.
+            numberOfSharedAudioTags={10}
             acknowledgeRemotionLicense
             errorFallback={errorFallback}
             style={stage.playerStyle}
