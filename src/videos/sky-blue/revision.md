@@ -1918,3 +1918,28 @@ survives at the race's finish line.
 staging — multi-leg race world), and absorbs 28b. Runtime delta to be
 computed in draft; the treatment's +43.8s estimate will grow — budget
 approved implicitly by the scope of the request, flag the final number.
+
+---
+
+# ADDENDUM 2 (Mike, 2026-08-01) — SIX VOICES, ONE SILENCE
+
+Supersedes the two-voice casting in §"Voices": **six of the seven colors
+speak; Violet alone never does** — Mike's call, fixing the structural flaw
+that five silent siblings unmark Violet's silence. Line-budget discipline:
+Blue and Red remain the leads (the double-act); Orange, Yellow, Green,
+Indigo get 1–2 lines each where THE LINE IS THE PERSONALITY:
+- Orange: only ever agrees with Red ("What Red said." — possibly his entire
+  vocabulary, this episode and every future one).
+- Yellow: relentless cheer as non-sequitur ("Great bounce, Violet!" — also
+  the only character who ever addresses Violet).
+- Green: contentment ("This is a nice spot." — said while dropping out).
+- Indigo: Blue's echo, VOCALLY as well as physically — same voice as Blue
+  (Decent_Boy) pitched down ~2 semitones, slower, quieter, repeating the
+  tails of Blue's lines four beats late. No new voice needed; physics-true
+  (adjacent wavelength = faded copy).
+Natural line homes: the race exits (each color departs with their
+signature; Violet exits in pointed silence) and the roll call (seven
+hellos from Ray, six replies — hang the lantern). Violet's gag is now
+load-bearing across episodes: he is the ONLY one who never speaks.
+Cast decided: Blue=Decent_Boy (happy 1.05), Red=Patient_Man (calm 0.9).
+Middle four pending audition.
