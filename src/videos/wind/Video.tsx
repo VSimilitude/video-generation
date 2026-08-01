@@ -475,7 +475,12 @@ const SCRIPT: SceneSpec[] = [
       // 45f — let it sit. This is the line the whole character was built to say.
       a3_52_puff: 45,
     },
-    tailFrames: 40,
+    // 135f, up from 40 (2026-08-01): "look what they CAN see" now has a
+    // demonstration. Puff turns, fills up, and flicks the beetle onto his
+    // back — the one thing on that hill they CAN see happening — and the
+    // flipped beetle then gets a beat of stunned stillness before the
+    // "Meanwhile." cut. The choreography in act3.tsx keys off this tail.
+    tailFrames: 135,
   },
   {
     // C9 — the cutaway. Scene 13's exact framing, five minutes later, re-lit

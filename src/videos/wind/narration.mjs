@@ -1124,8 +1124,13 @@ export default {
       text: "WARM AIR RISES! Because I warm the ground! That is also me!",
       ...SUNNY,
     },
+    // "Wind", sentence case, on purpose (2026-08-01): as "WIND!" MiniMax read
+    // the word like kind/find/mind — "wine-d". Auditioned three respellings
+    // (public/narration/auditions-cloudia/) and sentence case alone fixes the
+    // vowel, so the real spelling stays. The recap's on-screen panel still
+    // shouts WIND in caps; that text lives in scenes/recap.tsx, not here.
     rc_04_cloudia: {
-      text: "WIND! Air in a hurry! It delivers me door to door, darling!",
+      text: "Wind! Air in a hurry! It delivers me door to door, darling!",
       ...CLOUDIA,
       emotion: "happy",
     },

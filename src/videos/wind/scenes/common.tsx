@@ -1120,6 +1120,12 @@ type CreatureProps = {
   eyeLife?: number;
   idle?: number;
   zIndex?: number;
+  /**
+   * Body rotation in degrees, about the creature's centre. Face, legs and
+   * antennae all go with it — 180 is a beetle flat on his back, which is the
+   * only thing this knob was added for (Scene 32's puff-off).
+   */
+  rot?: number;
 };
 
 const BEETLE_SHELL = "#4a3f6e";
@@ -1234,7 +1240,7 @@ export const Leaf: React.FC<CreatureProps> = (props) => {
 /** Shared positioning frame for the cameo creatures. */
 const CreatureFrame: React.FC<
   CreatureProps & { rig: ReturnType<typeof useRig>; box: number; children: React.ReactNode }
-> = ({ rig, box, x, y, scale = 1, zIndex, children }) => {
+> = ({ rig, box, x, y, scale = 1, rot = 0, zIndex, children }) => {
   const p = rig.placement;
   return (
     <div
@@ -1253,7 +1259,10 @@ const CreatureFrame: React.FC<
       }}
     >
       <svg width={box} height={box} viewBox={`${-box / 2} ${-box / 2} ${box} ${box}`} overflow="visible">
-        {children}
+        {/* The viewBox origin is the body centre, so a bare rotate() here is a
+            rotation about the creature's middle — squash stays feet-anchored
+            on the div above, the tumble happens in here. */}
+        <g transform={rot ? `rotate(${rot})` : undefined}>{children}</g>
       </svg>
     </div>
   );

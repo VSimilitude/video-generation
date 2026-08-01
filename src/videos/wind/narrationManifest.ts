@@ -181,7 +181,7 @@ export const NARRATION: Record<string, NarrationClip> = {
   "rc_01_narrator": { file: "narration/wind/rc_01_narrator.mp3", durationSeconds: 3.025 },
   "rc_02_puff": { file: "narration/wind/rc_02_puff.mp3", durationSeconds: 6.516 },
   "rc_03_sunny": { file: "narration/wind/rc_03_sunny.mp3", durationSeconds: 4.175 },
-  "rc_04_cloudia": { file: "narration/wind/rc_04_cloudia.mp3", durationSeconds: 5.22 },
+  "rc_04_cloudia": { file: "narration/wind/rc_04_cloudia.mp3", durationSeconds: 4.86 },
   "rc_05_narrator": { file: "narration/wind/rc_05_narrator.mp3", durationSeconds: 5.425 },
   "rc_06_narrator": { file: "narration/wind/rc_06_narrator.mp3", durationSeconds: 4.025 },
   "rc_07_narrator": { file: "narration/wind/rc_07_narrator.mp3", durationSeconds: 5.325 },

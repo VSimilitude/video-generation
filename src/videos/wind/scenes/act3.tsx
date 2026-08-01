@@ -5,6 +5,8 @@ import {
   Puff,
   Sunny,
   kidEase,
+  kidRadius,
+  kidShadow,
   kidTheme,
   kidType,
   mixHex,
@@ -2732,6 +2734,31 @@ const WhatTheyCanSeeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     visual,
   );
 
+  // --- THE PUFF-OFF, added 2026-08-01. "Look what they CAN see" used to be
+  // the last thing that happened in the scene, and the line pointed at
+  // nothing: the kite is behind Puff, the cut to the rock came next, and the
+  // second viewer went looking for the thing they can see. So now Puff
+  // demonstrates. He turns to the beetle, fills up — a flick, not Scene 31's
+  // gale — and flips him clean off his patch of grass onto his back, legs up,
+  // eyes wide. That IS the thing they can see: not Puff, just a beetle going
+  // over for no visible reason at all. Everything is keyed off the tail
+  // (`heldBeat` of the last line), which `Video.tsx` grew to 135f for this.
+  const [gagFrom] = heldBeat(scene, "a3_54_puff");
+  // Turn (10f in), inhale across 18f, blow at +30.
+  const inhale = kidEase.easeInOutSine(clamp01((frame - (gagFrom + 10)) / 18));
+  const blast = frame - (gagFrom + 30);
+  const swell = inhale * (blast <= 0 ? 1 : Math.max(0, 1 - blast / 12));
+  // The flight: launched the frame the arcs reach his shell, half a turn in
+  // the air, down on his back 20f later, then a damped rock as the shell
+  // settles. `rot` is the new creature knob — see CreatureFrame in ./common.
+  const flightFrom = gagFrom + 44;
+  const flip = clamp01((frame - flightFrom) / 20);
+  const flipEase = kidEase.easeOutCubic(flip);
+  const tumbleX = beetleX + 170 * flipEase;
+  const tumbleY = S32_BEETLE.y + 20 * flipEase - 140 * Math.sin(Math.PI * flip);
+  const beetleRot =
+    180 * flipEase + 12 * settleWave(clamp01((frame - (flightFrom + 20)) / 50), 2.2, 3.5);
+
   const kidX = HILL_MARKS.kidX;
   const kid: KidPlacement = {
     x: kidX,
@@ -2766,24 +2793,57 @@ const WhatTheyCanSeeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.puff}
         emotion={emotion}
         speaking={stage.speaking("puff")}
-        look={frame >= beatFrom ? { x: 0.85, y: -0.55 } : { x: 0.7, y: -0.6 }}
-        idle={frame >= beatFrom && frame < beatFrom + 45 ? 0.4 : 0.9}
+        // Third state is the puff-off: he drops his eyes from the kite to the
+        // beetle down the slope, and holds there through the flip — the look
+        // is what tells the audience the flick was aimed.
+        look={
+          frame >= gagFrom + 8
+            ? { x: 1, y: 0.42 }
+            : frame >= beatFrom
+              ? { x: 0.85, y: -0.55 }
+              : { x: 0.7, y: -0.6 }
+        }
+        swell={swell}
+        pose={swell > 0.4 ? "brace" : "rest"}
+        idle={swell > 0.3 ? 0.25 : frame >= beatFrom && frame < beatFrom + 45 ? 0.4 : 0.9}
         wisps={2}
       />
       {/* Foreground grass for the beetle to arrive through. */}
       <ForegroundTuft x={S32_BEETLE.x + 40} />
       <Beetle
-        x={beetleX}
-        y={S32_BEETLE.y}
+        x={tumbleX}
+        y={tumbleY}
         scale={S32_BEETLE.scale}
+        rot={beetleRot}
         phase={PHASE.beetle}
         speaking={stage.speaking("beetle")}
-        look={beetleLook}
-        emotion="neutral"
-        eyeLife={0.3}
-        idle={0.45}
+        // The take snaps on launch: eyes all the way awake, "amazed" (the
+        // rig's wide-eyed face — this is the surprised look). The look is in
+        // *face* space, so at rot 180 {x: 0.2, y: 0.45} reads on screen as
+        // up-and-back toward where the shove came from — which, of course, he
+        // still cannot see.
+        look={flip > 0 ? { x: 0.2, y: 0.45 } : beetleLook}
+        emotion={flip > 0 ? "amazed" : "neutral"}
+        eyeLife={flip > 0 ? 1 : 0.3}
+        idle={flip >= 1 ? 0.3 : 0.45}
         zIndex={26}
       />
+      {/* The flick, drawn: the same arc language as Scene 31's blast, one
+          size down, crossing from Puff to the beetle's shell. The arcs pass
+          behind the beetle (his z-index wins), which is what makes them read
+          as *reaching* him. */}
+      {blast >= 0 && blast < 18 ? (
+        <AirArcs
+          x={S32_PUFF.x + 170 + blast * 56}
+          // Low: the flick crosses the whole frame, and at torso height it
+          // looked aimed at the kid. Skimming the grass line keeps it under
+          // his knees on the way past.
+          y={680}
+          scale={1.05}
+          strength={Math.max(0, 1 - blast / 18)}
+          count={3}
+        />
+      ) : null}
       <Bubbles
         scene={scene}
         cast={cast}
@@ -2907,10 +2967,47 @@ const TheRockAgainScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       <Moth from={22} until={Math.min(beatFrom - 20, 118)} t={t} />
       {/* The cut in from the kite hill. */}
       <CutFlash at={0} strength={0.35} />
+      {/* The caption, added 2026-08-01. The Narrator already says "Meanwhile."
+          on the cut; this is the same word written down, in the corner the
+          trope keeps it in. It pops with the spoken word and then just stays —
+          a caption, not an event, so no starburst and no bouncing letters. */}
+      <MeanwhileBanner />
       {/* No bubble, for either line. The rock had none in Scene 13 — its bubble
           would still be shrinking six frames into the silence — and the
           Narrator has never had one in two episodes. */}
     </AbsoluteFill>
+  );
+};
+
+/** The classic cutaway card, top-left, for as long as the shot holds. */
+const MeanwhileBanner: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const pop = spring({ frame: frame - 2, fps, config: { damping: 13, mass: 0.7 } });
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 54,
+        top: 46,
+        padding: "10px 40px 16px",
+        background: kidTheme.paper,
+        border: `7px solid ${kidTheme.ink}`,
+        borderRadius: kidRadius.chip,
+        color: kidTheme.ink,
+        fontFamily: kidTheme.fontFamily,
+        fontSize: kidType.label,
+        fontWeight: 800,
+        // Tilted like a card slapped on the frame, growing from its own top
+        // corner so the pop reads as arriving, not inflating.
+        transform: `rotate(-2deg) scale(${pop})`,
+        transformOrigin: "12% 0%",
+        boxShadow: kidShadow(0.8),
+        zIndex: 40,
+      }}
+    >
+      Meanwhile…
+    </div>
   );
 };
 
