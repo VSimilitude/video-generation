@@ -1863,3 +1863,53 @@ QA lesson this repo has now learned three separate times.
 - **The `wind` episode, apart from one free line.** `rc_16_sunny` ("Wait.
   What?"), the 45f beat in front of it, the mid-episode fuse and every other
   ep-2 clip are untouched.
+
+---
+
+# ADDENDUM (Mike, 2026-08-01) — THE SUNSET RACE
+
+Supersedes/extends §6.13 (Scene 28) and integrates §6.14 (Scene 28b): the
+"blue runs out" drain becomes a RACE among the seven colors across the
+sunset path — the mechanism staged as ensemble comedy, and the volcano's
+one in-episode touchpoint, in-world.
+
+**Shape** (the simple line view / two-path diagram of Scene 27 stays, as
+the setup — the race runs after it as the payoff):
+- All seven leave together at the start of the long sideways path.
+  Different terrain legs (high air → over country → out over the sea →
+  the viewer's eye at the shore).
+- **Violet and Blue get bounced out early** — pinballed off air until
+  they exit the race UPWARD, visibly becoming part of the sky behind
+  (physics honesty: nobody loses, they bounce off sideways and go
+  decorate the sky; stage the exits as bounces INTO the blue above,
+  never as falling/vanishing).
+- **Indigo** follows Blue out four frames late, per his signature.
+- **Yellow and Green** last longer, then fade mid-race in character:
+  ONE of them (pick in draft — leaning Yellow) drifts down to rest on
+  the sleeping volcano island; the narrator warns them off (line to
+  draft — register options: "That is not a rest stop." / "Light does
+  not go down there." / Mike's sketch: "no light can go down there");
+  **the volcano opens ONE eye.** Holds a beat. Closes it. Says nothing
+  (or at most a sub-verbal rumble). This is the volcano's first-ever
+  acknowledgment that it is aware — the sleeping gag's next escalation
+  (ep 2 asleep unmentioned → ep 3 one eye → ep 4 awake). The racer
+  bounces off apologetically and exits upward like the others.
+- The OTHER of Yellow/Green gets distracted somewhere else en route
+  (in character: Green sits down the instant something stops moving —
+  a becalmed sailboat? draft it).
+- **Red and Orange finish** — Red at his one speed, Orange one
+  body-length behind as always. Flows directly into §6.14's "Peace and
+  quiet." (Red's moment now includes Orange arriving second, silently,
+  and standing exactly one body-length behind him at the rail.)
+
+**Rules carried:** each exit is that color's signature move; physics
+honesty (bounced out ≠ lost; the sunset's red IS the survivors); the
+volcano gets NO dialogue and NO narrator explanation beyond the one
+warn-off line; held beats per pacing rules, esp. the one-eye beat
+(~45f, nothing enters it); Scene 28's landing-on-an-eye pedagogy beat
+survives at the race's finish line.
+
+**Cost note:** replaces the Scene 28 REVISE with a REWRITE (bigger
+staging — multi-leg race world), and absorbs 28b. Runtime delta to be
+computed in draft; the treatment's +43.8s estimate will grow — budget
+approved implicitly by the scope of the request, flag the final number.
