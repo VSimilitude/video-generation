@@ -521,7 +521,8 @@ three" below.
 below) and the whole cast is off placeholders, but nobody has watched the
 episode end to end with his voice in it; the recast character lines all want an
 ear, particularly Cloudia's `angry` demand; spelled
-"A. I. R." / "W. I. N. D." clips need an ear; scene 30 is prop-crowded;
+"A. I. R." / "W. I. N. D." clips need an ear (done 2026-07-31 — the second
+failed, see below); scene 30 is prop-crowded;
 scene 35 map has place-name text (cut for pre-readers?); the 75f kite payoff
 and the rock's stillness are timing bets pending playback. Since the punch-up
 (2026-07-28), add: **all thirteen Sunny lines**, which are new recordings on the
@@ -696,6 +697,47 @@ one:
 lines free on Kokoro, eight on MiniMax for 235 characters, about **$0.03**
 total. The rock's callback (`a3_55_narrator`) cost nothing at all: it is an
 alias, not a recording.
+
+### The eight-year-old's round (2026-07-31)
+
+- **A second viewer, four years older, finds a completely different class of
+  fault — and one of her notes was a better line than ours.** Six fixes, all
+  small, all in one pass (12:20 → 12:25, one MiniMax regen at under a cent,
+  three new Kokoro clips free). What they have in common is worth more than any
+  one of them: the six-year-old's notes were about *pace and who is talking*,
+  and the eight-year-old's were about **things that are technically fine and
+  read wrong** — a letter mispronounced, a joke run together, a cut that looked
+  like an answer, a shape that looked like something else. Ship a cut to a
+  second viewer at a different age before calling it done. The six, and the
+  rules they leave behind: **(a)** she heard "W. I. N. D." as "Vind" — MiniMax
+  says a bare "W." badly, and the pre-written phonetic fallback ("Double you.
+  Eye. Enn. Dee.") became the line. *A pre-written fallback is only insurance
+  if somebody actually ear-checks the thing it insures*, and the letter-timed
+  card had to be re-measured against the new clip (`BigWordBeat` grew an
+  optional `beats`, because an even split assumes the syllables are evenly
+  spaced and this engine leaves six tenths of a second between letters).
+  **(b)** Her own punch-up, adopted as given: the Narrator's flat "Yes." after
+  "Are they all called Puff?" is now **"Probably."** *A viewer's line is worth
+  more than a writer's when it is funnier; take it, and credit it in the
+  comment.* **(c)** "One day Sunny will be wrong about something. It is not
+  today." was heard as one breath — Kokoro cannot pause inside a line, so the
+  sentence is now two clips with 36 frames of silence between them. *A pause a
+  joke depends on is a held beat, not punctuation; if the engine cannot pause,
+  split the clip.* **(d)** The moving air puffs read as sperm. A round blob with
+  one tapering trail is a tadpole silhouette and the eye reads it as one
+  organism rather than an object with motion on it; two shorter parallel offset
+  lines read unambiguously as speed, because nothing alive has two tails. Drawn
+  the old way in four places, now all through one `MotionTrail` helper, and
+  **codified in STYLE.md's kids section**. *This is the reusable one: a
+  suggestive silhouette is invisible to whoever drew it and obvious to everyone
+  else, which is exactly what a second pair of eyes is for.* **(e)** Drip's
+  bubble sat below him, so its tail — which always hangs off the bubble's
+  bottom — pointed at empty sky and the line read as narration. *Place a bubble
+  above its speaker; use `tailAt` whenever it had to be moved off its own mark.*
+  **(f)** The rock cutaway landed straight off "look what they CAN see" and she
+  connected the two. One narrator word, **"Meanwhile."**, fixed it: *a
+  non-sequitur has to be declared, or the audience will assume it is an answer
+  — which is what the classic TV cutaway marker has always been for.*
 
 ### The consolidation before episode three (2026-07-27)
 

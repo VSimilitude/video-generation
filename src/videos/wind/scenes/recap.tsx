@@ -15,6 +15,7 @@ import {
   AbsoluteFill,
   Bubbles,
   Camera,
+  MotionTrail,
   PHASE,
   PUFF_OPACITY,
   PaintedSky,
@@ -340,7 +341,10 @@ const PanelCast: React.FC<{ who: Panel["key"]; speaking: boolean; lit: boolean }
         const x = ((t * 260 + i * 173) % 900) - 120;
         return (
           <g key={i}>
-            <path d={`M ${x} ${y} q 60 -12 120 -2`} stroke={kidTheme.airDeep} strokeWidth={9} strokeLinecap="round" fill="none" opacity={0.55} />
+            {/* Two lines, never one — see `MotionTrail`. This panel and Scene
+                25's cool-air sweep are the two the eight-year-old named: a
+                round blob with a single tapering line off it is a tadpole. */}
+            <MotionTrail x={x + 122} y={y - 4} len={112} dir={-1} width={7} opacity={0.55} />
             <ellipse cx={x + 150} cy={y - 4} rx={26} ry={20} fill={kidTheme.airCool} stroke={kidTheme.airDeep} strokeWidth={5} />
           </g>
         );

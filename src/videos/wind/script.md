@@ -99,7 +99,7 @@ astonished.
 |---|---|---|---|
 | **AIR** | One | `a1_21`, `a1_37`, `a1_38`, `a1_39`, `rc_02`, `rc_06` | `WordCard`, spelled A. I. R. |
 | **WARM AIR RISES** | Two | `a2_20` (twice in the line), `a2_21`, `rc_03`, `rc_06` | **Rule stamp, not a `WordCard`** — see Production notes |
-| **WIND** | Two | `a2_31`, `a2_32`, `a2_33`, `a2_34`, `rc_04`, `rc_06` | `WordCard`, spelled W. I. N. D., chant "Wind is air in a HURRY!" |
+| **WIND** | Two | `a2_31`, `a2_32`, `a2_33`, `a2_34`, `rc_04`, `rc_06` | `WordCard`, blocks W / I / N / D (said "Double you. Eye. Enn. Dee." — see Scene 19), chant "Wind is air in a HURRY!" |
 | **SEA BREEZE** | Three | `a3_16`, `a3_17`, `a3_18`, `rc_05`, `rc_06` | `WordCard` |
 
 ## Line-key convention
@@ -731,17 +731,28 @@ house signature.
 **Lines:** `a2_31_narrator`, `a2_32_puff`, `a2_33_narrator`, `a2_34_puff`
 
 > **NARRATOR:** And that rushing, hurrying, sideways air has a name. Wind.
-> **PUFF:** W. I. N. D. WIND!
+> **PUFF:** Double you. Eye. Enn. Dee. WIND!
 > **NARRATOR:** Wind is air in a hurry. Say it with us.
 > **PUFF:** Wind is air in a HURRY!
 
 **HELD BEATS — 12f (0.4s) after `a2_31_narrator` and 12f after `a2_32_puff`.**
 House Big Word rhythm.
 
+**`a2_32_puff` is on the phonetic spelling (revised 2026-07-31).** It was
+"W. I. N. D. WIND!" and the second viewer, an eight-year-old, heard the first
+letter as "Vind" — MiniMax says a bare "W." badly, which is exactly what the
+line's own note anticipated, and the fallback was pre-written. The **card is
+unchanged**: the four blocks still read W / I / N / D, because only the
+pronunciation moved. What did have to change is the block timing — the new read
+leaves six tenths of a second between each letter and then shouts the word, so
+`BigWordBeat` is handed explicit `beats` (`S19_CHANT_BEATS` in `act2.tsx`,
+measured off the clip) instead of splitting it into even quarters. Re-measure
+if the line is ever reworded again. `a1_38_puff` ("A. I. R.") stayed on the
+letter form; those three came through clean.
+
 **Pedagogy:** The episode's `EVAPORATION`-equivalent, and the definition the
 whole show is built to make chantable: **wind is air in a hurry**. Twice plain
-(`a2_31`, `a2_33`), spelled once, chanted once. **Audition `a2_32_puff` first**;
-fallback spelling is pre-written in `narration.mjs`.
+(`a2_31`, `a2_33`), spelled once, chanted once.
 
 ---
 
@@ -769,10 +780,17 @@ foreground.
 reaction, no bob, no emotion change — the crowd keeps circulating behind him
 and he waits.
 
-> **NARRATOR:** Yes.
+> **NARRATOR:** Probably.
 
 **Scene tail: 40f** (was 32f). One flat word needs somewhere to land — same
 call as `a3_20_narrator` ("Him again.").
+
+**The word is the second viewer's (2026-07-31).** It was "Yes."; the
+eight-year-old offered "Probably." unprompted and it is funnier, so it is
+adopted as given. The grammar of the joke is untouched — one word, flat, at
+0.9, out of a full second of silence — and the Narrator declining to be certain
+about the one thing he has been certain about all episode is a better button
+than agreeing.
 
 **Pedagogy:** Corrects a misconception the story itself could easily have
 created — wind is not a substance, it is a behaviour of one. "Wind is what air
@@ -796,7 +814,8 @@ ground to air, air upward, cool air sideways — until the whole circuit is
 turning, visibly driven from his side of the frame. On the last brag the
 diagram goes planetary and every wind arrow on Earth lights up at once.
 **Lines:** `a2_39_sunny`, `a2_40_puff`, `a2_41_sunny`, `a2_41b_puff`,
-`a2_42_sunny`, `a2_43_sunny`, `a2_44_narrator`, `a2_45_narrator`
+`a2_42_sunny`, `a2_43_sunny`, `a2_44_narrator`, `a2_45_narrator`,
+`a2_45b_narrator`
 
 > **SUNNY:** EXCUSE ME. Who warmed the ground?
 > **PUFF:** Um. You did.
@@ -811,7 +830,24 @@ holding an enormous smug grin and not saying anything. The grown-up laugh goes
 here. **Emotion lead cut to 0** — Sunny must not start grinning before the
 Narrator finishes conceding.
 
-> **NARRATOR:** One day Sunny will be wrong about something. It is not today.
+> **NARRATOR:** One day Sunny will be wrong about something.
+
+**HELD BEAT — 36f (1.2s) after `a2_45_narrator`.** The promise is allowed to
+hang, and *then* it is taken back. **Nothing enters this beat**: Sunny is
+already frozen at the top of his grin from the 45f beat above, the camera
+finished its push in before that beat opened, and Puff left under `a2_44`. The
+only thing on screen is a sun holding a face.
+
+> **NARRATOR:** It is not today.
+
+**The promise and the refusal are two clips (split 2026-07-31).** They were one
+line with a full stop in the middle and the second viewer heard them as a
+single breath, which spends the joke — the audience has to believe the promise
+for a second before it is withdrawn. Kokoro cannot pause *inside* a line (a
+pause marker is a MiniMax instruction and an error here), so the pause is a
+real silence between two clips and lives in `Video.tsx` like every other held
+beat in the episode. `a2_45` keeps 0.95; `a2_45b` runs at 0.92, because four
+words have to land and stop.
 
 **Staging for `a2_41b_puff`:** Puff says it to camera, small, at the bottom of
 frame, while Sunny's diagram assembles behind him. He sinks down the left of
@@ -1099,6 +1135,16 @@ across and waves with both arms.
 > **DRIP:** Hi! It's me! I'm the weather!
 > **NARRATOR:** That is Drip. Different show. Same sky.
 
+**Drip's bubble sits *above* the window, not beside it (fixed 2026-07-31).** A
+speech-bubble tail hangs off the bottom of the bubble, so a bubble level with
+or below its speaker points its tail into empty sky — which is exactly what the
+second viewer saw: the line read as narration captioning the mountains rather
+than as the small blue character in the window saying it. It is now up in the
+top right of frame with `tailAt` aimed back down at the window, clear of
+Cloudia's face, her hat's streaming ribbons and the awning. General rule, and
+it belongs to every scene: **place a bubble above its speaker, and use `tailAt`
+whenever the bubble had to be moved off its own mark.**
+
 **Pedagogy:** Fourth job, and the biggest one — wind is what moves weather
 around the planet. For a returning viewer it also closes a loop episode one
 left open: clouds did not drift over the mountains by themselves. "Different
@@ -1180,7 +1226,7 @@ actually use.
 ---
 
 ### Scene 32b — Meanwhile
-**On stage:** Rock (Narrator carries the button)
+**On stage:** Narrator, Rock
 **Visual:** Hard cut away from the kite hill to **the first hill** — Scene 13's
 exact framing, same angle, same distance, same rock, and the same drawn ground,
 because the components are literally the ones act two uses. The light is late
@@ -1188,7 +1234,13 @@ afternoon now, long and gold and raking in from frame left, with a shadow
 stretching away from the rock and the heat shimmer gone. The rock has not moved
 a muscle. One moth crosses the frame. Nothing else in the shot moves at all.
 Cut back out to the kite hill for the recap.
-**Lines:** `a3_55_narrator` (staged as the Rock), `a3_56_narrator`
+**Lines:** `a3_54b_narrator`, `a3_55_narrator` (staged as the Rock),
+`a3_56_narrator`
+
+> **NARRATOR:** Meanwhile.
+
+**HELD BEAT — 18f (0.6s) after `a3_54b_narrator`.** The word lands on the cut
+and then gets out of the way. Nothing on screen but the rock, not moving.
 
 > **ROCK:** Ohh yeah. That is the stuff.
 
@@ -1201,9 +1253,19 @@ same reason, and the length of the silence is the entire mechanism.
 
 **Scene tail: 45f.** Hold on the rock. Then cut to the recap.
 
-**No bubble**, for either line. The rock had none in Scene 13 — its bubble
-would still be shrinking six frames into the silence — and the Narrator has
-never had one in two episodes. The picture is the joke.
+**No bubble**, for any of the three lines. The rock had none in Scene 13 — its
+bubble would still be shrinking six frames into the silence — and the Narrator
+has never had one in two episodes. The picture is the joke.
+
+**The scene is called Meanwhile and now says so out loud (added 2026-07-31).**
+Without the marker the hard cut lands straight off `a3_54_puff` ("look what
+they CAN see") and the second viewer connected the two: she read the rock as
+the thing they can see, which inverts the gag into a non-sequitur that looks
+like an answer. One word from the Narrator is the classic television cutaway
+marker and it *declares* the non-sequitur, which is the difference between
+funny and confusing. It is the Narrator's own voice, on kokoro at 0.9, in its
+own clip — not a title card, because this show has never put words on screen
+to explain a cut.
 
 **Why it exists.** It fills the episode's longest gagless stretch (Drip's cameo
 to the tease, nearly two minutes) at exactly the point episode one puts a laugh
@@ -1361,7 +1423,7 @@ already written down:
   straight-line, set in `narration.mjs` with a comment on each. Forty-eight
   lines carry an override. The deadpan floor is `a2_08_narrator` (the rock) at
   0.85; the slowest narration is `rc_06_narrator` at 0.88.
-- **Held beats of silence**, thirty-eight of them (thirty-six stage directions
+- **Held beats of silence**, forty-one of them (thirty-nine stage directions
   above; the two Big Word scenes each declare a pair in one), each written with
   its exact frame count and its reason. They become `gaps` in `Video.tsx`. The
   three longest are the kite soaring (75f), the dandelion hillside (60f) and
@@ -1474,10 +1536,12 @@ generated. What is left is listening, in this order:
 3. `a2_08_narrator` — the rock's respelled "Ohh yeah". If the engine still
    separates the two h's, the fully safe fallback is written into
    `narration.mjs`: "Oh yeah. That is the stuff."
-4. `a1_38_puff` ("A. I. R.") and `a2_32_puff` ("W. I. N. D.") — the spelled Big
-   Words, and **the highest risk in the episode**: they moved to MiniMax with
-   the rest of Puff and nobody has heard single letters on this engine.
-   Phonetic fallbacks are pre-written in `narration.mjs`.
+4. `a1_38_puff` ("A. I. R.") — the one spelled Big Word still on letter names.
+   It came through MiniMax clean. `a2_32_puff` **failed this check on
+   2026-07-31** (the bare "W." read as "Vind") and is now on its pre-written
+   phonetic fallback, "Double you. Eye. Enn. Dee. WIND!"; what is left to check
+   there is that the four card blocks still hop on their own letters, which
+   they do off measured `beats` rather than an even split.
 5. `a3_49_puff` ("PUSH!" at `angry`) and `a1_25_puff` ("Poof!") — respelled for
    the engine, so what was verified in the audition was the *word*, not this
    exact clip. `a2_28_narrator` ("FWOOSH." alone in a clip) is unchanged.
@@ -1503,6 +1567,27 @@ generated. What is left is listening, in this order:
    `a3_23b_puff`, `a3_23c_narrator`, `a3_56_narrator`, `rc_11b_puff`. The four
    that carry the most risk are the deadpans, because a sold deadpan is a dead
    one: `a2_21d_cloudia` ("They all say that, darling."), `a2_38c_narrator`
-   ("Yes." — one word, and it must be flat), `a3_23b_puff` ("Okay, boat.
+   ("Probably." — one word, and it must be flat), `a3_23b_puff` ("Okay, boat.
    Push." — timid, not *played* timid) and `rc_11b_puff` ("Door to door,
    darling." — a kid doing an impression, unplayed).
+11. **The second viewer's round** (2026-07-31), four clips: `a2_32_puff` on the
+   phonetic spelling, `a2_38c_narrator` ("Probably."), the split
+   `a2_45_narrator` / `a2_45b_narrator` across their 36f of silence, and
+   `a3_54b_narrator` ("Meanwhile."). The two to listen to hardest are the
+   split — the promise has to sound finished before the refusal arrives, or the
+   silence reads as a dropout — and "Meanwhile.", which has to sound like a
+   narrator changing the subject rather than like the start of a sentence.
+
+**One motion-line style, and it is two lines.** Every moving air puff in the
+episode trails through `MotionTrail` (`scenes/common.tsx`): two shorter,
+parallel, offset lines, never one. The second viewer looked at Scene 25's
+cool-air sweep and the recap's SEA BREEZE panel and named what a round blob
+with a single tapering line coming off it looks like, and she was right — a
+round body plus one trail is a tadpole silhouette, and the eye reads the whole
+thing as one organism instead of as an object with motion on it. Two lines read
+unambiguously as speed lines, because nothing alive has two tails. Four places
+were drawn the old way and all four now go through the helper: Scene 18's cool
+rush, Scene 18's backwards puff (whose trail comes out of the *front* — that
+inversion is the joke and it survives being doubled), Scene 25's inflow and the
+recap panel. Scene 20's circuit and Scene 15's warm crowd have no trails at all
+and are left alone.

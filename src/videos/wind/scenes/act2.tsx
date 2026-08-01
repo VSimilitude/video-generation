@@ -28,6 +28,7 @@ import {
   Hill,
   Kite,
   KidSilhouette,
+  MotionTrail,
   PHASE,
   PUFF_OPACITY,
   PaintedSky,
@@ -2105,12 +2106,16 @@ const CoolRush: React.FC<{
         const r = 30 + ((i * 47) % 30);
         return (
           <g key={i} opacity={fade}>
-            {/* Speed streaks behind each one — sideways, always sideways. */}
-            <path
-              d={`M ${x - dir * (r + 40)} ${y} l ${-dir * (150 + ((i * 37) % 120))} 0`}
-              stroke={kidTheme.airDeep}
-              strokeWidth={8}
-              strokeLinecap="round"
+            {/* Speed streaks behind each one — sideways, always sideways, and
+                two lines rather than one (see `MotionTrail`: a round body with
+                a single trail is a tadpole, which is not what this scene is
+                about). */}
+            <MotionTrail
+              x={x - dir * (r + 40)}
+              y={y}
+              len={150 + ((i * 37) % 120)}
+              dir={dir > 0 ? -1 : 1}
+              width={8}
               opacity={0.45}
             />
             <AirBlob
@@ -2199,13 +2204,18 @@ const BackwardsPuff: React.FC<{ from: number }> = ({ from }) => {
   return (
     <WideLayer zIndex={25}>
       <g transform={`translate(${x} ${y})`}>
-        {/* The streak, out of the FRONT. This is the whole joke, drawn. */}
+        {/* The streaks, out of the FRONT. This is the whole joke, drawn — and
+            it is two lines like every other trail in the episode, because one
+            line off a round body is a tadpole (see `MotionTrail`). Two out of
+            the front invert just as legibly as one did. */}
         {moving ? (
-          <path
-            d={`M ${dir * (r + 30)} 0 l ${dir * 240} 0`}
-            stroke={kidTheme.ink}
-            strokeWidth={11}
-            strokeLinecap="round"
+          <MotionTrail
+            x={dir * (r + 30)}
+            y={0}
+            len={240}
+            dir={dir > 0 ? 1 : -1}
+            color={kidTheme.ink}
+            width={11}
             opacity={0.55}
           />
         ) : null}
@@ -2257,6 +2267,27 @@ const TumblingLeaf: React.FC<{ at: number }> = ({ at }) => {
 
 const S19_CARD_Y = 300;
 
+/**
+ * Where the four letters are actually said inside `a2_32_puff`, as fractions of
+ * that clip — the blocks are letter-timed off these rather than off an even
+ * quarter-split.
+ *
+ * They have to be measured, and they had to change on 2026-07-31 when the line
+ * went from "W. I. N. D. WIND!" to the phonetic fallback "Double you. Eye.
+ * Enn. Dee. WIND!" (the second viewer heard the bare "W." as "Vind"). MiniMax
+ * leaves a full six tenths of a second between each letter and then shouts the
+ * word, so an even quarter-split puts every block a beat late and the fourth
+ * one on top of the shout instead of on "Dee". Measured with
+ *
+ *   ffmpeg -i public/narration/wind/a2_32_puff.mp3 \
+ *     -af silencedetect=noise=-30dB:d=0.06 -f null -
+ *
+ * over a 4.824s clip: "Double you" 0.18–0.71, "Eye" 1.33–1.64, "Enn"
+ * 2.27–2.55, "Dee" 3.17–3.47, "WIND!" 3.98–4.50. These are the midpoints. If
+ * the line is ever reworded, re-measure — do not scale the old numbers.
+ */
+const S19_CHANT_BEATS = [0.093, 0.308, 0.499, 0.688];
+
 const BigWordWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const stage = useStage(scene);
@@ -2285,6 +2316,7 @@ const BigWordWindScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         word="WIND"
         syllables={["W", "I", "N", "D"]}
+        beats={S19_CHANT_BEATS}
         chantKey="a2_32_puff"
         slamAt={slamAt}
         color={ACT_COLOR.wind}

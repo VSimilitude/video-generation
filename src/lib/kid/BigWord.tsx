@@ -39,6 +39,22 @@ export const BigWordBeat: React.FC<{
   word: string;
   syllables: string[];
   chantKey: string;
+  /**
+   * Where in the chant clip each block is actually *said*, as fractions of that
+   * clip (0..1), one per syllable and ascending. Omit it and the blocks split
+   * the clip evenly, which is right whenever the chant is nothing but the
+   * syllables at an even pace.
+   *
+   * Pass it when it is not — a chant that carries a shout after the spelling,
+   * or a voice that leaves half-second gaps between letters, lands its blocks
+   * off the read on an even split. Measure the clip rather than guessing:
+   *
+   *   ffmpeg -i public/narration/<slug>/<key>.mp3 \
+   *     -af silencedetect=noise=-30dB:d=0.06 -f null -
+   *
+   * and take the midpoint of each spoken run over the clip's duration.
+   */
+  beats?: number[];
   /** Frame the freeze + slam happens. Default: 40 frames before the chant. */
   slamAt?: number;
   color?: string;
@@ -52,6 +68,7 @@ export const BigWordBeat: React.FC<{
   word,
   syllables,
   chantKey,
+  beats,
   slamAt,
   color = kidTheme.pink,
   sub,
@@ -80,6 +97,7 @@ export const BigWordBeat: React.FC<{
       <WordCard text={word} from={slam} until={split} y={y} bannerColor={color} sub={sub} />
       <SyllableBlocks
         syllables={syllables}
+        beats={beats}
         from={split}
         chantFrom={chantFrom}
         chantLen={chantLen}
@@ -115,16 +133,31 @@ export const CutFlash: React.FC<{ at: number; strength?: number }> = ({
 
 const SyllableBlocks: React.FC<{
   syllables: string[];
+  beats?: number[];
   from: number;
   chantFrom: number;
   chantLen: number;
   y: number;
   color: string;
-}> = ({ syllables, from, chantFrom, chantLen, y, color }) => {
+}> = ({ syllables, beats, from, chantFrom, chantLen, y, color }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   if (frame < from) return null;
-  const per = chantLen / syllables.length;
+  // Where each block is said, as a fraction of the chant. The default splits
+  // the clip evenly and hops each block over the middle of its own quarter —
+  // the same numbers this always used.
+  const centres =
+    beats && beats.length === syllables.length
+      ? beats
+      : syllables.map((_, i) => (i + 0.5) / syllables.length);
+  // How long one hop lasts: the tightest gap between two beats, so no two
+  // blocks are ever up at the same time and the word is still being said one
+  // beat at a time.
+  const gap =
+    centres.length > 1
+      ? Math.min(...centres.slice(1).map((c, i) => c - centres[i]))
+      : 1 / syllables.length;
+  const per = chantLen * Math.max(0.02, gap);
   return (
     <div
       style={{
@@ -148,9 +181,10 @@ const SyllableBlocks: React.FC<{
           fps,
           config: { damping: 11, mass: 0.6 },
         });
-        // Each block hops on its own slice of the chant — the word is being
-        // *said* one beat at a time, which is the whole point of the card.
-        const u = (frame - (chantFrom + i * per)) / per;
+        // Each block hops around the frame its own syllable is said on — the
+        // word is being *said* one beat at a time, which is the whole point of
+        // the card.
+        const u = (frame - (chantFrom + centres[i] * chantLen - per / 2)) / per;
         const hop = u >= 0 && u <= 1 ? Math.sin(u * Math.PI) : 0;
         const hot = hop > 0.15;
         return (

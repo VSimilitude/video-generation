@@ -191,7 +191,7 @@ export function turnsOf(
 }
 
 // `lineKeyOf`, `turnFor`, `lineWindow`, `heldBeat` (the silence a `gapFrames`
-// bought, which is how this episode's thirty-eight held beats are staged without
+// bought, which is how this episode's forty-one held beats are staged without
 // hard-coding a length) and `lineProgress` are the kit's
 // (`src/lib/kid/lines.ts`); they are re-exported at the foot of this file.
 
@@ -319,7 +319,7 @@ export function useLineKey(scene: TimedScene): string | null {
  * **`lead` is 0 on every held-beat scene in this episode.** script.md makes
  * that a rule rather than a note: the default eight-frame lead lands a reaction
  * inside the silence the joke is being held for, which spends the beat early.
- * Scenes 4, 5, 21 and 36 say so explicitly; treat it as true of all thirty-eight
+ * Scenes 4, 5, 21 and 36 say so explicitly; treat it as true of all forty-one
  * held beats.
  *
  * Never map a line to `scared`: the rig's wobble-mouth hard-cuts to a talking
@@ -1256,6 +1256,67 @@ const CreatureFrame: React.FC<
         {children}
       </svg>
     </div>
+  );
+};
+
+/**
+ * The speed trail behind (or, for one gag, in front of) a moving puff.
+ *
+ * **Two lines. Never one.** This is a rule the episode learned the hard way:
+ * the second viewer, an eight-year-old, looked at Scene 25's cool-air sweep and
+ * the recap's SEA BREEZE panel and told us what a round blob with a single
+ * tapering line coming off it looks like. She was right, and it was drawn that
+ * way in four places. A round body plus one trail is a tadpole silhouette and
+ * the eye reads the whole thing as *one organism* rather than as an object with
+ * motion on it; two shorter lines, parallel and offset from each other, read
+ * unambiguously as speed lines because nothing alive has two tails.
+ *
+ * So every moving air puff in the episode trails through this, and it is the
+ * only motion-line style in the show:
+ *
+ *   <MotionTrail x={p.x - r} y={p.y} len={150} dir={-1} />
+ *
+ * `x`/`y` is where the trail attaches — the back edge of the body, in whatever
+ * coordinate space the surrounding `<svg>` is using, so the recap's 960-wide
+ * panel passes smaller numbers than a `WideLayer` does. `dir` points *away*
+ * from the direction of travel (Scene 18's backwards puff is the one place it
+ * does not; that inversion is the joke, and two lines out of the front invert
+ * just as legibly as one did).
+ *
+ * It renders a bare `<g>`, so it goes inside an existing `<svg>`.
+ */
+export const MotionTrail: React.FC<{
+  x: number;
+  y: number;
+  /** Length of the longer of the two lines. */
+  len: number;
+  /** Which way the trail streams. `-1` is the default: body travelling right. */
+  dir?: 1 | -1;
+  color?: string;
+  width?: number;
+  opacity?: number;
+  /** Distance between the two lines. Default: 2.4 × `width`. */
+  spread?: number;
+}> = ({
+  x,
+  y,
+  len,
+  dir = -1,
+  color = kidTheme.airDeep,
+  width = 9,
+  opacity = 0.5,
+  spread,
+}) => {
+  const gap = spread ?? width * 2.4;
+  // The short one starts further out and stops sooner, so the pair reads as a
+  // ragged wake rather than as an equals sign.
+  const shortLen = len * 0.62;
+  const shortInset = len * 0.2;
+  return (
+    <g stroke={color} strokeWidth={width} strokeLinecap="round" fill="none" opacity={opacity}>
+      <path d={`M ${x} ${y - gap / 2} l ${dir * len} 0`} />
+      <path d={`M ${x + dir * shortInset} ${y + gap / 2} l ${dir * shortLen} 0`} />
+    </g>
   );
 };
 

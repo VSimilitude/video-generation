@@ -26,6 +26,7 @@ import {
   Kite,
   KidSilhouette,
   KiteString,
+  MotionTrail,
   PAINTED_GREEN,
   PHASE,
   PUFF_OPACITY,
@@ -1067,14 +1068,9 @@ const CoolInflow: React.FC<{ at: number }> = ({ at }) => {
         const r = 52 - u * 16;
         return (
           <g key={i} opacity={Math.min(1, f / 20) * (u > 0.94 ? (1 - u) / 0.06 : 1)}>
-            <path
-              d={`M ${p.x - r - 150} ${p.y - 10} q 70 -14 130 -4`}
-              stroke={kidTheme.airDeep}
-              strokeWidth={9}
-              strokeLinecap="round"
-              fill="none"
-              opacity={0.5}
-            />
+            {/* Two lines, never one — see `MotionTrail`. This sweep and the
+                recap's SEA BREEZE panel are the two the eight-year-old named. */}
+            <MotionTrail x={p.x - r - 20} y={p.y - 6} len={140} dir={-1} />
             <g transform={`translate(${p.x} ${p.y})`}>
               <path d={airBlobPath(r, f / fps, i)} fill={kidTheme.airCool} />
               <path d={airBlobPath(r, f / fps, i)} fill="none" stroke={kidTheme.airDeep} strokeWidth={7} />
@@ -2309,7 +2305,15 @@ const DoorToDoorScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         at={{
           a3_38_cloudia: { x: 660, y: 250, tail: "right" },
           a3_40_cloudia: { x: 660, y: 250, tail: "right" },
-          a3_41_drip: { x: 1560, y: 700, tail: "left" },
+          // Drip is at the window on Cloudia's right cheek, and the tail hangs
+          // off the *bottom* of a bubble — so this has to sit above him, not
+          // beside him. It was at y 700, which is below the window: the tail
+          // pointed down into empty sky and the bubble read as narration
+          // captioning the mountains (second viewer, 2026-07-31). Up here it
+          // clears the awning (which tops out at y≈375) and the hat's streaming
+          // ribbons, is well clear of Cloudia's face, and `tailAt` aims the
+          // tail back down at the window rather than at the bubble's corner.
+          a3_41_drip: { x: 1520, y: 262, tail: "left", tailAt: 1300 },
         }}
       />
     </AbsoluteFill>

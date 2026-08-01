@@ -130,14 +130,18 @@
 //     lost its "Ohhh" when it was cast — see a2_08 — and the only stretched
 //     spellings left in the file are on the Narrator's own kokoro lines.
 //   - CAPS mark shouted words and survive the model fine.
-//   - The spelled-out Big Words are single letters with full stops
-//     ("A. I. R.", "W. I. N. D.") so the model reads letter names and a kid can
-//     chant along with the card. THESE TWO ARE THE FIRST THINGS TO EAR-CHECK.
-//     They changed engine with the rest of Puff and nobody has heard them on
-//     MiniMax. If the model says "one" for "I." or "uh" for "A.", swap in the
-//     phonetic fallbacks, which are pre-written and known safe:
+//   - The spelled-out Big Words were single letters with full stops so the
+//     model reads letter names and a kid can chant along with the card, and
+//     THEY WERE THE FIRST THINGS TO EAR-CHECK. One of the two failed, on
+//     2026-07-31: `a2_32_puff` ("W. I. N. D.") came back as "Vind", because
+//     MiniMax says a bare "W." badly, and it is now on its pre-written phonetic
+//     fallback ("Double you. Eye. Enn. Dee. WIND!"). `a1_38_puff` ("A. I. R.")
+//     came through clean and stays on letter names; its own fallback is still
+//     pre-written and unused:
 //       a1_38_puff  ->  "Ay. Eye. Arr. That spells AIR!"
-//       a2_32_puff  ->  "Double you. Eye. Enn. Dee. WIND!"
+//     A phonetic swap is not free downstream: it changes where the letters fall
+//     inside the clip, so the Big Word card's blocks have to be re-timed
+//     against it (Scene 19 now passes measured `beats`).
 //   - Also ear-check before building anything on them: `a1_25_puff` ("Poof!",
 //     plain now — it is the beat the dandelion detonates off), `a3_49_puff`
 //     ("PUSH!" at `angry`), `a2_28_narrator` ("FWOOSH." alone in a line) and
@@ -699,10 +703,21 @@ export default {
       text: "And that rushing, hurrying, sideways air has a name. Wind.",
       ...NARRATOR,
     },
-    // SPELL MOMENT — EAR-CHECK FIRST, and unheard on this engine. "auto" for
-    // the same reason as a1_38: four letter names need clarity more than they
-    // need a mood. Fallback: "Double you. Eye. Enn. Dee. WIND!"
-    a2_32_puff: { text: "W. I. N. D. WIND!", ...PUFF, speed: 0.9 },
+    // SPELL MOMENT — ON THE PHONETIC FALLBACK, 2026-07-31. The letter form
+    // ("W. I. N. D. WIND!") was ear-checked by the second viewer, an
+    // eight-year-old, who heard the first letter as "Vind" — MiniMax says a
+    // bare "W." badly, which is exactly the failure this line's comment was
+    // written to anticipate. The fallback was pre-written and known safe and is
+    // now the line. "auto" for the same reason as a1_38: four letter names need
+    // clarity more than they need a mood.
+    //
+    // The card's four blocks are still W / I / N / D — the *drawn* spelling
+    // does not change, only the way the letters are pronounced. Scene 19 hands
+    // `BigWordBeat` explicit `beats` because "Double you" is twice the length
+    // of "Dee" and an even quarter-split now lands the blocks off the read.
+    // a1_38_puff ("A. I. R.") stayed on the letter form; those three came
+    // through clean.
+    a2_32_puff: { text: "Double you. Eye. Enn. Dee. WIND!", ...PUFF, speed: 0.9 },
     a2_33_narrator: {
       text: "Wind is air in a hurry. Say it with us.",
       ...NARRATOR,
@@ -729,7 +744,13 @@ export default {
     a2_38b_puff: { text: "Are they all called Puff?", ...PUFF, speed: 0.95 },
     // One word, flat, after a full second of silence. Kokoro. Do not add a
     // second sentence to this line; the whole joke is that there is not one.
-    a2_38c_narrator: { text: "Yes.", ...NARRATOR, speed: 0.9 },
+    //
+    // The word is the eight-year-old's punch-up (2026-07-31): it was "Yes." and
+    // she offered "Probably." unprompted, which is funnier and adopted as
+    // given. Same grammar — one word, flat, out of a full second of silence —
+    // and it is now the Narrator declining to be sure about a fact he has
+    // spent the whole episode being sure about.
+    a2_38c_narrator: { text: "Probably.", ...NARRATOR, speed: 0.9 },
     // Deliberately unseasoned: nothing in Scene 21 marks this as anger, and the
     // tone guardrail is that nobody in this show is unkind. It is an
     // interruption, and the words carry it.
@@ -765,10 +786,26 @@ export default {
       ...NARRATOR,
       speed: 0.9,
     },
+    // SPLIT IN TWO, 2026-07-31. This was one line — "One day Sunny will be
+    // wrong about something. It is not today." — and the second viewer heard
+    // the two sentences run together, which spends the joke: the promise has to
+    // hang in the air long enough for the audience to believe it before the
+    // refusal takes it back. Kokoro cannot pause *inside* a line (that is a
+    // MiniMax marker and an error here), so the silence has to be a real one
+    // between two clips, and the 36f gap after this one lives in `Video.tsx`.
+    // Both halves keep the 0.95 the whole sentence ran at.
     a2_45_narrator: {
-      text: "One day Sunny will be wrong about something. It is not today.",
+      text: "One day Sunny will be wrong about something.",
       ...NARRATOR,
       speed: 0.95,
+    },
+    // The refusal, after the promise has been allowed to hang. Deadpan, and
+    // flatter than the line in front of it: 0.92 because it is four words and
+    // has to land and stop, same call as a1_43 and a2_19d.
+    a2_45b_narrator: {
+      text: "It is not today.",
+      ...NARRATOR,
+      speed: 0.92,
     },
     // No dash here on purpose. The interruption is staged, not punctuated —
     // Puff stops because the *scene* stops him, and the gap after this line
@@ -1040,6 +1077,16 @@ export default {
       text: "They still can't see me. But look what they CAN see.",
       ...PUFF,
     },
+    // THE CUTAWAY MARKER, added 2026-07-31. Scene 32b is titled "Meanwhile" and
+    // now says so out loud. Without it the hard cut lands straight off
+    // a3_54_puff ("look what they CAN see") and the second viewer read the rock
+    // as the thing they can see — the gag inverted into a non-sequitur that
+    // looked like an answer. One word from the Narrator is the classic TV
+    // cutaway marker and it *declares* the non-sequitur, which is what makes it
+    // funny rather than confusing. Kokoro, 0.9, its own clip, and 18 frames of
+    // silence after it before the rock speaks (`Video.tsx`) so the word lands
+    // on the cut and then gets out of the way.
+    a3_54b_narrator: { text: "Meanwhile.", ...NARRATOR, speed: 0.9 },
     // C9 — THE ROCK CALLBACK, new Scene 32b. Same clip, not a re-recording:
     // `sameAs` shares the Scene 13 file byte for byte, which is the rule for
     // any repetition gag on a paid remote model (see the beetle, a3_51). Costs

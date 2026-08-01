@@ -34,7 +34,7 @@ import { RECAP_SCENES } from "./scenes/recap";
 // THE GAPS ARE THE SCRIPT'S, NOT THE BUILDER'S.
 //
 // Episode two writes down every silence in it. script.md's stage directions
-// carry thirty-eight held beats with exact frame counts and a reason each, and
+// carry forty-one held beats with exact frame counts and a reason each, and
 // they become the `gaps` below verbatim. Its own words: "raising one is a note,
 // lowering one is a change to the joke." Every number in a `gaps` block traces
 // to a `HELD BEAT` line in the screenplay; the comment names it.
@@ -327,10 +327,20 @@ const SCRIPT: SceneSpec[] = [
       "a2_43_sunny",
       "a2_44_narrator",
       "a2_45_narrator",
+      "a2_45b_narrator",
     ],
-    // 45f — Sunny alone in frame, holding an enormous smug grin and saying
-    // nothing. The grown-up laugh goes here. Emotion lead 0 on this scene.
-    gaps: { a2_44_narrator: 45 },
+    gaps: {
+      // 45f — Sunny alone in frame, holding an enormous smug grin and saying
+      // nothing. The grown-up laugh goes here. Emotion lead 0 on this scene.
+      a2_44_narrator: 45,
+      // 36f — the promise hangs, and THEN the refusal. This used to be one
+      // sentence with a full stop in the middle of it and the second viewer
+      // heard it as one breath; kokoro cannot pause inside a line, so the pause
+      // is a real silence between two clips. Nothing enters it: Sunny is
+      // already frozen at the top of his grin from the beat above, the camera
+      // finished its push before that beat opened, and Puff left under a2_44.
+      a2_45_narrator: 36,
+    },
     tailFrames: 34,
   },
   {
@@ -473,10 +483,17 @@ const SCRIPT: SceneSpec[] = [
     // a re-recording, it is the Scene 13 clip shared through `sameAs`, which is
     // what makes the repeat identical rather than merely similar.
     id: "s32b_the_rock_again",
-    lines: ["a3_55_narrator", "a3_56_narrator"],
-    // 45f — the rock does nothing. Same length as Scene 13's beat, same reason:
-    // the length of the silence is the entire mechanism.
-    gaps: { a3_55_narrator: 45 },
+    lines: ["a3_54b_narrator", "a3_55_narrator", "a3_56_narrator"],
+    gaps: {
+      // 18f — "Meanwhile." lands on the cut and then gets out of the way. The
+      // scene is titled Meanwhile and now says so: without the marker the cut
+      // reads as an answer to a3_54_puff ("look what they CAN see") instead of
+      // as a deliberate non-sequitur.
+      a3_54b_narrator: 18,
+      // 45f — the rock does nothing. Same length as Scene 13's beat, same
+      // reason: the length of the silence is the entire mechanism.
+      a3_55_narrator: 45,
+    },
     // Hold on the rock, then cut to the recap.
     tailFrames: 45,
   },

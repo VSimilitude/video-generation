@@ -123,6 +123,12 @@ our theme palette overrides its colors:
   it is visible to the timeline and to whoever is staging the scene. Markers
   are a MiniMax feature: the generator rejects one on a kokoro line, where the
   model would read the punctuation out loud.
+- **If a joke needs a pause and the engine cannot make one, split the clip.**
+  Two sentences in one kokoro line arrive as one breath, and a beat the comedy
+  depends on — a promise allowed to hang before it is taken back — is not
+  something a full stop can buy. Two clips with a `gaps` entry between them is
+  the answer, and it is the better one anyway: the silence is then visible in
+  the timeline and can be tuned without re-synthesizing anything.
 - When a scene wants a different tone, audition rather than guess:
   `npm run narration -- --audition <slug>:<lineKey> <dir>`, then pick by ear —
   and for MiniMax candidates, `… <dir> --engine minimax --voices <id1,id2,…>
@@ -443,6 +449,16 @@ the previous frame renders differently every time.
   feels more alive, that is the win. Judge these in motion — render a short
   every-frame clip or a few stills two frames apart. A secondary action you can
   *notice* in a still is too big.
+- **A motion trail on a round body is two lines, never one.** One tapering line
+  off a blob is a tadpole silhouette, and the eye reads the whole thing as a
+  single organism instead of as an object with speed on it. Episode two drew
+  its moving air puffs that way in four places and the eight-year-old viewer
+  told us exactly what they looked like; the fix is two shorter, parallel,
+  offset lines (`MotionTrail`, ep 2's `scenes/common.tsx`), because nothing
+  alive has two tails. Keep one trail style per episode and put it in a helper,
+  so the fix is one edit rather than four. More generally: **a suggestive
+  silhouette is invisible to whoever drew it.** Nobody spots their own; this is
+  what a second pair of eyes, and ideally a second age, is for.
 
 ## Comedy pacing
 
@@ -568,6 +584,14 @@ the previous frame renders differently every time.
   it its own treatment (episode two stamps `WARM AIR RISES`), or the signature
   stops meaning "learn this word".
 - Letters bounce in one at a time so the word is *spelled*, not revealed.
+- **The blocks hop when the syllable is *said*.** The default splits the chant
+  clip evenly, which is right only if the chant is nothing but the syllables at
+  an even pace. If it carries a shout after the spelling, or the voice leaves
+  gaps between the letters, pass `beats` — the fraction of the clip each block
+  lands on — and *measure* it (`ffmpeg -i <clip> -af
+  silencedetect=noise=-30dB:d=0.06 -f null -`, then take the midpoint of each
+  spoken run). Re-measure whenever the line is reworded; a spell moment where
+  the card is a beat behind the voice is worse than no card.
 - The starburst stays behind the banner. It is decoration, and because the card
   owns a z-index, anything that overflows the banner draws on top of the
   characters' faces.
