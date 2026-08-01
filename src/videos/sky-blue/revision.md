@@ -995,7 +995,12 @@ laugh beats and its BIG grade.
 
 ---
 
-## 6.11 Scene 26 — The volcano **(CUT)**
+## 6.11 Scene 26 — The volcano **(CUT — but see the ADDENDUM at the end of this file)**
+
+> **⚠ SUPERSEDED IN PART.** The standalone volcano scene stays cut, but the
+> volcano now gets its one in-episode touchpoint INSIDE the sunset race —
+> a racer lands on it, the narrator warns them off, it opens one eye. See
+> **"ADDENDUM — THE SUNSET RACE"** (end of file).
 
 **Deleted entirely.** `a3_06_narrator` is removed from `narration.mjs` and from
 `Video.tsx`; the `s26_volcano` scene spec is deleted; the 60f hold goes with it.
@@ -1052,7 +1057,7 @@ walking" than to read off two drawn lines.
 
 ---
 
-## 6.13 Scene 28 — Blue runs out **(REVISE — visual only, +0.0s)**
+## 6.13 Scene 28 — Blue runs out **(SUPERSEDED — see ADDENDUM: this scene becomes THE SUNSET RACE)**
 
 **Nothing about this scene's lines, its 45f drain beat, or the goodbye roll call
 changes.** `a3_14b_ray` / `a3_14c_narrator` / `a3_14d_ray` and their 20f/24f
@@ -1077,7 +1082,7 @@ scene.
 
 ---
 
-## 6.14 Scene 28b — Red arrives **(NEW)**
+## 6.14 Scene 28b — Red arrives **(NEW — ABSORBED INTO THE RACE, see ADDENDUM: Red + Orange finish into "Peace and quiet")**
 
 *Insert after `s28_blue_runs_out`, before `s29_bigword_sunset`.* Scene id:
 `s28b_red_arrives`.
