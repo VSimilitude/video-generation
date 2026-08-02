@@ -14,6 +14,12 @@ dist-site/
 #   src/videos/*/narrationManifest.ts
 #                              generated, but the durations are what the
 #                              compositions time against
+#   public/backgrounds/**      generated gouache plates + their .cache.json;
+#                              same deal as the audio — committed so a checkout
+#                              renders without an API key or a re-spend
+#   src/videos/*/backgroundManifest.ts
+#                              generated; the compositions import these paths
 
 # API keys for build-time asset generation (image gen); never commit
 .env
+tmp/
