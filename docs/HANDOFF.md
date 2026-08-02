@@ -43,8 +43,8 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   full every-frame render passed. Agent's report highlights: FIT=0.78
   scaling; blink solved with wide flat oval lid-cover; talking passes at
   0.44/0.62; ladder numbers Red 1.0 cycle → Violet 7.2 (table in the
-  STYLE.md Ray section). Deliverable for Mike: scratchpad/ray_final_sheet.png
-  (NOT yet sent to him — send it).
+  STYLE.md Ray section). Deliverable scratchpad/ray_final_sheet.png SENT to
+  Mike 2026-08-02 (F2 approved — see top of file).
   **Three staging items it reported, NOT yet fixed** (wave-2 work):
   1. staging.tsx midOf/markCentre aim at box centre = the gap between F2's
      face and wave — other characters' `look` at Ray aims low; add a
@@ -80,7 +80,7 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   caches still complete; full every-frame --scale=0.25 render re-run:
   **exit 0** (24,482 frames, 81MB, 2026-08-02). Wave 1 is verified green.
 
-### Wave 2 — NOT STARTED: scene staging (the remaining work)
+### Wave 2 — IN FLIGHT (showrunner spawned 2026-08-02): scene staging
 **The staging worklist is now authoritative:
 `src/videos/sky-blue/wave2-worklist.md`** (showrunner, 2026-08-02 — merges
 the audit, script.md's builder worklist, and this section; adds a
