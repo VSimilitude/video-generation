@@ -11,6 +11,10 @@ docs/roles/ + .claude/agents/. This file is now updated continuously (small
 edits per event), never as a terminal mega-write. ray_final_sheet.png sent
 to Mike 2026-08-02. Wave-1 audit delegated to a showrunner agent (in
 flight); wave-2 staging follows per its worklist.
+Ray F2 APPROVED by Mike 2026-08-02 (verbatim: "it looks a little alien-y,
+so we'll ultimately have to see how the kids respond to it") — no rework
+now; watch Claire/Math's reaction at the family screening before any
+redesign talk.
 
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).
