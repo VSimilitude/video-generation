@@ -43,6 +43,11 @@ one, not free capacity.
 - **Keep `docs/HANDOFF.md` + the task list current CONTINUOUSLY** — small
   edits at every commit/event, while context is cheap. The terminal
   mega-handoff is banned; a fresh session must be bootable at any commit.
+- **HANDOFF is current state, not a journal — TRIM at every wave boundary.**
+  Delete resolved items outright (git log keeps the history); lessons worth
+  keeping go to LEARNINGS.md, standing decisions to memory. Every line in
+  HANDOFF is re-read by every fresh orchestrator and showrunner, so a stale
+  line is a recurring tax.
 - **Watch quota; restart at wave boundaries.** Wave ends = state committed,
   HANDOFF current → end the session and start fresh. Late turns in a long
   session are what eat quota.
