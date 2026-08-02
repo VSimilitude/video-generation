@@ -43,6 +43,9 @@ one, not free capacity.
 - **Keep `docs/HANDOFF.md` + the task list current CONTINUOUSLY** — small
   edits at every commit/event, while context is cheap. The terminal
   mega-handoff is banned; a fresh session must be bootable at any commit.
+  Write ownership: the active showrunner owns its campaign's in-flight
+  section; the orchestrator owns everything else. Neither edits the other's
+  section — report across the boundary instead.
 - **HANDOFF is current state, not a journal — TRIM at every wave boundary.**
   Delete resolved items outright (git log keeps the history); lessons worth
   keeping go to LEARNINGS.md, standing decisions to memory. Every line in

@@ -36,6 +36,13 @@ ship and revise.
   (~1 real find per wave: badge occlusion, ink-blot Big Empty). Sample the
   riskiest beats, not everything — stills you Read are expensive and stay in
   your context forever.
+- **Front-load Mike-latency**: anything gated on Mike's ear or eye (audition
+  clips, re-rolls, character sheets) gets produced and shipped to the
+  orchestrator at the earliest possible moment, regardless of batch order —
+  his review runs in parallel with build work, never serialized after it.
+- **A wave isn't done until the next wave's worklist is written** (a file,
+  e.g. `wave2-worklist.md`): your successor boots from that distillation, not
+  by re-deriving context from the full spec. Cheapest handoff in the system.
 - **Text-only design agents** (treatments, punch-ups, audits) are cheap and
   reviewable — always run design as text before build. The density-audit →
   treatment → implementation chain is the standard revision loop.
