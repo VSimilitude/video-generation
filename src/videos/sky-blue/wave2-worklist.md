@@ -136,8 +136,10 @@ every scene row depends on it.
   puff Blue just left; the 45f pinball beat is SACRED — motion builds under
   silence, no bubbles inside it; three-corner bubbles on `a2_28b_blue` at
   `beats(clip, [0.05, 0.42, 0.74])`, each two words, each `tailAt` Blue's
-  actual position, bubbles STILL even when Blue is not. **Coupled to C4: if
-  `a2_25b_blue` is replaced after Mike's ear-check, re-measure the beats.**
+  actual position, bubbles STILL even when Blue is not. **BLOCKED ON B12**
+  (the a2_28b_blue re-roll): measure the beat fractions against the NEW take,
+  never the current 6.66s one. (a2_25b_blue PASSED Mike's ear-check as-is —
+  its fallback is withdrawn; no coupling there.)
 - **B8 — Scene 20 dome**: every arrow gets Blue on the end of it; dome
   resolves into Blue's face for ~half a second ON `a2_33_narrator` (never in
   the 36f beat, which stays empty); Violet out-bounces Blue (replace the
@@ -154,6 +156,21 @@ every scene row depends on it.
 - **B11 — Ray staging items 2 + 3** (item 1 = K4): act1.tsx:359-367 scene-4
   whip streak band crosses the face/wave gap — re-aim it; Scene 4 Sunny's
   pinch arms converge on the same gap — re-aim via K4's `faceOffset`.
+- **B12 — Re-roll `a2_28b_blue` (bad take; do BEFORE B7).** Mike's ear-check
+  (2026-08-02): "weirdly slow and low". Diagnosis: bad nondeterministic
+  MiniMax draw, NOT a field problem — 6.66s / 0.83 s/word vs Blue's own
+  0.31–0.36 s/word on `a3_13b`/`rc_03b` with IDENTICAL fields (Decent_Boy,
+  happy, 1.05). Keep text and every field unchanged. Procedure: delete the
+  `a2_28b_blue` entry from `public/narration/sky-blue/.cache.json`, re-run
+  `npm run narration -- --video sky-blue` (needs REPLICATE_API_TOKEN;
+  ~$0.01), sanity-check the new duration lands ~2.4–3.2s; up to two more
+  rolls if it draws slow again (escalate to a field tweak only after three
+  bad draws). THEN: (1) relay the new clip + `a2_28c_indigo` +
+  `a3_13c_indigo` to Mike — he approved the Indigo faded-copy contrast
+  against the OLD slow 28b, so the pairing must be re-heard against the fast
+  take; (2) B7 measures its bubble beats against the new clip. Side effect:
+  scene 19 re-times ~3.5s shorter automatically (audio-driven), total
+  runtime dips to ~13:32.
 
 ## Batch (c) — recap + review + gates + deploy
 
@@ -170,16 +187,14 @@ every scene row depends on it.
   arc, Scene 9 stagger. Builders render stills INSIDE animated beats, not at
   endpoints (the lesson this repo has learned three times), and Read their own
   stills before reporting.
-- **C4 — Ear-check packet for Mike** (clips already on disk; orchestrator
-  relays file paths; non-blocking except the B7 coupling): in priority order —
-  `a2_49_narrator` "He has a point." (must be FLAT, not amused — the whole arc
-  change rests on it); **`a2_25b_blue` (5.54s for five words — probably wrong,
-  MiniMax pausing on every "!"; pre-written fallback "Hi! Sorry! I did not
-  mean to hit you!" costs ~$0.01)**; `a2_24b_red` "Lovely air." (clipping);
-  `a3_18d_red` "Peace and quiet." (contented, not tired — THE tone call);
-  Indigo at pitch+3/1.1 (faded copy of Blue, not an eighth person); the five
-  "Are we there yet?" firings as a run; `a2_50_sunny` pun; `rc_18_sunny` full
-  confidence.
+- **C4 — Ear-check packet: DONE 2026-08-02.** Mike's verdict: "all are good
+  except I think blue in 28b sounds weirdly slow and low while in 25b blue
+  sounds fine." So: `a2_49` flat ✓, `a2_25b` APPROVED AS-IS (the predicted
+  dud passed — its 1.11 s/word is pause-driven and reads as apologizing
+  mid-bounce; fallback withdrawn), `a2_24b` ✓, `a3_18d` tone ✓, Indigo
+  contrast ✓ (against the old 28b — re-verify per B12), five-firing run ✓,
+  `a2_50` pun ✓, `rc_18` confidence ✓. The one fail is `a2_28b_blue` → B12.
+  Remaining ear work this batch: the B12 re-heard pairing only.
 - **C5 — Full gates**: `npm run typecheck`, `npm run lint:hooks`, full
   every-frame `RaySkyBlue` render at `--scale=0.25`, exit 0.
 - **C6 — Clean-worktree deploy** (CLAUDE.md recipe; never `git add -A` — the

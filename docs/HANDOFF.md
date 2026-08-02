@@ -67,10 +67,16 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   (builder's reasoned decline of addendum 2's line-home ACCEPTED — lantern
   hung by Yellow's "Great bounce, Violet!"; Mike may override at screening
   for cents); runtime **13:36.1** flagged per addendum 1's "flag the final
-  number", no cuts now (cut-list at script.md:2358-2365). Ear-check packet
-  for Mike listed in the worklist — headline: `a2_25b_blue` came back 5.54s
-  for five words (MiniMax pausing on "!"), probably needs its pre-written
-  fallback. Gates re-run post-fixes: typecheck 0, lint:hooks 0 findings,
+  number", no cuts now (cut-list at script.md:2358-2365). **Ear-check packet
+  DONE 2026-08-02** — Mike: "all are good except I think blue in 28b sounds
+  weirdly slow and low while in 25b blue sounds fine." Everything approved
+  incl. `a2_25b_blue` as-is (fallback withdrawn); the one fail is
+  **`a2_28b_blue`** — diagnosed as a bad MiniMax draw (0.83 s/word vs Blue's
+  0.31–0.36 on identical fields), fix = cache-bust re-roll, same text/fields,
+  ~$0.01, wave-2 batch (b) item B12 in the worklist; scene-19 bubble beats
+  (B7) blocked on it, and the Blue→Indigo echo pairing must be re-heard
+  against the new take. Gates re-run post-fixes: typecheck 0, lint:hooks 0
+  findings,
   caches still complete; full every-frame --scale=0.25 render re-run:
   **exit 0** (24,482 frames, 81MB, 2026-08-02). Wave 1 is verified green.
 
