@@ -50,6 +50,7 @@ export {
   type RayProps,
   type RayPose,
   type RayShardProps,
+  type ShardPose,
   type SpectrumColor,
 } from "./characters/Ray";
 export { Sunny, type SunnyProps } from "./characters/Sunny";

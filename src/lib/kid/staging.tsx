@@ -14,8 +14,8 @@ import { AbsoluteFill } from "remotion";
 //   export type Body = keyof typeof CHAR_BOX;
 //   export type Mark = KitMark<Body>;
 //   const geom = makeBodyGeometry({ box: CHAR_BOX, body: "puff", bubbleLift: 165 });
-//   export const { stand, hover, crownOf, midOf, bubbleAbove, markCentre,
-//                  projectMark } = geom;
+//   export const { stand, hover, crownOf, midOf, faceOf, bubbleAbove,
+//                  markCentre, projectMark } = geom;
 //
 // and its act files keep importing those names from `./common`, unchanged.
 
@@ -50,11 +50,19 @@ export type BodyGeometry<B extends string> = {
   hover: (who: B, centreY: number, scale?: number) => number;
   /** Screen y of the top of a body's head — what a bubble has to clear. */
   crownOf: (who: B, y: number, scale?: number) => number;
-  /** Screen y of a body's visual middle — what another character looks at. */
+  /** Screen y of a body's geometric middle — the centre of its box. */
   midOf: (who: B, y: number, scale?: number) => number;
+  /**
+   * Screen y of a body's **face** — what another character's eyes aim at.
+   *
+   * The same as `midOf` for every body that does not declare a `faceOffset`,
+   * which is what keeps this an addition rather than a change. See the
+   * `faceOffset` note on `makeBodyGeometry`.
+   */
+  faceOf: (who: B, y: number, scale?: number) => number;
   /** Bubble centre for a mark: clear of the crown, with room for the tail. */
   bubbleAbove: (m: Mark<B>) => number;
-  /** The point another character should look at. */
+  /** The point another character should look at: their face. */
   markCentre: (m: Mark<B>) => { x: number; y: number };
   /** A mark as it appears on screen under a camera move. */
   projectMark: (cam: Cam, m: Mark<B>) => Mark<B>;
@@ -75,9 +83,35 @@ export function makeBodyGeometry<Box extends Record<string, number>>(opts: {
   body: keyof Box & string;
   /** How far above the crown a bubble's centre sits. */
   bubbleLift?: number;
+  /**
+   * **Where a body's face is, relative to the centre of its box.**
+   *
+   * In the body's own natural units (the ones its `viewBox` is drawn in),
+   * negative up, and multiplied by the mark's `scale` — so it survives a
+   * character staged at 0.44 and a character staged at 1.45 without a second
+   * number.
+   *
+   * Omitted, and every body is treated as having its face at the centre of its
+   * box, which is what this file did before the option existed: an episode that
+   * does not pass it renders identically, frame for frame.
+   *
+   * It exists because that assumption is not true of every design. Ray (ep 3)
+   * is candidate F2 — a face floating *above* an independent wave ribbon — and
+   * the centre of his box is the GAP between the two, so every character who
+   * looked at him aimed at empty air a face-height low, and every eye in a
+   * two-shot read as looking at his chest. The fix belongs here rather than in
+   * the episode because `markCentre` is the one place the whole kit answers the
+   * question "what does a character aim at": route the aim through the face and
+   * `useLookAtSpeaker`, camera focus helpers and anything else built on it are
+   * all correct at once.
+   *
+   * Measure it off the component, do not guess: it is the local y the face is
+   * drawn at, times whatever fit/scale transforms wrap the drawing.
+   */
+  faceOffset?: Partial<Record<keyof Box & string, number>>;
 }): BodyGeometry<keyof Box & string> {
   type B = keyof Box & string;
-  const { box, body: fallback, bubbleLift = 170 } = opts;
+  const { box, body: fallback, bubbleLift = 170, faceOffset } = opts;
   const stand = (who: B, groundY: number): number => groundY - box[who] / 2;
   const hover = (who: B, centreY: number, scale = 1): number =>
     centreY - box[who] / 2 + (box[who] * scale) / 2;
@@ -89,13 +123,15 @@ export function makeBodyGeometry<Box extends Record<string, number>>(opts: {
     const h = box[who];
     return y + h / 2 - (h * scale) / 2;
   };
+  const faceOf = (who: B, y: number, scale = 1): number =>
+    midOf(who, y, scale) + (faceOffset?.[who] ?? 0) * scale;
   const bubbleAbove = (m: Mark<B>): number => {
     if (m.lift !== undefined) return m.y - m.lift;
     return crownOf(m.who ?? fallback, m.y, m.scale ?? 1) - bubbleLift;
   };
   const markCentre = (m: Mark<B>): { x: number; y: number } => ({
     x: m.x,
-    y: midOf(m.who ?? fallback, m.y, m.scale ?? 1),
+    y: faceOf(m.who ?? fallback, m.y, m.scale ?? 1),
   });
   // The character's ground line projects like any point; the scale multiplies.
   const projectMark = (cam: Cam, m: Mark<B>): Mark<B> => {
@@ -108,7 +144,7 @@ export function makeBodyGeometry<Box extends Record<string, number>>(opts: {
       scale: (m.scale ?? 1) * (cam.zoomY ?? cam.zoom ?? 1),
     };
   };
-  return { stand, hover, crownOf, midOf, bubbleAbove, markCentre, projectMark };
+  return { stand, hover, crownOf, midOf, faceOf, bubbleAbove, markCentre, projectMark };
 }
 
 // ---------------------------------------------------------------------------

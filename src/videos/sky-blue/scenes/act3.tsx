@@ -7,37 +7,48 @@ import {
   BigWordBeat,
   Bubbles,
   Camera,
+  GREEN_SIT_DROP,
   HEIGHT,
+  INDIGO_LAG,
   PHASE,
   PaintedSky,
   RAY_LIGHT,
   RAY_SPECTRUM,
+  RED_SPEED,
   Ray,
-  RayShard,
-  SHARD_PHASE,
+  SHARD_BODY,
   SPECTRUM,
+  Shard,
   SoftShade,
   Sunny,
   WIDTH,
   WideLayer,
+  blueRicochet,
+  blueTrail,
+  greenSit,
   heldBeat,
   hover,
+  indigoEcho,
   interpolate,
   kidEase,
   kidTheme,
   kidType,
   lineWindow,
   moveAlong,
+  orangeFollow,
   plateY,
+  redWalk,
   settleWave,
   spring,
   useCurrentFrame,
   useEmotion,
   useStage,
   useVideoConfig,
+  type Box,
   type Cam,
   type Cast,
   type Mark,
+  type ShardName,
   type TimedScene,
 } from "./common";
 import {
@@ -56,11 +67,21 @@ import {
 //   s25  the sea, late, blue draining out of the top of frame. Ray hangs low
 //        with the light coming in almost horizontally and throwing a long
 //        shadow off a rock (`Rock` is the kit's). Plate: sea_sunset.
-//   s26  THE VOLCANO. One line, then 60 frames of nothing.
+//   s26  CUT (2026-08-01) and, as of this wave, gone from the file. See A7 in
+//        the wave-2 worklist: the scene, its component and its one line key
+//        were the last dangling reference in the tree.
 //   s27  the cross-section: a short slice of air at midday against a very long
-//        one at sunset. The only new physics in the act, and it is geometry.
-//   s28  follow the beam along its whole path and watch the blue ping out of
-//        it sideways, one at a time, in silence. Payoff of Scene 18.
+//        one at sunset. The only new physics in the act, and it is geometry —
+//        with **Blue on the midday beam and Red on the sunset beam**, so the
+//        two lengths are two characters rather than two drawn lines.
+//   s28  THE SUNSET RACE, leg one: high air. Seven set off together, Blue
+//        ricochets out and goes UP, Indigo follows four frames late, Violet
+//        last, highest and furthest, in silence. Payoff of Scene 18.
+//   s28b THE SUNSET RACE, leg two: out over the sea. Green settles on a
+//        becalmed sailboat, Yellow lands on the sleeping volcano, and the
+//        volcano opens ONE EYE for forty-five frames.
+//   s28c THE SUNSET RACE, the finish line: the eye the beam lands in, and then
+//        a wide empty orange sky with Red still walking across it.
 //   s29  BIG WORD THREE — SUNSET, lit from below. `ACT_COLOR.sunset`,
 //        syllables ["Sun", "Set"]. Sunny leans on the bottom of the card.
 //   s30  the crayon goes back in the box. **Scene 1's exact framing**, so it
@@ -73,6 +94,27 @@ import {
 //        story. Plate: space_stars.
 //
 // ---------------------------------------------------------------------------
+// THE RULE THAT GOVERNS EVERY EXIT IN THE RACE, and it is not negotiable
+// (script.md, Scene 28; revision addendum "THE SUNSET RACE"):
+//
+//   *Nobody loses and nothing is taken away.* Every colour that leaves is
+//   **bounced out sideways and upward**, into the blue above, and visibly
+//   becomes part of the sky. Never falling, never fading to nothing in the
+//   beam, never dropping behind, never simply not being drawn on the next
+//   frame. The sunset's red is not what survived a cull, it is what was left
+//   going straight, and `a3_14c_narrator` says so out loud.
+//
+// **How many leave in Scene 28, and the spec conflict behind it.** Three:
+// Blue, Indigo, Violet. revision §6.13 (which the race addendum supersedes in
+// its own banner) says Green and Yellow leave inside the 45f drain beat, and
+// the wave-2 worklist carries that sentence forward — but §6.13 predates the
+// race, and the newer layers all disagree with it: `a3_14e_narrator` counts
+// **"and then there were four"** at the top of Scene 28b, Green and Yellow
+// both have *lines* in 28b, and script.md's Scene 28 visual lists exactly
+// "Blue … Indigo … Violet". The arithmetic is decisive, so the count wins:
+// seven set off, three leave here, four go out over the sea.
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 // THE VOLCANO RULE (script.md, Production notes) — read this before staging
 // anything on a coastal horizon.
 //
@@ -82,15 +124,25 @@ import {
 //     `plateY` turns them into a composition y for the scene's own pan/zoom.
 //   - It must be **continuously visible for the whole shot** it appears in. A
 //     background gag that vanishes mid-scene reads as a bug — that is why
-//     episode two cut it from its own Scene 26. Both scenes it appears in here
-//     (25 and 26, plus Scene 29's frozen horizon and Scene 35's dusk) have it
-//     on screen from their first frame to their last; there is a stills sweep
-//     in the retro that checks exactly that.
-//   - It gets one line (Scene 26) and one wobble (Scene 35) in three episodes,
-//     and **nothing else in this episode may look at it, point at it, or
-//     explain it**. No bubble, no arrow, no music sting, no second narrator
-//     line anywhere. The whole value of the beat is that the show appears to
-//     think it is not important.
+//     episode two cut it from its own Scene 26. It appears in Scenes **25,
+//     28b, 28c, 29, 31 and 35 and in no other frame of the episode**, and in
+//     each of those it is on screen from the shot's first frame to its last.
+//     (script.md's rewritten rule names 28b and 28c; the wave-2 worklist's
+//     shorter list is revision §6.11's, written before the race split Scene 28b
+//     into two scenes, and 28c's own Visual asks for it in as many words.
+//     Scene 28c is two shots either side of one dissolve — the corridor and
+//     then the wide sea — and the island is continuous through the whole of
+//     the shot it is in.)
+//   - It gets **no line in this episode at all**. `a3_14i_narrator` ("That is
+//     not a rest stop.") is addressed to *Yellow*, does not name it and does
+//     not concede it is anything but a warm rock, and it is the only line
+//     anybody says anywhere near it. Nothing looks at it, points at it, or
+//     explains it. No bubble, no arrow, no music sting.
+//   - **The escalation is exactly one eyelid.** It opens ONE eye inside Scene
+//     28b's 45-frame held beat, holds, closes it, and the show declines to
+//     comment (`eye` below). ep 2 asleep and unmentioned -> ep 3 one eye ->
+//     ep 4 awake. There is **no rumble here**: the rumble belongs to Scene 35
+//     and firing it twice spends it.
 //
 // `sea_sunset` and `sea_dusk` were both prompted for one straight unambiguous
 // waterline so that it can be measured; `sea_sunset` cost three rolls to get a
@@ -182,7 +234,21 @@ export const SleepingVolcano: React.FC<{
    * half-pixel sway — a rumble you feel rather than a camera shake.
    */
   stir?: number;
-}> = ({ x, base, scale = 1, phase = 0, rim = 0, stir = 0 }) => {
+  /**
+   * **One eye, open. Scene 28b only, and it is the whole escalation.**
+   *
+   * 0 is the closed happy arc it has worn for two episodes; 1 is the right eye
+   * fully open. The left one never moves, because "one eye" is the joke — two
+   * would be the volcano waking up, which is episode four's.
+   *
+   * It looks **straight ahead**, not at Yellow, who is sitting on it. Aiming
+   * the pupil at him would make this a reaction, and the value of the beat is
+   * that nothing in the show acknowledges anything: a rock opens an eye, looks
+   * at nothing in particular for a second and a half, and closes it again
+   * while a small yellow character has a sit down on its head.
+   */
+  eye?: number;
+}> = ({ x, base, scale = 1, phase = 0, rim = 0, stir = 0, eye = 0 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps + phase * SNORE;
@@ -199,6 +265,7 @@ export const SleepingVolcano: React.FC<{
   // crater at t = k * SNORE, so nothing here remembers anything.
   const newest = Math.floor(t / SNORE);
 
+  const open = clamp01(eye);
   const { halfW, h, crater } = VOLCANO;
   const body =
     rim > 0 ? mixHex(VOLCANO_BODY, kidTheme.sunDeep, 0.18 * rim) : VOLCANO_BODY;
@@ -280,15 +347,44 @@ export const SleepingVolcano: React.FC<{
             opacity={0.8 + 0.2 * rim}
           >
             <path d={`M -33 ${-h * 0.56} q 11 -13 22 0`} />
-            <path d={`M 11 ${-h * 0.56} q 11 -13 22 0`} />
+            <path d={`M 11 ${-h * 0.56} q 11 -13 22 0`} opacity={1 - open} />
             <path d={`M -10 ${-h * 0.4} q 10 9 20 0`} strokeWidth={5} />
           </g>
+          {/* ONE EYE. Drawn as a lid *rising* — the eye grows in height about
+              its own centre and the upper lid rides up with it — rather than
+              as a shape that fades in on top of the closed one, because a
+              cross-faded eye reads as a double exposure and this beat has to
+              read as a decision. Pupil dead centre: it is not looking at
+              anybody (see the `eye` prop). */}
+          {open > 0.01 ? (
+            <g transform={`translate(22 ${-h * 0.56 - 2})`}>
+              <ellipse rx={13} ry={11.5 * open} fill={mixHex(face, kidTheme.paper, 0.6)} />
+              <circle cx={0} cy={0} r={5.6 * open} fill={mixHex(VOLCANO_BODY, kidTheme.ink, 0.5)} />
+              <path
+                d={`M -13 ${-11.5 * open} q 13 ${-8 * open} 26 0`}
+                stroke={face}
+                strokeWidth={6}
+                strokeLinecap="round"
+                fill="none"
+                opacity={0.8 + 0.2 * rim}
+              />
+            </g>
+          ) : null}
         </g>
-        {/* The snore. */}
+        {/* The snore.
+            **Asleep, a ring lives two seconds out of every three, so there is
+            one second in every snore with no ring on screen at all — which is
+            correct for a background gag nobody is looking at, and fatal for
+            Scene 35, whose first held beat *is* "the wobbling smoke ring,
+            alone, in silence" for forty-five frames. Stirring, the smoke hangs
+            around: 3.2s of life against a 3s period, so the rings overlap and
+            the beat always has one in it.** (It reads, too — smoke that stops
+            dissipating is a thing that has started producing more of it.) */}
         {[newest, newest - 1].map((k) => {
+          const life = SNORE_RING_LIFE * (1 + 0.6 * s);
           const age = t - k * SNORE;
-          if (age < 0 || age > SNORE_RING_LIFE) return null;
-          const u = age / SNORE_RING_LIFE;
+          if (age < 0 || age > life) return null;
+          const u = age / life;
           const rise = kidEase.easeOutSine(u) * 62;
           const rr = 11 + u * 24;
           const cx = u * 30 + Math.sin(u * 3.4 + k) * 6;
@@ -588,67 +684,112 @@ const LongShadow: React.FC<{
 );
 
 // ---------------------------------------------------------------------------
-// Scene 26 — The volcano
+// Scene 26 — deleted (A7)
+// ---------------------------------------------------------------------------
+//
+// The scene was cut on 2026-08-01 and its component outlived it by a wave:
+// `VolcanoScene` sat in `ACT3_SCENES` under a `s26_volcano` key no timeline
+// entry ever asked for, holding the tree's only reference to the deleted line
+// key `a3_06_narrator`. Both are gone. What replaced the scene is one eyelid
+// inside Scene 28b — see THE VOLCANO RULE above.
+
+// ---------------------------------------------------------------------------
+// The race — shared motion
 // ---------------------------------------------------------------------------
 
 /**
- * Scene 26 — one line, sixty frames of nothing, and the most disciplined shot
- * in the episode.
+ * **A cruise: a short ramp up to speed, then a constant one.**
  *
- * The camera drifts idly across the horizon and settles on the island. It is in
- * frame on frame zero (the drift is a *settle*, not a search — a gag that walks
- * on halfway through a shot is a reveal, and this one is emphatically not a
- * reveal), and it is still in frame on the last frame of the held beat.
+ * `kidEase` has no ease-in-only curve that is also flat afterwards, and the
+ * race needs exactly that. `easeInOutSine` across a thirty-five-second track
+ * nearly stops in the middle, and a beam of light that slows down in the
+ * middle of two hundred miles of air is the one thing this act cannot draw.
  *
- * **Nothing else is in this scene.** No Ray, no bubble, no arrow, no caption, no
- * sting, no second look. The whole value of the beat is that the show appears to
- * think it is not important, and the only way to play that is to put the thing
- * in the middle of the frame and let the line be the entire performance.
- *
- * The push is done with the *camera*, not by growing the island: it is a place,
- * and a place is the same size in every episode.
+ * It is the *velocity* that is eased, not the position: linear ramp on speed
+ * over the first `ramp` of the trip, constant after, normalised so `cruise(1)`
+ * is still 1. So the pack sets off (nothing starts at full speed, STYLE.md)
+ * and then holds one speed for the rest of the leg, with no corner in the
+ * position curve where the two meet.
  */
-const VolcanoScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
-  const frame = useCurrentFrame();
-  const [, lineTo] = lineWindow(scene, "a3_06_narrator");
+function cruise(u: number, ramp = 0.08): number {
+  const c = clamp01(u);
+  const raw = c <= ramp ? (c * c) / (2 * ramp) : c - ramp / 2;
+  return raw / (1 - ramp / 2);
+}
 
-  // Settles well before the line ends, and then does not move again — the held
-  // beat is on a completely locked-off frame.
-  const settle = kidEase.easeInOutSine(frame / Math.max(1, lineTo * 0.55));
-
-  // **The plate is never inside the camera.** A `Camera` translate slides an
-  // `AbsoluteFill` bodily, and `KidPaintedBackdrop` only overscans enough to
-  // cover its own drift and pan — so a 660px camera `dx` walks the picture off
-  // its own left edge and puts a cream stripe down a quarter of the frame. A
-  // still of the first pass is the only thing that said so. The plate does its
-  // own push (`zoom`, which is paid for by the overscan), the *island* is what
-  // the camera moves, and the horizon is recomputed from the plate's live
-  // numbers so the island stays seated on it to the pixel.
-  const zoom = 1 + settle * 0.1;
-  const horizon = plateY(SEA_SUNSET_FRAC, { drift: SEA_DRIFT, zoom });
-  const cam: Cam = {
-    // `y` on the horizon with `dy` at zero is what keeps the island's baseline
-    // welded to the waterline through the whole push.
-    x: VOLCANO_AT.x,
-    y: horizon,
-    zoom: 1.34 + settle * 0.56,
-    dx: 960 - VOLCANO_AT.x + (1 - settle) * 250,
-  };
-
-  return (
-    <AbsoluteFill style={{ background: kidTheme.sunsetLow, overflow: "hidden" }}>
-      <PaintedSky bg="sea_sunset" phase={2.7} drift={SEA_DRIFT} zoom={zoom} />
-      <Camera cam={cam}>
-        <SleepingVolcano
-          x={VOLCANO_AT.x}
-          base={horizon}
-          scale={VOLCANO_AT.scale}
-          phase={0.55}
-        />
-      </Camera>
-    </AbsoluteFill>
-  );
+/**
+ * **A colour leaving the race**, as a fraction of its exit arc: 0 the frame it
+ * bounces, 1 the frame it has finished becoming sky.
+ *
+ * `reach` is how far up and out that colour gets — the ensemble sheet as
+ * geometry. Blue gets 1 and is gone; Indigo, who is Blue faded, gets less and
+ * parks in the blue band; Violet goes furthest, which is the running gag drawn
+ * as a distance.
+ */
+type Exit = {
+  out: number;
+  frames: number;
+  runTo: { x: number; y: number };
+  /**
+   * How much the arc bows. **`moveAlong`'s bow is a fraction of the whole
+   * chord**, so the number that reads as a bounce on Blue's 1100px hop off the
+   * beam throws Violet's 2400px climb two hundred pixels off the top of the
+   * frame — which is where a first pass put both of the two colours who still
+   * have to be on screen for the goodbye. Short exits bow; long ones barely.
+   */
+  arc: number;
 };
+
+/**
+ * A leaver's world position: the arc off the beam, `easeOutQuad` so it leaves
+ * hard and arrives soft, bowed by `moveAlong` so it is a bounce rather than a
+ * ramp. Past `frames` it stays exactly where it finished — light that has gone
+ * somewhere else does not come back, and it does not evaporate either.
+ */
+function exitAt(frame: number, from: { x: number; y: number }, e: Exit): {
+  x: number;
+  y: number;
+  angle: number;
+  u: number;
+} {
+  const u = clamp01((frame - e.out) / e.frames);
+  const p = moveAlong(from, e.runTo, u, { arc: e.arc, ease: kidEase.easeOutQuad });
+  return { x: p.x, y: p.y, angle: p.angle, u };
+}
+
+/** A pupil offset from one staged point towards another. Negative y is up. */
+function aim(from: { x: number; y: number }, to: { x: number; y: number }): {
+  x: number;
+  y: number;
+} {
+  const d = Math.max(1, Math.hypot(to.x - from.x, to.y - from.y));
+  return {
+    x: Math.max(-1, Math.min(1, ((to.x - from.x) / d) * 1.25)),
+    y: Math.max(-1, Math.min(1, ((to.y - from.y) / d) * 1.25)),
+  };
+}
+
+/**
+ * **A leaver turning back to wave, and it is a whole-body wag rather than an
+ * arm.** Returns a position offset and a size pulse, in composition px at
+ * scale 1.
+ *
+ * Two reasons it is not `arms`. At the scale these three are staged at, a
+ * shard's arm is about nine pixels of amber and reads as nothing; and
+ * **raising an arm belongs to Yellow** — `SEVEN` gives him "waves at everyone,
+ * continuously, including at things that are leaving" as his entire
+ * characterisation, and the moment a second colour does it he has none. A body
+ * rocking side to side at two and a half hertz is unmistakably a wave and is
+ * nobody else's signature.
+ */
+function waveBack(age: number, span: number): { dx: number; dy: number; grow: number } {
+  const a = 1 - kidEase.easeInOutSine(clamp01(age / span));
+  return {
+    dx: Math.sin(age * 0.52) * 26 * a,
+    dy: -Math.abs(Math.sin(age * 0.52)) * 8 * a,
+    grow: 1 + 0.14 * a,
+  };
+}
 
 // ---------------------------------------------------------------------------
 // Scene 27 — The long way through
@@ -701,8 +842,48 @@ const S27_BUBBLES: Record<string, string> = {
   a3_10_ray: "How long is that trip?",
 };
 
+/**
+ * **The two beams are not abstractions** (revision §6.12, visual only).
+ *
+ * The midday beam has Blue on it and the sunset beam has Red on it, walking
+ * their own path lengths at their own speeds for the whole scene. It costs
+ * nothing — the beams are drawn anyway — and it turns the act's one geometry
+ * fact into something a six-year-old can *feel*: one of them arrived ages ago
+ * and is bouncing around with nothing to do, and the other one is still going.
+ *
+ * **RAY COMES OFF THE BEAMS TO PAY FOR IT, and that is the delta's real cost.**
+ * The delivered cut had him ride the short trip down, fade, and restart the
+ * long one — he was the demonstrator of both. He cannot be that *and* share a
+ * 150px-thick air shell with two colours who are now doing exactly that job:
+ * a still of the first pass had Ray, Red and a ricocheting Blue stacked in one
+ * 130px-wide heap at the end of the long path, with the observer's head behind
+ * them. So he watches from beside the diagram instead, at the mark below,
+ * looking at whichever trip is live. The scene still says "Ray comes in
+ * sideways" over a picture of a colour coming in sideways; what it no longer
+ * does is claim that a diagram of two beams needs three characters on it.
+ *
+ * The box Blue ricochets in is a tight one around where he *landed* — the air
+ * shell is only `EARTH.air` thick, and "arrived, with nothing to do" is a
+ * pinball in a cupboard rather than a pinball on tour.
+ */
+const S27_BLUE_BOX: Box = { x: 1140, y: 452, w: 240, h: 146 };
+/**
+ * Where Red sets off: off the left of the drawn beam entirely.
+ *
+ * **The scene picks his start, never his speed.** `RED_SPEED` is a constant
+ * because it is the joke, and at 108 px/s the 1106px chord takes 307 frames of
+ * the 336 the scene has left after the line — which would land him on the
+ * observer's toes four frames before the cut. Starting 520px further out he
+ * walks into frame under `a3_09`, stays 300px behind the beam's own leading
+ * edge, and is still going when the shot cuts and when Scene 28 opens.
+ */
+const S27_RED_X0 = GRAZE_X - 520;
+/** Where Ray watches the diagram from. Clear of both trips and the observer. */
+const S27_RAY = { x: 1600, y: 258, scale: 0.6 };
+
 const LongWayScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const [noonFrom, noonTo] = lineWindow(scene, "a3_08_narrator");
   const [lowFrom] = lineWindow(scene, "a3_09_narrator");
 
@@ -717,29 +898,45 @@ const LongWayScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     (frame - lowFrom - 10) / Math.max(1, (scene.durationInFrames - lowFrom - 10) * 1.09),
   );
 
-  // He is one character, so he cannot be on both paths at once: he lands at the
-  // observer, fades, and the sunset trip starts him again out at the left. The
-  // two *paths* stay on screen, which is the comparison.
-  const onNoon = frame < lowFrom - 6;
-  const rayAlpha = onNoon
-    ? clamp01((frame - noonFrom - 12) / 8) * (1 - clamp01((frame - noonTo + 6) / 10))
-    : clamp01((frame - lowFrom - 8) / 10);
+  // RED, walking the long trip at the one speed he has. The beam's leading
+  // edge gets there first and Red — the colour that stays — is still walking,
+  // which is the sentence the whole of Act Three ends on.
+  const red = redWalk(Math.max(0, frame - lowFrom) / fps, { x: S27_RED_X0, y: OBSERVER.y });
 
-  const rayX = onNoon ? EARTH.cx : GRAZE_X + (OBSERVER.x - GRAZE_X) * low;
-  const rayY = onNoon
-    ? NOON_TOP - 260 + (OBSERVER.y - (NOON_TOP - 260)) * kidEase.easeInOutSine(noon)
-    : OBSERVER.y;
+  // BLUE, on the midday trip: down the short beam in eight frames — it is a
+  // hundred and fifty pixels and he is the fastest thing in the episode — and
+  // then ricocheting around the shell for the remaining twelve seconds, having
+  // arrived. The contrast *is* the scene.
+  const blueFrom = noonFrom + 14;
+  const blueAge = frame - blueFrom;
+  const blueBox = blueRicochet(Math.max(0, blueAge - 8), S27_BLUE_BOX);
+  const blueDrop = moveAlong(
+    { x: EARTH.cx, y: NOON_TOP - 250 },
+    { x: blueBox.x, y: blueBox.y },
+    clamp01(blueAge / 8),
+    { arc: 0.08, ease: kidEase.easeInQuad },
+  );
+  const blueP = blueAge < 8 ? blueDrop : blueBox;
+  const blueOn = clamp01((blueAge + 2) / 6);
+
+  const onNoon = frame < lowFrom - 6;
 
   const stage = useStage(scene);
   const emotion = useEmotion(scene, "ray", { a3_10_ray: "amazed" }, "happy");
 
   const rayMark: Mark = {
-    x: rayX,
-    y: hover("ray", rayY, 0.6),
-    scale: 0.6,
+    x: S27_RAY.x,
+    y: hover("ray", S27_RAY.y, S27_RAY.scale),
+    scale: S27_RAY.scale,
     who: "ray",
-    side: onNoon ? "right" : "left",
+    side: "left",
   };
+  // His eyes are the scene's pointer: down at the short trip while it is being
+  // drawn, then off left along the long one, which is the only "arrow" a scene
+  // with no captions is allowed.
+  const rayLook = onNoon
+    ? aim({ x: S27_RAY.x, y: S27_RAY.y }, { x: EARTH.cx, y: (NOON_TOP + OBSERVER.y) / 2 })
+    : aim({ x: S27_RAY.x, y: S27_RAY.y }, { x: red.x, y: red.y });
 
   return (
     <AbsoluteFill style={{ background: "#fdefe0" }}>
@@ -751,19 +948,51 @@ const LongWayScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <CrossSection noon={noonDrawn} low={low} />
 
+      {/* BLUE, arrived, with nothing to do. His trail is two legs long so a
+          paused frame always has a corner in it — the change of direction is
+          the whole of him, and it is what makes him legible next to a red who
+          never changes direction at all. */}
+      {blueAge > -1 ? (
+        <Shard
+          who="blue"
+          x={blueP.x}
+          y={hover("shard", blueP.y, 0.34)}
+          scale={0.34}
+          heading={blueAge < 8 ? blueDrop.angle : blueBox.angle}
+          trail={blueAge > 14 ? blueTrail(blueAge - 8, S27_BLUE_BOX) : undefined}
+          opacity={blueOn}
+          look={{ x: 0.2, y: 0 }}
+          zIndex={22}
+        />
+      ) : null}
+
+      {/* RED, still walking. Dead level, one speed, no lean — `Shard` refuses
+          to bank him however enthusiastic the heading it is handed, which is
+          the table doing its job. */}
+      {frame >= lowFrom ? (
+        <Shard
+          who="red"
+          x={red.x}
+          y={hover("shard", red.y, 0.4)}
+          scale={0.4}
+          heading={red.angle}
+          look={{ x: 0.5, y: 0 }}
+          zIndex={24}
+        />
+      ) : null}
+
       <Ray
-        x={rayX}
+        x={rayMark.x}
         y={rayMark.y}
-        scale={0.6}
+        scale={S27_RAY.scale}
         brightness={RAY_LIGHT.full}
         spectrum={RAY_SPECTRUM.afterRainbow}
         phase={PHASE.ray}
         emotion={emotion}
         speaking={stage.speaking("ray")}
-        look={onNoon ? { x: 0, y: 0.8 } : { x: 0.8, y: 0 }}
-        bank={onNoon ? 0 : -2}
-        streak={0.7}
-        opacity={rayAlpha}
+        look={rayLook}
+        bank={-2}
+        streak={0.25}
         edge={kidTheme.ink}
         zIndex={30}
       />
@@ -772,7 +1001,7 @@ const LongWayScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         cast={{ ray: rayMark } as Cast}
         text={S27_BUBBLES}
-        at={{ a3_10_ray: { x: 1180, y: 250, tail: "left", tailAt: rayX } }}
+        at={{ a3_10_ray: { x: 1060, y: 214, tail: "right", tailAt: S27_RAY.x } }}
       />
     </AbsoluteFill>
   );
@@ -971,23 +1200,32 @@ const MeasureBar: React.FC<{
 };
 
 // ---------------------------------------------------------------------------
-// Scene 28 — Blue runs out
+// Scene 28 — THE SUNSET RACE, leg one: high air
 // ---------------------------------------------------------------------------
 //
 // The payoff of Scene 18, and **the one scene in the episode where a colour
 // genuinely goes missing from a beam** — so it is also the scene where the
-// script's physics-honesty rule bites hardest:
-//
-//   "Nothing is taken away. Act Three is the one place where a colour genuinely
-//    does go missing from a beam, and it is staged as blue *bouncing off
-//    sideways*, visibly, into the rest of the sky, rather than as blue being
-//    removed."
+// script's physics-honesty rule bites hardest. See the exit rule in the file
+// header: nobody loses, nothing is taken away, every exit is a bounce UP.
 //
 // So no shard ever fades out on the beam. Each one hits an air puff, **ricochets
 // off sideways and upward**, keeps flying, and the blue it takes with it turns
 // into the blue wash across the top of the corridor — the rest of the sky, being
 // made, out of the exact material that left. A six-year-old can follow one blob
 // from the beam to the sky with their finger.
+//
+// **The one hand-off in the scene, and why it exists.** A leaver's arc is drawn
+// in world coordinates, inside the tracking camera, so the audience watches it
+// come off the beam. The camera is chasing a beam of light, though, so anything
+// world-fixed is swept out of the left of frame within a couple of seconds —
+// and Indigo and Violet have to still be there at `a3_14b_ray`, ninety and
+// forty frames later, for the goodbye to have anybody in it. So the moment a
+// leaver's arc completes it is handed to a fixed SCREEN mark up in the blue
+// band, and stays there. That is not a cheat, it is the statement: they are not
+// objects in the corridor any more, **they are the sky**, and the sky does not
+// slide past you when you move. The hand-off is exact — the arc's world
+// endpoint is computed so that its screen position on the hand-off frame *is*
+// the sky mark — so there is no frame on which anybody jumps.
 
 /**
  * The corridor, in world coordinates. The camera rides along it.
@@ -1000,36 +1238,91 @@ const MeasureBar: React.FC<{
  * layer's box and had never been drawn. Nothing in a `WideLayer` is allowed to
  * be somewhere the box is not.
  */
-const BEAM = { x0: -1150, x1: 2600, y: 596, eyeX: 3010 };
-/** Where the pack sits on screen while the camera is tracking it. */
-const TRACK_X = 690;
+const BEAM = { x0: -1150, x1: 2600, y: 596 };
+/** Where the head of the pack sits on screen while the camera tracks it. */
+const TRACK_X = 900;
 
 const S28_BUBBLES: Record<string, string> = {
   // A summary, not a transcript — exactly as Scene 10's seven-name roll call
   // gets "Hi! Hi! Hi! Hi!". Three names, three goodbyes.
   a3_14b_ray: "Bye! Bye! Bye!",
   a3_14d_ray: "I will see me later.",
-  a3_15_ray: "So who is left?",
-  a3_17_ray: "The calm ones.",
+  a3_13b_blue: "Sorry! I am going UP!",
+  a3_13c_indigo: "Going up now. Bye.",
+  a3_13d_yellow: "Great bounce, Violet!",
 };
 
-/** The order the seven leave in: violet-ward first, red and orange never. */
-const LEAVERS = [4, 5, 6, 3, 2] as const;
+/**
+ * **The pack, and the box each colour is allowed to be in while it is in it.**
+ *
+ * Pack-local coordinates: the file runs backwards from the pack's own x, red at
+ * the head and violet at the tail, which is the order they leave in and the
+ * order `a3_14b_ray` names them in.
+ */
+// 112, not the 46 the delivered cut used. A shard's *drawn* body at 0.44 is
+// about 106px of frame (`SHARD_BODY` is 240 and it is wider than its own box),
+// so at 46 the seven were a single seven-headed animal and the frequency ladder
+// — the thing the file exists to show — was unreadable in a paused frame.
+const PACK_STEP = 112;
+function packSlot(i: number): { x: number; y: number } {
+  return { x: -i * PACK_STEP, y: ((i % 2) - 0.5) * 26 };
+}
+/**
+ * The box Blue ricochets in **relative to the pack** — so his corners come out
+ * of `blueRicochet` in one fixed frame of reference and the whole thing travels
+ * with the light. His trail is offset by the pack's *current* position for the
+ * same reason: the camera is tracking the pack, so pack-local is what the
+ * viewer's eye is holding still, and a trail laid out in world coordinates
+ * would smear a second, false, camera-shaped tail behind him.
+ *
+ * **He does not hold a slot in the file, and that is the point of him**: the
+ * box is centred on where his slot *would* be and is wide enough that he keeps
+ * crossing his neighbours' places in the line. Five colours travelling in
+ * formation and one that cannot hold a position for nine frames together is
+ * the whole of Act Two restated in one picture.
+ */
+const S28_BLUE_BOX: Box = { x: -610, y: -124, w: 320, h: 248 };
 
 /**
- * **The three the roll call names**, and they are the first three off the beam
- * — Blue, Indigo and Violet, in that order, which is why `a3_14b_ray` can name
- * them and be describing the picture rather than adding to it.
+ * Where a leaver ends up, once it is sky: a fixed SCREEN mark in the blue band
+ * across the top of the frame.
  *
- * Each of the three turns back on its way out and waves; Ray waves back, with
- * an eye-line, which is Scene 10's roll call staged as a departure instead of
- * as a greeting. Green and Yellow leave inside the 45f drain beat and do
- * **not** wave: that beat is untouched, and a wave in it would be something
- * entering it.
+ * **Z-ORDER AND OFFSET FOR THE BLUE/INDIGO PAIR, decided here and on purpose**
+ * (the kit's known watch-item: Indigo at four frames' lag sits about half a
+ * body behind Blue and overlaps him). In the pack, Indigo is drawn **behind**
+ * Blue — lower `zIndex` — and sits 26px lower, because he is the faded copy and
+ * a copy belongs behind and under its original. In the sky they are not near
+ * each other at all: Blue has gone, and Indigo is alone up at frame left.
+ *
+ *   blue    no mark. He goes furthest UP rather than furthest out and leaves
+ *           through the top of frame while the wash steps up — he *is* the
+ *           blue at the top of the picture from that frame on, which is the
+ *           only honest way to draw "the sky is what left the beam".
+ *   indigo  frame left, low in the band, still a findable body. Ray's second
+ *           wave lands on him and he waves back four frames late, because he
+ *           is late at everything.
+ *   violet  higher, further, smaller — the running gag as geometry — and he
+ *           turns back and waves from further away than either of them.
+ *
+ * All three go out through the same corner, which is where they bounced from,
+ * and the two who stay are **offset diagonally and by size** so they never
+ * become one lilac smudge: Indigo is 62px of body at (300, 300) and Violet is
+ * 58px at (140, 124).
+ *
+ * Both marks are also clear of Ray's bubble box, which is 660px wide about
+ * x=700 — a still of the button had Indigo entirely behind the left third of
+ * "I will see me later.", i.e. the goodbye covering one of the two people it
+ * was addressed to.
  */
-const WAVERS = 3;
+const SKY_MARK: Partial<Record<ShardName, { x: number; y: number; scale: number }>> = {
+  indigo: { x: 300, y: 300, scale: 0.26 },
+  violet: { x: 140, y: 124, scale: 0.24 },
+};
+
 /** Frames a leaver spends turned back, waving, before it faces its own path. */
 const WAVE_FOR = 30;
+/** How long Ray's own wave gesture lasts, per name. */
+const RAY_WAVE_FOR = 34;
 
 const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -1040,45 +1333,156 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [bounceFrom, bounceTo] = lineWindow(scene, "a3_13_narrator");
   const [beatFrom, beatTo] = heldBeat(scene, "a3_13_narrator");
   const [, arriveTo] = lineWindow(scene, "a3_14_narrator");
+  const [, indigoLineTo] = lineWindow(scene, "a3_13c_indigo");
 
-  // Three bounces on "Bounce. Bounce. Bounce." (the line runs at 0.88 so that
-  // they are three bounces), then the drain carries on **in silence** through
-  // the held beat with two more. Five pings, one at a time, over most of the
-  // width of the frame.
+  // --- who leaves, and when -------------------------------------------------
+  //
+  // THREE colours leave this leg, and the count is load-bearing — Scene 28b
+  // opens on "and then there were four". See the file header for the spec
+  // conflict this resolves.
+  //
+  //   blue    inside the 45f drain beat, in SILENCE. That beat is the race
+  //           starting and it is the one place in the episode Blue does not get
+  //           his four-frame interruption gap, "because he is busy being
+  //           bounced out of a race and the picture has to be watched first"
+  //           (script.md). He is already gone by the time he says it.
+  //   indigo  `INDIGO_LAG` frames later, off the puff Blue has just left.
+  //   violet  in the 20f beat after Indigo's echo, last, highest, furthest, and
+  //           he does not say anything. The silence *is* the joke.
   const bounceSpan = Math.max(1, bounceTo - bounceFrom);
-  const beatSpan = Math.max(1, beatTo - beatFrom);
-  const departAt = [
+  const blueOut = beatFrom + 6;
+  const indigoOut = blueOut + INDIGO_LAG;
+  const violetOut = indigoLineTo + 4;
+
+  // The three pings Blue leaves on the air on "Bounce. Bounce. Bounce." — the
+  // line runs at 0.88 so that they are three bounces and not one noise. He is
+  // still in the pack for all three; the fourth ping is him leaving.
+  const pingAt = [
     bounceFrom + bounceSpan * 0.24,
     bounceFrom + bounceSpan * 0.56,
     bounceFrom + bounceSpan * 0.88,
-    beatFrom + beatSpan * 0.3,
-    beatFrom + beatSpan * 0.74,
+    blueOut,
+    indigoOut,
+    violetOut,
   ];
 
-  // Where the light is. One continuous move, left to right, all the way to the
-  // eye — it never stops and never cuts.
-  const travel = kidEase.easeInOutSine(
-    clamp01((frame - travelFrom) / Math.max(1, arriveTo - travelFrom)),
-  );
-  // …and then the last of it, on "straight down the middle, all the way to your
-  // eyes": red and orange cover the final stretch into the pupil while the
-  // camera holds. The scene ends with the light actually arriving somewhere.
-  const [landFrom, landTo] = lineWindow(scene, "a3_18_narrator");
-  const land = kidEase.easeInOutSine(
-    clamp01((frame - landFrom - 20) / Math.max(1, (landTo - landFrom) * 0.8)),
-  );
-  const packX =
-    BEAM.x0 + (BEAM.x1 - BEAM.x0) * travel + land * (BEAM.eyeX - 268 - BEAM.x1);
+  // Where the light is. One continuous move, left to right, high up in air
+  // thick with puffs — a `cruise`, so it sets off and then holds one speed
+  // rather than easing to a halt in the middle of two hundred miles of air.
+  // The camera stops tracking once the pack has crossed, and the last third of
+  // the scene is the goodbye on a locked-off shot: deadpan is stillness.
+  //
+  // **OPEN DECISION, left as it was found (wave 2, batch (a) audit).** `travel`
+  // saturates at `arriveTo`, so from there to the cut — about 350 frames — the
+  // pack is stationary in world space as well as on screen, which means RED
+  // STOPS WALKING for eleven seconds in the middle of the episode that spends
+  // five scenes establishing that he never does. The two readings pull against
+  // each other and both are in the spec: "the goodbye lands … deadpan is
+  // stillness" (script.md's 20f and 24f beats) against Red's one law. It was
+  // left alone because the alternative costs more than it buys — keeping the
+  // pack cruising runs `packX` to ~4520, outside `WIDE`'s box, and re-timing
+  // the cruise to land at `BEAM.x1` on the last frame moves every exit arc,
+  // every ping and both sky hand-offs. Nothing in the frame reports the stop
+  // (the puffs are world-fixed too, so the whole picture holds together), and
+  // Red is walking again three seconds later in 28b. **If a viewer ever calls
+  // it, the fix is the re-time, not a nudge.**
+  const travel = cruise(clamp01((frame - travelFrom) / Math.max(1, arriveTo - travelFrom)));
+  const packX = BEAM.x0 + (BEAM.x1 - BEAM.x0) * travel;
   const packY = BEAM.y + Math.sin(travel * 5.2) * 14;
-
-  // The camera follows, and stops when the eye is in frame — the last third of
-  // the scene is four lines of dialogue on a locked-off shot.
-  const dx = Math.max(-(BEAM.x1 - TRACK_X), -(packX - TRACK_X));
+  const packAt = (f: number): { x: number; y: number } => {
+    const u = cruise(clamp01((f - travelFrom) / Math.max(1, arriveTo - travelFrom)));
+    return { x: BEAM.x0 + (BEAM.x1 - BEAM.x0) * u, y: BEAM.y + Math.sin(u * 5.2) * 14 };
+  };
+  const camDxAt = (f: number): number => Math.max(-(BEAM.x1 - TRACK_X), -(packAt(f).x - TRACK_X));
+  const dx = camDxAt(frame);
   const cam: Cam = { x: 0, y: 540, dx };
 
+  // --- the three exits ------------------------------------------------------
+  //
+  // Each arc's world endpoint is solved from its SKY mark, so the hand-off from
+  // world space to sky space happens on a frame where the two agree exactly.
+  // Blue has no mark: he goes out through the top of frame as the wash steps
+  // up, which is him becoming the blue at the top of the picture.
+  // Blue's ricochet, in pack-local coordinates. `blueRicochet` is fed a
+  // scene-local frame so his corner sequence is a pure function of the frame,
+  // exactly like everything else in the kit — and Indigo is literally the same
+  // function, `INDIGO_LAG` frames ago, so he inherits Blue's corners with the
+  // same elbow in them four frames stale.
+  const blueLegs = (f: number) => blueRicochet(Math.max(0, f - travelFrom), S28_BLUE_BOX);
+  const blueLocal = blueLegs(frame);
+  const indigoLocal = indigoEcho(blueLegs, frame);
+  /** Where a roamer actually is in the world on an arbitrary frame. */
+  const roamAt = (f: number, lag: number, dy: number): { x: number; y: number } => {
+    const l = blueLegs(f - lag);
+    const p = packAt(f);
+    return { x: p.x + l.x, y: p.y + l.y + dy };
+  };
+
+  const exitOf = (
+    who: ShardName,
+    out: number,
+    frames: number,
+    from: { x: number; y: number },
+    arc: number,
+  ): Exit => {
+    const m = SKY_MARK[who];
+    const end = out + frames;
+    return {
+      out,
+      frames,
+      arc,
+      runTo: m
+        ? { x: m.x - camDxAt(end), y: m.y }
+        : // Blue: straight up and a little back the way he came, which is what
+          // a bounce off an air puff actually is, and out through the top.
+          { x: from.x - 240, y: BEAM.y - 1120 },
+    };
+  };
+  const blueFrom = roamAt(blueOut, 0, 0);
+  const indigoFrom = roamAt(indigoOut, INDIGO_LAG, 26);
+  const violetFrom = {
+    x: packAt(violetOut).x + packSlot(6).x,
+    y: packAt(violetOut).y + packSlot(6).y,
+  };
+  const blueExit = exitOf("blue", blueOut, 132, blueFrom, 0.2);
+  // Indigo takes **more than twice as long** over the same job and does not get
+  // as far: an adjacent wavelength is a faded copy, and a faded copy is slower.
+  // It is also what puts him low enough in the frame to have a bubble over his
+  // head when his line lands, which a climb at Blue's rate does not.
+  const indigoExit = exitOf("indigo", indigoOut, 300, indigoFrom, 0.09);
+  // Violet goes last, highest and furthest, and takes the longest doing it —
+  // he is the fastest thing in any frame he is in and he still arrives last.
+  const violetExit = exitOf("violet", violetOut, 210, violetFrom, 0.09);
+
+  /**
+   * Where a leaver is on screen right now — mid-arc, or parked in the sky.
+   * Bubbles live outside the camera, so they need the screen answer and not
+   * the world one, and the two colours who speak on their way out both do it
+   * while they are still moving.
+   */
+  const leaverNow = (
+    who: ShardName,
+    exit: Exit,
+    from: { x: number; y: number },
+  ): { x: number; y: number } => {
+    const m = SKY_MARK[who];
+    if (frame <= exit.out) return { x: from.x + dx, y: from.y };
+    if (frame <= exit.out + exit.frames) {
+      const p = exitAt(frame, from, exit);
+      return { x: p.x + dx, y: p.y };
+    }
+    return m ? { x: m.x, y: m.y } : { x: exit.runTo.x + dx, y: exit.runTo.y };
+  };
+  const indigoNow = leaverNow("indigo", indigoExit, indigoFrom);
+
   // How much of the blue has gone up into the sky. Drives the wash at the top
-  // of frame: what left the beam is what the sky is now made of.
-  const gone = departAt.filter((f) => frame >= f).length / departAt.length;
+  // of frame: what left the beam is what the sky is now made of, and the step
+  // that lands as Blue leaves the top of frame is Blue.
+  const gone =
+    (clamp01((frame - blueOut) / blueExit.frames) +
+      clamp01((frame - indigoOut) / indigoExit.frames) +
+      clamp01((frame - violetOut) / violetExit.frames)) /
+    3;
 
   const stage = useStage(scene);
   const emotion = useEmotion(
@@ -1088,44 +1492,52 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     // exactly as `a1_44_ray` is not in Scene 10's: the face he ends the goodbye
     // with is the face he says the button on, and the deflation is staged as
     // stillness below rather than as an expression.
-    { a3_14b_ray: "excited", a3_15_ray: "amazed", a3_17_ray: "happy" },
+    { a3_14b_ray: "excited" },
     "happy",
-    // 45f held beat in this scene.
+    // 45f, 20f and 24f held beats in this scene.
     NO_LEAD,
   );
 
-  // --- the goodbye (punch-up C3) -------------------------------------------
+  // --- the goodbye ----------------------------------------------------------
+  //
+  // Three names, three waves, evenly through the line — and **the first one
+  // hits nothing**. Blue bounced out four hundred frames ago and there is a
+  // hole in the file where he was, so the gesture is identical each time and
+  // only two of the three land. Ray does not notice, and nothing in the scene
+  // points it out: that is the joke and it is free.
   const [byeFrom, byeTo] = lineWindow(scene, "a3_14b_ray");
   const [stillFrom, stillTo] = heldBeat(scene, "a3_14c_narrator");
-  // He waves three times on the way out — once as each named colour leaves —
-  // and then once more, at all three of them, on the line that names them.
-  // Everything he does here is `WAVE_FOR` frames long, so the gesture is the
-  // same gesture every time and a child can see it is one joke fired four
-  // times.
-  const waveBursts = [departAt[0], departAt[1], departAt[2], byeFrom];
-  const wave = waveBursts.reduce((best, at) => {
+  const bySpan = Math.max(1, byeTo - byeFrom);
+  const nameAt = [byeFrom + bySpan * 0.1, byeFrom + bySpan * 0.44, byeFrom + bySpan * 0.76];
+  const wave = nameAt.reduce((best, at) => {
     const age = frame - at;
     if (age < 0) return best;
-    const span = at === byeFrom ? byeTo - byeFrom + 20 : WAVE_FOR;
-    return Math.max(best, 1 - kidEase.easeInOutSine(age / Math.max(1, span)));
+    return Math.max(best, 1 - kidEase.easeInOutSine(age / RAY_WAVE_FOR));
   }, 0);
   // **Nothing enters the 24f after `a3_14c`.** He hangs there in a beam that is
   // now red and orange, doing absolutely nothing — same beat, same length and
   // same reason as Scene 10's.
   const inButtonBeat = frame >= stillFrom && frame < stillTo;
-  // Up and back, at whichever of the three has just left, and then up at the
-  // blue wash they turned into. The one place in Act Three where his eyes are
-  // somewhere other than on the diagram.
-  const watching = waveBursts.some((at) => frame >= at && frame < at + WAVE_FOR + 20);
 
-  // He gets out of the way of the thing the beam is landing in. A still had him
-  // sitting on the eye's own eyebrow.
   const rayMark: Mark = {
-    x: packX + 120 - land * 300,
-    y: hover("ray", packY - 96 - land * 210, 0.62),
+    x: packX + 150,
+    y: hover("ray", packY - 148, 0.62),
     scale: 0.62,
     who: "ray",
   };
+
+  // His eye-line, name by name: **at the empty piece of beam Blue used to
+  // ricochet over**, then up at Indigo, then up at Violet. Three aims, one
+  // gesture, and only two of them have anybody on the end.
+  const rayEye = { x: rayMark.x + dx, y: rayMark.y };
+  const blueHole = { x: packX + dx + (S28_BLUE_BOX.x + S28_BLUE_BOX.w / 2), y: packY };
+  const rayLook = ((): { x: number; y: number } => {
+    if (inButtonBeat) return { x: -0.5, y: 0.35 };
+    if (frame >= nameAt[2]) return aim(rayEye, SKY_MARK.violet ?? blueHole);
+    if (frame >= nameAt[1]) return aim(rayEye, SKY_MARK.indigo ?? blueHole);
+    if (frame >= nameAt[0]) return aim(rayEye, blueHole);
+    return { x: -0.5, y: 0.35 };
+  })();
 
   return (
     <AbsoluteFill>
@@ -1159,92 +1571,96 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Camera cam={cam}>
         <AirCorridor t={t} />
-        <BeamTrail x0={BEAM.x0 - 420} x1={packX} y={BEAM.y} gone={gone} />
-        <TheEye x={BEAM.eyeX} y={BEAM.y} arrive={clamp01((frame - arriveTo + 40) / 30)} />
+        <BeamTrail x0={BEAM.x0 - 420} x1={packX + 90} y={BEAM.y} gone={gone} />
 
-        {/* The seven. Always seven, always mounted, always in the same order —
-            what changes is where each one is. Red and Orange ride all the way
-            to the eye; the other five bounce off sideways, keep going, and end
-            up in the sky at the top of the frame. */}
-        {SPECTRUM.map((c, i) => {
-          const slot = LEAVERS.indexOf(i as (typeof LEAVERS)[number]);
-          const left = slot >= 0 && frame >= departAt[slot];
-          const packPos = {
-            // Red at the head of the file and violet at the tail, so the two
-            // that never bounce are the two that arrive in the eye — and the
-            // order of the file is the order they leave in.
-            x: packX - i * 46,
-            y: packY + ((i % 2) - 0.5) * 26,
-          };
-          if (!left) {
-            return (
-              <RayShard
-                key={c.name}
-                color={i}
-                x={packPos.x}
-                // `hover`, not the raw centre: `CharacterFrame` scales about
-                // the bottom of the body's box, so a shard at 0.44 handed its
-                // own centre sits 56px low — which put the whole pack under
-                // the beam it is supposed to be travelling in.
-                y={hover("shard", packPos.y, 0.44)}
-                scale={0.44}
-                phase={SHARD_PHASE[i]}
-                look={{ x: 0.6, y: 0 }}
-                bank={-4}
-                zIndex={24 + i}
-              />
-            );
-          }
-          const at = departAt[slot];
-          const origin = beamPointAt(at, travelFrom, arriveTo);
-          // Off sideways and up, on an arc, and it keeps going: nothing is
-          // taken away, it is somewhere else now.
-          const age = frame - at;
-          const dir = slot % 2 === 0 ? -1 : 1;
-          // **Violet goes furthest**, which is the third firing of the running
-          // gag as geometry: he is the last of the three to go and he is still
-          // travelling after the other two have stopped.
-          const reach = slot === 2 ? 1.28 : 1;
-          const p = moveAlong(
-            origin,
-            { x: origin.x + (dir * 620 + 120) * reach, y: origin.y - 1180 * reach },
-            clamp01(age / (150 * reach)),
-            { arc: 0.22 * dir, ease: kidEase.easeOutQuad },
-          );
-          // The three the roll call names turn back and wave for their first
-          // second — a rock rather than a raised arm, because at 0.44 a shard's
-          // arm is nine pixels and a whole body tipping side to side is not.
-          const waving = slot < WAVERS ? 1 - kidEase.easeInOutSine(age / WAVE_FOR) : 0;
-          const rock = waving > 0 ? Math.sin(age * 0.62) * 15 * waving : 0;
-          return (
-            <RayShard
-              key={c.name}
-              color={i}
-              x={p.x}
-              y={hover("shard", p.y, 0.44)}
-              scale={0.44 * (1 - clamp01(age / 150) * 0.34) * (1 + waving * 0.22)}
-              phase={SHARD_PHASE[i]}
-              emotion="excited"
-              arms={waving > 0.05}
-              // Turned back at Ray while waving, then away down its own path.
-              look={waving > 0.3 ? { x: 0.7, y: 0.35 } : { x: dir * 0.4, y: -0.5 }}
-              bank={p.angle * 0.3 + rock}
-              opacity={1 - clamp01((age - 40) / 110) * 0.55}
-              zIndex={24 + i}
-            />
-          );
-        })}
+        {/* THE PACK. Always seven mounted, always in the same order — what
+            changes is where each one is. Red at the head of the file and violet
+            at the tail, so the two that never bounce are the two at the front
+            and the order of the file is the order they leave in. */}
+        <PackShard who="red" pack={{ x: packX, y: packY }} i={0} look={{ x: 0.6, y: 0 }} />
+        <PackShard who="orange" pack={{ x: packX, y: packY }} i={1} look={{ x: 0.6, y: 0 }} />
+        <PackShard
+          who="yellow"
+          pack={{ x: packX, y: packY }}
+          i={2}
+          // He waves at somebody who is leaving, which is his entire character,
+          // and he is the only one who ever addresses Violet by name. His look
+          // goes up after Violet from `a3_13d` on; nobody else looks up.
+          //
+          // Up and **LEFT**: Violet is four pack slots (448px) behind Yellow in
+          // the file and his exit arc goes further left again, to a sky mark at
+          // x=140. A first pass aimed this up-right, i.e. had the one character
+          // who ever addresses Violet by name waving at the opposite corner of
+          // the sky from him.
+          look={frame >= violetOut ? { x: -0.5, y: -0.8 } : { x: 0.6, y: 0 }}
+          speaking={stage.speaking("yellow")}
+        />
+        <PackShard who="green" pack={{ x: packX, y: packY }} i={3} look={{ x: 0.6, y: 0 }} />
 
-        {/* The ping each bounce leaves on the air it bounced off. */}
-        {departAt.map((at, i) => (
+        {/* BLUE, ricocheting inside the pack until he ricochets out of it. His
+            trail is two legs long, so a paused frame always has a corner in it
+            — the corner is the whole of him. */}
+        {frame < blueOut ? (
+          <Shard
+            who="blue"
+            x={packX + blueLocal.x}
+            y={hover("shard", packY + blueLocal.y, 0.44)}
+            scale={0.44}
+            heading={blueLocal.angle}
+            trail={blueTrail(Math.max(0, frame - travelFrom), S28_BLUE_BOX).map((p) => ({
+              x: p.x + packX,
+              y: p.y + packY,
+            }))}
+            look={{ x: 0.5, y: 0 }}
+            speaking={stage.speaking("blue")}
+            zIndex={30}
+          />
+        ) : null}
+        {/* INDIGO. Blue's own corners, four frames stale, drawn BEHIND him and
+            26px lower — see the note on `SKY_MARK`. */}
+        {frame < indigoOut ? (
+          <Shard
+            who="indigo"
+            x={packX + indigoLocal.x}
+            y={hover("shard", packY + indigoLocal.y + 26, 0.42)}
+            scale={0.42}
+            heading={indigoLocal.angle}
+            trail={blueTrail(
+              Math.max(0, frame - travelFrom - INDIGO_LAG),
+              S28_BLUE_BOX,
+            ).map((p) => ({ x: p.x + packX, y: p.y + packY + 26 }))}
+            look={{ x: 0.5, y: 0 }}
+            speaking={stage.speaking("indigo")}
+            zIndex={28}
+          />
+        ) : null}
+        {/* VIOLET, in the file, fizzing. `Shard` vibrates him whether or not the
+            scene asks, so there is no frame of this episode in which he is
+            still. */}
+        {frame < violetOut ? (
+          <PackShard who="violet" pack={{ x: packX, y: packY }} i={6} look={{ x: 0.6, y: 0 }} />
+        ) : null}
+
+        {/* The ping each bounce leaves on the air it bounced off — the first
+            three on "Bounce. Bounce. Bounce.", then one per departure. Each is
+            drawn where the bouncer actually was on that frame. */}
+        {pingAt.map((at, i) => (
           <PingRing
             key={i}
             at={at}
             frame={frame}
             fps={fps}
-            p={beamPointAt(at, travelFrom, arriveTo)}
+            p={i === 5 ? violetFrom : roamAt(at, i === 4 ? INDIGO_LAG : 0, i === 4 ? 26 : 0)}
+            color={i === 5 ? 6 : i === 4 ? 5 : 4}
           />
         ))}
+
+        {/* The leavers, mid-arc: off the beam, up, and still going. Drawn in
+            world space only while the arc runs; after that they are sky (see
+            the header note) and are drawn outside the camera below. */}
+        <Leaver who="blue" exit={blueExit} from={blueFrom} frame={frame} scale={0.44} />
+        <Leaver who="indigo" exit={indigoExit} from={indigoFrom} frame={frame} scale={0.42} />
+        <Leaver who="violet" exit={violetExit} from={violetFrom} frame={frame} scale={0.42} />
 
         <Ray
           x={rayMark.x}
@@ -1255,10 +1671,7 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           phase={PHASE.ray}
           emotion={emotion}
           speaking={stage.speaking("ray")}
-          // Up and back at whoever has just left — and, on the goodbye, up at
-          // the blue wash across the top of the frame, which is where they went
-          // and is what `a3_14c_narrator` is about to say out loud.
-          look={inButtonBeat ? { x: -0.5, y: 0.35 } : watching ? { x: -0.35, y: -0.85 } : { x: -0.5, y: 0.35 }}
+          look={rayLook}
           pose={wave > 0.04 && !inButtonBeat ? "wave" : "rest"}
           wave={wave}
           // Deadpan is stillness: inside the 24f button beat his idle drops and
@@ -1270,34 +1683,188 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         />
       </Camera>
 
+      {/* THE SKY, which is now partly made of three named characters. Outside
+          the camera, because that is the point of them. */}
+      <SkyLeaver
+        who="indigo"
+        exit={indigoExit}
+        frame={frame}
+        // Four frames late at everything, including at waving back. This is the
+        // wave `a3_14b_ray`'s second name actually lands on.
+        waveAt={nameAt[1] + INDIGO_LAG}
+      />
+      <SkyLeaver
+        who="violet"
+        exit={violetExit}
+        frame={frame}
+        // **Violet, firing three.** He turns back and waves from further away
+        // than either of them, and nobody but Yellow has ever looked at him.
+        waveAt={nameAt[2]}
+      />
+
       <Bubbles
         scene={scene}
-        cast={{ ray: { ...rayMark, x: rayMark.x + dx } } as Cast}
+        cast={
+          {
+            ray: { ...rayMark, x: rayMark.x + dx },
+            // The colours' bubbles hang where the colours actually are — Blue
+            // and Indigo are up in the sky by the time they speak, which is
+            // the whole of "he is already gone by the time he says it", and a
+            // tail pointing at the beam they left would undo it.
+            // Blue has no position left to hang a bubble off — he is out
+            // through the top of frame — so this mark exists only to make him
+            // a member of the cast. Every coordinate that matters is in the
+            // `at` override below.
+            blue: { x: 560, y: 180, scale: 0.3, who: "shard" },
+            indigo: { x: indigoNow.x, y: indigoNow.y, scale: 0.3, who: "shard" },
+            yellow: {
+              x: packX + packSlot(2).x + dx,
+              y: hover("shard", packY + packSlot(2).y, 0.44),
+              scale: 0.44,
+              who: "shard",
+            },
+          } as Cast
+        }
         text={S28_BUBBLES}
         at={{
           a3_14b_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
           a3_14d_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
-          a3_15_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
-          a3_17_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
+          // **Blue is off the frame entirely when this lands** — up and out
+          // through the top-left corner — so this is a bubble with nobody
+          // under it, which is the joke (script.md: "He is already gone by the
+          // time he says it"). It goes **up in the top-left corner, pointing
+          // the way he went**.
+          //
+          // It was on the right at x=1330 for one pass and a still killed it:
+          // the tail's clamped corner landed 70px above Ray's face, so the
+          // frame read as *Ray* saying "Sorry! I am going UP!" — a bubble with
+          // nobody under it only works if there is nobody under it. Indigo is
+          // climbing through this quadrant but is 300px lower and to the right
+          // of the bubble's box for the whole of Blue's line, and Violet is
+          // still in the file down on the beam.
+          a3_13b_blue: { x: 560, y: 180, tail: "left", tailAt: 300 },
+          // Over on the far side of him, tail reaching back: he is still
+          // climbing when this lands, and a bubble centred over a body that is
+          // 300px up the frame sits on top of it.
+          a3_13c_indigo: { x: 440, y: 196, tail: "right", tailAt: indigoNow.x },
+          // Far right, clear of Ray's glow: the upper-left quadrant belongs to
+          // the two who are still climbing through it, and Ray sits at a fixed
+          // 1050 for the whole tracked stretch.
+          a3_13d_yellow: {
+            x: 520,
+            y: 400,
+            tail: "right",
+            tailAt: packX + packSlot(2).x + dx,
+          },
         }}
       />
     </AbsoluteFill>
   );
 };
 
-/** The beam's world position at an arbitrary frame — bounces need the past. */
-function beamPointAt(at: number, from: number, to: number): { x: number; y: number } {
-  const u = kidEase.easeInOutSine(clamp01((at - from) / Math.max(1, to - from)));
-  return { x: BEAM.x0 + (BEAM.x1 - BEAM.x0) * u, y: BEAM.y + Math.sin(u * 5.2) * 14 };
-}
+/**
+ * One of the seven, in the file, at the pack's own position. A three-line
+ * wrapper so a scene with seven of them reads as seven marks rather than as
+ * seven copies of the same arithmetic — and so the file's spacing lives in
+ * `packSlot` and cannot drift between them.
+ */
+const PackShard: React.FC<{
+  who: ShardName;
+  pack: { x: number; y: number };
+  i: number;
+  look?: Parameters<typeof Shard>[0]["look"];
+  speaking?: boolean;
+  scale?: number;
+}> = ({ who, pack, i, look, speaking, scale = 0.44 }) => {
+  const slot = packSlot(i);
+  return (
+    <Shard
+      who={who}
+      x={pack.x + slot.x}
+      y={hover("shard", pack.y + slot.y, scale)}
+      scale={scale}
+      look={look}
+      speaking={speaking}
+      zIndex={24 + i}
+    />
+  );
+};
+
+/**
+ * A colour on its way out of the race, in world space, for exactly as long as
+ * its arc lasts.
+ *
+ * It never fades and it never shrinks to nothing: it gets *smaller with
+ * distance* down to two thirds, and then it is somewhere else. Blue is the one
+ * exception and it is not a fade either — his arc ends above the top of the
+ * frame at the same moment the blue wash finishes stepping up, so what the
+ * audience sees is one thing turning into the other.
+ */
+const Leaver: React.FC<{
+  who: ShardName;
+  exit: Exit;
+  from: { x: number; y: number };
+  frame: number;
+  scale: number;
+}> = ({ who, exit, from, frame, scale }) => {
+  if (frame < exit.out || frame > exit.out + exit.frames) return null;
+  const p = exitAt(frame, from, exit);
+  return (
+    <Shard
+      who={who}
+      x={p.x}
+      y={hover("shard", p.y, scale * (1 - p.u * 0.34))}
+      scale={scale * (1 - p.u * 0.34)}
+      heading={p.angle}
+      emotion="excited"
+      look={{ x: 0.2, y: -0.7 }}
+      zIndex={34}
+    />
+  );
+};
+
+/**
+ * A colour that has finished becoming sky: parked at its screen mark, up in
+ * the blue band, for the rest of the scene.
+ *
+ * `waveAt` is the frame it turns back and waves — a whole-body wag rather than
+ * an arm, because a raised arm is Yellow's and nobody else's (`waveBack`).
+ */
+const SkyLeaver: React.FC<{
+  who: ShardName;
+  exit: Exit;
+  frame: number;
+  waveAt: number;
+}> = ({ who, exit, frame, waveAt }) => {
+  const m = SKY_MARK[who];
+  if (!m || frame < exit.out + exit.frames) return null;
+  const wag = frame >= waveAt ? waveBack(frame - waveAt, WAVE_FOR) : { dx: 0, dy: 0, grow: 1 };
+  const s = m.scale * wag.grow;
+  return (
+    <Shard
+      who={who}
+      x={m.x + wag.dx}
+      y={hover("shard", m.y + wag.dy, s)}
+      scale={s}
+      emotion="excited"
+      // Turned back at Ray while waving, then away up its own path again.
+      look={frame >= waveAt && frame < waveAt + WAVE_FOR ? { x: -0.5, y: 0.7 } : { x: 0.3, y: -0.5 }}
+      zIndex={18}
+    />
+  );
+};
 
 /** The air the beam is crossing: hundreds of miles of it, drawn as a crowd. */
-const AirCorridor: React.FC<{ t: number }> = ({ t }) => (
+const AirCorridor: React.FC<{ t: number; density?: number; y?: number }> = ({
+  t,
+  density = 1,
+  y: yMid = BEAM.y,
+}) => (
   <WideLayer zIndex={10}>
-    {Array.from({ length: 54 }, (_, i) => {
+    {Array.from({ length: Math.round(54 * density) }, (_, i) => {
       const k = i * 37;
-      const x = BEAM.x0 - 300 + i * 86 + ((k * 41) % 60);
-      const y = BEAM.y - 220 + ((k * 97) % 430);
+      const x = BEAM.x0 - 300 + i * (86 / density) + ((k * 41) % 60);
+      const y = yMid - 220 + ((k * 97) % 430);
       const r = 26 + ((k * 13) % 22);
       return (
         <AirBlob key={i} x={x} y={y} r={r} t={t} seed={i} opacity={0.42} />
@@ -1344,7 +1911,19 @@ const PingRing: React.FC<{
   frame: number;
   fps: number;
   p: { x: number; y: number };
-}> = ({ at, frame, fps, p }) => {
+  /**
+   * Whose bounce it is. Defaults to blue, which is whose it usually is — but a
+   * ring is a colour leaving a mark on the air it hit, so it wears that
+   * colour, and a blue hoop round a yellow bounce says the wrong thing.
+   */
+  color?: number;
+  /**
+   * How big, 1 being the corridor's own size. Scenes inside a camera push
+   * scale this **down**: at Scene 28b's 1.95× a default ring is a 450px hoop
+   * lying across the volcano, which a still caught being read as a prop.
+   */
+  size?: number;
+}> = ({ at, frame, fps, p, color = 4, size = 1 }) => {
   const u = (frame - at) / (fps * 0.7);
   if (u < 0 || u > 1) return null;
   return (
@@ -1352,10 +1931,10 @@ const PingRing: React.FC<{
       <circle
         cx={p.x}
         cy={p.y}
-        r={40 + u * 190}
+        r={(40 + u * 190) * size}
         fill="none"
-        stroke={SPECTRUM[4].light}
-        strokeWidth={12 * (1 - u)}
+        stroke={SPECTRUM[color].light}
+        strokeWidth={12 * (1 - u) * size}
         opacity={0.75 * (1 - u)}
       />
     </WideLayer>
@@ -1408,6 +1987,686 @@ const TheEye: React.FC<{ x: number; y: number; arrive: number }> = ({ x, y, arri
   );
 };
 
+// ---------------------------------------------------------------------------
+// Scene 28b — THE SUNSET RACE, leg two: out over the sea
+// ---------------------------------------------------------------------------
+//
+// Four left. The beam runs on, lower and warmer, out over open water — high
+// air behind us, the last of the country sliding out of frame left, then
+// nothing but sea. Green settles on a becalmed sailboat and Yellow lands on
+// the sleeping volcano, and **the volcano opens one eye**.
+//
+// **The shot, and why it is built out of a scroll rather than a `Camera`.**
+// Everything here is a distance: the puffs the beam is crossing are near, the
+// sailboat is a way down, the coast is far, the island is on the horizon. A
+// single camera transform gives all four the same parallax, which flattens a
+// scene whose entire subject is how far away things are — and it makes it
+// impossible to *guarantee* the island is in frame on every frame, which THE
+// VOLCANO RULE requires. So the shot is one `scroll` number and a depth per
+// layer, and the island's screen x is arithmetic I can read off rather than a
+// transform I have to hope about.
+//
+// The scroll `cruise`s to a stop before the push-in starts, so the push has a
+// fixed centre and nothing slides under it. Both are finished by the warn-off,
+// and **the 45-frame held beat is on a completely locked-off frame**.
+
+/** The beam, over the sea: low, warm, and above the waterline. */
+const S28B_BEAM_Y = 424;
+/** Where the four of them ride while the world scrolls past underneath. */
+const S28B_PACK_X = 690;
+/** Screen x of the island at the top of the shot, and where it settles. */
+const S28B_ISLAND_X0 = 1616;
+const S28B_ISLAND_X1 = 880;
+/** How far the near world travels. Fixes the island's parallax at 0.30. */
+const S28B_ISLAND_DEPTH = 0.3;
+const S28B_SCROLL = (S28B_ISLAND_X0 - S28B_ISLAND_X1) / S28B_ISLAND_DEPTH;
+/** Frames the world spends scrolling, and then the frames the push takes. */
+const S28B_SCROLL_TO = 300;
+const S28B_PUSH_FROM = 310;
+const S28B_PUSH_TO = 400;
+/**
+ * How hard the shot pushes in for the eye.
+ *
+ * The island is a *place*, so it stays at `VOLCANO_AT.scale` and the shot
+ * moves instead — the rule Scenes 26 and 35 were built on. At 1.95× the
+ * eyelid is about fifty pixels of frame, which is what it takes for "it opened
+ * one eye" to be a thing a six-year-old sees rather than a thing they are told.
+ */
+const S28B_PUSH = 0.95;
+
+const S28B_BUBBLES: Record<string, string> = {
+  a3_14f_green: "This is a nice spot.",
+  a3_14h_yellow: "A warm rock! A sit down!",
+};
+
+const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const t = frame / fps;
+
+  const [seaFrom] = lineWindow(scene, "a3_14e_narrator");
+  const [greenFrom] = lineWindow(scene, "a3_14f_green");
+  const [sitFrom, sitTo] = heldBeat(scene, "a3_14f_green");
+  const [yellowFrom] = lineWindow(scene, "a3_14h_yellow");
+  const [warnFrom] = lineWindow(scene, "a3_14i_narrator");
+  const [eyeFrom, eyeTo] = heldBeat(scene, "a3_14i_narrator");
+
+  // --- the shot -------------------------------------------------------------
+  const scroll = S28B_SCROLL * cruise(clamp01((frame - seaFrom) / Math.max(1, S28B_SCROLL_TO - seaFrom)));
+  const at = (depth: number, x: number): number => x - scroll * depth;
+  const islandX = at(S28B_ISLAND_DEPTH, S28B_ISLAND_X0);
+
+  const push = kidEase.easeInOutSine(
+    clamp01((frame - S28B_PUSH_FROM) / (S28B_PUSH_TO - S28B_PUSH_FROM)),
+  );
+  // **The plate is never inside the camera** (the Scene 26 lesson): a `Camera`
+  // translate slides an `AbsoluteFill` bodily and walks the painting off its
+  // own edge. The plate does its own, much smaller, push and the horizon is
+  // recomputed from the plate's live numbers, so the island's baseline stays
+  // welded to the waterline through the whole move.
+  const plateZoom = 1 + push * 0.1;
+  const horizon = plateY(SEA_SUNSET_FRAC, { drift: SEA_DRIFT, zoom: plateZoom });
+  const cam: Cam = {
+    x: S28B_ISLAND_X1,
+    y: horizon,
+    zoom: 1 + push * S28B_PUSH,
+    dx: (960 - S28B_ISLAND_X1) * push,
+  };
+
+  // --- the four of them, travelling ----------------------------------------
+  //
+  // They cross the sea leg without once changing direction, at Red's one speed,
+  // and Red and Orange leave frame right — which is the whole point of them:
+  // Red's law is one speed and a dead-straight line, and a scene that parks him
+  // to keep him in shot has deleted the character. Orange is `orangeFollow` —
+  // Red's own path, delayed by the time it takes Red to walk one body — so he
+  // never overtakes. Green and Yellow ride the same file until they peel off,
+  // so a still taken before either of them leaves shows four colours on a beam
+  // rather than two travelling and two parked.
+  const redPath = (tt: number) =>
+    redWalk(tt, { x: S28B_PACK_X + packSlot(0).x, y: S28B_BEAM_Y });
+  const secs = (f: number) => Math.max(0, f - seaFrom) / fps;
+  const onBeam = (i: number, f: number): { x: number; y: number } => ({
+    x: redPath(secs(f)).x + packSlot(i).x,
+    y: S28B_BEAM_Y,
+  });
+  const red = redPath(secs(frame));
+  const orange = orangeFollow(redPath, secs(frame), SHARD_BODY * 0.44);
+
+  // --- THE EYE --------------------------------------------------------------
+  //
+  // Open over nine frames, hold, close, and a clear frame or two before Yellow
+  // moves. **Nothing else enters this beat** — no line, no bubble, no rumble,
+  // no music sting, no reaction from Yellow, from the Narrator or from anybody
+  // else — so the eyelid is the only thing in the episode that is doing
+  // anything different between the warn-off and the cut.
+  //
+  // `heldBeat` gives 59 frames here rather than the scripted 45, and that is
+  // correct: `a3_14i_narrator` is the scene's LAST line, so its gap and the
+  // scene's 14-frame tail are one continuous silence and `heldBeat` reports
+  // both. The eye takes the first 78% of it and Yellow bounces off inside the
+  // rest, which is script.md's shape ("the held beat above *is* this scene's
+  // tail") expressed as a fraction so that a change to either number in
+  // Video.tsx moves the staging with it instead of stranding it.
+  const eyeSpan = Math.max(1, eyeTo - eyeFrom);
+  const offAt = eyeFrom + Math.round(eyeSpan * 0.78);
+  const eye =
+    kidEase.easeInOutSine(clamp01((frame - eyeFrom) / 9)) -
+    kidEase.easeInOutSine(clamp01((frame - (offAt - 12)) / 9));
+
+  // --- GREEN, who sits down the instant anything stops moving ---------------
+  //
+  // The becalmed sailboat is the only thing in the episode that has already
+  // stopped, so he is off the beam before the Narrator has finished the
+  // sentence. The bounce arcs UP out of the beam first and comes down onto the
+  // boom — he is not dropping out, he scattered like everybody else and just
+  // took longer, which is what `a3_14g_narrator` says out loud.
+  const boatX = at(0.72, 1490);
+  const boatY = horizon + 168;
+  const greenOut = greenFrom - 26;
+  const greenU = clamp01((frame - greenOut) / 34);
+  const greenBeam = onBeam(3, greenOut);
+  const greenP =
+    frame < greenOut
+      ? { ...onBeam(3, frame), angle: 0 }
+      : moveAlong(greenBeam, { x: boatX + 46, y: boatY - 48 }, greenU, {
+          arc: -0.42,
+          ease: kidEase.easeOutQuad,
+        });
+  // A held beat is automatically a Green joke — and this one is the beat that
+  // *is* him: he sits, and he does not get up again.
+  const sit = greenSit(frame, sitFrom, frame >= sitFrom);
+
+  // --- YELLOW, who has spotted a warm rock ---------------------------------
+  const craterY = horizon - VOLCANO.h * VOLCANO_AT.scale;
+  const yellowOut = yellowFrom - 34;
+  const yellowU = clamp01((frame - yellowOut) / 40);
+  const yellowBeam = onBeam(2, yellowOut);
+  const yellowSeat = { x: islandX + 30, y: craterY - 2 };
+  const yellowDown =
+    frame < yellowOut
+      ? { ...onBeam(2, frame), angle: 0 }
+      : moveAlong(yellowBeam, yellowSeat, yellowU, {
+          arc: -0.3,
+          ease: kidEase.easeOutQuad,
+        });
+  // …and the apologetic bounce off, **inside the tail**, in silence: a crouch
+  // and a spring, up after the others. Six frames of anticipation is what makes
+  // it read as a bounce rather than as a character being deleted.
+  const offAge = frame - offAt;
+  const offU = clamp01(offAge / Math.max(1, scene.durationInFrames - offAt));
+  // 180 world px, which at this shot's 1.95× is 350 of frame — a bounce, not a
+  // launch. A first pass used the 620 that reads right in an un-pushed shot and
+  // put him through the top of frame in four frames flat, i.e. deleted him.
+  // `easeOutQuad`, because a bounce is fast at the bottom and slowing at the
+  // top; `easeInQuad` is what a rocket does.
+  const yellowUp = moveAlong(yellowSeat, { x: yellowSeat.x + 54, y: yellowSeat.y - 180 }, offU, {
+    arc: 0.2,
+    ease: kidEase.easeOutQuad,
+  });
+  const crouch = offAge >= 0 && offAge < 6 ? kidEase.easeOutQuad(offAge / 6) * 16 : 0;
+  const yellowP =
+    offAge < 0
+      ? yellowDown
+      : offAge < 6
+        ? { x: yellowSeat.x, y: yellowSeat.y + crouch, angle: 0 }
+        : yellowUp;
+
+  const stage = useStage(scene);
+
+  const greenMark: Mark = {
+    x: greenP.x,
+    y: hover("shard", greenP.y, 0.4),
+    scale: 0.4,
+    who: "shard",
+    side: "left",
+  };
+  const yellowMark: Mark = {
+    x: yellowP.x,
+    y: hover("shard", yellowP.y, 0.34),
+    scale: 0.34,
+    who: "shard",
+    side: "right",
+  };
+
+  return (
+    <AbsoluteFill style={{ background: kidTheme.sunsetLow, overflow: "hidden" }}>
+      <PaintedSky bg="sea_sunset" phase={2.7} drift={SEA_DRIFT} zoom={plateZoom} />
+
+      {/* The blue three colours have already become, still up at the top of the
+          frame where they left it in Scene 28. It does not grow here: nobody
+          bounces UP in this scene until Yellow does, inside the tail. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(to bottom, rgba(58,160,236,0.5) 0%, rgba(58,160,236,0.2) 26%, rgba(58,160,236,0) 48%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <Camera cam={cam}>
+        {/* THE LAST OF THE COUNTRY, going. A backlit headland on the waterline
+            that is out of frame inside three seconds — the leg change, drawn,
+            with nothing said about it. */}
+        <Coast x={at(0.45, 300)} horizon={horizon} />
+
+        {/* THE VOLCANO. On the measured horizon, in frame from the first frame
+            of the scene to the last, and never named. */}
+        <SleepingVolcano
+          x={islandX}
+          base={horizon}
+          scale={VOLCANO_AT.scale}
+          phase={0.55}
+          eye={eye}
+        />
+
+        <Sailboat x={boatX} y={boatY} />
+
+        {/* The air, thinning out over the water. */}
+        <AirCorridor t={t + scroll * 0.0004} density={0.55} y={S28B_BEAM_Y} />
+        <WideLayer zIndex={12}>
+          {/* The beam itself. It is longer than the frame in both directions,
+              so it is drawn once and does not scroll — what shows the travel is
+              the air going past it. */}
+          <rect
+            x={-1400}
+            y={S28B_BEAM_Y - 23}
+            width={4600}
+            height={46}
+            rx={23}
+            fill={SPECTRUM[0].fill}
+            opacity={0.62}
+          />
+          <rect
+            x={-1400}
+            y={S28B_BEAM_Y - 8}
+            width={4600}
+            height={16}
+            rx={8}
+            fill={kidTheme.sunLight}
+            opacity={0.72}
+          />
+        </WideLayer>
+
+        <Shard
+          who="red"
+          x={red.x}
+          y={hover("shard", red.y, 0.44)}
+          scale={0.44}
+          heading={red.angle}
+          look={{ x: 0.6, y: 0 }}
+          zIndex={24}
+        />
+        <Shard
+          who="orange"
+          x={orange.x}
+          y={hover("shard", orange.y, 0.44)}
+          scale={0.44}
+          heading={orange.angle}
+          look={{ x: 0.6, y: 0 }}
+          zIndex={25}
+        />
+        <Shard
+          who="green"
+          x={greenP.x}
+          y={hover("shard", greenP.y, 0.4)}
+          scale={0.4}
+          heading={greenU < 1 ? greenP.angle : 0}
+          sit={sit}
+          look={greenU < 1 ? { x: 0.2, y: 0.6 } : { x: 0.35, y: 0.1 }}
+          speaking={stage.speaking("green")}
+          zIndex={26}
+        />
+        <Shard
+          who="yellow"
+          x={yellowP.x}
+          y={hover("shard", yellowP.y, 0.34)}
+          scale={0.34}
+          heading={yellowP.angle}
+          // He is still waving through the whole beat, and that is not
+          // something entering it — it is the one thing about him that is true
+          // on every frame he has ever been in. A Yellow who stopped waving to
+          // watch an eyelid would be a reaction, which is the one thing the
+          // beat is not allowed to contain.
+          look={{ x: -0.3, y: 0.1 }}
+          speaking={stage.speaking("yellow")}
+          zIndex={27}
+        />
+        {/* The ping Green's bounce and Yellow's bounce leave on the air. */}
+        <PingRing at={greenOut} frame={frame} fps={fps} p={greenBeam} color={3} size={0.72} />
+        <PingRing at={yellowOut} frame={frame} fps={fps} p={yellowBeam} color={2} size={0.72} />
+        <PingRing at={offAt + 6} frame={frame} fps={fps} p={yellowSeat} color={2} size={0.34} />
+      </Camera>
+
+      <Bubbles
+        scene={scene}
+        cast={
+          {
+            green: {
+              ...greenMark,
+              x: (greenMark.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
+              y: (greenMark.y - cam.y) * (cam.zoom ?? 1) + cam.y,
+            },
+            yellow: {
+              ...yellowMark,
+              x: (yellowMark.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
+              y: (yellowMark.y - cam.y) * (cam.zoom ?? 1) + cam.y,
+            },
+          } as Cast
+        }
+        text={S28B_BUBBLES}
+        at={{
+          a3_14f_green: {
+            x: 1330,
+            y: 690,
+            tail: "right",
+            tailAt: boatX,
+          },
+          a3_14h_yellow: {
+            x: 620,
+            y: 250,
+            tail: "left",
+            tailAt: (yellowSeat.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
+          },
+        }}
+      />
+    </AbsoluteFill>
+  );
+};
+
+/**
+ * The last of the country: a low backlit headland lying on the waterline, with
+ * three fields on it that are barely more than a value change.
+ *
+ * Drawn rather than painted, because it has to *move* — it is the leg change,
+ * and a plate cannot slide out of its own frame. It is dark and warm rather
+ * than green for the same reason the island is: everything on this horizon is
+ * between the audience and a sun that is on the floor.
+ */
+const Coast: React.FC<{ x: number; horizon: number }> = ({ x, horizon }) => (
+  <WideLayer zIndex={7}>
+    <g transform={`translate(${x} ${horizon})`} opacity={0.9}>
+      <path
+        d={
+          "M -1900 0 L -1900 -34 Q -1500 -66 -1120 -48 Q -820 -34 -560 -62" +
+          " Q -300 -88 -120 -52 Q -40 -36 0 -8 Z"
+        }
+        fill={mixHex(VOLCANO_BODY, kidTheme.sunDeep, 0.1)}
+      />
+      <path
+        d="M -1900 -34 Q -1500 -66 -1120 -48 Q -820 -34 -560 -62 Q -300 -88 -120 -52"
+        fill="none"
+        stroke={kidTheme.sunLight}
+        strokeWidth={4}
+        strokeLinecap="round"
+        opacity={0.5}
+      />
+      <ellipse cx={-300} cy={2} rx={1600} ry={7} fill={kidTheme.ink} opacity={0.14} />
+    </g>
+  </WideLayer>
+);
+
+/**
+ * A becalmed sailboat: dead still on flat water, with the sail hanging off the
+ * boom because there is no wind in it at all.
+ *
+ * It is SVG rather than paint because Green sits on it — anything a character
+ * touches stays drawn (STYLE.md). It does not bob: the entire reason it is in
+ * the episode is that it is the one thing that has stopped moving, which is
+ * what makes Green sit down.
+ */
+const Sailboat: React.FC<{ x: number; y: number }> = ({ x, y }) => (
+  <WideLayer zIndex={11}>
+    <g transform={`translate(${x} ${y})`}>
+      <ellipse cx={0} cy={16} rx={112} ry={11} fill={kidTheme.ink} opacity={0.16} />
+      {/* Hull. */}
+      <path
+        d="M -86 -2 L 86 -2 Q 62 26 0 30 Q -62 26 -86 -2 Z"
+        fill={mixHex(kidTheme.ink, kidTheme.sunDeep, 0.34)}
+        stroke={kidTheme.ink}
+        strokeWidth={5}
+        strokeLinejoin="round"
+      />
+      {/* Mast and boom. */}
+      <path d="M -6 -4 L -6 -126" stroke={kidTheme.ink} strokeWidth={8} strokeLinecap="round" />
+      <path d="M -14 -34 L 74 -30" stroke={kidTheme.ink} strokeWidth={7} strokeLinecap="round" />
+      {/* The sail, hanging. Slack, folded twice, and going nowhere. */}
+      <path
+        d="M -2 -122 Q 26 -96 22 -62 Q 18 -40 34 -32 L -2 -34 Z"
+        fill={mixHex(kidTheme.paper, kidTheme.sunLight, 0.4)}
+        stroke={kidTheme.ink}
+        strokeWidth={4}
+        strokeLinejoin="round"
+        opacity={0.92}
+      />
+    </g>
+  </WideLayer>
+);
+
+// ---------------------------------------------------------------------------
+// Scene 28c — THE SUNSET RACE, the finish line
+// ---------------------------------------------------------------------------
+//
+// Two shots and one dissolve between them.
+//
+//   the corridor  the far end of the beam and the eye it lands in — the
+//                 delivered cut's pedagogy beat, kept, at the race's finish
+//                 line — with Red and Orange, the only two left, walking it.
+//   the wide      a warm, almost empty frame: sea horizon low, sky orange, the
+//                 volcano asleep on it, and **nothing else in the shot**. Red
+//                 walks out of the end of the beam at exactly the speed he has
+//                 walked at all episode and keeps walking, left to right, for
+//                 the rest of the scene.
+//
+// **THE TONE GUARDRAIL LIVES IN THIS SCENE, and it is the one this episode is
+// most at risk of breaking:** *the sunset must never read as the light dying.*
+// So there is nothing here that fades, dims, cools or closes. The sky does not
+// darken across the shot — it gets a shade *warmer* under `a3_18f_narrator`,
+// because the Narrator's last line is about anticipation. There is no
+// vignette, no dusk wash, no music, and Red never slows down. He is delighted,
+// in his own flat way, he is not alone (Orange is right there), and he is
+// still walking when the scene cuts.
+//
+// Four held beats — 36/30/45/20 — and **nothing enters any of them**. What is
+// already on screen keeps doing what it was doing: two colours walking at one
+// speed and an island snoring on the horizon. That is not something entering a
+// beat, it is the beat.
+
+/** Where the beam ends and Red comes out of it, in the wide shot. */
+const S28C_BEAM_END = 150;
+/** The dissolve out of the corridor, keyed to `a3_18b_narrator`. */
+const S28C_DISSOLVE = 48;
+/** How much of the frame Red is. Big: it is his scene and the sky is empty. */
+const S28C_RED_SCALE = 0.8;
+/** The wide shot's plate pan, which puts the horizon low and the sky huge. */
+const S28C_PAN = 176;
+
+const S28C_BUBBLES: Record<string, string> = {
+  a3_15_ray: "So who is left?",
+  a3_17_ray: "The calm ones.",
+  a3_18c_red: "Everybody bounced off.",
+  a3_18d_red: "Peace and quiet.",
+  a3_18e_orange: "What Red said.",
+};
+
+const RedArrivesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const t = frame / fps;
+
+  const [, landTo] = lineWindow(scene, "a3_18_narrator");
+  const [wideFrom] = lineWindow(scene, "a3_18b_narrator");
+  const [warmFrom] = lineWindow(scene, "a3_18f_narrator");
+
+  // --- shot one: the corridor, locked off ----------------------------------
+  //
+  // We have arrived: the camera does not track here, the last of the light
+  // does. Red walks in from frame left at his own speed and Orange comes out
+  // of the air one body-length later, which is what `a3_16_narrator` at 0.92
+  // buys — "red and orange land separately".
+  const eyeX = 1500;
+  const nearRedPath = (tt: number) => redWalk(tt, { x: -420, y: 566 });
+  const nearRed = nearRedPath(t);
+  const nearOrange = orangeFollow(nearRedPath, t, SHARD_BODY * 0.62);
+  const arrive = clamp01((frame - landTo + 62) / 44);
+
+  // --- the dissolve ---------------------------------------------------------
+  const wide = clamp01((frame - wideFrom - 8) / S28C_DISSOLVE);
+  const wideEase = kidEase.easeInOutSine(wide);
+
+  // --- shot two: the wide, empty, orange one --------------------------------
+  const horizon = plateY(SEA_SUNSET_FRAC, { drift: SEA_DRIFT, dy: S28C_PAN });
+  const walkFrom = wideFrom + 8;
+  const widePath = (tt: number) => redWalk(tt, { x: S28C_BEAM_END - 290, y: 430 });
+  const wideT = Math.max(0, frame - walkFrom) / fps;
+  const red = widePath(wideT);
+  const orange = orangeFollow(widePath, wideT, SHARD_BODY * S28C_RED_SCALE);
+  // The Narrator's last line is about anticipation, not loss, so the frame
+  // gets *warmer* under it. The one direction this shot is allowed to move.
+  const warm = clamp01((frame - warmFrom) / 40);
+
+  const stage = useStage(scene);
+  const rayEmotion = useEmotion(scene, "ray", { a3_15_ray: "amazed" }, "happy", NO_LEAD);
+
+  // 392, not 340. His bubbles are clamped to y>=170 by `Bubbles`, so at 340 the
+  // tail spike came off the bubble's underside and ended *inside his own glow* —
+  // a black spike through the speaker's face. 52px of clearance is enough for
+  // the tail to read as a tail, and he is still well above the beam at y=534.
+  const rayMark: Mark = { x: 470, y: hover("ray", 392, 0.62), scale: 0.62, who: "ray", side: "right" };
+  const redMark: Mark = {
+    x: red.x,
+    y: hover("shard", red.y, S28C_RED_SCALE),
+    scale: S28C_RED_SCALE,
+    who: "shard",
+    side: "right",
+  };
+  const orangeMark: Mark = {
+    x: orange.x,
+    y: hover("shard", orange.y, S28C_RED_SCALE),
+    scale: S28C_RED_SCALE,
+    who: "shard",
+    side: "right",
+  };
+
+  return (
+    <AbsoluteFill style={{ background: kidTheme.sunsetLow, overflow: "hidden" }}>
+      {/* --- shot one ------------------------------------------------------ */}
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - wideEase }}>
+        <PaintedSky bg="sky_dome_day" phase={6.1} drift={8} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(255,120,54,0.66) 0%, rgba(255,158,60,0.72) 46%, rgba(255,196,64,0.66) 100%)",
+            pointerEvents: "none",
+          }}
+        />
+        {/* The blue that left, still up there. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(58,160,236,0.52) 0%, rgba(58,160,236,0.22) 26%, rgba(58,160,236,0) 48%)",
+            pointerEvents: "none",
+          }}
+        />
+        <AirCorridor t={t} density={0.4} y={566} />
+        <WideLayer zIndex={12}>
+          {/* The last of the beam, running out of the air and into the eye. Red
+              and orange only: the blue end of it went two scenes ago. */}
+          <rect x={-1400} y={534} width={1500 + eyeX - 300} height={64} rx={32} fill={SPECTRUM[0].fill} opacity={0.55} />
+          <rect x={-1400} y={554} width={1500 + eyeX - 300} height={24} rx={12} fill={kidTheme.sunLight} opacity={0.55} />
+        </WideLayer>
+        <TheEye x={eyeX} y={566} arrive={arrive} />
+        <Shard
+          who="red"
+          x={nearRed.x}
+          y={hover("shard", nearRed.y, 0.62)}
+          scale={0.62}
+          heading={nearRed.angle}
+          look={{ x: 0.6, y: 0 }}
+          zIndex={30}
+        />
+        <Shard
+          who="orange"
+          x={nearOrange.x}
+          y={hover("shard", nearOrange.y, 0.62)}
+          scale={0.62}
+          heading={nearOrange.angle}
+          look={{ x: 0.6, y: 0 }}
+          zIndex={29}
+        />
+        <Ray
+          x={rayMark.x}
+          y={rayMark.y}
+          scale={0.62}
+          brightness={RAY_LIGHT.full}
+          spectrum={RAY_SPECTRUM.afterRainbow}
+          phase={PHASE.ray}
+          emotion={rayEmotion}
+          speaking={stage.speaking("ray")}
+          look={{ x: 0.3, y: 0.55 }}
+          streak={0.5}
+          bank={-3}
+          zIndex={40}
+        />
+      </div>
+
+      {/* --- shot two ------------------------------------------------------ */}
+      <div style={{ position: "absolute", inset: 0, opacity: wideEase }}>
+        <PaintedSky bg="sea_sunset" phase={9.4} drift={SEA_DRIFT} dy={S28C_PAN} />
+        {/* Warmer, not darker. See the tone guardrail above. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: `linear-gradient(to bottom, rgba(255,176,72,${0.1 + 0.1 * warm}) 0%, rgba(255,152,64,${0.06 + 0.1 * warm}) 60%, rgba(255,196,96,${0.04 + 0.08 * warm}) 100%)`,
+            pointerEvents: "none",
+          }}
+        />
+        {/* THE VOLCANO, asleep on the measured horizon, in frame from the first
+            frame of this shot to the last, and unmentioned. */}
+        <SleepingVolcano x={VOLCANO_AT.x} base={horizon} scale={VOLCANO_AT.scale} phase={0.7} />
+        <SideLight horizon={horizon} strength={0.5} />
+        {/* The end of the beam, at frame left: two hundred miles of air, and
+            this is where it stops. Red walks out of it. */}
+        <WideLayer zIndex={9}>
+          {/* The gradient runs opaque for most of its length and feathers only
+              the last fifth. A first pass ramped it from the left-hand edge, so
+              the only part of it that was ever on screen was the tail end at
+              ten per cent alpha — red on orange, invisible, and the shot lost
+              the thing Red is walking out of. */}
+          <defs>
+            <linearGradient id="a3-beamend" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor={SPECTRUM[0].fill} stopOpacity={0.88} />
+              <stop offset="0.9" stopColor={SPECTRUM[0].fill} stopOpacity={0.84} />
+              <stop offset="1" stopColor={SPECTRUM[0].fill} stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="a3-beamendcore" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor={kidTheme.sunLight} stopOpacity={0.85} />
+              <stop offset="0.88" stopColor={kidTheme.sunLight} stopOpacity={0.8} />
+              <stop offset="1" stopColor={kidTheme.sunLight} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <rect x={-900} y={430 - 52} width={900 + S28C_BEAM_END} height={104} rx={52} fill="url(#a3-beamend)" />
+          <rect x={-900} y={430 - 17} width={900 + S28C_BEAM_END} height={34} rx={17} fill="url(#a3-beamendcore)" />
+        </WideLayer>
+        {/* Red is warm-on-warm, which is the Ray legibility problem wearing a
+            different hue. Shade behind him rather than a different Red.
+            **0.13, not the 0.2 the first pass used**: this shot is a wide,
+            clean, empty orange frame and at 0.2 a 1040×660 shade travelling
+            across it reads as a stain on the sky rather than as air. Red's own
+            pale edge is carrying most of the legibility; this is the last few
+            per cent of it. */}
+        <SoftShade x={red.x} y={red.y} rx={520} ry={330} strength={0.13} color="92,38,42" />
+        <Shard
+          who="red"
+          x={red.x}
+          y={hover("shard", red.y, S28C_RED_SCALE)}
+          scale={S28C_RED_SCALE}
+          heading={red.angle}
+          look={{ x: 0.45, y: 0 }}
+          speaking={stage.speaking("red")}
+          zIndex={30}
+        />
+        <Shard
+          who="orange"
+          x={orange.x}
+          y={hover("shard", orange.y, S28C_RED_SCALE)}
+          scale={S28C_RED_SCALE}
+          heading={orange.angle}
+          // He never looks at Red and Red never looks at him. Deadpan is
+          // stillness, and two characters checking each other's faces after the
+          // funniest line in the act would be selling it.
+          look={{ x: 0.45, y: 0 }}
+          speaking={stage.speaking("orange")}
+          zIndex={29}
+        />
+      </div>
+
+      <Bubbles
+        scene={scene}
+        cast={{ ray: rayMark, red: redMark, orange: orangeMark } as Cast}
+        text={S28C_BUBBLES}
+        at={{
+          a3_15_ray: { x: 520, y: 176, tail: "left", tailAt: rayMark.x },
+          a3_17_ray: { x: 520, y: 176, tail: "left", tailAt: rayMark.x },
+          a3_18c_red: { y: 214, tail: "left", tailAt: red.x },
+          a3_18d_red: { y: 214, tail: "left", tailAt: red.x },
+          // Over on his own side, above him, and the same height as Red's — the
+          // double act says the same thing from the same place, one body-length
+          // and one beat apart. A first pass hung it BELOW them, which points a
+          // tail at the sea.
+          a3_18e_orange: { x: orange.x - 340, y: 214, tail: "right", tailAt: orange.x },
+        }}
+      />
+    </AbsoluteFill>
+  );
+};
 // ---------------------------------------------------------------------------
 // Scene 29 — Big Word Three: SUNSET
 // ---------------------------------------------------------------------------
@@ -2468,9 +3727,12 @@ const Continents: React.FC<{ cx: number; cy: number; r: number; fill: string }> 
 
 export const ACT3_SCENES: Record<string, React.FC<{ scene: TimedScene }>> = {
   s25_sea_sunset: SeaSunsetScene,
-  s26_volcano: VolcanoScene,
+  // No `s26_volcano`: the scene was cut on 2026-08-01 and its component went
+  // with it in wave 2 (A7). Nothing is renumbered and the id is not reused.
   s27_long_way: LongWayScene,
   s28_blue_runs_out: BlueRunsOutScene,
+  s28b_race_island: RaceIslandScene,
+  s28c_red_arrives: RedArrivesScene,
   s29_bigword_sunset: BigWordSunsetScene,
   s30_crayon_back: CrayonBackScene,
   s31_round_the_other_side: RoundTheOtherSideScene,

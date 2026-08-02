@@ -721,6 +721,8 @@ const SpectrumEdge: React.FC<{
 // The seven — one colour shard, and THE FREQUENCY LADDER
 // ---------------------------------------------------------------------------
 
+export type ShardPose = "rest" | "wave";
+
 export type RayShardProps = CharacterProps & {
   /** Which of the seven. Index into `SPECTRUM`, or the entry itself. */
   color: SpectrumColor | number;
@@ -730,6 +732,35 @@ export type RayShardProps = CharacterProps & {
   bank?: number;
   /** Tiny arms. Off by default: seven pairs of arms is a lot of frame. */
   arms?: boolean;
+  /**
+   * `rest` hangs the arms down; `wave` raises both and flaps them.
+   *
+   * There is exactly one shard who waves and he does it in every frame he is
+   * ever in (Yellow — "waves at everyone, continuously, including at things
+   * that are leaving"), so this is a two-value pose rather than the six Ray
+   * gets. A raised arm is also the only thing that makes his signature legible
+   * in a *paused* frame, which is the standard the ensemble sheet sets.
+   */
+  pose?: ShardPose;
+  /** Wave size 0..1, for `pose="wave"`. */
+  wave?: number;
+  /**
+   * **Amplitude-in-place motion blur**: draw the whole body again either side
+   * of itself, offset by this much in local units, at low alpha.
+   *
+   * One shard needs it (Violet, who "vibrates so hard his own outline blurs"),
+   * and it is deliberately a *different kind of blur* from the one Blue gets.
+   * Blue's blur is a bent trail behind him — a change of DIRECTION. Violet's is
+   * this: three copies of a body spanning the width of a vibration it never
+   * leaves. Two bodies wearing the same generic speed-smear would say the two
+   * are the same kind of fast, and the physics of the whole episode is that
+   * they are not.
+   *
+   * The caller supplies the vector because the *amplitude* is the episode's
+   * ensemble sheet talking (`VIOLET_AMP` in the episode's `scenes/common.tsx`),
+   * not the drawing's.
+   */
+  smear?: { dx: number; dy: number };
 };
 
 /**
@@ -765,11 +796,16 @@ export type RayShardProps = CharacterProps & {
  * spectrum order and the picture is a frequency diagram wearing faces, which is
  * the whole of Scenes 9 and 10 and of the sunset race.
  *
- * script.md is explicit that the seven are a **crowd, not a cast** — they bob,
- * wave, march and ricochet, and not one of them ever has a line. So the body is
- * cheap and the face is expensive: seven faces that are recognisably his is the
- * whole of Scene 9, and a child who cannot see that they are all Ray has
- * watched a special effect instead of a fact.
+ * The seven used to be described here as a **crowd, not a cast**. They are not,
+ * and have not been since the 2026-08-01 revision: six of them speak, five of
+ * them have a signature movement that is the only characterisation they will
+ * ever get, and the seventh's entire joke is that he is the one who never gets
+ * a line. Who each of them *is* lives in the episode's ensemble sheet
+ * (`SEVEN` in `src/videos/sky-blue/scenes/common.tsx`); what lives here is the
+ * one thing that is true of them as drawings — the body is cheap and the face
+ * is expensive. Seven faces that are recognisably Ray's is the whole of Scene
+ * 9, and a child who cannot see that they are all Ray has watched a special
+ * effect instead of a fact.
  *
  * Seven of these is a fixed-length list in a scene, so the hook count never
  * changes across a frame — see PROCESS.md §5 on why that matters.
@@ -815,7 +851,7 @@ export const RayShard: React.FC<RayShardProps> = (props) => {
   const rig = useRig({ emotion: "happy", ...props });
   const i = shardIndexOf(props.color);
   const c = SPECTRUM[i];
-  const { opacity = 1, bank = 0, arms = false } = props;
+  const { opacity = 1, bank = 0, arms = false, pose = "rest", wave = 1, smear } = props;
   const box = RAY_SHARD_BOX;
   const { lam, hz, amp, hw } = waveOf(i);
   const t = rig.frame / rig.fps + rig.phase * 1.7;
@@ -864,6 +900,22 @@ export const RayShard: React.FC<RayShardProps> = (props) => {
       zIndex={props.zIndex}
     >
       <g transform={`rotate(${bank})`} opacity={opacity}>
+        {/* Violet's other blur — see `smear`. The ghosts are drawn FIRST and
+            without features: a copy of a face either side of a face reads as
+            three characters, where a copy of the silhouette either side of a
+            body reads as one body whose outline has stopped holding still,
+            which is the sentence the ensemble sheet actually writes. */}
+        {smear ? (
+          <>
+            <g transform={`translate(${smear.dx} ${smear.dy})`}>
+              <ShardSilhouette d={d} c={c} faceY={faceY} alpha={0.42} />
+            </g>
+            <g transform={`translate(${-smear.dx} ${-smear.dy})`}>
+              <ShardSilhouette d={d} c={c} faceY={faceY} alpha={0.42} />
+            </g>
+          </>
+        ) : null}
+
         {/* A whisper of the hue along the ribbon, so seven of them in a row glow
             into each other the way a rainbow does. Two widening strokes of the
             wave's own path, exactly as Ray's radiance is done — an *ellipse*
@@ -880,7 +932,16 @@ export const RayShard: React.FC<RayShardProps> = (props) => {
             ))
           : null}
 
-        {arms ? <ShardArms edge={c.deep} swing={rig.trail.dy * 0.4} y={faceY + 36} /> : null}
+        {arms ? (
+          <ShardArms
+            edge={c.deep}
+            swing={rig.trail.dy * 0.4}
+            y={faceY + 36}
+            pose={pose}
+            wave={wave}
+            t={t}
+          />
+        ) : null}
 
         <path d={d} fill={c.fill} />
         <path d={d} fill="none" stroke={c.deep} strokeWidth={7} strokeLinejoin="round" />
@@ -916,19 +977,70 @@ export const RayShard: React.FC<RayShardProps> = (props) => {
   );
 };
 
-const ShardArms: React.FC<{ edge: string; swing: number; y: number }> = ({ edge, swing, y }) => (
-  <g transform={`translate(0 ${y + swing})`}>
-    {[-1, 1].map((s) => (
-      <g key={s} transform={s === 1 ? "scale(-1 1)" : undefined}>
-        <path
-          d="M -30 4 Q -68 16 -84 24"
-          stroke={edge}
-          strokeWidth={13}
-          strokeLinecap="round"
-          fill="none"
-        />
-        <circle cx={-84} cy={24} r={11} fill={edge} />
-      </g>
-    ))}
+/** The shard with no features: ribbon, outline, face disc. A ghost. */
+const ShardSilhouette: React.FC<{
+  d: string;
+  c: SpectrumColor;
+  faceY: number;
+  alpha: number;
+}> = ({ d, c, faceY, alpha }) => (
+  <g opacity={alpha}>
+    <path d={d} fill={c.fill} />
+    <path d={d} fill="none" stroke={c.deep} strokeWidth={7} strokeLinejoin="round" />
+    <ellipse cx={0} cy={faceY} rx={58} ry={48} fill={c.fill} />
   </g>
 );
+
+/**
+ * Two tiny arms, drawn behind the body like everything else in this kit.
+ *
+ * `wave` raises them and flaps, which exists for exactly one character: Yellow
+ * waves at everyone, continuously, including at things that are leaving, and a
+ * signature that only exists in motion is not in the episode. The raised arm is
+ * the *paused-frame* half of it — in a line-up of seven, Yellow is the one with
+ * his hand up, in any frame you stop on.
+ *
+ * **The first pass of this read as antennae**, and that is worth writing down
+ * because the cause generalises: the arm left the shoulder *underneath* the
+ * face disc, so the only part on screen was a thin stick emerging from the top
+ * of a head with a ball on the end. An arm has to have a visible shoulder. The
+ * root is now out at (−42, 14) from the anchor — clear of the disc's edge
+ * (rx 58, ry 48 around `faceY`, anchor 36 below it) — the stroke is fatter than
+ * the resting arm rather than thinner, and the hand is a proper hand instead of
+ * a bead. Both arms go up rather than one: a single raised arm on a symmetric
+ * body is the polar silhouette the whole redesign was about.
+ */
+const ShardArms: React.FC<{
+  edge: string;
+  swing: number;
+  y: number;
+  pose?: ShardPose;
+  wave?: number;
+  t?: number;
+}> = ({ edge, swing, y, pose = "rest", wave = 1, t = 0 }) => {
+  const up = pose === "wave" ? Math.max(0, Math.min(1, wave)) : 0;
+  const waving = up > 0.01;
+  const d = waving ? "M -42 14 Q -84 2 -96 -46" : "M -30 4 Q -68 16 -84 24";
+  const hand: Pt = waving ? [-96, -46] : [-84, 24];
+  const flap = waving ? Math.sin(t * 7.4) * 15 * up : 0;
+  return (
+    <g transform={`translate(0 ${y + swing})`}>
+      {[-1, 1].map((s) => (
+        <g key={s} transform={s === 1 ? "scale(-1 1)" : undefined}>
+          {/* The flap pivots at the shoulder, not at the body's centre — an arm
+              rotating about the middle of the character is a windmill. */}
+          <g transform={`translate(-42 14) rotate(${flap}) translate(42 -14)`}>
+            <path
+              d={d}
+              stroke={edge}
+              strokeWidth={waving ? 16 : 13}
+              strokeLinecap="round"
+              fill="none"
+            />
+            <circle cx={hand[0]} cy={hand[1]} r={waving ? 15 : 11} fill={edge} />
+          </g>
+        </g>
+      ))}
+    </g>
+  );
+};

@@ -101,7 +101,7 @@ export const NARRATION: Record<string, NarrationClip> = {
   "a2_26_puff": { file: "narration/sky-blue/a2_26_puff.mp3", durationSeconds: 3.708 },
   "a2_27_narrator": { file: "narration/sky-blue/a2_27_narrator.mp3", durationSeconds: 2.375 },
   "a2_28_ray": { file: "narration/sky-blue/a2_28_ray.mp3", durationSeconds: 2.412 },
-  "a2_28b_blue": { file: "narration/sky-blue/a2_28b_blue.mp3", durationSeconds: 6.66 },
+  "a2_28b_blue": { file: "narration/sky-blue/a2_28b_blue.mp3", durationSeconds: 3.06 },
   "a2_28c_indigo": { file: "narration/sky-blue/a2_28c_indigo.mp3", durationSeconds: 1.476 },
   "a2_29_narrator": { file: "narration/sky-blue/a2_29_narrator.mp3", durationSeconds: 3.175 },
   "a2_30_narrator": { file: "narration/sky-blue/a2_30_narrator.mp3", durationSeconds: 4.85 },

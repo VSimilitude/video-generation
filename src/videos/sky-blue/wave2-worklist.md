@@ -108,6 +108,35 @@ every scene row depends on it.
   (act3.tsx:2471) and the `VolcanoScene` component's `a3_06_narrator`
   reference (act3.tsx:613) — the only dangling line-key reference in the tree.
 
+## Batch (a) — DONE 2026-08-02 (showrunner-reviewed; rulings below)
+
+- Built across two builders (first quota-killed mid-run; recovery builder
+  audited the inherited work per-constraint, fixed 5 real finds — bubble
+  tails/looks/beat invasions — and built A5). Gates green on the final tree:
+  typecheck 0, lint:hooks 0, full every-frame --scale=0.25 render exit 0.
+  Stills: scratchpad/w2a2/ (scratchpad/w2a/ is STALE — pre-SKY_MARK).
+- **Rulings (do not re-open):**
+  - R4 — Red stands still ~350f in s28 during the goodbye: STAYS. Red stood
+    all of Act One; the roll-call beats want a quiet frame; "one colour is
+    still walking" lands in s28c over him visibly walking. C3/screening
+    watch-item, not a bug.
+  - R5 — Green+Yellow do NOT leave inside s28's 45f drain beat: the race
+    addendum supersedes §6.13's five-leave staging (both have lines in 28b;
+    a3_14e counts "four"). Worklist item A1's sentence is superseded;
+    argument in act3.tsx:107-115.
+  - R6 — Volcano appears in s28c too (the worklist's 25/28b/29/31/35 list
+    predates the 28b/28c split; revision's own rule puts it in red-arrives).
+  - R7 — Kit: new RayShard props (pose/wave, smear) APPROVED; Indigo's
+    hero-scale ribbon braid accepted (screening watch-item).
+- Carry into (b)/(c) briefs: bubble y-clamp 170 — any speaker above y≈340
+  gets STILL-checked, not diff-checked; Orange follow spacing (0.8×
+  SHARD_BODY here) must agree with B6's Scene 18; act2's VioletCase must
+  move to violetVibrate/<Shard> (B8); scene-19 Blue is still a plain dot
+  (B7); s32 has no colour bodies yet (C1); s28c's eye→volcano dissolve is
+  the murkiest 48f in the act (C3 sample); Blue/Indigo cross Green's slot
+  in the s28 pack 17500-17610 (C3 sample); SleepingVolcano now exists twice
+  with divergent behaviour — promotion to lib is cleanup-list, NOT wave 2.
+
 ## Batch (b) — acts 1–2 revisions + Ray staging (commit after)
 
 - **B1 — Scene 5 journey**: unchanging star field, no cuts, 25.6s of

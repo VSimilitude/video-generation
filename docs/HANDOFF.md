@@ -89,8 +89,24 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   (verbatim: "Blue and indigo are good to go") — new take + Blue→Indigo echo
   pairing both confirmed. B7 is unblocked and measures its bubble beats
   against the NEW 3.06s clip. No ear items pending anywhere.
-- **Kit K1–K4 builder in flight** (Speaker colours, personality tables,
-  frequency ladder, per-body faceOffset); batch (a) act3 race follows it.
+- **Kit K1–K4 DONE + showrunner-reviewed** (stills pass at hero + 0.44 crowd
+  scale; typecheck/lint/full render green). Files (uncommitted, ride with the
+  batch-(a) checkpoint): scenes/common.tsx ("API 6": SEVEN table + motion
+  laws + <Shard heading>), src/lib/kid/staging.tsx (faceOffset/faceOf),
+  src/lib/kid/characters/Ray.tsx (shard pose/wave + smear), src/lib/kid/
+  index.ts. Rulings: new RayShard props APPROVED; Indigo hero-scale braid
+  accepted (screening watch-item); raw RayShard call sites migrate per batch.
+- **Batch (a) DONE + showrunner-reviewed 2026-08-02** (first builder
+  quota-killed mid-run; recovery builder audited the inherited act3 work
+  per-constraint — 5 real finds fixed — and built A5). All A1–A7 landed:
+  race world s28/s28b/s28c, s27 delta, s35 tease restage (incl. stale
+  "That is not me." bubble fixed), volcano continuity on measured horizons,
+  dead s26 refs gone. Gates on final tree: typecheck 0, lint:hooks 0, full
+  every-frame --scale=0.25 render exit 0 (twice). Showrunner sampled 8
+  riskiest-beat stills (scratchpad/w2a2/) — accepted, no fix round.
+  New rulings R4–R7 + carry-forward notes recorded in wave2-worklist.md's
+  "Batch (a) — DONE" section. AWAITING CHECKPOINT COMMIT (paths in the
+  showrunner's batch-(a) report), then batch (b) builder spawns.
 
 **The staging worklist is now authoritative:
 `src/videos/sky-blue/wave2-worklist.md`** (showrunner, 2026-08-02 — merges
