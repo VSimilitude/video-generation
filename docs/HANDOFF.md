@@ -81,6 +81,17 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   **exit 0** (24,482 frames, 81MB, 2026-08-02). Wave 1 is verified green.
 
 ### Wave 2 — IN FLIGHT (showrunner spawned 2026-08-02): scene staging
+**Progress (showrunner session, 2026-08-02):**
+- **B12 DONE early** (pulled ahead of batch (b) to parallelize Mike's ear
+  latency): `a2_28b_blue` re-rolled, 3 draws (3.67 / 3.64 / **3.06s KEPT** —
+  0.38 s/word, in Blue's healthy band; text/fields unchanged). Manifest at
+  3.06s; scene 19 retimes automatically. **PENDING MIKE'S EAR** (relay via
+  orchestrator, paths only): new take + Blue→Indigo echo pairing —
+  `public/narration/sky-blue/a2_28b_blue.mp3`, `a2_28c_indigo.mp3`,
+  `a3_13c_indigo.mp3`. B7 measures bubble beats against the NEW 3.06s clip.
+- **Kit K1–K4 builder in flight** (Speaker colours, personality tables,
+  frequency ladder, per-body faceOffset); batch (a) act3 race follows it.
+
 **The staging worklist is now authoritative:
 `src/videos/sky-blue/wave2-worklist.md`** (showrunner, 2026-08-02 — merges
 the audit, script.md's builder worklist, and this section; adds a
@@ -116,6 +127,15 @@ full gates + clean-worktree deploy.
 - Retro → LEARNINGS + STYLE per PROCESS §7.
 
 ## Backlog (owned, not started)
+- SERIES BIBLE (approved by Mike 2026-08-02): docs/kids/BIBLE.md — per-
+  character canon (locked casting, personality, speech patterns, arc
+  history) + series ledger (running gags + state, open teases like the
+  volcano eye, world rules). Owner: showrunner; mandatory update at each
+  episode retro alongside LEARNINGS/STYLE. First write-up = story-writer
+  distills eps 1–3 + decision record, showrunner reviews — schedule at the
+  ep-3 wave-3 boundary (after ep-3 canon is final). When it lands: add
+  bible to showrunner boot order, bible-check to auditor checklist, and
+  character excerpts to story-writer briefs.
 - Ep 4: the volcano wakes — Claire's lava-drop / rock-cycle episode. Brief
   seeds in memory/kids-series.md + ORCHESTRATION.md (Sunny finally wrong;
   hero arc ≠ wrong-about-self; volcano voice = Elegant_Man pitch −6).
