@@ -1,0 +1,203 @@
+# Ep 3 wave-2 staging worklist — showrunner, 2026-08-02
+
+Merged from: `scratchpad/ep3_wave1_audit.md` (the wave-1 audit),
+`script.md:2282-2328` (the builder's own staging worklist — audited accurate
+and sized), `docs/HANDOFF.md`'s wave-2 section, and `revision.md` + its three
+addenda. HANDOFF's suggested batch structure is KEPT — the audit gave no
+reason to change it — with a kit-prerequisite layer added in front, because
+every scene row depends on it.
+
+## Wave-1 audit outcome (context for builders)
+
+- **CONFIRMED 41 · MISSING 1 · WRONG 9 · wave-2 expected-absent 6 · accepted
+  deviations 3.** The script layer is substantively correct: every line text,
+  key, voice, speed, pitch, emotion, gap and alias checked matches the spec;
+  both TTS caches complete; manifest ↔ narration ↔ Video.tsx in exact 208-key
+  sync; alias audio md5-identical. Full evidence: `scratchpad/ep3_wave1_audit.md`.
+- **All nine WRONGs were doc/comment drift and are FIXED in the audit wave**
+  (2026-08-02, this session): Video.tsx Scene 23 beat comment now says the grin
+  GROWS (was the deleted wrongness ceremony — the one find that would have
+  shipped a broken beat); Video.tsx Scene 16 comment now the empty tray; plus
+  seven count/gap corrections in script.md and narration.mjs. No behaviour
+  changed; cache still reports 0 to synthesize; gates re-run green.
+- The episode is **36 scenes** (race split into `s28b_race_island` +
+  `s28c_red_arrives` — accepted deviation D1); `s28_blue_runs_out` keeps its
+  id and nothing is renumbered.
+
+## Showrunner rulings (made this wave — carry into briefs, do not re-open)
+
+- **R1 — Roll call stays reply-free (audit MISSING M1).** Addendum 2's
+  "six replies — hang the lantern" roll-call line-home is DECLINED, accepting
+  the builder's written craft argument (script.md:603-607): the three-episode
+  roll-call shape (name → flat narrator line → unbothered button) is a series
+  signature and a spoken reply breaks it. The addendum's binding core is fully
+  delivered elsewhere (six speak, Violet alone silent, line-is-personality; the
+  lantern is hung by `a3_13d_yellow` "Great bounce, Violet!"). Flagged to Mike
+  as override-able at the family screening; reversal costs six MiniMax clips
+  (cents) + a Scene 10 re-time.
+- **R2 — Runtime 13:36.1 stands, flagged.** Addendum 1: "budget approved
+  implicitly by the scope of the request, flag the final number." Flagged:
+  **24,482 frames = 13:36.1** (vs the revision's ~13:01.7 estimate). No cuts
+  now; the costed cut-list lives at script.md:2358-2365 if Mike wants it
+  shorter after full-context viewing.
+- **R3 — Ray F2 is APPROVED by Mike** (relayed 2026-08-02): "I can approve the
+  ray final - it looks a little alien-y, so we'll ultimately have to see how
+  the kids respond to it." The "alien-y" note is a family-screening WATCH
+  ITEM, not wave-2 work.
+
+## Kit prerequisites — build FIRST (every batch depends on these)
+
+- **K1 — `Speaker` learns the colours.** `scenes/common.tsx:84` union +
+  `speakerOf()` (common.tsx:173-179) currently map every colour line to
+  `narrator`, so **all 16 colour lines stage as narrator turns — no mouth, no
+  bubble**. Extend both; delete the now-false "crowd, not a cast" comment at
+  common.tsx:88-93 in the same change.
+- **K2 — Seven personality tables** (revision §2, §6.2 — "the heaviest single
+  item"): one `SHARD_PHASE` identity, one signature move, one idle per colour,
+  written once in `scenes/common.tsx`, read by every act. Signatures must
+  survive a paused frame; Blue's blur = change of DIRECTION, Violet's =
+  amplitude in place — two different kinds of blur.
+- **K3 — The frequency ladder** (addendum 3): Red = single trough + peak
+  (half-wave), stepwise wavier per colour up to Violet's fizz, ONE shared wave
+  speed so frequency IS temperament; must read as ascending at a glance in
+  spectrum order. Ladder numbers already in STYLE.md's Ray section (Red 1.0
+  cycle → Violet 7.2); `scratchpad/rayRedesign2.tsx` is the F2/ladder source
+  of truth for reference.
+- **K4 — Per-body `faceOffset` kit-wide** (Ray staging item 1): `staging.tsx`
+  `midOf`/`markCentre` aim at box centre, which on F2 is the gap between face
+  and wave — other characters' `look` at Ray aims low. Add `faceOffset` and
+  route look/aim targets through it. (Ray has NO arms at pose="rest" by
+  design — do not "fix" that.)
+
+## Batch (a) — act3 race + tease (commit after)
+
+- **A1 — `s28_blue_runs_out` rework** (medium): goodbye roll call kept EXACTLY
+  (`a3_14b/c/d`, 20f/24f beats, Blue does NOT answer); Blue already bounced
+  out before Ray's wave arrives; Indigo four frames behind so that wave lands;
+  Violet last, furthest, waves back from further away (firing three); Green +
+  Yellow leave inside the 45f drain beat WITHOUT waving (nothing enters it);
+  Orange stays with Red (the plant).
+- **A2 — `s28b_race_island` component** (large, NEW): multi-leg race world
+  (high air → country → sea). Every exit is that colour's signature move,
+  bounced UP into the blue above — never falling/fading/vanishing (physics
+  honesty: bounced out ≠ lost). Drop-out in spectrum order. Yellow lands on
+  the volcano ("A warm rock!"); narrator warn-off "That is not a rest stop.";
+  **THE VOLCANO OPENS ONE EYE — 45f, nothing enters, no dialogue, NO rumble**
+  (the rumble belongs to Scene 35); eye closes; Yellow bounces off
+  apologetically, exits upward. Green settles on the becalmed sailboat ("This
+  is a nice spot."). Landing-on-an-eye pedagogy beat survives at the finish.
+- **A3 — `s28c_red_arrives` component** (large, NEW): Red walks out of the
+  beam at his one unvaried speed; Orange one body-length behind, arrives
+  second, silent until "What Red said."; beats 36/30/45 with nothing entering;
+  empty orange sky; contented, never elegiac — **the sunset must never read
+  as the light dying** (tone guardrail lives here).
+- **A4 — `s27_long_way` delta** (visual only): Blue on the midday beam
+  (arrives almost instantly, then ricochets around having arrived), Red on the
+  sunset beam (still walking when the scene ends, and into s28).
+- **A5 — `s35_tease` staging**: wobbling smoke ring that does not close;
+  rumble moves the water; Sunny BEAMS at full brightness, arms out, zero
+  doubt, emotion lead 0; beats 45/60/45/30; **wondrous, not frightening** —
+  no dark chord, no red glow, no camera shake.
+- **A6 — Volcano scenery continuity**: continuously visible on the MEASURED
+  horizon (sample the plate or read drawn `HORIZON`, never guess) in scenes
+  25, 28b, 29, 31, 35 and in no other frame; snoring three-second loop;
+  nobody looks at it; the narrator's warn-off in A2 is the only adjacent line
+  in the episode. Reuse `SleepingVolcano` (exists in BOTH wind/act3 and
+  sky-blue/act3; promotion to `src/lib/` is cleanup-list work, NOT this wave).
+- **A7 — trivial**: delete the dead `s26_volcano: VolcanoScene` mapping
+  (act3.tsx:2471) and the `VolcanoScene` component's `a3_06_narrator`
+  reference (act3.tsx:613) — the only dangling line-key reference in the tree.
+
+## Batch (b) — acts 1–2 revisions + Ray staging (commit after)
+
+- **B1 — Scene 5 journey**: unchanging star field, no cuts, 25.6s of
+  deliberate sameness; five identical firings (one clip, five identical mouth
+  shapes and bubbles); gaps 30/45/60/75; the fifth UNANSWERED — 6f tail, hard
+  cut to the Scene 6 garden. Nothing may telegraph the cut.
+- **B2 — Scene 9 ensemble birth**: the 60f counting beat stays EMPTY; the
+  seven come alive only from `a1_37_ray`, one per ~8f, spectrum order, via
+  `beats()` — stagger, never swarm. Red does not come alive because he never
+  stopped; he does not move again until Act Two.
+- **B3 — Scene 10 roll call**: seven in-character reactions per revision
+  §6.3; Red does not react AT ALL (the new best moment, zero frames); nobody
+  replies out loud (ruling R1); everyone freezes in seven different poses
+  through the 20f beat.
+- **B4 — Scene 11**: letters taken in character; Violet squeezed onto the W's
+  far arm, ignored, still there at the cut. DECIDE Drip-on-B vs Blue
+  ricocheting off her, and WRITE THE CHOICE IN THE SCENE FILE (revision names
+  the ricochet as funnier) — the next reader will otherwise "fix" it.
+- **B5 — Scene 16 restage** (negative work): one prop — the tray, tipped
+  toward camera on the 45f beat, plainly never used. DELETE the ladder, dust
+  sheet and painting animation. Emotion lead 0.
+- **B6 — Scene 18 corridor**: Red + Orange cross dead straight; Puff's
+  reach-miss-shrug runs INSIDE the 30f beat as continuous action; Red's 16f
+  approach gaps are already in the timeline — stage to them.
+- **B7 — Scene 19 corridor**: Blue pinball; Indigo permanently hitting the
+  puff Blue just left; the 45f pinball beat is SACRED — motion builds under
+  silence, no bubbles inside it; three-corner bubbles on `a2_28b_blue` at
+  `beats(clip, [0.05, 0.42, 0.74])`, each two words, each `tailAt` Blue's
+  actual position, bubbles STILL even when Blue is not. **Coupled to C4: if
+  `a2_25b_blue` is replaced after Mike's ear-check, re-measure the beats.**
+- **B8 — Scene 20 dome**: every arrow gets Blue on the end of it; dome
+  resolves into Blue's face for ~half a second ON `a2_33_narrator` (never in
+  the 36f beat, which stays empty); Violet out-bounces Blue (replace the
+  plain-dot comparator with Blue), droops on the 20f beat, nothing else
+  enters; Ray looks at him on "Sorry, Violet." and on no other frame.
+- **B9 — Scene 21**: Blue throws the letters one per ricochet; Indigo throws
+  one four frames late and misses; everything perched on `syllableBlock()`,
+  never composition coordinates.
+- **B10 — Scene 23 restage**: **the diagram NEVER stops** — it rebuilds
+  around Sunny with the air drawn into it on `a2_51_narrator`; the grin GROWS
+  across the whole 36f beat (Video.tsx comment now says so — W1 fixed);
+  ray-fan visual pun on "LOADS of points"; optional free visual: Red walks
+  across the finished diagram on `a2_51`, NEVER inside a held beat.
+- **B11 — Ray staging items 2 + 3** (item 1 = K4): act1.tsx:359-367 scene-4
+  whip streak band crosses the face/wave gap — re-aim it; Scene 4 Sunny's
+  pinch arms converge on the same gap — re-aim via K4's `faceOffset`.
+
+## Batch (c) — recap + review + gates + deploy
+
+- **C1 — Scene 32 chant**: Blue shoves into Puff's panel (4f gap; neither
+  concedes, nobody adjudicates); Red walks into and out of Sunny's panel (16f
+  gap; the 20f beat after "It is mostly me." is total stillness — Sunny does
+  not hear, does not look); Violet half out of the RAINBOW panel edge, waving,
+  unre-framed (firing four).
+- **C2 — Remaining recap rows** from script.md's staging worklist (Scene 35
+  already in A5; Moon/Scene 34 untouched — 60f black-sky hold sacred).
+- **C3 — Showrunner sampled still review** (mine, not a builder's): riskiest
+  beats — race exits MID-animation, the one-eye 45f, s28c's empty orange
+  frame, Scene 19's three-corner bubbles mid-ricochet, Scene 23 grin growth
+  arc, Scene 9 stagger. Builders render stills INSIDE animated beats, not at
+  endpoints (the lesson this repo has learned three times), and Read their own
+  stills before reporting.
+- **C4 — Ear-check packet for Mike** (clips already on disk; orchestrator
+  relays file paths; non-blocking except the B7 coupling): in priority order —
+  `a2_49_narrator` "He has a point." (must be FLAT, not amused — the whole arc
+  change rests on it); **`a2_25b_blue` (5.54s for five words — probably wrong,
+  MiniMax pausing on every "!"; pre-written fallback "Hi! Sorry! I did not
+  mean to hit you!" costs ~$0.01)**; `a2_24b_red` "Lovely air." (clipping);
+  `a3_18d_red` "Peace and quiet." (contented, not tired — THE tone call);
+  Indigo at pitch+3/1.1 (faded copy of Blue, not an eighth person); the five
+  "Are we there yet?" firings as a run; `a2_50_sunny` pun; `rc_18_sunny` full
+  confidence.
+- **C5 — Full gates**: `npm run typecheck`, `npm run lint:hooks`, full
+  every-frame `RaySkyBlue` render at `--scale=0.25`, exit 0.
+- **C6 — Clean-worktree deploy** (CLAUDE.md recipe; never `git add -A` — the
+  technical session may have WIP). Then, per HANDOFF: send Mike the deployed
+  link for the full-context family screening.
+
+## Watch items (screening, not wave-2 work)
+
+- Ray F2 reads "a little alien-y" (Mike) — kids' reaction at the family
+  screening decides whether it ever becomes a tweak.
+- R1 (roll call reply-free) — Mike may override after viewing; cents to add.
+- Runtime 13:36.1 — cut-list at script.md:2358-2365 if it must come down.
+
+## Brief boilerplate for wave-2 builders (per docs/roles/showrunner.md)
+
+Carry into every brief: quality bar = "read act1.tsx first"; scope guards
+(registries shared — minimal diffs; `src/site/` belongs to the technical
+session; do not touch wind/ scene files); render + Read your own stills and
+iterate (~50–170 stills is normal); flagged weak points above (F2 face/wave
+gap, emotion-vocab limits, plate horizon measurement); stills inside animated
+beats; commit nothing — report to the showrunner.

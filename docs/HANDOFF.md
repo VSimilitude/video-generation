@@ -52,23 +52,36 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   2. act1.tsx:359-367 scene-4 whip streak band crosses the same gap.
   3. Scene 4 Sunny's pinch arms converge on the gap.
   Also: Ray has NO arms at pose="rest" by design.
-- **Script layer** (script.md/narration.mjs/Video.tsx + TTS): the agent died
-  at the session limit with its LAST message = "GATE_EXIT=0 — the full
-  every-frame render passed cleanly", i.e. work complete through gates but
-  its final report (wave-2 worklist, counts) never arrived. On-disk state
-  is committed. **First task of the new session: AUDIT this** (the proven
-  audit-not-trust pattern): verify script.md/narration.mjs/Video.tsx fully
-  match revision.md + addenda (race scenes, 5× are-we-there-yet aliases with
-  gaps 30/45/60/75 + unanswered fifth, scene 16 rebuild, scene 23
-  "He has a point." rewording, scene 26 cut, tease rework, six-voice cast
-  block, generator `pitch` field), confirm `npm run narration -- --video
-  sky-blue` and `--video wind` report 0 to synthesize (cache complete), and
-  confirm wind's rc_15 tease = "Sunny has a theory. It is a very Sunny
-  theory." Then re-run gates yourself before staging.
+- **Script layer** (script.md/narration.mjs/Video.tsx + TTS): **AUDITED
+  2026-08-02** (showrunner + opus auditor; full audit:
+  `scratchpad/ep3_wave1_audit.md`). Verdict: substantively correct —
+  CONFIRMED 41 / MISSING 1 / WRONG 9 / wave-2 expected-absent 6. All named
+  checks passed: race scenes per addendum 1 (as s28 + NEW s28b_race_island +
+  s28c_red_arrives — 36 scenes now, nothing renumbered), 5× aliases with
+  gaps 30/45/60/75 + unanswered fifth, scene 16/23/26/35 changes verbatim,
+  cast block exact (incl. Indigo pitch+3 UP), generator `pitch` field in
+  cache key, both caches 0-to-synthesize, wind rc_15 exact. All 9 WRONGs
+  were doc/comment drift and are FIXED (worst: Video.tsx's scene-23 beat
+  comment still described the deleted wrongness ceremony — a wave-2 landmine,
+  now says the grin GROWS). Showrunner rulings: roll call stays reply-free
+  (builder's reasoned decline of addendum 2's line-home ACCEPTED — lantern
+  hung by Yellow's "Great bounce, Violet!"; Mike may override at screening
+  for cents); runtime **13:36.1** flagged per addendum 1's "flag the final
+  number", no cuts now (cut-list at script.md:2358-2365). Ear-check packet
+  for Mike listed in the worklist — headline: `a2_25b_blue` came back 5.54s
+  for five words (MiniMax pausing on "!"), probably needs its pre-written
+  fallback. Gates re-run post-fixes: typecheck 0, lint:hooks 0 findings,
+  caches still complete; full every-frame --scale=0.25 render re-run:
+  **exit 0** (24,482 frames, 81MB, 2026-08-02). Wave 1 is verified green.
 
 ### Wave 2 — NOT STARTED: scene staging (the remaining work)
-Stage the rewritten/new scenes to match the new script; audit-derived
-worklist will refine this, but from revision.md it includes at minimum:
+**The staging worklist is now authoritative:
+`src/videos/sky-blue/wave2-worklist.md`** (showrunner, 2026-08-02 — merges
+the audit, script.md's builder worklist, and this section; adds a
+kit-prerequisite layer K1–K4: Speaker/colour support — all 16 colour lines
+currently stage as narrator turns —, seven personality tables, the frequency
+ladder, per-body faceOffset). Batch structure below is kept. Original
+sketch, from revision.md, for context:
 - THE SUNSET RACE (addendum 1; act3): multi-leg race world; per-color
   in-character exits (bounced UP into the sky, never eliminated); Yellow's
   volcano rest attempt + narrator warn-off + THE VOLCANO OPENS ONE EYE

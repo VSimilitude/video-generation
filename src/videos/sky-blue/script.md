@@ -91,7 +91,7 @@ of one casting rather than a knob for sweetening a read.
 
 **Violet never speaks, and that is now load-bearing.** Under the delivered cut
 he was the one nobody noticed among six silent siblings, which meant his silence
-was not *marked*. Now five of the other six have lines, one of them (Yellow) even
+was not *marked*. Now all six of the others have lines, one of them (Yellow) even
 talks *to* him, and he still does not get a word. He out-bounces the entire dome
 in Scene 20 while Blue — who bounces less than he does — has four lines, and he
 leaves the sunset race in complete silence while Blue is shouting and Indigo is
@@ -147,10 +147,10 @@ colours are on MiniMax speech-2.8-hd (via Replicate), which is paid but takes an
 `emotion` and a `pitch` per line and honours inline pause markers. **Sixty-nine
 MiniMax lines, one hundred and thirty-four kokoro lines and five `sameAs`
 aliases**; the aliases are copies rather than recordings and cost nothing at all.
-Sunny's twenty are free and re-time for nothing whenever a word of his changes.
+Sunny's nineteen (eighteen recordings plus the `sameAs` greeting) are free and re-time for nothing whenever a word of his changes.
 
-**Most MiniMax lines are not seasoned.** Ray's forty-seven are twenty-one `auto`,
-twenty-five seasoned and one shared recording: two `sad` (the
+**Most MiniMax lines are not seasoned.** Ray's fifty are twenty-one `auto`,
+twenty-five seasoned and four `sameAs` aliases of one shared recording: two `sad` (the
 sulk, and nowhere else in the episode), `surprised` on the eight lines where a
 fact lands on him, `happy` from the rainbow onward, one `calm` at the sunset.
 Drip and Puff are `happy` throughout, which is all they are. **The six colours
@@ -1997,7 +1997,7 @@ opening position for *"I did that." / "No. He really didn't."*
 
 **Tone guardrails.** Unchanged from episodes one and two. No sarcasm a
 six-year-old cannot parse — the Narrator's deadpans are always *about* obvious
-behaviour (Sunny bragging, Sunny holding a dry roller), never an ironic
+behaviour (Sunny bragging, Sunny tipping an empty paint tray at the camera), never an ironic
 reversal. No scary peril: the volcano tease is stirring, not threatening, and
 the sunset must never read as the light dying — Scene 31 exists to make it a
 journey. No potty humour. Nobody is unkind: Ray corrects Sunny by *giving* him
@@ -2021,7 +2021,7 @@ rule are already written down here:
   interlock) and `rc_05` (the summary). **Two lines now run *above* 1.0** for the
   first time in the series — Blue at 1.05 and Indigo at 1.1 — because being
   faster than everybody else is the character and the physics at once.
-- **Held beats of silence**, forty-two of them, each written above with its
+- **Held beats of silence**, forty-one of them (plus seven per-character approach gaps), each written above with its
   exact frame count and its reason. They become `gaps` in `Video.tsx`. The
   longest are the world turning and the fifth "Are we there yet?" (75f each), and
   the two-second holds carry the episode's biggest pictures: the crayon choice,
@@ -2076,7 +2076,7 @@ rule are already written down here:
   "Great bounce, Violet!" after him and gets nothing back); and he waves from the
   edge of the recap panel. **He must be the same blob every time** — same seventh
   colour, same `SHARD_PHASE[6]`, same silhouette — or he is five different
-  accidents. **He does not get a line, ever.** Since 2026-08-01 five of his six
+  accidents. **He does not get a line, ever.** Since 2026-08-01 all six of his
   siblings speak, which is what makes his silence a joke rather than a fact.
 - *The volcano is asleep.* — **no line about it, anywhere in the episode.**
   Scenery on the horizon in Scenes 25, 28b, 28c, 29 and 31; it opens one eye in

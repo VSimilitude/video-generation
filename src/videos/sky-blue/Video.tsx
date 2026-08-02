@@ -319,9 +319,10 @@ const SCRIPT: SceneSpec[] = [
   {
     id: "s16_myth_paint",
     lines: ["a2_10_sunny", "a2_11_narrator", "a2_12_sunny", "a2_13_narrator"],
-    // 45f — "Sunny holding a dry roller, alone in frame, saying nothing, for a
-    // second and a half. **Emotion lead cut to 0** — his face must not start to
-    // fall before the Narrator has finished the question."
+    // 45f — "Sunny tips the tray, the tray is empty, and nobody says anything
+    // for a second and a half. **Emotion lead cut to 0** — his face must not
+    // start to fall before the Narrator has finished the question. Nothing else
+    // moves in the frame, and there is nothing else in the frame to move."
     gaps: { a2_11_narrator: 45 },
     tailFrames: 30,
   },
@@ -465,8 +466,10 @@ const SCRIPT: SceneSpec[] = [
       // to expect 'He is right. Again.' **Emotion lead cut to 0** on the next
       // line."
       a2_48_narrator: 45,
-      // 36f — "Three words, and then nothing at all. Sunny's grin does not move
-      // for the first half of this beat and comes apart in the second."
+      // 36f — "Same length, opposite content. The grin does not come apart — it
+      // GROWS, slowly, across the whole beat, and the diagram behind him keeps
+      // assembling. Nothing else enters. The laugh is that the audience braced
+      // for a verdict and got a concession."
       a2_49_narrator: 36,
       // 30f — "It lands on him. Nobody helps."
       a2_52_ray: 30,

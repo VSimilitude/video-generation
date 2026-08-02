@@ -78,8 +78,9 @@
 // proves it: each one carries exactly ONE emotion for the whole episode and
 // never changes it, because the emotion *is* the character. Red is `calm` in
 // every frame he is in; a Red who plays a reaction has stopped being Red.
-// Ray's forty-seven lines are twenty-one
-// "auto", twenty-five seasoned and one shared recording, and the seasoning is
+// Ray's fifty keys are twenty-one
+// "auto", twenty-five seasoned and four `sameAs` aliases of one shared
+// recording, and the seasoning is
 // his arc:
 // two `sad` in Act One (the sulk, and nowhere else), `surprised` on the eight
 // lines where a fact lands on him, `happy` from the rainbow onward, and one
@@ -1142,7 +1143,9 @@ export default {
       speed: 0.88,
     },
     // BLUE IS OUT FIRST, and he goes UP, cheerfully, apologising to the air on
-    // his way — the same joke as a2_25b and the same 4f entrance gap. He is not
+    // his way — the same joke as a2_25b, landing after the 45f race-start beat:
+    // the one place in the episode he does NOT get his 4f interruption gap
+    // (see script.md, Scene 28 — the race start is held, not interrupted). He is not
     // losing a race, he is becoming the sky, which is what the whole episode
     // has been about for four minutes.
     a3_13b_blue: {
@@ -1276,8 +1279,7 @@ export default {
     // ORANGE'S ONE LINE IN THE EPISODE, and possibly his entire vocabulary for
     // the series: he agrees with Red, about everything, including this. It
     // lands AFTER the 45f silence rather than inside it, one body-length
-    // behind, which is where he has been all episode. 16f in front of it — he
-    // keeps Red's pace even in the gaps.
+    // behind, which is where he has been all episode.
     a3_18e_orange: { text: "What Red said.", ...ORANGE, emotion: "calm" },
     // About anticipation, not loss. The tone guardrail lives in this line.
     a3_18f_narrator: {
