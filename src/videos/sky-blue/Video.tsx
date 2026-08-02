@@ -34,17 +34,25 @@ import { RECAP_SCENES } from "./scenes/recap";
 // ---------------------------------------------------------------------------
 // THE GAPS ARE THE SCRIPT'S, NOT THE BUILDER'S.
 //
-// script.md carries **forty-four** held beats with exact frame counts and a
-// reason each, and they become the `gaps` below verbatim. Its own words:
-// "These numbers are the script's, not the builder's; raising one is a note,
-// lowering one is a change to the joke." Every number in a `gaps` block traces
-// to a `HELD BEAT` line in the screenplay; the comment quotes its reason.
+// script.md carries its held beats with exact frame counts and a reason each,
+// and they become the `gaps` below verbatim. Its own words: "These numbers are
+// the script's, not the builder's; raising one is a note, lowering one is a
+// change to the joke." Every number in a `gaps` block traces to a `HELD BEAT`
+// line in the screenplay; the comment quotes its reason.
 //
 // Tails are the builder's, with three exceptions the script fixes (Scene 13:
-// 45, Scene 24: 45, and Scene 26's beat which runs to the cut). Seven held
-// beats are *trailing* — the last line of Scenes 4, 7, 23, 26 and 31 buys
-// silence that runs to the cut — so those scenes carry a short tail rather than
-// the house 30, because the beat already is the tail.
+// 45, Scene 24: 45, and Scene 5's 6, which is deliberately almost nothing
+// because the fifth "Are we there yet?" is buttoned by a *cut*). Held beats
+// that are *trailing* — the last line of Scenes 4, 7, 23, 28b and 31 buys
+// silence that runs to the cut — mean those scenes carry a short tail rather
+// than the house 30, because the beat already is the tail.
+//
+// A THIRD KIND OF NUMBER LIVES HERE SINCE 2026-08-01: the two cast colours'
+// approach gaps. Red takes **16f** before every line he says (a2_23_narrator,
+// rc_04_sunny) and Blue takes **4f** before every line he says (a2_25_narrator,
+// a2_28_ray, rc_03_puff) — twice and half the house eight. That is temperament
+// encoded in the timeline instead of in the read, and it costs a third of a
+// second either way. Indigo takes **12f**, because he is late on purpose.
 // ---------------------------------------------------------------------------
 
 // Format constants live in scenes/common.tsx (every scene file needs them) and
@@ -129,12 +137,41 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s05_journey",
-    lines: ["a1_13_ray", "a1_14_narrator", "a1_15_ray", "a1_16_narrator"],
-    // 60f — "**This beat is the joke.** Nothing happens in it: same star field,
-    // same speed, same distance to go… the audience is allowed to get bored on
-    // purpose. Nothing enters — no bubble, no gesture, no emotion change."
-    gaps: { a1_14_narrator: 60 },
-    tailFrames: 30,
+    lines: [
+      "a1_13_ray",
+      "a1_14_narrator",
+      "a1_15_ray",
+      "a1_15b_narrator",
+      "a1_15c_ray",
+      "a1_15d_narrator",
+      "a1_15e_ray",
+      "a1_16_narrator",
+      "a1_16b_ray",
+    ],
+    gaps: {
+      // THE ESCALATION — 30 / 45 / 60 / 75, and it is the whole architecture of
+      // the gag. Five identical firings of one recording, four flat almanac
+      // answers, and a silence that grows by half a second every time.
+      //
+      // 30f — "**HELD BEAT — 30f (1.0s) after `a1_14_narrator`.**" The first
+      // one is short: the pattern has to be established before it can stretch.
+      a1_14_narrator: 30,
+      // 45f — the second. Same star field, same speed, same distance to go.
+      a1_15b_narrator: 45,
+      // 60f — the third, and the length the delivered cut used for its only
+      // hold here. "Six minutes of story time pass inside two seconds."
+      a1_15d_narrator: 60,
+      // 75f — "**The longest silence in Act One, and the peak of the gag.**
+      // Nothing enters it — no bubble, no gesture, no emotion change, and above
+      // all no sign that anything is about to happen." Equal to the episode's
+      // own ending hold, and the script is explicit that no single silence here
+      // goes past it.
+      a1_16_narrator: 75,
+    },
+    // 6f — "Scene tail: 6f. *(Deliberately almost nothing.)* The fifth firing
+    // is **not answered**. Scene 6 cuts hard to a garden at full brightness on
+    // the frame after it… The joke's button is a cut."
+    tailFrames: 6,
   },
   {
     id: "s06_arrival",
@@ -304,26 +341,61 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s18_red_straight",
-    lines: ["a2_22_narrator", "a2_23_narrator", "a2_24_narrator"],
-    // 30f — "Red crosses the whole frame in silence, dead straight. The
-    // audience has to see *boring* before bouncy means anything."
-    gaps: { a2_23_narrator: 30 },
-    tailFrames: 30,
+    lines: [
+      "a2_22_narrator",
+      "a2_23_narrator",
+      "a2_23b_red",
+      "a2_24_narrator",
+      "a2_24b_red",
+    ],
+    gaps: {
+      // 16f — "*(New, and short.)* Red takes his time about answering. **Every
+      // Red line in the episode has a longer approach gap than the house eight
+      // frames**; that is the character encoded in the timeline rather than in
+      // the read."
+      a2_23_narrator: 16,
+      // 30f — moved here from `a2_23_narrator`, same length: "Red crosses the
+      // whole frame in silence, dead straight, with Orange behind him… The
+      // audience has to see *boring* before bouncy means anything."
+      a2_23b_red: 30,
+      // 20f — "**Nothing enters this.** Red is most of the way out of frame.
+      // Puff is still holding the shrug. Deadpan is stillness."
+      a2_24_narrator: 20,
+    },
+    // 40f — "Red exits during it, at exactly the same speed, and Puff watches
+    // him go."
+    tailFrames: 40,
   },
   {
     id: "s19_blue_everywhere",
     lines: [
       "a2_25_narrator",
+      "a2_25b_blue",
       "a2_26_puff",
       "a2_27_narrator",
       "a2_28_ray",
+      "a2_28b_blue",
+      "a2_28c_indigo",
       "a2_29_narrator",
     ],
-    // 45f — "The pinballing runs on under the silence, building until there is
-    // blue moving in every direction in frame. This is the mechanism of the
-    // whole episode arriving as a physical event, and it must not be narrated
-    // while it happens."
-    gaps: { a2_27_narrator: 45 },
+    gaps: {
+      // 4f — "*(Half the house turn gap.)* Blue does not wait to be finished
+      // introducing. **Every Blue entrance in the episode takes a 4-frame gap
+      // instead of the default eight** — the opposite of Red's 16 — so the
+      // interruption is in the timeline rather than in the read."
+      a2_25_narrator: 4,
+      // 45f — "**Unchanged and sacred.** The pinballing runs on under the
+      // silence… This is the mechanism of the whole episode arriving as a
+      // physical event and it must not be narrated while it happens. **Nothing
+      // enters it — including Blue's bubbles.**"
+      a2_27_narrator: 45,
+      // 4f — Blue's house gap again; he answers Ray before Ray has stopped.
+      a2_28_ray: 4,
+      // 12f — Indigo's gap, and the only one of its kind: he is LATE, not
+      // early. Longer than the house eight so the echo arrives after the joke
+      // has finished rather than inside it.
+      a2_28b_blue: 12,
+    },
     tailFrames: 30,
   },
   {
@@ -429,15 +501,13 @@ const SCRIPT: SceneSpec[] = [
     ],
     tailFrames: 30,
   },
-  {
-    id: "s26_volcano",
-    lines: ["a3_06_narrator"],
-    // 60f, trailing — "Hold on the volcano. Nobody reacts, nothing else
-    // happens, and then the episode simply carries on with the sunset as though
-    // the last twelve seconds did not occur."
-    gaps: { a3_06_narrator: 60 },
-    tailFrames: 14,
-  },
+  // `s26_volcano` IS CUT (2026-08-01). Its one line and its 60f hold are gone
+  // and the scene ceases to exist: the volcano gag's entire value is that the
+  // show appears not to think it is important, and the delivered cut stopped
+  // the episode and said a sentence about it. −9.6s. Its component is still in
+  // ACT3_SCENES and is now simply unreferenced — deleting it is the staging
+  // wave's job, not the timeline's. The volcano keeps its horizon in Scenes 25,
+  // 28b, 29, 31 and 35 and nobody looks at it until it opens an eye in 28b.
   {
     id: "s27_long_way",
     lines: [
@@ -449,33 +519,104 @@ const SCRIPT: SceneSpec[] = [
     ],
     tailFrames: 30,
   },
+  // --- THE SUNSET RACE — three legs, three scenes -------------------------
+  // The 2026-08-01 addendum turns Scene 28's drain into a race down two hundred
+  // miles of sideways air and absorbs the proposed Scene 28b into its finish
+  // line. The scene id `s28_blue_runs_out` is KEPT — it is wiring, read by the
+  // act file and by every bubble map, and the note on the ep-2 cameo keys
+  // applies: check whether anything actually reads a name before changing it.
   {
     id: "s28_blue_runs_out",
     lines: [
       "a3_12_narrator",
+      "a3_12b_narrator",
       "a3_13_narrator",
+      "a3_13b_blue",
+      "a3_13c_indigo",
+      "a3_13d_yellow",
       "a3_14_narrator",
       "a3_14b_ray",
       "a3_14c_narrator",
       "a3_14d_ray",
-      "a3_15_ray",
-      "a3_16_narrator",
-      "a3_17_ray",
-      "a3_18_narrator",
     ],
     gaps: {
       // 45f — "The blue drains out of the beam in silence, one ping at a time,
       // over most of the width of the frame. This is Act Two's mechanism doing
       // something *new*, and it needs to be watched rather than described."
+      // It is now also the start of the race: seven colours set off inside it.
       a3_13_narrator: 45,
+      // 12f — Indigo's gap, the same one he takes in Scene 19: he is four beats
+      // behind Blue, always, and the echo has to arrive after the line rather
+      // than under it.
+      a3_13b_blue: 12,
+      // 20f — VIOLET'S EXIT GOES HERE, in silence, between Indigo's echo and
+      // Yellow shouting after him. He goes last, highest and furthest, and he
+      // is the only one who does not say anything on his way out. Nothing else
+      // enters this beat: the silence *is* the joke and a bubble would spend it.
+      a3_13c_indigo: 20,
       // 20f — "The goodbye lands. Ray is still waving after them while the
-      // audience works out who just left."
+      // audience works out who just left." Unchanged.
       a3_14b_ray: 20,
       // 24f — "**Nothing enters this.** No wave, no bubble, no entrance, no
       // emotion change — Ray hangs there in a beam that is now red and orange,
       // doing absolutely nothing. Same beat, same length and same reason as
-      // Scene 10's."
+      // Scene 10's." Unchanged.
       a3_14c_narrator: 24,
+    },
+    tailFrames: 30,
+  },
+  {
+    id: "s28b_race_island",
+    lines: [
+      "a3_14e_narrator",
+      "a3_14f_green",
+      "a3_14g_narrator",
+      "a3_14h_yellow",
+      "a3_14i_narrator",
+    ],
+    gaps: {
+      // 20f — Green sits down on a becalmed sailboat and stays sat. The beat is
+      // him not getting up again, which is the whole character.
+      a3_14f_green: 20,
+      // 45f, trailing — **THE VOLCANO OPENS ONE EYE.** It holds, and it closes
+      // it. Nothing enters: no line, no bubble, no rumble, no reaction from
+      // anybody, and no music sting. Three episodes of a sleeping gag escalate
+      // by exactly one eyelid, and the value of it is entirely that the show
+      // declines to comment. Yellow bounces off apologetically inside the tail.
+      a3_14i_narrator: 45,
+    },
+    // Short, because the held beat above *is* this scene's tail.
+    tailFrames: 14,
+  },
+  {
+    id: "s28c_red_arrives",
+    lines: [
+      "a3_15_ray",
+      "a3_16_narrator",
+      "a3_17_ray",
+      "a3_18_narrator",
+      "a3_18b_narrator",
+      "a3_18c_red",
+      "a3_18d_red",
+      "a3_18e_orange",
+      "a3_18f_narrator",
+    ],
+    gaps: {
+      // 36f — "Red walks. Orange walks. The sky is entirely his colour and
+      // there is nobody else in it. **Nothing enters this beat.**"
+      a3_18b_narrator: 36,
+      // 30f — "He does not speed up. He has not sped up once in twelve minutes
+      // and he does not start now. **Nothing enters.**"
+      a3_18c_red: 30,
+      // 45f — "**The act's silence, and Red's whole scene.** The frame is
+      // orange, empty, and quiet, and the character who owns it is strolling
+      // across it having outlasted everybody. Nothing enters — no bubble, no
+      // gesture, no emotion change. Orange keeps his distance and does not
+      // overtake."
+      a3_18d_red: 45,
+      // 20f — Orange has agreed, one body-length behind, and neither of them
+      // says anything else. Deadpan is stillness.
+      a3_18e_orange: 20,
     },
     tailFrames: 30,
   },
@@ -529,7 +670,28 @@ const SCRIPT: SceneSpec[] = [
   // --- RECAP ---------------------------------------------------------------
   {
     id: "s32_chant",
-    lines: ["rc_01_narrator", "rc_02_ray", "rc_03_puff", "rc_04_sunny", "rc_05_narrator"],
+    lines: [
+      "rc_01_narrator",
+      "rc_02_ray",
+      "rc_03_puff",
+      "rc_03b_blue",
+      "rc_04_sunny",
+      "rc_04b_red",
+      "rc_05_narrator",
+    ],
+    gaps: {
+      // 4f — Blue's house gap. He shoves into Puff's panel before Puff has
+      // finished claiming the word, and neither of them concedes.
+      rc_03_puff: 4,
+      // 16f — Red's house gap. He takes his time, then walks into Sunny's panel
+      // from the side and out of the far edge of it.
+      rc_04_sunny: 16,
+      // 20f — "**Nothing enters this.** Sunny does not react. He does not hear
+      // it, he does not look at Red, and the panel light moves on to the
+      // Narrator while Red is still walking out of the far side of the frame.
+      // Deadpan is stillness."
+      rc_04b_red: 20,
+    },
     tailFrames: 32,
   },
   { id: "s33_right_now", lines: ["rc_06_narrator", "rc_07_narrator"], tailFrames: 44 },
@@ -556,18 +718,30 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s35_tease",
-    lines: ["rc_16_narrator", "rc_17_narrator", "rc_18_sunny", "rc_19_ray"],
+    lines: [
+      "rc_16_narrator",
+      "rc_17_narrator",
+      "rc_18_sunny",
+      "rc_18b_narrator",
+      "rc_19_ray",
+    ],
     gaps: {
-      // 45f — "The wobbling smoke ring, alone, in silence."
+      // 45f — "The wobbling smoke ring, alone, in silence." Unchanged.
       rc_16_narrator: 45,
       // 60f — "The rumble, felt in the water and in the smoke, with nothing
       // said over it. **Keep this wondrous, not frightening** — no dark chord,
-      // no red glow, no shaking camera."
+      // no red glow, no shaking camera." Unchanged and sacred.
       rc_17_narrator: 60,
-      // 45f — "Sunny still squinting at the horizon, unusually quiet. **Emotion
-      // lead cut to 0**; he is not playing a reaction, he is genuinely not
-      // sure. Nothing enters."
+      // 45f — **Same length, opposite content from the delivered cut.** Sunny
+      // is not unsure and he is not squinting: he is BEAMING, at full
+      // brightness, arms out, having claimed a volcano without a second's
+      // hesitation. The volcano rumbles again behind him and he does not
+      // notice. **Nothing enters this beat** and **emotion lead cut to 0** — no
+      // dawning, no doubt, no reaction of any kind. The joke is entirely that
+      // he is wrong and does not know it, and the audience does.
       rc_18_sunny: 45,
+      // 30f — "The volcano, the rumble, Sunny still beaming. Nothing enters."
+      rc_18b_narrator: 30,
     },
     tailFrames: 60,
   },

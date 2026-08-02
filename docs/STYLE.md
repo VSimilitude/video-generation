@@ -397,6 +397,62 @@ came out of it.
   in lockstep and instantly read as one puppet.
 - **Look at the speaker.** `lookAt(from, to)` turns two staged positions into a
   pupil offset. A character listening while facing the camera looks absent.
+- **Silhouette before detail, and check it mirrored.** Flatten the character to
+  a solid shape (kill colour, push alpha) and look at it next to its own mirror
+  image. Two rounds of Ray designs died on this test: every one of them was
+  *polar* — a compact rounded mass at one end and a motif tapering away at the
+  other — which is the sperm silhouette however nicely the tail is textured. If
+  the shape has a front, either the character genuinely faces that way or the
+  design is wrong. Direction of travel belongs in `bank` and in **detached**
+  motion dashes (a comics device), never in the anatomy.
+
+## Ray, and the two rules that came out of him (ep 3, 2026-08-01)
+
+Ray is **candidate F2**: a set of features floating in a feathered wash of
+light over a wave ribbon that is a separate object, with no head and no
+outline. The face bobs on the wave's centre crest a fifth of a second *late*,
+and that lag is the only thing joining them — on the same frame the pair welds
+into a head on a wavy body, a fifth of a second behind it they are a face that
+happens to be over a wave. Two rules generalise out of building it:
+
+- **A Cheshire face needs a genuinely opaque field wherever the features are
+  drawn, and the field's shape is dictated by the blink.** `Face` paints a lid
+  as a `skin`-coloured *rectangle* over the eye (a clip path would need a
+  per-instance id, and seven shards share one document), so anywhere the wash
+  is translucent a blink flashes a pale rectangle on the character's eye. The
+  rectangle's corners are the binding constraint and they are far out
+  diagonally: a *circle* big enough to reach them is a drawn head, which is the
+  design you were trying not to make. **Use a wide flat oval** — it covers the
+  same corner in much less area and it is a better face shape anyway (see
+  "faces must be huge") — and feather everything outside it over a hundred-plus
+  units so there is no edge. Verify by rendering a real blink frame
+  (`blinkAmount` is deterministic; solve for the frame), not by eye on a still.
+- **When a face field grows, re-check every limb.** The arms in this kit are
+  drawn behind the body and only exist outside the silhouette; grow the
+  silhouette and raised poses put their *hands* inside it, so `arms` silently
+  renders nothing. Ray's wave, cheer and hug were all armless for a pass. The
+  shoulder end of the path must sit under the field and every hand must clear
+  it — and a mirrored pair of *horizontal* arms (point, brace) must come out
+  **below** the field, or it reads as a rod through the character's chin.
+
+**The frequency ladder.** The seven shards differ only in hue and in how many
+times their wave goes up and down, at **one shared wave speed** — so `f = v/λ`
+is drawn rather than asserted, and temperament is the physics. Red is one
+trough and one peak (1.0 cycles, 0.24 Hz, visibly unbothered); Orange 1.5,
+Yellow 2.1, Green 2.9, Blue 4.0, Indigo 5.4, Violet 7.2 cycles at 1.76 Hz,
+ghosted either side of itself for motion blur. **Amplitude is deliberately not
+a ladder** — flat across the first five, tightening only for the last two where
+the swing would otherwise fold the ribbon through itself. That is what makes a
+row of them read as *frequency* ascending rather than "energy" ascending: stand
+the seven in spectrum order and the shot is a frequency diagram wearing faces.
+The ladder survives the silhouette test, which is the point of it.
+
+Two things about F2 to accept rather than fix: flattened, his face field is a
+disc, so at squint distance he is a ball over a wave (the wave is what keeps it
+honest — never let the field grow to where it out-measures the ribbon, which is
+why `F_L` is 196 against a solid face of 92). And **he has no arms at rest**:
+the wave is the gesture, and two amber bars slung under a chin turn the pair
+back into a head on a body.
 
 ## Motion craft
 
@@ -595,6 +651,15 @@ the previous frame renders differently every time.
 - The starburst stays behind the banner. It is decoration, and because the card
   owns a z-index, anything that overflows the banner draws on top of the
   characters' faces.
+- **Never `-webkit-text-stroke`; outline display text with `kidInkOutline()`**
+  (`src/lib/kid/theme.ts`, 2026-08-01). Text-stroke outlines each glyph
+  *contour* separately, and an iPhone resolves `system-ui` to a variable font
+  that keeps its overlapping components — so on the phone a stroked "A" shows
+  every bar it is assembled from. `paint-order: stroke` hides the seams in
+  Chrome but WebKit only honours it for SVG, which is exactly how the bug
+  survived every laptop preview. The helper draws the outline as a ring of
+  text-shadows cast by the glyph's finished silhouette (seamless everywhere);
+  pass it half the stroke width it replaces.
 
 ## Mouth sync
 

@@ -6,7 +6,8 @@
 //                                     # render one line in several candidate
 //                                     # voices so a human can pick by ear
 //   npm run narration -- --audition foo:intro /tmp/auditions \
-//       --engine minimax --voices Abbess,Imposing_Manner [--emotion happy]
+//       --engine minimax --voices Abbess,Imposing_Manner [--emotion happy] \
+//       [--speed 1.0] [--pitch -2]
 //                                     # same, in candidate MiniMax voices
 //
 // Each video directory (src/videos/<slug>/) declares its lines in a
@@ -23,6 +24,11 @@
 //       cloud: {
 //         text: "Door to door service, darling!",
 //         engine: "minimax", voiceId: "Abbess", emotion: "happy", speed: 1.0,
+//       },
+//       // …or shift one character off another's voice without a second casting:
+//       echo: {
+//         text: "…darling.",
+//         engine: "minimax", voiceId: "Abbess", emotion: "happy", pitch: 3,
 //       },
 //       // …or replay an earlier line's *exact recording* under a new key:
 //       askAgain: { sameAs: "ask" },
@@ -42,12 +48,19 @@
 //                       house default. Nothing about this path has changed.
 //   minimax           — MiniMax speech-2.8-hd via Replicate, paid, ~$0.11 per
 //                       1000 characters. Character acting: it takes an
-//                       `emotion` and honours inline pause markers `<#0.4#>`
-//                       (seconds of silence), neither of which kokoro has.
+//                       `emotion`, a `pitch` and honours inline pause markers
+//                       `<#0.4#>` (seconds of silence), none of which kokoro
+//                       has.
 //
 // A minimax line declares `engine: "minimax"` and a `voiceId`; `emotion`
-// defaults to "auto". Pause markers are a MiniMax feature and are rejected on
-// a kokoro line, where the model would read the punctuation out loud.
+// defaults to "auto" and `pitch` to 0. Pause markers are a MiniMax feature and
+// are rejected on a kokoro line, where the model would read the punctuation out
+// loud; so is `pitch`, which kokoro simply does not have.
+//
+// PITCH is whole semitones, -12..+12, and it is the cheap way to get a *second
+// character out of one casting* — a shadow, an echo, a smaller sibling — rather
+// than a knob to sweeten a read with. It leaves the hash of every line that does
+// not use it untouched, so adding one to a file does not re-buy the rest of it.
 //
 // Output per video (identical for both engines):
 //   public/narration/<slug>/<key>.mp3      (mono, 48 kbps; WAV fallback)
@@ -73,6 +86,9 @@ const DEFAULT_SPEED = 1.0;
 // --- minimax ---------------------------------------------------------------
 
 const MINIMAX_MODEL = "minimax/speech-2.8-hd";
+// MiniMax's pitch control, in whole semitones. The model's own range.
+const MINIMAX_PITCH_MIN = -12;
+const MINIMAX_PITCH_MAX = 12;
 const MINIMAX_EMOTIONS = [
   "auto",
   "happy",
@@ -363,6 +379,9 @@ async function synthesizeMiniMax(token, spec) {
     emotion: spec.emotion,
   };
   if (spec.speed !== 1) input.speed = spec.speed;
+  // Omitted at 0, exactly as `speed` is at 1: a line that does not ask for a
+  // shift must send the same request body it always sent.
+  if (spec.pitch) input.pitch = spec.pitch;
   const body = JSON.stringify({ input });
 
   let prediction = null;
@@ -456,7 +475,7 @@ function loadTts() {
 }
 
 // Normalize a line entry ("text" or {text, voice?, speed?, engine?, voiceId?,
-// emotion?, sameAs?}) against the video's defaults.
+// emotion?, pitch?, sameAs?}) against the video's defaults.
 function lineSpec(entry, defaults) {
   if (typeof entry === "string") return { engine: "kokoro", text: entry, ...defaults };
   if (entry.sameAs) return { engine: "alias", sameAs: entry.sameAs };
@@ -468,6 +487,7 @@ function lineSpec(entry, defaults) {
       voiceId: entry.voiceId,
       emotion: entry.emotion ?? "auto",
       speed: entry.speed ?? defaults.speed,
+      pitch: entry.pitch ?? 0,
     };
   }
   return {
@@ -475,6 +495,10 @@ function lineSpec(entry, defaults) {
     text: entry.text,
     voice: entry.voice ?? defaults.voice,
     speed: entry.speed ?? defaults.speed,
+    // Carried through unnormalized so `specProblems` can reject it: kokoro has
+    // no pitch, and a silently-ignored field is how a character quietly loses
+    // the thing its casting was leaning on.
+    pitch: entry.pitch,
   };
 }
 
@@ -514,12 +538,28 @@ function specProblems(spec, order = [], key = null) {
           "kokoro would read it aloud; remove it or move the line to minimax",
       );
     }
+    if (spec.pitch !== undefined) {
+      problems.push(
+        "has a `pitch` on a kokoro line — kokoro has no pitch control and " +
+          "would ignore it silently; remove it or move the line to minimax",
+      );
+    }
     if (!spec.voice) problems.push("has no voice");
   } else {
     if (!spec.voiceId) problems.push('is engine "minimax" but has no voiceId');
     if (!MINIMAX_EMOTIONS.includes(spec.emotion)) {
       problems.push(
         `emotion ${JSON.stringify(spec.emotion)} is not one of ${MINIMAX_EMOTIONS.join(", ")}`,
+      );
+    }
+    if (
+      !Number.isInteger(spec.pitch) ||
+      spec.pitch < MINIMAX_PITCH_MIN ||
+      spec.pitch > MINIMAX_PITCH_MAX
+    ) {
+      problems.push(
+        `pitch ${JSON.stringify(spec.pitch)} is not a whole number of semitones ` +
+          `between ${MINIMAX_PITCH_MIN} and ${MINIMAX_PITCH_MAX}`,
       );
     }
   }
@@ -535,11 +575,18 @@ function clipHash(spec, encMode, sourceHash) {
   // leaves out encMode — the mp3 arrives already encoded, and a machine that
   // gains ffmpeg must not re-buy 75 lines. An alias hashes its *source's* hash,
   // so re-wording the source re-copies the alias.
+  //
+  // `pitch` joins the minimax material ONLY when it is set, for the same
+  // reason: the day it was added, every existing paid clip in the suite had to
+  // stay cached — and a re-buy is not just money, it is a second roll of the
+  // dice on a take that has already been heard and timed.
   const material =
     spec.engine === "alias"
       ? ["alias", spec.sameAs, sourceHash]
       : spec.engine === "minimax"
-        ? [MINIMAX_MODEL, spec.text, spec.voiceId, spec.emotion, spec.speed]
+        ? spec.pitch
+          ? [MINIMAX_MODEL, spec.text, spec.voiceId, spec.emotion, spec.speed, spec.pitch]
+          : [MINIMAX_MODEL, spec.text, spec.voiceId, spec.emotion, spec.speed]
         : [spec.text, spec.voice, spec.speed, encMode];
   return createHash("sha256")
     .update(JSON.stringify(material))
@@ -682,7 +729,9 @@ async function generateVideo({ slug, config }, encMode, token) {
         clips[key] = { file: `narration/${slug}/${outFile}`, durationSeconds };
         console.log(
           `  ${key.padEnd(16)} ${durationSeconds.toFixed(2)}s  ${(bytes.length / 1024).toFixed(0)} KB  ` +
-            `(minimax ${spec.voiceId}/${spec.emotion} @${spec.speed}, ${((Date.now() - t0) / 1000).toFixed(1)}s)`,
+            `(minimax ${spec.voiceId}/${spec.emotion} @${spec.speed}` +
+            `${spec.pitch ? ` pitch ${spec.pitch > 0 ? "+" : ""}${spec.pitch}` : ""}, ` +
+            `${((Date.now() - t0) / 1000).toFixed(1)}s)`,
         );
       } catch (err) {
         failed.push(`${key}: ${err.message}`);
@@ -794,8 +843,20 @@ async function runAudition(target, outDir, opts = {}) {
       process.exit(2);
     }
     const speed = opts.speed ?? spec.speed;
+    const pitch = opts.pitch ?? spec.pitch ?? 0;
+    if (
+      !Number.isInteger(pitch) ||
+      pitch < MINIMAX_PITCH_MIN ||
+      pitch > MINIMAX_PITCH_MAX
+    ) {
+      console.error(
+        `--pitch must be a whole number of semitones between ${MINIMAX_PITCH_MIN} and ${MINIMAX_PITCH_MAX}.`,
+      );
+      process.exit(2);
+    }
     console.log(
-      `Auditioning ${slug}:${key} on ${MINIMAX_MODEL} (${emotion} @${speed}) — ${JSON.stringify(spec.text)}\n`,
+      `Auditioning ${slug}:${key} on ${MINIMAX_MODEL} (${emotion} @${speed}` +
+        `${pitch ? ` pitch ${pitch > 0 ? "+" : ""}${pitch}` : ""}) — ${JSON.stringify(spec.text)}\n`,
     );
     for (const voiceId of voices) {
       try {
@@ -804,10 +865,12 @@ async function runAudition(target, outDir, opts = {}) {
           voiceId,
           emotion,
           speed,
+          pitch,
         });
         // Include the line key: two lines auditioned with the same emotion
-        // into one dir must not overwrite each other.
-        const outFile = `audition_${key}_${voiceId}_${emotion}.mp3`;
+        // into one dir must not overwrite each other. A pitch shift is part of
+        // the candidate, so it is part of the filename too.
+        const outFile = `audition_${key}_${voiceId}_${emotion}${pitch ? `_p${pitch}` : ""}.mp3`;
         await writeFile(path.join(outDir, outFile), bytes);
         console.log(
           `  ${voiceId.padEnd(20)} ${mp3DurationSeconds(bytes).toFixed(2)}s  ` +
@@ -859,7 +922,8 @@ async function main() {
     if (!target || !target.includes(":") || !outDir) {
       console.error(
         "Usage: node generate-narration.mjs --audition <slug>:<lineKey> <outDir>\n" +
-          "       [--engine minimax --voices <id1,id2,…> [--emotion happy] [--speed 1.0]]",
+          "       [--engine minimax --voices <id1,id2,…> [--emotion happy] [--speed 1.0]\n" +
+          "        [--pitch -2]]",
       );
       process.exit(2);
     }
@@ -868,6 +932,7 @@ async function main() {
       voices: flag("--voices")?.split(",").map((s) => s.trim()).filter(Boolean),
       emotion: flag("--emotion"),
       speed: flag("--speed") ? Number(flag("--speed")) : null,
+      pitch: flag("--pitch") !== null ? Number(flag("--pitch")) : null,
     });
   }
 

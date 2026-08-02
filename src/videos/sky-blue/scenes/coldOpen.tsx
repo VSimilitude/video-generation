@@ -1,5 +1,5 @@
 import React from "react";
-import { kidEase, kidRadius, kidShadow, kidTheme, kidType, settleWave } from "../../../lib/kid";
+import { kidEase, kidInkOutline, kidRadius, kidShadow, kidTheme, kidType, settleWave } from "../../../lib/kid";
 import {
   AbsoluteFill,
   Bubbles,
@@ -546,9 +546,7 @@ const PaintedTitle: React.FC<{ paint: (i: number) => number }> = ({ paint }) => 
               lineHeight: 1.06,
               letterSpacing: 2,
               color: kidTheme.paper,
-              WebkitTextStroke: `${Math.round(line.size * 0.055)}px ${kidTheme.ink}`,
-              paintOrder: "stroke",
-              textShadow: `0 ${Math.round(line.size * 0.05)}px 0 rgba(36,52,71,0.35)`,
+              textShadow: `${kidInkOutline(line.size * 0.028)}, 0 ${Math.round(line.size * 0.05)}px 0 rgba(36,52,71,0.35)`,
               clipPath: `inset(0 ${(1 - p) * 100}% 0 0)`,
             }}
           >

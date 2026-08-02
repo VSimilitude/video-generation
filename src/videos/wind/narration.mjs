@@ -1184,8 +1184,18 @@ export default {
     // Scene 36: the running gag's last confident firing, twelve seconds before
     // it breaks.
     rc_14_sunny: { text: "OH, that one is me as well! HA! HA!", ...SUNNY },
+    // TEXT CHANGED 2026-08-01 (was "Sunny has a theory. It is wrong."), and it
+    // is the only edit episode three's revision makes to a shipped episode.
+    // Episode three no longer declares the theory wrong — the wrongness
+    // ceremony moved to episode four — so this tease must promise the theory
+    // without ruling on it. The tautology is the joke and it is a pure
+    // non-verdict: a returning viewer can read it either way, which is exactly
+    // the state episode three wants them in. Kokoro, so it is free and re-times
+    // the episode by about a second and a half.
+    // `rc_16_sunny` ("Wait. What?") is UNCHANGED and gets funnier: he cannot
+    // tell whether that was a compliment.
     rc_15_narrator: {
-      text: "Sunny has a theory. It is wrong.",
+      text: "Sunny has a theory. It is a very Sunny theory.",
       ...NARRATOR,
       speed: 0.9,
     },

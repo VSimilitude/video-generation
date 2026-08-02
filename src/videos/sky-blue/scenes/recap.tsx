@@ -1,5 +1,5 @@
 import React from "react";
-import { mixHex } from "../../../lib/kid";
+import { kidInkOutline, mixHex } from "../../../lib/kid";
 import {
   ACT_COLOR,
   AbsoluteFill,
@@ -224,8 +224,7 @@ const ChantPanel: React.FC<{
               fontWeight: 900,
               letterSpacing: -1,
               color: kidTheme.paper,
-              WebkitTextStroke: `4px ${kidTheme.ink}`,
-              paintOrder: "stroke",
+              textShadow: kidInkOutline(2),
               whiteSpace: "nowrap",
               boxShadow: kidShadow(1.1),
               transform: `scale(${0.5 + 0.5 * wordIn}) rotate(${-1.5 + (1 - wordIn) * 6}deg)`,
@@ -430,8 +429,7 @@ const ThreeWords: React.FC<{ from: number }> = ({ from }) => {
               fontWeight: 900,
               letterSpacing: 1,
               color: kidTheme.paper,
-              WebkitTextStroke: `5px ${kidTheme.ink}`,
-              paintOrder: "stroke",
+              textShadow: kidInkOutline(2.5),
               boxShadow: kidShadow(1.2),
               transform: `scale(${Math.max(0, s)}) rotate(${-2 + (1 - s) * 8}deg)`,
               transformOrigin: "0% 50%",
@@ -1142,8 +1140,7 @@ const NextTimeCard: React.FC<{ scale: number }> = ({ scale }) => {
           lineHeight: 1.02,
           letterSpacing: 2,
           color: kidTheme.sun,
-          WebkitTextStroke: `6px ${kidTheme.ink}`,
-          paintOrder: "stroke",
+          textShadow: kidInkOutline(3),
         }}
       >
         EPISODE FOUR

@@ -1381,11 +1381,14 @@ invisible to everyone in the picture.
 
 > **NARRATOR:** Next time. Why is the sky BLUE?
 > **SUNNY:** OH, that one is me as well! HA! HA!
-> **NARRATOR:** Sunny has a theory. It is wrong.
+> **NARRATOR:** Sunny has a theory. It is a very Sunny theory.
 
 **HELD BEAT — 45f (1.5s) after `rc_15_narrator`.** Sunny holds his pose while
 the sentence catches up with him. **Emotion lead cut to 0**: his face must not
 fall until the beat is nearly over, or the reaction pre-empts the joke.
+**Unchanged, and it is now doing a better job** — the beat used to be a man
+realising he had been contradicted; it is now a man unable to work out whether
+he has just been complimented.
 
 > **SUNNY:** Wait. What?
 
@@ -1393,10 +1396,24 @@ fall until the beat is nearly over, or the reaction pre-empts the joke.
 
 > **PUFF:** Bye! You can't see me. But you can FEEL me.
 
+> **`rc_15_narrator` CHANGED, 2026-08-01** (was *"Sunny has a theory. It is
+> wrong."*), and it is the only edit episode three's revision makes to this
+> episode. **Episode three no longer declares the theory wrong** — the wrongness
+> ceremony, and "That is not me." with it, moved to episode four — so this tease
+> must promise the theory without ruling on it. The tautology is the joke and it
+> is a pure non-verdict: a returning viewer can read it either way, which is
+> exactly the state episode three wants them in. Kokoro, so it is free; the
+> episode runs about **+1.4s** (12:27.5 → 12:28.9). `rc_16_sunny` and every other
+> ep-2 clip are untouched, and so is the mid-episode fuse at `a2_45`/`a2_45b`
+> (*"One day Sunny will be wrong about something. It is not today."*), which
+> episode three deliberately declines to collect — a longer fuse, not a
+> forgotten one.
+
 **Pedagogy:** Series continuity, and the evolution of the show's oldest running
-gag. Sunny has been right about everything in two episodes; episode three is
-built on him finally not being, and `a2_45_narrator` planted that four minutes
-earlier so the tease reads as a promise being kept rather than a swerve.
+gag. Sunny has been right about everything in two episodes and the series is
+still not ready to say otherwise; what this tease promises is the *theory*, not
+the verdict. `a2_45_narrator` planted the fuse four minutes earlier and it is
+still burning at the end of episode three.
 
 ---
 

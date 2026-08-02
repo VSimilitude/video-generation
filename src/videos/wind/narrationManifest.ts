@@ -193,7 +193,7 @@ export const NARRATION: Record<string, NarrationClip> = {
   "rc_12_narrator": { file: "narration/wind/rc_12_narrator.mp3", durationSeconds: 4.725 },
   "rc_13_narrator": { file: "narration/wind/rc_13_narrator.mp3", durationSeconds: 2.775 },
   "rc_14_sunny": { file: "narration/wind/rc_14_sunny.mp3", durationSeconds: 2.475 },
-  "rc_15_narrator": { file: "narration/wind/rc_15_narrator.mp3", durationSeconds: 2.9 },
+  "rc_15_narrator": { file: "narration/wind/rc_15_narrator.mp3", durationSeconds: 3.675 },
   "rc_16_sunny": { file: "narration/wind/rc_16_sunny.mp3", durationSeconds: 1.325 },
   "rc_17_puff": { file: "narration/wind/rc_17_puff.mp3", durationSeconds: 3.996 },
 };
