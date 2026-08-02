@@ -1,8 +1,16 @@
-# HANDOFF — current status & plan (written 2026-08-01, session end)
+# HANDOFF — current status & plan (live file, updated continuously)
 
 For the fresh orchestrator session: read docs/ORCHESTRATION.md first (how we
 work), then this (where we are). Memory auto-loads the decision record.
 Everything below is committed and pushed on `main` unless marked otherwise.
+
+## 2026-08-02: orchestration v2 adopted
+Role split per Mike: orchestrator = pure relay/logistics; creative direction
+(incl. all still review) = `showrunner` fable agent; see ORCHESTRATION.md +
+docs/roles/ + .claude/agents/. This file is now updated continuously (small
+edits per event), never as a terminal mega-write. ray_final_sheet.png sent
+to Mike 2026-08-02. Wave-1 audit delegated to a showrunner agent (in
+flight); wave-2 staging follows per its worklist.
 
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).

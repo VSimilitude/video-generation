@@ -89,19 +89,22 @@ npm run typecheck
 - After finishing a video: add a dated entry to `docs/LEARNINGS.md` and
   update `docs/STYLE.md` with anything that should become a rule.
 
-## Multi-session etiquette
+## Session structure & etiquette
 
-Multiple Claude sessions may work in this tree concurrently (e.g. episode
-production vs. player/site engineering). Rules that keep them from colliding:
+One orchestrator session (Mike's single remote-control point of contact)
+coordinates everything; work happens in subagents — see
+`docs/ORCHESTRATION.md` for the roster and role docs. Rules that keep
+concurrent work from colliding:
 
-- Ownership: `src/videos/` + `src/lib/kid/` belong to the production session;
-  `src/site/` + the branching player belong to the technical session. Registries
-  are shared — add entries with minimal diffs, never reorganize concurrently.
-- Commit selectively (never `git add -A` while another session has uncommitted
-  work) and PUSH after committing — a local-only commit is invisible to the
-  other session's deploys.
-- To deploy while the tree contains another session's WIP: build from a clean
-  worktree of committed main —
+- Ownership: `src/videos/` + `src/lib/kid/` belong to the production side
+  (showrunner crew); `src/site/` + the branching player belong to the
+  tech-lead, who works in a git worktree. Registries are shared — add
+  entries with minimal diffs, never reorganize concurrently.
+- Agents never commit. The orchestrator commits selectively (never
+  `git add -A` — the tree may hold another agent's or session's WIP) and
+  PUSHES after committing — a local-only commit is invisible to deploys
+  built elsewhere.
+- Deploy from a clean worktree of committed main —
   `git worktree add --detach <tmp> origin/main && ln -s $(pwd)/node_modules
   <tmp>/node_modules && (cd <tmp> && npm run deploy)` — then remove the
   worktree (from OUTSIDE it).
