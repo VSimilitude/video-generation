@@ -85,10 +85,10 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
 - **B12 DONE early** (pulled ahead of batch (b) to parallelize Mike's ear
   latency): `a2_28b_blue` re-rolled, 3 draws (3.67 / 3.64 / **3.06s KEPT** —
   0.38 s/word, in Blue's healthy band; text/fields unchanged). Manifest at
-  3.06s; scene 19 retimes automatically. **PENDING MIKE'S EAR** (relay via
-  orchestrator, paths only): new take + Blue→Indigo echo pairing —
-  `public/narration/sky-blue/a2_28b_blue.mp3`, `a2_28c_indigo.mp3`,
-  `a3_13c_indigo.mp3`. B7 measures bubble beats against the NEW 3.06s clip.
+  3.06s; scene 19 retimes automatically. **APPROVED BY MIKE 2026-08-02**
+  (verbatim: "Blue and indigo are good to go") — new take + Blue→Indigo echo
+  pairing both confirmed. B7 is unblocked and measures its bubble beats
+  against the NEW 3.06s clip. No ear items pending anywhere.
 - **Kit K1–K4 builder in flight** (Speaker colours, personality tables,
   frequency ladder, per-body faceOffset); batch (a) act3 race follows it.
 
