@@ -139,6 +139,41 @@ every scene row depends on it.
 
 ## Batch (b) — acts 1–2 revisions + Ray staging (commit after)
 
+**Showrunner rulings for this batch (2026-08-02, successor session — do not
+re-open):**
+- **R8 — B4's DECIDE is decided: Drip STAYS on the B; Blue ricochets off her
+  twice before settling somewhere else entirely.** The revision names this the
+  funnier option (§6.4) and it is one more free firing of Blue's signature.
+  The choice is written into the scene file per B4's instruction.
+- **R9 — AMENDED TO OUT.** The act2 builder's arithmetic is decisive: `a2_51`
+  + `a2_52_ray` give Red 171 frames = a quarter of the crossing at RED_SPEED,
+  so every staging leaves him walking inside the 30f "It lands on him. Nobody
+  helps." beat (evidence still: scratchpad/w2b2/r9_REJECTED_*.png). Kept as
+  `S23_RED_WALK = false` in act2.tsx with the argument written on the
+  constant. Do not re-add.
+
+### Batch (b) act2 — DONE 2026-08-02 (showrunner-reviewed, accepted)
+- B5–B10 + VioletCase→kit migration all landed in act2.tsx only. Gates:
+  typecheck 0, lint:hooks 0, every-frame render of scenes 16–24
+  (frames 9869–15845) --scale=0.25 exit 0. Stills: scratchpad/w2b2/ (52 +
+  fix pair). Showrunner sampled 12 stills — one fix (Scene 23 roller
+  anchored to Sunny's spikes, showrunner-applied, re-stilled, typecheck 0).
+- B7 measured fractions vs the NEW 3.06s a2_28b_blue: clause onsets
+  [0.058, 0.455, 0.740] via silencedetect; acceptance test written on
+  S19_SEED. Builder fixed three stale pre-revision bubbles (a2_10, a2_50,
+  a2_52) found during the work.
+- Accepted deviations: B6 Orange spacing = one DRAWN body-length (264px at
+  S18 scale 1.1 — act3's 0.8 was that shot's drawn scale, not a
+  coefficient); Scene 20 comparator-Blue keeps ricocheting through the 20f
+  droop beat (his law; stopping him would be a second event) — screening
+  watch-item, like Scene 19 Blue/Indigo mid-leg touching at 4f lag.
+- Kit gaps reported (cleanup-list, NOT wave 2): <Shard> hardcodes
+  pose=wave for yellow only (Violet cannot wave through the kit; act3's
+  body-wag workaround reused); no syllableBlock() geometry export (B9
+  perched on the banner centre + stagger constant instead); SpeechBubble
+  dressing not exported (corner bubbles re-derive blue inline —
+  bubbleDressOf(who) wanted); SpeechBubble tails are bottom-edge-only.
+
 - **B1 — Scene 5 journey**: unchanging star field, no cuts, 25.6s of
   deliberate sameness; five identical firings (one clip, five identical mouth
   shapes and bubbles); gaps 30/45/60/75; the fifth UNANSWERED — 6f tail, hard
@@ -200,6 +235,34 @@ every scene row depends on it.
   take; (2) B7 measures its bubble beats against the new clip. Side effect:
   scene 19 re-times ~3.5s shorter automatically (audio-driven), total
   runtime dips to ~13:32.
+
+### Batch (b) act1 — DONE 2026-08-02 (showrunner-reviewed, accepted, no fix round)
+- B1–B4 + B11 all landed in act1.tsx only. Gates: typecheck 0, lint:hooks 0,
+  every-frame renders 2140–3355 and 5426–7284 --scale=0.25 both exit 0.
+  Stills: scratchpad/w2b1/ (27). Showrunner sampled 6 — accepted.
+- Highlights: ArcShard `alive` gate keeps the 60f count beat personality-free
+  and makes Red's non-birth a no-op; Scene 10 reactions freeze on a stopped
+  `held` clock; Ray aims at the mark of whoever he names incl. Blue's empty
+  slot; R8 written into the file (Drip rings on each of Blue's two bounces);
+  B11 pinch/streak re-aimed to faceOf (streak now two bands: face + wave).
+- Builder finds fixed en route: S5 bubble only existed on 2 of 5 firings
+  (now one shared bubble+at), S5 tailAt pointed past Ray on firing five,
+  S9 fan landed mid-count-beat (now beatFrom+8), S10 Ray materialised on
+  top of Red (walk retimed 0.18–0.78).
+- Accepted deviations: Yellow idles at 0.82 wave so "waves harder" has
+  headroom; Indigo echo anchored on own mark −130px (act3 precedent); Violet
+  keeps vibrating inside frozen beats (resting state, not gesture); Blue has
+  no further excursions after §6.2's two (kit idle carries his jitter).
+- Kit gaps reported (cleanup-list, NOT wave 2): Shard pose hardcoded (only
+  Yellow can raise arms — "a raised arm is Yellow's" now de-facto law);
+  `beats()` not re-exported by common.tsx; `blueTrail` unusable at formation
+  scale over painted plates (dropped in s09/s10, fine at 0.36 perch scale;
+  act2 built its own mesh for s19/s20 so the predicted bite didn't land);
+  Ray wave-ribbon offset undeclared (local +72, single use).
+- Pre-existing flags for batch (c)/cleanup: a1_49_drip bubble sits below
+  Drip (tail points away); s11 ~6940–6960 the seven cluster over WordCard
+  capitals that don't match their block seats (~20f); arcPointLifted cannot
+  clear a shard at the bow's ends.
 
 ## Batch (c) — recap + review + gates + deploy
 

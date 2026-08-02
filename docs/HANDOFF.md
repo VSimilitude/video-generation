@@ -105,8 +105,22 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   every-frame --scale=0.25 render exit 0 (twice). Showrunner sampled 8
   riskiest-beat stills (scratchpad/w2a2/) — accepted, no fix round.
   New rulings R4–R7 + carry-forward notes recorded in wave2-worklist.md's
-  "Batch (a) — DONE" section. AWAITING CHECKPOINT COMMIT (paths in the
-  showrunner's batch-(a) report), then batch (b) builder spawns.
+  "Batch (a) — DONE" section. Committed 4418f7e (kit + batch (a) + B12).
+- **Batch (b) DONE + showrunner-reviewed 2026-08-02** (successor showrunner
+  session; boot spot-check on 4418f7e green). Two parallel builders:
+  act1 (B1–B4 + B11) and act2 (B5–B10 + VioletCase→kit migration; B7
+  fractions measured against the NEW 3.06s a2_28b_blue via silencedetect =
+  [0.058, 0.455, 0.740]). Rulings R8 (Drip stays on the B, Blue ricochets
+  off her twice) and R9-AMENDED-OUT (Scene 23 Red walk-across rejected on
+  the builder's frame arithmetic — evidence in scratchpad/w2b2/) recorded
+  in wave2-worklist.md with the full DONE sections, accepted deviations,
+  and reported kit gaps (cleanup-list). Showrunner sampled 18 stills
+  across w2b1/ + w2b2/; one fix (Scene 23 roller anchored to Sunny's
+  spikes, showrunner-applied + re-stilled). Gates per builder: typecheck 0,
+  lint:hooks 0, every-frame scene-range renders exit 0 (2140–3355,
+  5426–7284, 9869–15845). AWAITING CHECKPOINT COMMIT (act1.tsx + act2.tsx
+  + worklist + this file), then batch (c): recap C1–C2, showrunner full
+  sampled review C3, full gates C5, deploy-readiness distillation.
 
 **The staging worklist is now authoritative:
 `src/videos/sky-blue/wave2-worklist.md`** (showrunner, 2026-08-02 — merges

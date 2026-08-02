@@ -1,46 +1,61 @@
 import React from "react";
 import {
+  SpeechBubble,
   emotionAt,
   kidEase,
   kidOutline,
   kidRadius,
   kidShadow,
   kidTheme,
+  lookAt,
   mixHex,
 } from "../../../lib/kid";
 import {
   ACT_COLOR,
   AbsoluteFill,
   AirBlob,
+  BLUE_LEG,
   BigWordBeat,
   Bubbles,
   Camera,
   CutFlash,
+  Face,
+  INDIGO_LAG,
   PHASE,
   PaintRoller,
   PaintedSky,
   Puff,
   RAY_LIGHT,
   RAY_SPECTRUM,
+  RED_SPEED,
   Ray,
-  RayShard,
-  SHARD_PHASE,
+  SHARD_BODY,
   SPECTRUM,
+  Shard,
   SoftShade,
   Sunny,
   WideLayer,
+  blueRicochet,
+  blueTrail,
   heldBeat,
   hover,
+  indigoEcho,
   interpolate,
   lineWindow,
+  markCentre,
+  orangeFollow,
   plateY,
   projectMark,
+  redWalk,
   useCurrentFrame,
   useEmotion,
+  useRig,
   useStage,
   useVideoConfig,
+  type Box,
   type Cam,
   type Cast,
+  type EmotionInput,
   type Mark,
   type TimedScene,
 } from "./common";
@@ -552,70 +567,77 @@ const MythStamp: React.FC<{ at: number; until: number; x: number; y: number }> =
 // Scene 16 — Myth-bust two: show us the paint
 // ---------------------------------------------------------------------------
 
-const S16_SUNNY: Mark = { x: 1352, y: hover("sunny", 372, 0.86), scale: 0.86, who: "sunny", side: "left" };
 /**
- * Where the roller is working, and what the camera pushes in on.
+ * **One prop, one idea** (revision §6.5).
  *
- * Close enough to Sunny that the handle end runs back into him: he has no arms
- * (he is a disc with rays), so the prop is *held* only by being in contact with
- * the body, exactly as the cold open holds it.
+ * The delivered cut asked for a ladder, a dust sheet, a roller, a tray, a patch
+ * of already-blue sky being painted, and a reveal that two separate objects were
+ * dry — five props and two ideas, which is why the note on it was "visually very
+ * messy". All of it is deleted. What is left is a man in an empty sky holding a
+ * paint tray, and then tipping it toward us.
+ *
+ * The roller survives only as **the thing lying in the tray**. A dry roller is a
+ * fact a grown-up infers; an empty tray is a fact a six-year-old reads in one
+ * frame, and the frame is the joke.
  */
-const S16_ROLLER = { x: 1126, y: 566 } as const;
-/** The fixed point of the push-in: between the sleeve and his face, so the
- *  beat frames the dry roller AND the man holding it. */
-const S16_FOCUS = { x: 1180 } as const;
+const S16_SUNNY: Mark = { x: 1452, y: hover("sunny", 402, 0.92), scale: 0.92, who: "sunny", side: "left" };
+
+/**
+ * Where the tray is before the beat, and where it ends up in it.
+ *
+ * `rest` is beside him, tilted **toward himself** so the audience cannot see
+ * into it — he has turned up holding the evidence and is extremely pleased with
+ * it, which only works if the evidence has not been read yet. `show` is dead
+ * centre and 1.85×, which is a shade under a third of the frame: he tips it
+ * toward the lens by holding it *out*, so the tray grows because it is coming
+ * at us rather than because a camera moved. Nothing else in the scene moves,
+ * including the camera — there is no `Camera` in this scene any more.
+ */
+const S16_TRAY = {
+  rest: { x: 1268, y: 646, scale: 1 },
+  show: { x: 960, y: 596, scale: 1.85 },
+} as const;
 
 const S16_BUBBLES: Record<string, string> = {
-  a2_10_sunny: "I am GOOD at painting!",
+  // A summary of "It was PAINT! Blue paint! I painted the whole sky!" — the
+  // third claim, which is the one with the sky in it.
+  a2_10_sunny: "I painted the whole sky!",
   a2_12_sunny: "I keep it somewhere else.",
 };
 
 /**
- * Scene 16 — a ladder in the sky, a dust sheet, and a roller that is completely
- * dry.
+ * Scene 16 — an empty sky, one tray, and nothing in it.
  *
- * The beat is the whole scene: forty-five frames of Sunny holding an empty
- * roller while nobody says anything. Three things are staged for it and nothing
- * else moves inside it — **the stroke stops** on the first frame of "Sunny.
- * Show us the paint" (everything stops, script.md), the camera pushes in on the
- * sleeve so the audience can see there is nothing on it, and his face does not
- * begin to fall until ten frames *into* the silence, which is the emotion-lead
- * rule made literal: a reaction that starts under the Narrator's question is
- * the joke being answered before it is asked.
+ * The beat is the whole scene: forty-five frames of Sunny holding an empty tray
+ * toward camera while nobody says anything. Two things are staged for it and
+ * nothing else exists to move — the tray **tips over** into the middle of the
+ * frame across the first twenty frames of the silence and then holds absolutely
+ * still, and his face does not begin to fall until ten frames *into* it, which
+ * is the emotion-lead rule made literal: a reaction that starts under the
+ * Narrator's question is the joke being answered before it is asked.
  */
 const MythPaintScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const [strokeFrom] = lineWindow(scene, "a2_10_sunny");
-  const [stopAt] = lineWindow(scene, "a2_11_narrator");
+  const [proudFrom] = lineWindow(scene, "a2_10_sunny");
   const [beatFrom, beatTo] = heldBeat(scene, "a2_11_narrator");
   const [recoverFrom] = lineWindow(scene, "a2_12_sunny");
 
-  // He paints a patch of sky that is already blue, up and down, until he is
-  // told to stop. Frozen — not eased out — because "everything stops".
-  const painting = frame >= strokeFrom && frame < stopAt;
-  const strokeT = (Math.min(frame, stopAt) - strokeFrom) / fps;
-  // Kept below his face: the handle runs back into his disc (that is what
-  // "holding it" looks like on a character with no arms), but a stroke that
-  // reached his eye line put a red grip across his face in the push-in.
-  const strokeY = S16_ROLLER.y + Math.sin(strokeT * 3.1) * 84;
-  const sheen = Math.max(0, Math.min(1, (frame - strokeFrom) / 60));
-
-  // The push in on the sleeve. It lands inside the first third of the beat and
-  // then holds absolutely still for a second — the shot has to be *stopped*,
-  // not slowing down, or the stillness reads as a move that has not finished.
-  const push = kidEase.easeInOutSine((frame - beatFrom) / 20);
-  const cam: Cam = {
-    x: S16_FOCUS.x,
-    y: strokeY - 30,
-    zoom: 1 + push * 0.5,
-  };
+  // The tip. It lands inside the first half of the beat and then the shot is
+  // *stopped* rather than slowing down — a move that is still easing out reads
+  // as unfinished, and this silence has to read as held.
+  const tip = clamp01(kidEase.easeInOutSine((frame - beatFrom) / 20));
+  // Afterwards he keeps holding it out, still empty, while he explains where
+  // the paint is. It only comes back far enough to clear his face.
+  const back = clamp01(kidEase.easeInOutSine((frame - recoverFrom) / 18)) * 0.34;
+  const tx = S16_TRAY.rest.x + (S16_TRAY.show.x - S16_TRAY.rest.x) * (tip - back * tip);
+  const ty = S16_TRAY.rest.y + (S16_TRAY.show.y - S16_TRAY.rest.y) * (tip - back * tip);
+  const ts = S16_TRAY.rest.scale + (S16_TRAY.show.scale - S16_TRAY.rest.scale) * (tip - back * tip);
 
   // His face goes in the silence, so there is no line to hang it on.
   const sunnyEmotion = emotionAt(
     frame,
     [
-      { at: strokeFrom, emotion: "excited" },
+      { at: proudFrom, emotion: "excited" },
       { at: beatFrom + 10, emotion: "neutral" },
       { at: recoverFrom, emotion: "proud" },
     ],
@@ -623,145 +645,163 @@ const MythPaintScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     9,
   );
   const stage = useStage(scene);
-  const sunnyMark: Mark = { ...S16_SUNNY };
 
   return (
     <AbsoluteFill>
       <PaintedSky bg="sky_dome_day" phase={12.3} drift={9} />
-      <Camera cam={cam}>
-        <WideLayer zIndex={6}>
-          {/* The dust sheet, over a cloud, because a professional protects the
-              floor. There is no floor. */}
-          <g opacity={0.5}>
-            <ellipse cx={760} cy={906} rx={330} ry={116} fill={kidTheme.cloud} />
-            <ellipse cx={1180} cy={926} rx={300} ry={100} fill={kidTheme.cloud} />
-          </g>
-          <g opacity={0.95}>
-            <path
-              d="M 470 880 q 150 -70 330 -30 q 190 44 360 -10 q 170 -54 330 10 l 30 300 l -1080 0 Z"
-              fill={kidTheme.paper}
-              stroke={kidTheme.cloudShade}
-              strokeWidth={9}
-              strokeLinejoin="round"
-            />
-            <path
-              d="M 640 900 q 150 40 300 6 M 1000 934 q 160 34 300 -10"
-              stroke={kidTheme.cloudShade}
-              strokeWidth={7}
-              fill="none"
-              opacity={0.8}
-            />
-          </g>
-          {/* The patch he has been working on: no paint on it anywhere, just a
-              faint sheen where a dry sleeve has been over the same blue. */}
-          <g opacity={sheen * 0.5}>
-            {[0, 1, 2, 3].map((i) => (
-              <rect
-                key={i}
-                x={890}
-                y={330 + i * 74}
-                width={300}
-                height={54}
-                rx={26}
-                fill="#ffffff"
-                opacity={0.35 - i * 0.05}
-              />
-            ))}
-          </g>
-        </WideLayer>
 
-        {/* Ladder and tray to the left of the roller, Sunny to the right of it:
-            three things at three x's, so the push-in frames all of them and
-            none of them is standing on anybody. */}
-        <Ladder x={1010} y={1088} />
-        {/* The tray, on the ladder's top rung, and as empty as the roller. It
-            has to be in the push-in frame: script.md says the tray is dry too,
-            and a fact stated off screen is not staged. */}
-        <PaintTray x={932} y={706} />
+      {/* The one prop. It is in front of Sunny because he is holding it out:
+          he has no arms (he is a disc with rays), so "held" is contact, and
+          "held out" is the tray being nearer the lens than he is. */}
+      <PaintTray x={tx} y={ty} scale={ts} tip={tip} zIndex={26} />
 
-        <PaintRoller
-          x={S16_ROLLER.x}
-          y={strokeY}
-          scale={1.05}
-          rot={-96 + (painting ? Math.sin(strokeT * 3.1) * 5 : 0)}
-          // **Zero, and it is the entire scene.** The roller is 1 exactly once
-          // in the episode and that is the cold open, where the show lets him
-          // appear to be right.
-          wet={0}
-          zIndex={22}
-        />
-
-        <Sunny
-          x={S16_SUNNY.x}
-          y={S16_SUNNY.y}
-          scale={0.86}
-          phase={PHASE.sunny}
-          emotion={sunnyEmotion}
-          speaking={stage.speaking("sunny")}
-          look={frame >= beatFrom && frame < beatTo ? { x: -0.75, y: 0.5 } : { x: -0.6, y: 0.3 }}
-          // Nothing moves in the beat. His breath drops to almost nothing and
-          // his eyes stop wandering: deadpan is stillness.
-          idle={frame >= beatFrom && frame < beatTo ? 0.35 : 1}
-          eyeLife={frame >= beatFrom && frame < beatTo ? 0.35 : 1}
-          raySpeed={frame >= beatFrom && frame < beatTo ? 0.04 : 0.16}
-          zIndex={18}
-        />
-      </Camera>
+      <Sunny
+        x={S16_SUNNY.x}
+        y={S16_SUNNY.y}
+        scale={0.92}
+        phase={PHASE.sunny}
+        emotion={sunnyEmotion}
+        speaking={stage.speaking("sunny")}
+        // Down and to the left at the tray for the whole scene: it is the only
+        // other thing in the frame and he is proud of it right up until he is
+        // not.
+        look={frame >= beatFrom ? { x: -0.85, y: 0.4 } : { x: -0.55, y: 0.25 }}
+        // Nothing moves in the beat. His breath drops to almost nothing and
+        // his eyes stop wandering: deadpan is stillness.
+        idle={frame >= beatFrom && frame < beatTo ? 0.35 : 1}
+        eyeLife={frame >= beatFrom && frame < beatTo ? 0.35 : 1}
+        raySpeed={frame >= beatFrom && frame < beatTo ? 0.04 : 0.16}
+        enter={{ at: 0, kind: "slideRight" }}
+        zIndex={18}
+      />
 
       <Bubbles
         scene={scene}
-        cast={{ sunny: projectMark(cam, sunnyMark) } as Cast}
+        cast={{ sunny: S16_SUNNY } as Cast}
         text={S16_BUBBLES}
         at={{
-          a2_10_sunny: { x: 640, y: 210, tail: "right", tailAt: 1100 },
-          a2_12_sunny: { x: 660, y: 210, tail: "right", tailAt: 1100 },
+          a2_10_sunny: { x: 640, y: 226, tail: "right", tailAt: 1290 },
+          a2_12_sunny: { x: 620, y: 226, tail: "right", tailAt: 1290 },
         }}
       />
     </AbsoluteFill>
   );
 };
 
-/** A step ladder, standing in the sky, because he is a professional. */
-const Ladder: React.FC<{ x: number; y: number }> = ({ x, y }) => (
-  <WideLayer zIndex={10}>
-    <g stroke="#b3762f" strokeWidth={22} strokeLinecap="round" fill="none">
-      <path d={`M ${x - 96} ${y + 260} L ${x - 30} ${y - 560}`} />
-      <path d={`M ${x + 96} ${y + 260} L ${x + 30} ${y - 560}`} />
-    </g>
-    {[0, 1, 2, 3, 4, 5, 6].map((i) => {
-      const t = i / 6;
-      const ry = y + 240 - t * 780;
-      const half = 92 - t * 62;
-      return (
-        <path
-          key={i}
-          d={`M ${x - half} ${ry} L ${x + half} ${ry}`}
-          stroke="#d59544"
-          strokeWidth={18}
-          strokeLinecap="round"
-        />
-      );
-    })}
-  </WideLayer>
-);
+/** 0..1, the shape half this file's easings want around them. */
+function clamp01(v: number): number {
+  return Math.max(0, Math.min(1, v));
+}
 
-/** The tray. Bone dry, and the second half of the same joke. */
-const PaintTray: React.FC<{ x: number; y: number }> = ({ x, y }) => (
-  <WideLayer zIndex={12}>
-    <g transform={`translate(${x} ${y}) rotate(-4)`}>
-      <path
-        d="M -110 -26 L 120 -26 L 96 54 L -86 54 Z"
-        fill="#e8e2d4"
-        stroke={kidTheme.ink}
-        strokeWidth={9}
-        strokeLinejoin="round"
-      />
-      {/* The well, with nothing in it. The highlight is the *tray*, not paint. */}
-      <path d="M -70 12 L 84 12 L 74 42 L -60 42 Z" fill="#d5cec0" />
-      <path d="M -96 -12 L 104 -12" stroke="#ffffff" strokeWidth={7} opacity={0.7} />
-    </g>
-  </WideLayer>
-);
+/**
+ * **The paint tray, and the only object in Scene 16.**
+ *
+ * `tip` is the whole prop: at 0 the far rim is barely above the near one and we
+ * are looking at the *outside* of a tray tilted away from us, so there is
+ * nothing to read; at 1 the well is wide open at the lens and it is clean,
+ * white, unribbed by a single stroke and plainly never used. It is drawn as one
+ * continuous opening rather than as two states that cross-fade, because a tray
+ * that dissolves into a different tray is a cut and this has to be a man tipping
+ * something over.
+ *
+ * Not merely dry: **unused**. The well is white rather than the sleeve-grey the
+ * old prop used, and the ramp ribs are unbroken — a tray that has had paint in
+ * it has a tide mark, and the joke is that this one never has.
+ */
+const PaintTray: React.FC<{
+  x: number;
+  y: number;
+  scale: number;
+  tip: number;
+  zIndex?: number;
+}> = ({ x, y, scale, tip, zIndex }) => {
+  const open = clamp01(tip);
+  const nearY = 78;
+  const farY = -4 - 104 * open;
+  const nearHalf = 168;
+  const farHalf = 126 + 26 * open;
+  const shell = `M ${-farHalf} ${farY} L ${farHalf} ${farY} L ${nearHalf} ${nearY} L ${-nearHalf} ${nearY} Z`;
+  // The interior, inset by the rim's own thickness. It is what gives the tray a
+  // *wall*: the first pass drew one flat quad and a still of it read as a sheet
+  // of ruled paper, which is a very funny thing for the sky's paint tray to be
+  // and not the joke this scene is telling.
+  const inNear = nearY - 15;
+  const inFar = farY + 15;
+  const inNearHalf = nearHalf - 21;
+  const inFarHalf = farHalf - 17;
+  const lerpHalf = (k: number): number => inFarHalf + (inNearHalf - inFarHalf) * k;
+  const lerpY = (k: number): number => inFar + (inNear - inFar) * k;
+  const inner = `M ${-inFarHalf} ${inFar} L ${inFarHalf} ${inFar} L ${inNearHalf} ${inNear} L ${-inNearHalf} ${inNear} Z`;
+  // The well is the near third — the bit a roller is loaded out of, and the bit
+  // that has to be visibly *empty*.
+  const wellTop = 0.62;
+  const well = `M ${-lerpHalf(wellTop)} ${lerpY(wellTop)} L ${lerpHalf(wellTop)} ${lerpY(wellTop)} L ${inNearHalf} ${inNear} L ${-inNearHalf} ${inNear} Z`;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        transform: `translate(-50%, -50%) scale(${scale}) rotate(${-5 + open * 3}deg)`,
+        zIndex,
+        pointerEvents: "none",
+      }}
+    >
+      <svg width={380} height={300} viewBox="-190 -150 380 300" overflow="visible">
+        {/* The near lip, which is the only part of the tray that is the same
+            shape at both ends of the tip — it is what the whole thing pivots
+            about. */}
+        <path
+          d={`M ${-nearHalf} ${nearY} L ${nearHalf} ${nearY} L ${nearHalf - 8} ${nearY + 26} L ${-nearHalf + 8} ${nearY + 26} Z`}
+          fill="#cfc8b8"
+          stroke={kidTheme.ink}
+          strokeWidth={9}
+          strokeLinejoin="round"
+        />
+        {/* The rim: the tray's own grey outside, which is all there is to see
+            while it is tipped away from us. */}
+        <path d={shell} fill="#ded7c8" stroke={kidTheme.ink} strokeWidth={9} strokeLinejoin="round" />
+        {/* The inside, arriving as the well swings toward the lens. Ramp first,
+            then the deeper well at the near end, then the ribs — three tones so
+            the thing has a floor and a step rather than being one white shape. */}
+        <g opacity={open}>
+          <path d={inner} fill="#fbf8ef" stroke="#c9c2b1" strokeWidth={5} strokeLinejoin="round" />
+          <path d={well} fill="#eae5d7" stroke="#c9c2b1" strokeWidth={5} strokeLinejoin="round" />
+          {/* The ramp ribs. Short, on the ramp only, and every one unbroken: a
+              tray that has had paint in it has a tide mark across these, and the
+              whole joke is that this one never has. */}
+          {[0.16, 0.31, 0.46].map((k) => (
+            <path
+              key={k}
+              d={`M ${-lerpHalf(k) + 26} ${lerpY(k)} L ${lerpHalf(k) - 26} ${lerpY(k)}`}
+              stroke="#ded7c6"
+              strokeWidth={9}
+              strokeLinecap="round"
+            />
+          ))}
+        </g>
+        {/* Far rim highlight — the edge that tells the eye which way up it is. */}
+        <path
+          d={`M ${-farHalf + 12} ${farY + 3} L ${farHalf - 12} ${farY + 3}`}
+          stroke="#ffffff"
+          strokeWidth={7}
+          strokeLinecap="round"
+          opacity={0.75}
+        />
+      </svg>
+      {/* The roller, lying in it, and dry for the seventh scene running. `wet`
+          is 1 exactly once in the episode and that was the cold open.
+
+          Placed in the tray's *own* pixels: the svg above is 380×300 with a
+          centred viewBox, so local (0,0) is (190,150) here, and the wrapper's
+          `scale` already applies to everything inside — multiplying by it again
+          is the double-count that put the roller through the far rim. −110° is
+          the angle that lands the sleeve in the well with the handle sticking
+          up out of the mouth, which is what "resting in it" looks like. */}
+      <PaintRoller x={109} y={187} scale={0.85} rot={-162 + open * 7} wet={0} />
+    </div>
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Scene 17 — The sky is not empty
@@ -929,97 +969,104 @@ const AirCrowd: React.FC<{ dive: number; t: number }> = ({ dive, t }) => (
 /**
  * The cross-section of the air, shared by three scenes.
  *
- * Scene 18 sends Red through it, Scene 19 sends Blue through the *same*
- * corridor with the *same* puffs from the *same* entry point, and Scene 21
- * freezes it behind the Big Word. That is the comparison, so it has to be one
- * component with one set of numbers: two hand-placed ball pits that differed by
- * thirty pixels would quietly turn a controlled experiment into two pictures.
+ * Scene 18 sends Red and Orange through it, Scene 19 sends Blue and Indigo
+ * through the *same* corridor with the *same* puffs, and Scene 21 freezes it
+ * behind the Big Word. That is the comparison, so it has to be one component
+ * with one set of numbers: two hand-placed ball pits that differed by thirty
+ * pixels would quietly turn a controlled experiment into two pictures.
  */
 const CORRIDOR = { top: 236, bottom: 916, x0: -200, x1: 2120 } as const;
 
 /**
- * Where Blue bounces, in order, and therefore where the puffs are.
+ * **The box Blue ricochets in**, and the thing the ball pit is built out of.
  *
- * Hand-placed rather than generated: the ricochet has to go *backwards* twice
- * (points 4 and 7) and end up leaving the corridor upwards, because "in every
- * direction including backwards" is the sentence the picture is making, and a
- * seeded random walk gives a drunkard's stagger that mostly still goes right.
+ * Inset from the corridor walls by about a body so a corner never lands with
+ * half of him outside the diagram, and 1620×532 so that `blueRicochet`'s legs
+ * come out at their full 150–330px (the kit clamps a leg to 85% of the box's
+ * shorter side, and a tight box gives a Blue who twitches instead of
+ * ricocheting — the note on `BLUE_LEG_PX` is about exactly this scene).
  */
-const BOUNCE = [
-  { x: -190, y: 612 },
-  { x: 336, y: 452 },
-  { x: 548, y: 806 },
-  { x: 286, y: 872 },
-  { x: 792, y: 366 },
-  { x: 1084, y: 704 },
-  { x: 868, y: 296 },
-  { x: 1338, y: 512 },
-  { x: 1166, y: 862 },
-  { x: 1604, y: 372 },
-  { x: 1414, y: 726 },
-  { x: 1806, y: 828 },
-  { x: 1556, y: 262 },
-  { x: 2140, y: 470 },
-] as const;
-
-/** The one Blue bounces off on Puff's own line. */
-const PUFF_BOUNCE = 5;
-
-/** Cumulative 0..1 time of each bounce, at a constant speed. */
-const BOUNCE_AT = (() => {
-  const d = [0];
-  for (let i = 1; i < BOUNCE.length; i++) {
-    const dx = BOUNCE[i].x - BOUNCE[i - 1].x;
-    const dy = BOUNCE[i].y - BOUNCE[i - 1].y;
-    d.push(d[i - 1] + Math.sqrt(dx * dx + dy * dy));
-  }
-  const total = d[d.length - 1];
-  return d.map((v) => v / total);
-})();
+const S19_BOX: Box = { x: 150, y: 310, w: 1620, h: 532 };
 
 /**
- * The ball pit: a puff on every bounce point, plus filler between them so the
- * corridor is full rather than dotted. Red clips one or two of these without
- * changing direction at all, which is the control case in one sentence.
+ * **The seed, and it was chosen rather than typed.**
+ *
+ * `blueRicochet` is a real billiard rather than a scatter of points, which means
+ * a seed can quite legitimately spend forty bounces in one third of the frame —
+ * two of the seeds tried here did. Scene 19's whole picture is "the whole frame
+ * criss-crossed", Scene 18 needs puffs across the full width for Red to plough
+ * through, and Blue's three corner bubbles need him in three genuinely different
+ * places on three named frames. So the seed was searched for, against those
+ * three requirements, and it is written down with them:
+ *
+ *   coverage   every cell of a 6×3 grid over the box is visited inside sixty
+ *              bounces (the only seed in a thousand that did);
+ *   spread     on the three clause frames of `a2_28b_blue` he is at (1520,813),
+ *              (1064,654) and (584,530) — bottom right, middle, upper left, a
+ *              sweep across the frame rather than three pokes at one corner;
+ *   legs       152..323px at nine frames each, so Indigo four frames behind is
+ *              typically ~107px behind — visibly a follower rather than a
+ *              second head on the same body.
+ *
+ * **If any Act Two clip before `a2_28b_blue` changes length, re-run that search**
+ * (the three clause frames move with the audio) and re-check the corner
+ * assignment below. The numbers in this paragraph are the acceptance test.
+ */
+const S19_SEED = 80.41;
+
+/** Blue's path in the corridor, as a pure function of frames since he entered. */
+function bluePath(age: number): { x: number; y: number; angle: number } {
+  return blueRicochet(Math.max(0, age), S19_BOX, S19_SEED);
+}
+
+/** The k-th corner of that path: `blueRicochet` on a leg boundary *is* a corner. */
+function blueCornerAt(k: number): { x: number; y: number } {
+  return bluePath(k * BLUE_LEG);
+}
+
+/**
+ * **The ball pit, and it is Blue's own corner list.**
+ *
+ * Every third corner of his path gets a puff on it, which makes "he hits puffs"
+ * true by construction rather than by eye: the thing he bounces off is standing
+ * where he bounces. Hand-placing them was the old way and it could not survive
+ * Blue moving onto the kit's ricochet — the puffs and the path would have been
+ * two independent drawings of the same event.
+ *
+ * Every third rather than every one because at every corner they merge into a
+ * wall: the legs are 150–330px and the blobs are 34–60px, so a puff per corner
+ * is a chain. Every third leaves air between them and still puts one at a
+ * bounce three times a second.
+ *
+ * The eight fillers are pressed up under the two walls, where the path never
+ * goes (the box is inset), so the corridor reads as full to its edges rather
+ * than as a band of blobs with an empty margin.
  */
 const PUFFS = [
-  ...BOUNCE.slice(1, BOUNCE.length - 1).map((p, i) => ({
-    x: p.x,
-    y: p.y,
-    r: 52 + ((i * 17) % 22),
-    seed: i * 1.7,
-  })),
-  ...Array.from({ length: 16 }, (_, i) => {
+  ...Array.from({ length: 34 }, (_, i) => {
+    const p = blueCornerAt(1 + i * 3);
+    return { x: p.x, y: p.y, r: 34 + ((i * 23) % 26), seed: i * 1.7 };
+  }),
+  ...Array.from({ length: 8 }, (_, i) => {
     const k = i * 43 + 11;
     return {
-      x: -60 + ((k * 137) % 2060),
-      y: CORRIDOR.top + 70 + ((k * 89) % (CORRIDOR.bottom - CORRIDOR.top - 150)),
-      r: 34 + ((k * 23) % 26),
+      x: -40 + ((k * 137) % 2020),
+      y:
+        i % 2 === 0
+          ? CORRIDOR.top + 28 + ((k * 17) % 44)
+          : CORRIDOR.bottom - 96 + ((k * 19) % 42),
+      r: 28 + ((k * 23) % 20),
       seed: 3.1 + i * 2.3,
     };
   }),
 ];
 
-/** Where Blue is at `u` (0..1 through the pinball), and the trail behind him. */
-function blueAt(u: number): { x: number; y: number; leg: number } {
-  const t = Math.max(0, Math.min(1, u));
-  for (let i = 1; i < BOUNCE.length; i++) {
-    if (t <= BOUNCE_AT[i]) {
-      const k = (t - BOUNCE_AT[i - 1]) / Math.max(1e-6, BOUNCE_AT[i] - BOUNCE_AT[i - 1]);
-      return {
-        // Light does not accelerate and it does not ease: the legs are linear
-        // and the *turns* are what carry the energy.
-        x: BOUNCE[i - 1].x + (BOUNCE[i].x - BOUNCE[i - 1].x) * k,
-        y: BOUNCE[i - 1].y + (BOUNCE[i].y - BOUNCE[i - 1].y) * k,
-        leg: i - 1 + k,
-      };
-    }
-  }
-  const last = BOUNCE[BOUNCE.length - 1];
-  return { x: last.x, y: last.y, leg: BOUNCE.length - 1 };
-}
-
-const Corridor: React.FC<{ t: number; puffDim?: number }> = ({ t, puffDim = 1 }) => (
+const Corridor: React.FC<{
+  t: number;
+  puffDim?: number;
+  /** Where Blue just hit, if he did. The puff nearest it gets knocked. */
+  hit?: { x: number; y: number };
+}> = ({ t, puffDim = 1, hit }) => (
   <>
     <WideLayer zIndex={4}>
       {/* The corridor walls, in crayon. Long, straight and unexciting: this is
@@ -1048,18 +1095,26 @@ const Corridor: React.FC<{ t: number; puffDim?: number }> = ({ t, puffDim = 1 })
       />
     </WideLayer>
     <WideLayer zIndex={8}>
-      {PUFFS.map((p, i) => (
-        <AirBlob
-          key={i}
-          x={p.x + Math.sin(t * 0.5 + p.seed) * 7}
-          y={p.y + Math.cos(t * 0.42 + p.seed * 1.3) * 6}
-          r={p.r}
-          t={t + p.seed}
-          seed={p.seed}
-          opacity={0.5 * puffDim}
-          points={20}
-        />
-      ))}
+      {PUFFS.map((p, i) => {
+        // The crowd bats him about: whichever puff he just hit is shoved away
+        // from the impact and swells. It is the only thing the ball pit does,
+        // and it is what turns a field of decorations into participants.
+        const d = hit ? Math.max(1, Math.hypot(p.x - hit.x, p.y - hit.y)) : 1e9;
+        const k = Math.max(0, 1 - d / 160);
+        const away = hit ? { x: (p.x - hit.x) / d, y: (p.y - hit.y) / d } : { x: 0, y: 0 };
+        return (
+          <AirBlob
+            key={i}
+            x={p.x + Math.sin(t * 0.5 + p.seed) * 7 + away.x * k * 18}
+            y={p.y + Math.cos(t * 0.42 + p.seed * 1.3) * 6 + away.y * k * 18}
+            r={p.r * (1 + k * 0.22)}
+            t={t + p.seed}
+            seed={p.seed}
+            opacity={(0.5 + k * 0.3) * puffDim}
+            points={20}
+          />
+        );
+      })}
     </WideLayer>
   </>
 );
@@ -1071,6 +1126,126 @@ const CorridorBed: React.FC<{ phase: number }> = ({ phase }) => (
   </div>
 );
 
+/**
+ * **One leg of a ricochet, as TWO offset lines.**
+ *
+ * revision §11's third risk, in one function: *a motion trail on a round body
+ * has to be two lines or it is a tadpole*. One stroke behind a blob is a tail
+ * growing out of an animal; two strokes either side of where the blob went are
+ * the marks a thing leaves in the air, and the gap between them is what says
+ * "this was moving" rather than "this is attached".
+ *
+ * The offset is perpendicular to the leg, so the pair opens out along the
+ * direction of travel and pinches to nothing at a corner — which is where Blue's
+ * whole characterisation lives.
+ */
+function twinLeg(
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+  off: number,
+): [string, string] {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const len = Math.max(1e-3, Math.hypot(dx, dy));
+  const nx = (-dy / len) * off;
+  const ny = (dx / len) * off;
+  return [
+    `M ${(a.x + nx).toFixed(1)} ${(a.y + ny).toFixed(1)} L ${(b.x + nx).toFixed(1)} ${(b.y + ny).toFixed(1)}`,
+    `M ${(a.x - nx).toFixed(1)} ${(a.y - ny).toFixed(1)} L ${(b.x - nx).toFixed(1)} ${(b.y - ny).toFixed(1)}`,
+  ];
+}
+
+/**
+ * **Every leg Blue has flown, still on screen — the criss-cross.**
+ *
+ * `keep` is how many legs back the mesh reaches, and it is a *ramp* rather than
+ * a constant: the scene opens it at three and walks it up to thirty-two across the
+ * run-up and the sacred forty-five, so the frame is visibly filling for the
+ * whole of the silence and is at its fullest on the beat's last frame. A fixed
+ * window would have reached its steady state five seconds before the beat and
+ * the silence would have had nothing to build.
+ *
+ * Older legs fade but never go while they are in the window, because the picture
+ * the Big Word freezes is the whole mesh.
+ */
+const BlueMesh: React.FC<{ age: number; keep: number; opacity?: number }> = ({
+  age,
+  keep,
+  opacity = 1,
+}) => {
+  const legIndex = Math.floor(Math.max(0, age) / BLUE_LEG);
+  const first = Math.max(0, legIndex - keep);
+  const now = bluePath(age);
+  return (
+    <WideLayer zIndex={12}>
+      {Array.from({ length: legIndex - first + 1 }, (_, n) => {
+        const i = first + n;
+        const a = blueCornerAt(i);
+        const b = i < legIndex ? blueCornerAt(i + 1) : now;
+        const recency = keep <= 0 ? 1 : (i - first) / keep;
+        const [one, two] = twinLeg(a, b, 6);
+        return (
+          <g key={i} opacity={(0.1 + 0.46 * recency) * opacity}>
+            <path d={one} stroke={SPECTRUM[4].fill} strokeWidth={7} strokeLinecap="round" />
+            <path d={two} stroke={SPECTRUM[4].fill} strokeWidth={7} strokeLinecap="round" />
+          </g>
+        );
+      })}
+    </WideLayer>
+  );
+};
+
+/**
+ * Blue arriving everywhere else — what every puff he touches sends off sideways.
+ *
+ * They are dots rather than characters on purpose: fifteen more faces would turn
+ * the mechanism into a party. Each one **loops** off its own puff rather than
+ * flying away once, so the frame keeps filling for as long as the silence lasts
+ * instead of emptying two seconds in. **Nothing has been taken from Blue** — he
+ * is still bouncing, and these are the copies of him arriving everywhere else.
+ */
+const SPRAY_LOOP = 2.4;
+
+const SPRAY = Array.from({ length: 15 }, (_, i) => {
+  const k = i * 37 + 5;
+  return {
+    from: (i * 7 + 3) % 34,
+    angle: ((k * 97) % 628) / 100,
+    speed: 640 + ((k * 53) % 420),
+    born: 0.18 + ((k * 29) % 70) / 100,
+    r: 13 + ((k * 17) % 9),
+  };
+});
+
+const BlueSpray: React.FC<{ u: number; span: number }> = ({ u, span }) => (
+  <WideLayer zIndex={13}>
+    {SPRAY.map((s, i) => {
+      const age = (u - s.born) * span;
+      if (age <= 0) return null;
+      const p = (age % SPRAY_LOOP) / SPRAY_LOOP;
+      const from = PUFFS[s.from];
+      const d = 50 + p * s.speed * SPRAY_LOOP * 0.6;
+      const x = from.x + Math.cos(s.angle) * d;
+      const y = from.y + Math.sin(s.angle) * d;
+      const tail = Math.min(d, 190);
+      const fade = Math.sin(Math.PI * Math.min(1, p * 1.25));
+      const [one, two] = twinLeg(
+        { x: x - Math.cos(s.angle) * tail, y: y - Math.sin(s.angle) * tail },
+        { x, y },
+        5,
+      );
+      return (
+        <g key={i} opacity={0.85 * fade}>
+          <path d={one} stroke={SPECTRUM[4].fill} strokeWidth={7} strokeLinecap="round" opacity={0.45} />
+          <path d={two} stroke={SPECTRUM[4].fill} strokeWidth={7} strokeLinecap="round" opacity={0.45} />
+          <circle cx={x} cy={y} r={s.r} fill={SPECTRUM[4].fill} />
+          <circle cx={x - s.r * 0.3} cy={y - s.r * 0.35} r={s.r * 0.4} fill={SPECTRUM[4].light} />
+        </g>
+      );
+    })}
+  </WideLayer>
+);
+
 // ---------------------------------------------------------------------------
 // Scene 18 — Red goes straight through
 // ---------------------------------------------------------------------------
@@ -1078,76 +1253,172 @@ const CorridorBed: React.FC<{ phase: number }> = ({ phase }) => (
 /**
  * Scene 18 — and it is staged **boring on purpose**.
  *
- * Red enters left under his own line, crosses the entire frame at a constant
- * speed on one horizontal line, clips two puffs without deviating by a pixel,
- * and leaves. There is no arc, no bank, no ease and no camera move, which is
- * the only place in this act `kidEase.linear` is the right answer. The thirty
- * frames of silence in the middle are the crossing, and a child who only ever
- * sees Scene 19's pinball has watched a special effect instead of a comparison.
+ * Red enters left, crosses the entire frame on one horizontal line at
+ * `RED_SPEED` — the kit's one number for him, the same one he crosses the sunset
+ * and the recap at — clips a dozen puffs without deviating by a pixel, and
+ * leaves. Orange is one drawn body behind him the whole way and never overtakes.
+ * There is no arc, no bank, no ease, no camera move and no acceleration, which
+ * is what makes Scene 19 mean anything: a child who only ever sees the pinball
+ * has watched a special effect instead of a comparison.
+ *
+ * **The scene is the crossing, and the arithmetic says so.** 108px/s across
+ * ~2200px of frame-plus-margins is 620 frames, and the scene is 625: he is
+ * walking on the first frame and still leaving on the last, and the five beats
+ * in the middle are simply moments along one unvaried walk. Nothing in this
+ * scene is timed to a beat — the beats happen to Red.
  */
 const RED_Y = 612;
+
+/**
+ * Bigger than Scene 19's Blue (0.78), and that is the whole of "big and calm".
+ * It is not a size *explanation* — the physics honesty note forbids that — it
+ * is two bodies drawn at the sizes their temperaments read at.
+ */
+const S18_SHARD_SCALE = 1.1;
+
+/**
+ * Where Red is on frame zero: just off the left edge, already walking.
+ *
+ * "He is already walking" is his idle in the ensemble sheet, so he does not
+ * *enter* on a cue — the scene opens on a corridor he is already crossing.
+ */
+const S18_RED_X0 = -160;
+
+/**
+ * **Orange's gap, and it is act three's rule rather than act three's number.**
+ *
+ * `s28c` follows Red at `SHARD_BODY * S28C_RED_SCALE`, where that scale is the
+ * one the two bodies are *drawn* at — so the rule is "one drawn body-length",
+ * and the 0.8 in that file is its scale, not a coefficient. Copying the 0.8
+ * literally into a scene that draws them at 1.1 would put Orange 192px behind a
+ * 264px body, i.e. overlapping him by a third, which is the two-headed-animal
+ * still `SHARD_BODY`'s own doc warns about. The rule travels; the number does
+ * not.
+ */
+const S18_FOLLOW = SHARD_BODY * S18_SHARD_SCALE;
+
+/** Puff, down in the bottom of the corridor, on the mark Red walks over. */
+const S18_PUFF = { x: 1334, y: 812, scale: 0.86 } as const;
+
+const S18_BUBBLES: Record<string, string> = {
+  a2_23b_red: "Straight through. Always have.",
+  a2_24b_red: "Lovely air.",
+};
 
 const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const [redFrom, redLineTo] = lineWindow(scene, "a2_23_narrator");
-  const [, beatTo] = heldBeat(scene, "a2_23_narrator");
 
-  // He sets off on the second half of "Red goes first…" and is out of frame by
-  // the last frame of the silence, so the beat *is* the crossing.
-  const startAt = redFrom + Math.round((redLineTo - redFrom) * 0.45);
-  const u = kidEase.linear((frame - startAt) / Math.max(1, beatTo - startAt));
-  const x = CORRIDOR.x0 - 60 + u * (CORRIDOR.x1 - CORRIDOR.x0 + 200);
+  const t = frame / fps;
+  const redPath = (tt: number): { x: number; y: number; angle: number } =>
+    redWalk(tt, { x: S18_RED_X0, y: RED_Y });
+  const red = redPath(t);
+  const orange = orangeFollow(redPath, t, S18_FOLLOW);
+
+  // The frame Red's centre passes over Puff's, from Red's own speed rather than
+  // from a beat: if a clip in front of this scene changes length the walk is
+  // unchanged and so is the reach, because both are functions of the same
+  // constant.
+  const passAt = ((S18_PUFF.x - S18_RED_X0) / RED_SPEED) * fps;
+
+  const stage = useStage(scene);
+
+  const redMark: Mark = {
+    x: red.x,
+    y: hover("shard", RED_Y, S18_SHARD_SCALE),
+    scale: S18_SHARD_SCALE,
+    who: "shard",
+  };
 
   return (
     <AbsoluteFill style={{ background: "#eaf6ff" }}>
       <CorridorBed phase={14.5} />
-      <Corridor t={frame / fps} />
+      <Corridor t={t} />
 
       {/* The line he leaves behind him, and the reason it is still on screen
           under "Straight through. Barely touched the sides." — the evidence has
-          to outlast the demonstration or the next scene has nothing to beat. */}
+          to outlast the demonstration or the next scene has nothing to beat.
+
+          **One line, and it stays one line.** Blue's trails are two offset
+          strokes because a bouncing body needs the gap to read as motion; Red's
+          is a single unbroken rule across the frame, and the difference between
+          the two pictures is the difference between the two characters. */}
       <WideLayer zIndex={14}>
-        {u > 0 ? (
-          <path
-            d={`M ${CORRIDOR.x0 - 60} ${RED_Y} L ${x} ${RED_Y}`}
-            stroke={SPECTRUM[0].fill}
-            strokeWidth={13}
-            strokeLinecap="round"
-            opacity={0.4}
-          />
-        ) : null}
+        <path
+          d={`M ${S18_RED_X0} ${RED_Y} L ${red.x} ${RED_Y}`}
+          stroke={SPECTRUM[0].fill}
+          strokeWidth={13}
+          strokeLinecap="round"
+          opacity={0.4}
+        />
       </WideLayer>
 
-      <RayShard
-        color={0}
-        x={x}
-        y={hover("shard", RED_Y, 1.25)}
-        // Big, and bigger than Scene 19's Blue: "big and calm" is the half of
-        // the comparison this scene owns.
-        scale={1.25}
-        phase={0.7}
+      <Shard
+        who="red"
+        x={red.x}
+        y={redMark.y}
+        scale={S18_SHARD_SCALE}
+        heading={red.angle}
         emotion="happy"
+        speaking={stage.speaking("red")}
         look={{ x: 0.7, y: 0 }}
-        // No bank, no bob, no wobble. He is big and calm and he is not
-        // interested in any of this.
-        idle={0.45}
+        // He is not interested in any of this. `Shard` already damps his idle
+        // to the table's 0.5; this is the scene asking for a little less again,
+        // because he is crossing a frame with a joke happening under him.
+        idle={0.42}
         eyeLife={0.5}
         zIndex={20}
       />
 
+      {/* Orange, running Red's own path late. Not "behind him" as a
+          subtraction — as a *delay*, so he matches the stride rather than the
+          position, and on the frame Red stopped (he never does) Orange would
+          keep walking for one body and then stop too. */}
+      <Shard
+        who="orange"
+        x={orange.x}
+        y={hover("shard", orange.y, S18_SHARD_SCALE)}
+        scale={S18_SHARD_SCALE}
+        heading={orange.angle}
+        emotion="happy"
+        look={{ x: 0.7, y: 0 }}
+        idle={0.42}
+        eyeLife={0.5}
+        zIndex={19}
+      />
+
       {/* **The free visual from punch-up.md §5**, and the whole of it: Puff
           reaches for Red as he goes past, misses, and shrugs. No line, no
-          bubble, no held beat, no frame — the document's own answer to the soft
-          spot at 5:24, taken as a picture rather than as a sixth Puff line
-          (five is the count, and `a2_20`/`a2_44` are already flagged as the two
-          to cut if that is one too many).
+          bubble, no frame — the document's own answer to the soft spot at 5:24,
+          taken as a picture rather than as a sixth Puff line.
 
-          It does not fight the scene's boredom, it *is* the scene's boredom:
-          the air offers Red a bounce and Red does not deviate by a pixel, which
-          is exactly what Scene 19 is about to contradict. The reach is timed off
-          Red's own crossing, so it stays in step if the clip changes length. */}
-      <PuffMisses x={x} u={u} />
+          It runs INSIDE the thirty frames after `a2_23b_red` as continuous
+          action already in progress: his arms are up before the silence opens
+          and the shrug is still there when it closes. It does not fight the
+          scene's boredom, it *is* the scene's boredom — the air offers Red a
+          bounce and Red does not deviate by a pixel. */}
+      <PuffMisses frame={frame} passAt={passAt} />
+
+      <Bubbles
+        scene={scene}
+        cast={{ red: redMark } as Cast}
+        text={S18_BUBBLES}
+        at={{
+          // Both of Red's bubbles travel with him at his own speed, tail
+          // included: he is mid-crossing for both of his lines and a bubble
+          // pinned to where he *was* points at a gap in the air by the time he
+          // finishes the sentence.
+          a2_23b_red: { x: red.x - 300, y: 306, tail: "right", tailAt: red.x },
+          a2_24b_red: { x: red.x - 320, y: 306, tail: "right", tailAt: red.x },
+        }}
+      />
+      {/* Nothing enters the twenty frames after "Straight through. Barely
+          touched the sides." — Red is most of the way out of frame, Puff is
+          still holding the shrug, and there is deliberately no code below this
+          line: not one element in this scene has its visibility keyed to that
+          window, and the two bodies moving through it have been moving at the
+          same speed since frame zero. Deadpan is stillness, and the cheapest way
+          to keep a beat empty is to have nothing that could fill it. */}
     </AbsoluteFill>
   );
 };
@@ -1155,26 +1426,27 @@ const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 /**
  * Puff, under the corridor, failing to interest Red in a bounce.
  *
- * `reach` is 0..1 across the frames Red is passing over him and back to 0
- * after: arms up as he comes, a beat with them still up while Red carries
- * straight on, and a shrug. He never moves off his mark and he never says a
- * word about it.
+ * `reach` is arms up over the twenty-three frames before Red arrives, held
+ * while he goes straight past, and down again; `shrug` comes up after and
+ * **never comes back down**, because the twenty-frame beat two lines later is
+ * "Puff is still holding the shrug". He never moves off his mark and he never
+ * says a word about it.
  */
-const S18_PUFF = { x: 1040, y: 856, scale: 0.86 } as const;
-
-const PuffMisses: React.FC<{ x: number; u: number }> = ({ x, u }) => {
-  // Where Red is, relative to Puff, as a fraction of the crossing.
-  const meet = (S18_PUFF.x - (CORRIDOR.x0 - 60)) / (CORRIDOR.x1 - CORRIDOR.x0 + 200);
-  const since = u - meet;
-  // Up over the twelve percent of the crossing before Red arrives, held for
-  // eight after, then down.
+const PuffMisses: React.FC<{ frame: number; passAt: number }> = ({ frame, passAt }) => {
+  const since = frame - passAt;
   const reach =
-    since < -0.12 ? 0 : since < 0 ? (since + 0.12) / 0.12 : since < 0.08 ? 1 : Math.max(0, 1 - (since - 0.08) / 0.1);
-  const shrug = since > 0.18 ? Math.max(0, 1 - (since - 0.18) / 0.22) : 0;
+    since < -40
+      ? 0
+      : since < -17
+        ? (since + 40) / 23
+        : since < 9
+          ? 1
+          : Math.max(0, 1 - (since - 9) / 17);
+  const shrug = clamp01((since - 15) / 22);
   return (
     <Puff
       x={S18_PUFF.x}
-      y={hover("puff", S18_PUFF.y - reach * 26 + shrug * 10, S18_PUFF.scale)}
+      y={hover("puff", S18_PUFF.y - reach * 46 + shrug * 12, S18_PUFF.scale)}
       scale={S18_PUFF.scale}
       opacity={0.5}
       phase={PHASE.puff}
@@ -1182,7 +1454,9 @@ const PuffMisses: React.FC<{ x: number; u: number }> = ({ x, u }) => {
       emotion={reach > 0.35 ? "excited" : shrug > 0.3 ? "grumpy" : "happy"}
       look={reach > 0.2 ? { x: 0.1, y: -0.75 } : "camera"}
       arms
-      pose={reach > 0.2 ? "cheer" : "rest"}
+      // `brace` is the kit's arms-out-and-down pose and it is the only shrug
+      // available; it is what he is still holding twenty frames later.
+      pose={reach > 0.2 ? "cheer" : shrug > 0.35 ? "brace" : "rest"}
       wisps={0.3}
       idle={0.6}
       zIndex={18}
@@ -1194,64 +1468,120 @@ const PuffMisses: React.FC<{ x: number; u: number }> = ({ x, u }) => {
 // Scene 19 — Blue goes everywhere
 // ---------------------------------------------------------------------------
 
-const S19_PUFF = {
-  x: BOUNCE[PUFF_BOUNCE].x,
-  y: BOUNCE[PUFF_BOUNCE].y,
-  scale: 0.92,
-} as const;
+/** Blue and his shadow, drawn at the sizes that keep them two bodies. */
+const S19_BLUE_SCALE = 0.78;
+/**
+ * Indigo is smaller and fainter, and both are load-bearing.
+ *
+ * He is Blue's own path four frames stale, which at 27px a frame puts him about
+ * 107px behind — less than one drawn body — so two adjacent hues at the same
+ * size and alpha would be one lilac smudge with two faces in it (the note act
+ * three's pack shot carries). Drawn a third smaller and a fifth fainter he is
+ * legibly *a faded copy arriving late*, which is also the physics: an adjacent
+ * wavelength scatters slightly less.
+ */
+const S19_INDIGO_SCALE = 0.5;
+
+/** Puff, standing on one of Blue's own bounce points, getting hit repeatedly. */
+const S19_PUFF = { x: 805, y: 697, scale: 0.9 } as const;
 
 /** Above the corridor, watching his own blue go everywhere. */
 const S19_RAY = { x: 1616, y: 132, scale: 0.5 } as const;
 
 const S19_BUBBLES: Record<string, string> = {
+  // "Hi! Sorry! Sorry! Hi! Sorry!" — he is apologising to the air. The air does
+  // not mind, and nobody acknowledges it, ever, in the whole episode.
+  a2_25b_blue: "Sorry! Sorry! Sorry!",
   a2_26_puff: "Everybody bounce off Puff!",
   a2_28_ray: "Where did Blue GO?",
+  // The tail of Blue's line, said late, from the corner Blue has already left.
+  a2_28c_indigo: "And here.",
 };
 
 /**
- * The secondary blues: what every puff Blue touches sends off sideways.
+ * **The scene's one real ask** (revision §6.7): three bubbles, one per clause,
+ * each from a different corner of the frame, each pointing at wherever Blue
+ * actually is on that frame — and **each of them absolutely still while he is
+ * not**. The answer to "where did Blue go" is "everywhere", said from
+ * everywhere, and it only reads if the words hold still long enough to be read.
  *
- * They are dots rather than characters on purpose — the seven are a crowd and
- * not a cast, and fourteen more faces would turn the mechanism into a party.
- * Each one leaves the bounce it was born on, in its own direction, and keeps
- * going, so that by the end of the silence there is blue moving in every
- * direction in frame. **Nothing has been taken from Blue**: he is still
- * bouncing, and these are the copies of him arriving everywhere else.
+ * They accumulate rather than replacing each other: by the last clause all three
+ * are up at once in three corners, which is the whole mechanism in one frame.
+ *
+ * **The clause fractions are measured off the re-rolled take, not guessed.**
+ * `a2_28b_blue` was re-synthesized on 2026-08-02 (the first draw came back slow
+ * and low) and is now 3.06s. `silencedetect -30dB` on the delivered file gives
+ * spoken runs at 0.177–0.984, 1.391–1.874 and 2.264–2.757 seconds, so the three
+ * clause onsets are at 0.058, 0.455 and 0.740 of the clip. The brief's starting
+ * point was `[0.05, 0.42, 0.74]`; the middle one was 3.5% early against this
+ * take, which is a frame and a bit, and it is corrected here. **Never measure
+ * this against a memory of the old 6.66s take.**
  */
-const SPRAY = Array.from({ length: 15 }, (_, i) => {
-  const k = i * 37 + 5;
-  return {
-    from: 1 + (i % (BOUNCE.length - 3)),
-    angle: ((k * 97) % 628) / 100,
-    speed: 640 + ((k * 53) % 420),
-    born: 0.18 + ((k * 29) % 70) / 100,
-    r: 13 + ((k * 17) % 9),
-  };
-});
+const S19_CLAUSE = [0.058, 0.455, 0.74] as const;
+const S19_CLAUSE_TEXT = ["Over here!", "And here!", "And HERE!"] as const;
+
+/**
+ * Three frames of lead, because a bubble that starts its pop on the syllable
+ * finishes it a fifth of a second after the word has gone.
+ */
+const S19_POP_LEAD = 3;
+
+/**
+ * The three corners, and how far each bubble is allowed to lean out of its
+ * corner toward Blue.
+ *
+ * The lean exists because of the tail. `SpeechBubble` clamps `tailAt` inside the
+ * bubble's own width — the browser lays the bubble out, so CSS `clamp` is the
+ * only thing that knows how wide it ended up — and a two-word bubble is about
+ * 400px, so a tail asked to point 600px away just sits on the corner and points
+ * at nothing, which reads as narration. Pulling the bubble 42% of the way toward
+ * him keeps the tail *on* him while the bubble is still plainly in its corner.
+ *
+ * Bottom right, then top right, then top left: on the three clause frames Blue
+ * is at (1520,813), (1064,654) and (584,530), so the bubbles sweep across the
+ * frame in the same direction he does and every one of them is above him, which
+ * is what the tail rule needs (it leaves the bubble's *bottom* edge).
+ */
+const S19_CORNER = [
+  { x: 1440, y: 646 },
+  { x: 1440, y: 208 },
+  { x: 480, y: 208 },
+] as const;
+const S19_CORNER_PULL = 0.42;
 
 const BlueEverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const [blueFrom, blueLineTo] = lineWindow(scene, "a2_25_narrator");
   const [, beatTo] = heldBeat(scene, "a2_27_narrator");
-  const [goneFrom] = lineWindow(scene, "a2_28_ray");
+  const [sayFrom, sayTo] = lineWindow(scene, "a2_28b_blue");
 
-  // The pinball runs from the second half of "Now Blue…" to the last frame of
-  // the 45-frame silence — the beat is the build, and nothing is said over it.
-  const startAt = blueFrom + Math.round((blueLineTo - blueFrom) * 0.5);
-  const span = Math.max(1, beatTo - startAt);
-  const u = Math.max(0, Math.min(1, (frame - startAt) / span));
-  const blue = blueAt(u);
+  // He does not wait to be finished introducing — the four-frame turn gap in
+  // the timeline is the interruption, and this is the same joke in the picture:
+  // he is already ricocheting under the last two words of "Blue is the bounciest
+  // one there is."
+  const startAt = blueFrom + Math.round((blueLineTo - blueFrom) * 0.83);
+  const age = frame - startAt;
+  const blue = bluePath(age);
+  const indigo = indigoEcho(bluePath, age);
   const t = frame / fps;
 
-  // He does not leave, and he is not removed: by the time Ray asks where Blue
-  // went, blue is the trails and the spray, which is the honest answer to the
-  // question and the one the next scene needs.
-  const heroAlpha = 1 - kidEase.easeInOutSine((frame - goneFrom + 18) / 22);
+  // The mesh opens at three legs and walks up to forty on the last frame of the
+  // sacred forty-five. Nothing is said over that beat and nothing enters it; the
+  // thing it is holding for is the frame *filling*.
+  const keep = Math.round(
+    interpolate(frame, [startAt, beatTo], [3, 32], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    }),
+  );
+  const spray = clamp01((frame - startAt - 20) / Math.max(1, beatTo - startAt - 20));
 
-  // Already vibrating before he enters, and harder every time he is hit.
-  const jitter = 5 + 3.5 * Math.sin(t * 26);
-  const hit = Math.max(0, 1 - (blue.leg % 1) * 5);
+  // Where he is on the current leg, 0..1 — near 0 he has just hit something.
+  const legU = (Math.max(0, age) / BLUE_LEG) % 1;
+  const impact = Math.max(0, 1 - legU * 6);
+  const corner = blueCornerAt(Math.floor(Math.max(0, age) / BLUE_LEG));
+  const alive = clamp01((frame - startAt) / 8);
 
   const stage = useStage(scene);
   const rayEmotion = useEmotion(scene, "ray", { a2_28_ray: "amazed" }, "amazed", NO_LEAD);
@@ -1274,14 +1604,40 @@ const BlueEverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     who: "ray",
     side: "left",
   };
+  const blueMark: Mark = {
+    x: blue.x,
+    y: hover("shard", blue.y, S19_BLUE_SCALE),
+    scale: S19_BLUE_SCALE,
+    who: "shard",
+  };
+  const indigoMark: Mark = {
+    x: indigo.x,
+    y: hover("shard", indigo.y, S19_INDIGO_SCALE),
+    scale: S19_INDIGO_SCALE,
+    who: "shard",
+  };
 
   return (
     <AbsoluteFill style={{ background: "#eaf6ff" }}>
       <CorridorBed phase={15.6} />
-      <Corridor t={t} />
+      <Corridor t={t} hit={age > 0 ? corner : undefined} />
 
-      <BlueTrails u={u} now={blue} />
-      <BlueSpray u={u} span={span / fps} />
+      <BlueMesh age={age} keep={keep} opacity={alive} />
+      <BlueSpray u={spray} span={(beatTo - startAt) / fps} />
+
+      {/* The flash on the bounce he is closest to, so a turn reads as an
+          impact rather than as a rendering fault. */}
+      {age > 0 && impact > 0.02 ? (
+        <WideLayer zIndex={11}>
+          <circle
+            cx={corner.x}
+            cy={corner.y}
+            r={78 * impact}
+            fill={SPECTRUM[4].light}
+            opacity={0.42 * impact}
+          />
+        </WideLayer>
+      ) : null}
 
       <Puff
         x={S19_PUFF.x}
@@ -1293,21 +1649,40 @@ const BlueEverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         speaking={stage.speaking("puff")}
         look={{ x: 0.2, y: -0.3 }}
         pose={stage.speaking("puff") ? "cheer" : "rest"}
+        arms
         zIndex={18}
       />
 
-      <RayShard
-        color={4}
-        x={blue.x + Math.sin(t * 31) * jitter}
-        y={blue.y + Math.cos(t * 27) * jitter}
-        // Small and quick (script.md's own staging note), and the difference
-        // that actually reads is the shaking and the ricochet, not the size.
-        scale={0.85 * (1 + hit * 0.16)}
-        phase={1.6}
+      {/* **Indigo, and he is under Blue rather than over him**: he is the copy,
+          so on the frames they overlap it is Blue who is in front. His trail is
+          Blue's own trail four frames stale, which means it has the same elbow
+          in it and arrives at the corner Blue has just left — the drawing of
+          "does everything Blue does, slightly worse, half a beat late". */}
+      <Shard
+        who="indigo"
+        x={indigo.x}
+        y={indigoMark.y}
+        scale={S19_INDIGO_SCALE}
+        heading={indigo.angle}
+        trail={age > INDIGO_LAG + 4 ? blueTrail(age - INDIGO_LAG, S19_BOX, S19_SEED) : undefined}
+        emotion="happy"
+        speaking={stage.speaking("indigo")}
+        look={{ x: 0.3, y: -0.1 }}
+        opacity={alive * 0.82}
+        zIndex={22}
+      />
+
+      <Shard
+        who="blue"
+        x={blue.x}
+        y={blueMark.y}
+        scale={S19_BLUE_SCALE * (1 + impact * 0.14)}
+        heading={blue.angle}
+        trail={age > 4 ? blueTrail(age, S19_BOX, S19_SEED) : undefined}
         emotion="excited"
+        speaking={stage.speaking("blue")}
         look={{ x: 0.4, y: -0.2 }}
-        idle={1.6}
-        opacity={Math.max(0, Math.min(1, heroAlpha))}
+        opacity={alive}
         zIndex={24}
       />
 
@@ -1327,103 +1702,84 @@ const BlueEverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Bubbles
         scene={scene}
-        cast={{ puff: puffMark, ray: rayMark } as Cast}
+        cast={{ puff: puffMark, ray: rayMark, blue: blueMark, indigo: indigoMark } as Cast}
         text={S19_BUBBLES}
         at={{
-          a2_26_puff: { x: 1130, y: 224, tail: "right", tailAt: S19_PUFF.x },
-          a2_28_ray: { x: 1180, y: 148, tail: "right", tailAt: S19_RAY.x },
+          // Parked top left and dead still while he is not. He crosses half the
+          // corridor during this line, so the tail is aimed at where he was on
+          // the frame it popped and then stays there: a bubble that chased him
+          // at 27px a frame is a bubble nobody can read.
+          a2_25b_blue: { x: 520, y: 214, tail: "right", tailAt: bluePath(139 - startAt).x },
+          a2_26_puff: { x: 700, y: 252, tail: "right", tailAt: S19_PUFF.x },
+          a2_28_ray: { x: 1250, y: 176, tail: "right", tailAt: S19_RAY.x },
+          // Low and left, in the corner Blue's third bubble has just vacated —
+          // he is four frames behind a joke that has already finished.
+          a2_28c_indigo: { x: 470, y: 340, tail: "right", tailAt: indigo.x },
         }}
       />
+
+      <BlueCorners from={sayFrom} until={sayTo} length={sayTo - sayFrom} startAt={startAt} />
     </AbsoluteFill>
   );
 };
 
-/** Every leg Blue has already flown, still on screen. */
-const BlueTrails: React.FC<{ u: number; now: { x: number; y: number; leg: number } }> = ({
-  u,
-  now,
-}) => (
-  <WideLayer zIndex={12}>
-    {BOUNCE.slice(0, -1).map((p, i) => {
-      if (i > now.leg) return null;
-      const to = i < now.leg ? BOUNCE[i + 1] : now;
+/**
+ * The three-corner answer. See `S19_CLAUSE` and `S19_CORNER` for every number in
+ * it and where it was measured.
+ */
+const BlueCorners: React.FC<{
+  from: number;
+  until: number;
+  length: number;
+  startAt: number;
+}> = ({ from, until, length, startAt }) => (
+  <>
+    {S19_CLAUSE_TEXT.map((text, i) => {
+      const say = from + Math.round(S19_CLAUSE[i] * length);
+      const where = bluePath(say - startAt);
+      const anchor = S19_CORNER[i];
+      const bx = anchor.x + (where.x - anchor.x) * S19_CORNER_PULL;
       return (
-        <path
-          key={i}
-          d={`M ${p.x} ${p.y} L ${to.x} ${to.y}`}
-          stroke={SPECTRUM[4].fill}
-          strokeWidth={12}
-          strokeLinecap="round"
-          fill="none"
-          // The oldest legs fade a little but never go: the frame has to end up
-          // criss-crossed, which is the picture the Big Word freezes.
-          opacity={0.55 - Math.min(0.28, (now.leg - i) * 0.035)}
+        <SpeechBubble
+          key={text}
+          x={bx}
+          y={anchor.y}
+          text={text}
+          tail={where.x < bx ? "left" : "right"}
+          tailAt={where.x}
+          from={say - S19_POP_LEAD}
+          until={until}
+          background={mixHex(kidTheme.paper, SPECTRUM[4].light, 0.12)}
+          outline={SPECTRUM[4].deep}
+          zIndex={44}
         />
       );
     })}
-    {/* A flash on the bounce he is closest to, so a turn reads as an impact. */}
-    {u > 0 && u < 1 ? (
-      <circle
-        cx={BOUNCE[Math.min(BOUNCE.length - 1, Math.round(now.leg))].x}
-        cy={BOUNCE[Math.min(BOUNCE.length - 1, Math.round(now.leg))].y}
-        r={70 * Math.max(0, 1 - Math.abs(now.leg - Math.round(now.leg)) * 6)}
-        fill={SPECTRUM[4].light}
-        opacity={0.4 * Math.max(0, 1 - Math.abs(now.leg - Math.round(now.leg)) * 6)}
-      />
-    ) : null}
-  </WideLayer>
-);
-
-/**
- * Blue arriving everywhere else.
- *
- * Each one **loops** off its own bounce point rather than flying away once, so
- * the frame keeps filling for as long as the silence lasts instead of emptying
- * two seconds in. That is not decoration: blue bouncing off air is not an event
- * that happened, it is a thing that is happening, which is exactly what the
- * next scene ("wherever you look, blue is bouncing into your eyes") needs the
- * audience to have already seen.
- */
-const SPRAY_LOOP = 2.4;
-
-const BlueSpray: React.FC<{ u: number; span: number }> = ({ u, span }) => (
-  <WideLayer zIndex={13}>
-    {SPRAY.map((s, i) => {
-      const age = (u - s.born) * span;
-      if (age <= 0) return null;
-      const p = (age % SPRAY_LOOP) / SPRAY_LOOP;
-      const from = BOUNCE[s.from];
-      const d = 50 + p * s.speed * SPRAY_LOOP * 0.6;
-      const x = from.x + Math.cos(s.angle) * d;
-      const y = from.y + Math.sin(s.angle) * d;
-      const tail = Math.min(d, 190);
-      const fade = Math.sin(Math.PI * Math.min(1, p * 1.25));
-      return (
-        <g key={i} opacity={0.85 * fade}>
-          <path
-            d={`M ${x - Math.cos(s.angle) * tail} ${y - Math.sin(s.angle) * tail} L ${x} ${y}`}
-            stroke={SPECTRUM[4].fill}
-            strokeWidth={9}
-            strokeLinecap="round"
-            opacity={0.45}
-          />
-          <circle cx={x} cy={y} r={s.r} fill={SPECTRUM[4].fill} />
-          <circle cx={x - s.r * 0.3} cy={y - s.r * 0.35} r={s.r * 0.4} fill={SPECTRUM[4].light} />
-        </g>
-      );
-    })}
-  </WideLayer>
+  </>
 );
 
 // ---------------------------------------------------------------------------
 // Scene 20 — Blue, from every direction
 // ---------------------------------------------------------------------------
 
-/** Blue arriving at the lens from everywhere at once. */
-const ARROWS = Array.from({ length: 30 }, (_, i) => {
+/**
+ * Blue arriving at the lens from everywhere at once — **and every one of them
+ * has Blue on the end of it** (revision §6.8).
+ *
+ * Not a cheat and not a repeated sprite gag: it is what scattered light *is*,
+ * and it is the picture Scene 19's last line just promised. The same blob, in
+ * two dozen copies, arriving from every direction — so the answer to "where did
+ * Blue go" is standing in the frame two dozen times over.
+ *
+ * Twenty-four rather than the thirty the arrows-only version used. Each one is
+ * now a body with a face instead of a dart, and thirty faces converging on the
+ * middle of the frame is a swarm rather than a sky.
+ */
+const ARROW_N = 24;
+const ARROWS = Array.from({ length: ARROW_N }, (_, i) => {
   const k = i * 47 + 3;
   return {
-    angle: (i / 30) * Math.PI * 2 + ((k % 13) / 13) * 0.18,
+    angle: (i / ARROW_N) * Math.PI * 2 + ((k % 13) / 13) * 0.18,
     start: 0.62 + ((k * 31) % 60) / 100,
     at: ((k * 17) % 100) / 100,
     len: 150 + ((k * 29) % 130),
@@ -1442,26 +1798,60 @@ const S20_BUBBLES: Record<string, string> = {
 };
 
 /**
- * **Violet's ricochet, and the first thing on screen that is a joke about him.**
+ * **Violet, firing two — and he is on the kit now.**
  *
- * Firing two of the silent-Violet running gag (Scene 11, here, Scene 28). Where
- * he bounces, how hard, and how big he is drawn — all three are the gag, so they
- * are named rather than buried in the component:
+ * The delivered cut drew him here as a one-off: a hand-written Lissajous with an
+ * `ax`/`ay`/`speed` of its own, bouncing around a 380×280 box in the corner. It
+ * was a good gag and it was **the wrong body** — the ensemble sheet's Violet
+ * "vibrates so hard his own outline blurs, in place; he is the fastest thing in
+ * any frame he is in and he never goes anywhere", and a Violet who tours a box
+ * in Act Two and fizzes on the spot in Act Three is two characters. So the
+ * staging moves onto `<Shard who="violet">`, which applies `violetVibrate` and
+ * the amplitude smear whether or not a scene remembers to ask, and there is no
+ * raw Violet drawing left in this file.
+ *
+ * "Out-bouncing the entire frame" survives the move intact, and is in fact
+ * *stronger*: the kit sizes his amplitude against Blue on purpose (see
+ * `VIOLET_AMP`) so his peak speed is 57px a frame against Blue's 37 and his
+ * smear is 68px wide against Blue's 37px step. He is the fastest object and the
+ * widest blur in any frame containing both — without going anywhere, which is
+ * the joke.
+ *
+ * Three things stay named here because they are the gag rather than the rig:
  *
  *   - **Bottom-left, clear of everything.** The eye owns the middle at (960,
  *     726) and Ray owns the right at x=1466, so the corner is the one place a
  *     body can work this hard without being *in the way* — which is the point:
  *     nobody looks at him because nobody has to.
- *   - **`ax`/`ay` are bigger than the blue dot's on purpose** — well over twice,
- *     at more than twice the `speed`. "Violet bounces even more than Blue does"
- *     is the line the picture has to be true to, and a still with the two
- *     trails in it should make that obvious without the line.
+ *   - **`wag` is the waving**, and it is a body wag rather than an arm flap.
+ *     `<Shard>` puts `pose="wave"` on Yellow and only Yellow, so waving is not
+ *     available to him through the kit (see the note in the report); act three
+ *     solves the same problem the same way, by moving the whole body, and at
+ *     8Hz of vibration an arm flap would be invisible underneath it anyway.
  *   - **`scale` is the findability lesson** (ep 2's backwards puff): a
  *     background gag has to be findable in a paused frame or it is not in the
  *     episode. He is drawn the same size as Ray, fully opaque, with his own
  *     face, on the pale inside of the dome.
  */
-const S20_VIOLET = { x: 300, y: 720, ax: 140, ay: 96, speed: 4.6, scale: 0.88 } as const;
+const S20_VIOLET = { x: 300, y: 720, scale: 0.88, wag: 26, wagHz: 1.15 } as const;
+
+/**
+ * **The comparator, and it is Blue now** (revision §6.8: "replace that dot with
+ * Blue").
+ *
+ * A plain dot was the control in a two-object comparison and wanted no
+ * personality at all. It is the wrong object now for the same reason the
+ * hand-rolled Violet was: Blue is a character with three lines by this point in
+ * the episode, and "violet really does bounce more than blue does" lands as a
+ * *comparison between two people we know* rather than as a chart. He is here
+ * doing his own signature — a real ricochet, on the kit — in a box small enough
+ * that a paused frame shows him working visibly less hard than Violet is.
+ *
+ * Up and to the right of Violet's corner, and deliberately out of his lane: a
+ * still with the two of them overlapping is not a comparison, it is a collision.
+ */
+const S20_BLUE_BOX: Box = { x: 520, y: 336, w: 240, h: 150 };
+const S20_BLUE_SCALE = 0.6;
 
 /**
  * Scene 20 — the step that turns a bouncing ball into a sky.
@@ -1499,12 +1889,31 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const t = frame / fps;
   const arrows = kidEase.easeInOutSine((frame - arrowFrom - 10) / 40);
-  // The pull back out to the dome, landing exactly as the silence opens.
-  const pull = kidEase.easeInOutSine((frame - domeFrom - 20) / Math.max(1, beatFrom - domeFrom - 10));
+  // **The dome is fully up well before the line ends**, and that is a change:
+  // it used to land exactly as the silence opened, which left the face below
+  // resolving out of a half-faded dome. The face is the last third of
+  // `a2_33_narrator` and it needs something finished to resolve out of.
+  const pull = kidEase.easeInOutSine((frame - domeFrom - 10) / 60);
   const glow = 0.5 + 0.5 * Math.sin((frame - domeTo) * 0.06);
   const violet = kidEase.easeInOutSine((frame - violetFrom) / 26);
   const eye = kidEase.easeOutBack(Math.max(0, Math.min(1, (frame - eyeFrom) / 22)), 1.2);
   const blueEye = kidEase.easeInOutSine((frame - blueEyeFrom - 6) / 20);
+
+  // **The dome resolves into Blue's face, ON the line and never in the beat.**
+  //
+  // `a2_33_narrator` is "Blue is not a patch of the sky. Blue is the WHOLE
+  // sky.", 4.08s, and `silencedetect` puts its last clause — the one with
+  // "WHOLE sky" in it — at 2.406–3.561s, i.e. 0.59..0.87 of the clip. The face
+  // fades up at 0.64, holds half a second across the word, and is gone by 0.93,
+  // which is nine frames before the silence starts. **The 36f beat after this
+  // line is the answer to the cold open and it does not get a gag in it**: the
+  // full dome, glowing, with nothing over it, and this is the arithmetic that
+  // guarantees the face is not still there.
+  const domeLen = Math.max(1, domeTo - domeFrom);
+  const faceIn = domeFrom + domeLen * 0.64;
+  const faceOut = domeFrom + domeLen * 0.93;
+  const domeFace =
+    clamp01((frame - faceIn) / 9) * (1 - clamp01((frame - (faceOut - 10)) / 10));
 
   const stage = useStage(scene);
   const rayEmotion = useEmotion(scene, "ray", { a2_32_ray: "amazed", a2_34_ray: "happy" }, "happy", NO_LEAD);
@@ -1516,10 +1925,7 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     [{ at: droopFrom, emotion: "sad", frames: 14 }],
     "excited",
   );
-  // Frozen clock: his whole ricochet is a function of `t`, so stopping him is
-  // stopping his clock rather than adding a second code path.
-  const violetT = frame >= droopFrom ? droopFrom / fps : t;
-  const droop = kidEase.easeOutCubic((frame - droopFrom) / 26);
+  const droop = clamp01(kidEase.easeOutCubic((frame - droopFrom) / 26));
 
   const rayMark: Mark = {
     x: S20_RAY.x,
@@ -1527,6 +1933,16 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     scale: S20_RAY.scale,
     who: "ray",
     side: "left",
+  };
+  // Violet's own mark, so Ray's one look at him is *computed* off his face
+  // rather than eyeballed as a direction. `markCentre` is `faceOf`, which on a
+  // shard is 77 local units above the middle of its box — aiming at `midOf`
+  // would put Ray's eyes on the gap under his chin (the F2 note).
+  const violetMark: Mark = {
+    x: S20_VIOLET.x,
+    y: hover("shard", S20_VIOLET.y + droop * 30, S20_VIOLET.scale),
+    scale: S20_VIOLET.scale,
+    who: "shard",
   };
 
   return (
@@ -1540,16 +1956,17 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         <PaintedSky bg="sky_dome_day" phase={16.9} drift={9} />
       </div>
 
-      <ArrivingArrows u={Math.max(0, Math.min(1, arrows)) * (1 - Math.max(0, Math.min(1, pull)))} t={t} />
-      <BlueDome u={Math.max(0, Math.min(1, pull))} glow={glow} t={t} />
+      <ArrivingArrows u={clamp01(arrows) * (1 - clamp01(pull))} t={t} />
+      <BlueDome u={clamp01(pull)} glow={glow} t={t} face={domeFace} />
 
       {/* The honesty tax: violet really does bounce more, and the reason the
           sky is not violet is in the eye. Two small pictures, two lines — and
           one of the two pictures has a face on it and gets apologised to. */}
       <VioletCase
-        u={Math.max(0, Math.min(1, violet))}
+        u={clamp01(violet)}
+        frame={frame}
         t={t}
-        violetT={violetT}
+        droopFrom={droopFrom}
         droop={droop}
         emotion={violetEmotion}
       />
@@ -1574,9 +1991,10 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             : // **The one look Violet gets in the whole episode**, and it is on
               // the apology rather than in the beat: the joke is that nobody
               // looked, so the eye-line is the punchline's second half and it
-              // must not arrive early. Down and hard left, at (340, 706).
+              // must not arrive early. Aimed with `markCentre`, i.e. at his
+              // face, not at the middle of his box.
               frame >= sorryFrom && frame < sorryTo
-              ? { x: -1, y: 0.2 }
+              ? lookAt(markCentre(rayMark), markCentre(violetMark))
               : { x: -0.4, y: -0.5 }
         }
         // Nothing moves inside the dome beat, including him. Nor inside the
@@ -1609,54 +2027,98 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /**
- * Dozens of blue arrows, all of them pointed at you.
+ * Dozens of Blues, all of them arriving at you.
  *
  * They converge on a point a little below the middle of the frame — the lens,
  * i.e. the viewer standing in that street — and they keep arriving rather than
  * arriving once, because blue bouncing into your eyes is not an event that
  * happened, it is the condition you are standing in.
  *
- * Every one gets a paper underlay. The first pass drew them in `SPECTRUM[4]`
- * straight onto a painted street and they read as scratches on the plate: a
- * mid-blue line on a blue sky has almost no value contrast, which is the same
- * lesson Ray's outline is built on.
+ * **The dart on the end is Blue himself**, not an arrowhead: same body, same
+ * phase, same face, two dozen copies. What is left of the arrow is the *streak*
+ * behind him, which is his own two-line ricochet trail borrowed from the
+ * corridor — a body arriving with its motion drawn behind it rather than a
+ * symbol pointing at you.
+ *
+ * Every streak keeps its paper underlay. The first pass drew them in
+ * `SPECTRUM[4]` straight onto a painted street and they read as scratches on the
+ * plate: a mid-blue line on a blue sky has almost no value contrast, which is
+ * the same lesson Ray's outline is built on.
+ *
+ * The bodies cannot live inside the `WideLayer` — that is an `<svg>` and a
+ * character is a `<div>` — so the streaks and the Blues are two passes over the
+ * same list. Both are pure functions of `t`, so they cannot drift.
  */
 const LENS = { x: 960, y: 610 } as const;
+
+/** Where the i-th arriving Blue is at time `t`, and how big he reads. */
+function arrowAt(
+  a: (typeof ARROWS)[number],
+  t: number,
+): { x: number; y: number; tx: number; ty: number; fade: number; scale: number } {
+  const p = (((t * 0.5 + a.at) % 1) + 1) % 1;
+  // **The radius is bounded by the frame, not by the maths.** The first pass
+  // sent them out to 1500px around a lens at (960,610), which put two thirds of
+  // them off the plate at any given moment: a still of the beat showed three
+  // blue specks in the corners and an empty street. They now start just outside
+  // the frame and arrive, which is the sentence — you are standing in this.
+  const dist = 240 + a.start * (1 - p) * 780;
+  const near = Math.max(140, dist - a.len);
+  return {
+    x: LENS.x + Math.cos(a.angle) * dist,
+    y: LENS.y + Math.sin(a.angle) * dist * 0.86,
+    tx: LENS.x + Math.cos(a.angle) * near,
+    ty: LENS.y + Math.sin(a.angle) * near * 0.86,
+    // On for most of the flight and off only at the two ends: a sine over the
+    // whole trip spends most of every arrival being nearly transparent.
+    fade: 0.42 + 0.58 * Math.min(1, p * 3.2) * Math.min(1, (1 - p) * 5),
+    // Nearer the lens is nearer the viewer, so he gets bigger as he arrives.
+    // The far ones stay small enough to be a sky rather than a swarm.
+    scale: 0.3 + 0.32 * (1 - Math.min(1, near / 900)),
+  };
+}
 
 const ArrivingArrows: React.FC<{ u: number; t: number }> = ({ u, t }) => {
   if (u <= 0.01) return null;
   return (
-    <WideLayer zIndex={14} opacity={u}>
+    <>
+      <WideLayer zIndex={14} opacity={u}>
+        {ARROWS.map((a, i) => {
+          const p = arrowAt(a, t);
+          const [one, two] = twinLeg({ x: p.x, y: p.y }, { x: p.tx, y: p.ty }, 6);
+          return (
+            <g key={i} opacity={0.9 * p.fade}>
+              <path
+                d={`M ${p.x} ${p.y} L ${p.tx} ${p.ty}`}
+                stroke={kidTheme.paper}
+                strokeWidth={38}
+                strokeLinecap="round"
+                opacity={0.6}
+              />
+              <path d={one} stroke={SPECTRUM[4].fill} strokeWidth={15} strokeLinecap="round" />
+              <path d={two} stroke={SPECTRUM[4].fill} strokeWidth={15} strokeLinecap="round" />
+            </g>
+          );
+        })}
+      </WideLayer>
       {ARROWS.map((a, i) => {
-        const p = ((t * 0.5 + a.at) % 1 + 1) % 1;
-        const dist = 260 + a.start * (1 - p) * 1250;
-        const cx = LENS.x + Math.cos(a.angle) * dist;
-        const cy = LENS.y + Math.sin(a.angle) * dist * 0.86;
-        const tx = LENS.x + Math.cos(a.angle) * Math.max(150, dist - a.len);
-        const ty = LENS.y + Math.sin(a.angle) * Math.max(150, dist - a.len) * 0.86;
-        const fade = Math.sin(Math.PI * Math.min(1, p * 1.3));
-        const head = `M ${tx} ${ty} l ${Math.cos(a.angle + 2.55) * 52} ${Math.sin(a.angle + 2.55) * 52} l ${Math.cos(a.angle - 2.55) * 52 - Math.cos(a.angle + 2.55) * 52} ${Math.sin(a.angle - 2.55) * 52 - Math.sin(a.angle + 2.55) * 52} Z`;
+        const p = arrowAt(a, t);
         return (
-          <g key={i} opacity={0.9 * fade}>
-            <path
-              d={`M ${cx} ${cy} L ${tx} ${ty}`}
-              stroke={kidTheme.paper}
-              strokeWidth={26}
-              strokeLinecap="round"
-              opacity={0.55}
-            />
-            <path d={head} fill={kidTheme.paper} opacity={0.55} />
-            <path
-              d={`M ${cx} ${cy} L ${tx} ${ty}`}
-              stroke={SPECTRUM[4].fill}
-              strokeWidth={15}
-              strokeLinecap="round"
-            />
-            <path d={head} fill={SPECTRUM[4].fill} />
-          </g>
+          <Shard
+            key={i}
+            who="blue"
+            x={p.tx}
+            y={hover("shard", p.ty, p.scale)}
+            scale={p.scale}
+            heading={(a.angle * 180) / Math.PI}
+            emotion="excited"
+            look="camera"
+            opacity={u * p.fade}
+            zIndex={15}
+          />
         );
       })}
-    </WideLayer>
+    </>
   );
 };
 
@@ -1670,7 +2132,12 @@ const ArrivingArrows: React.FC<{ u: number; t: number }> = ({ u, t }) => {
  */
 const DOME = { cx: 960, cy: 902, r: 830 } as const;
 
-const BlueDome: React.FC<{ u: number; glow: number; t: number }> = ({ u, glow, t }) => {
+const BlueDome: React.FC<{ u: number; glow: number; t: number; face?: number }> = ({
+  u,
+  glow,
+  t,
+  face = 0,
+}) => {
   if (u <= 0.01) return null;
   // **The whole dome, in frame, with air around it.** The first pass parked the
   // centre 300px below the frame and drew a 1550px radius, so what a still of
@@ -1725,110 +2192,134 @@ const BlueDome: React.FC<{ u: number; glow: number; t: number }> = ({ u, glow, t
         <path d="M 1002 908 l 46 -44 l 46 44 Z" fill={kidTheme.earth} />
         <rect x={1012} y={906} width={72} height={34} fill={kidTheme.paper} opacity={0.92} />
       </g>
+      {face > 0.01 ? <DomeFace u={face} /> : null}
     </WideLayer>
   );
 };
 
 /**
- * Violet, bouncing harder than blue, in the bottom-left of the dome.
+ * **The dome, for about half a second, turning out to be Blue.**
  *
- * **Blue is a dot; Violet is a character.** That asymmetry is the punch-up's C2
- * and it is deliberate on both sides: the blue dot is the control in a
- * two-object comparison and wants no personality at all, and the violet one has
- * to be somebody or "Sorry, Violet." is an apology to a circle. He carries the
- * same trail the dot did — the trail is what makes "bounces even more" legible
- * in a single still rather than only in motion — and he is drawn at Ray's own
- * scale, fully opaque, on the pale inside of the dome, because a background gag
- * that cannot be found in a paused frame is not in the episode (ep 2, the
- * backwards puff).
+ * The line is "Blue is not a patch of the sky. Blue is the WHOLE sky.", and this
+ * is that sentence with the argument taken out of it: the thing filling the
+ * frame opens its eyes and it is him. It is on the line and it is gone before
+ * the silence — the beat after it is the answer to the cold open and it does not
+ * get a gag in it (see `domeFace` in the scene).
  *
- * No panel, no label, no arrow: a bordered inset would read as a second
- * diagram, and this is a footnote that waves.
+ * **The opaque field is not optional.** `Face` paints an eyelid as a
+ * `skin`-coloured *rectangle* over the eye, so drawn straight onto a
+ * half-transparent dome a blink flashes a pale rectangle on the sky — the
+ * Cheshire-face rule out of Ray's redesign, and the same fix: a wide flat oval
+ * of genuinely solid colour, feathered at its edge, with the features on top of
+ * it. The oval's colour is the dome's own crown mixed to opacity, so what
+ * resolves is the sky's face rather than a disc pasted on the sky.
+ */
+const DomeFace: React.FC<{ u: number }> = ({ u }) => {
+  const rig = useRig({ x: 0, y: 0, emotion: "excited", phase: PHASE.blue, idle: 0.6 });
+  const skin = mixHex(kidTheme.skyMid, SPECTRUM[4].light, 0.34);
+  return (
+    <g opacity={u}>
+      <ellipse
+        cx={DOME.cx}
+        cy={520}
+        rx={430 * (0.94 + 0.06 * u)}
+        ry={270 * (0.94 + 0.06 * u)}
+        fill={skin}
+        opacity={0.96}
+      />
+      {/* Feathered edge: three widening rings at falling alpha, so the field has
+          no rim of its own and the face reads as *the sky* rather than as a
+          badge on it. */}
+      {[1.06, 1.13, 1.2].map((k, i) => (
+        <ellipse
+          key={k}
+          cx={DOME.cx}
+          cy={520}
+          rx={430 * k}
+          ry={270 * k}
+          fill={skin}
+          opacity={0.3 - i * 0.09}
+        />
+      ))}
+      <Face rig={rig} x={DOME.cx} y={508} size={5.4} skin={skin} eyeSpread={1.2} eyeScale={0.98} />
+    </g>
+  );
+};
+
+/**
+ * **Violet, and Blue, in the bottom-left of the dome — the honesty tax as a
+ * picture.**
  *
- * `violetT` is his own clock, frozen by the caller on the first frame of the
- * held beat; `droop` 0..1 is the sag after it. Everything about the stop is
- * *subtraction* — the clock stops, the arms fall, the face goes — because the
- * beat is silent and the only thing allowed to happen in it is somebody giving
- * up.
+ * Both of them are `<Shard>` now, which is the whole of this rewrite. Violet was
+ * a bespoke Lissajous and Blue was a plain dot; they are the ensemble's own
+ * bodies running the ensemble's own laws, so "violet bounces even more than blue
+ * does" is not a claim the scene makes with two hand-tuned amplitudes — it falls
+ * out of the table. `violetVibrate` is applied by `<Shard>` itself, so there is
+ * no frame of this episode in which Violet holds still and no way for a scene to
+ * forget; `blueRicochet` gives Blue real corners in a small box, which is the
+ * *same* signature he does at full size in the corridor, visibly turned down.
+ *
+ * Two kinds of blur, and it matters here more than anywhere else in the episode
+ * because this is the one frame that contains both: **Violet's is amplitude in
+ * place** (three copies of a body spanning a vibration it never leaves) and
+ * **Blue's is a change of direction** (a bent trail behind a body leaning into a
+ * new leg). Two bodies wearing the same generic speed-smear would say the two
+ * are the same kind of fast, and the physics of the whole episode is that they
+ * are not.
+ *
+ * No panel, no label, no arrow: a bordered inset would read as a second diagram,
+ * and this is a footnote that waves.
+ *
+ * The stop is all *subtraction*: the vibration goes to zero, the arms fall, the
+ * body sags, the face goes. The beat is silent and the only thing allowed to
+ * happen in it is somebody giving up.
  */
 const VioletCase: React.FC<{
   u: number;
+  frame: number;
   t: number;
-  violetT: number;
+  droopFrom: number;
   droop: number;
-  emotion: Parameters<typeof RayShard>[0]["emotion"];
-}> = ({ u, t, violetT, droop, emotion }) => {
+  emotion: EmotionInput;
+}> = ({ u, frame, t, droopFrom, droop, emotion }) => {
   if (u <= 0.01) return null;
-  // Where each one is at time `tt`, so the same function draws the body and the
-  // few frames of path behind it.
-  const at = (
-    tt: number,
-    k: number,
-    speed: number,
-    ax: number,
-    ay: number,
-    cx: number,
-    cy: number,
-  ): { x: number; y: number } => ({
-    x: cx + Math.sin(tt * speed + k) * ax + Math.sin(tt * speed * 2.3 + k) * ax * 0.3,
-    y: cy + Math.cos(tt * speed * 1.37 + k * 2.1) * ay,
-  });
   const V = S20_VIOLET;
-  const violetAt = (tt: number): { x: number; y: number } =>
-    at(tt, 0, V.speed, V.ax, V.ay, V.x, V.y);
-  // The control, and it is kept **out of Violet's lane**: he is a body now, not
-  // a dot, and his ricochet box is 380×280 — a still with the two of them
-  // overlapping is not a comparison, it is a collision. Up and to the right of
-  // him, with a fifth of the amplitude, which is the whole sentence.
-  const blueAt = (tt: number): { x: number; y: number } => at(tt, 2.4, 2, 58, 38, 700, 470);
-  const trail = (fn: (tt: number) => { x: number; y: number }, tt: number): string =>
-    [0, 1, 2, 3, 4, 5]
-      .map((i) => {
-        const p = fn(tt - i * 0.055);
-        return `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
-      })
-      .join(" ");
-  const v = violetAt(violetT);
-  const b = blueAt(t);
-  // The lean he is travelling at, so the ricochet reads as effort rather than
-  // as float — and it unwinds to nothing as he droops.
-  const lean = (violetAt(violetT + 0.03).x - v.x) * 0.6 * (1 - droop);
+  // The wave, and it is a body wag rather than an arm flap — see the note on
+  // `S20_VIOLET`. It unwinds to nothing as he droops, and it is deliberately
+  // slow: at 8Hz of vibration the only motion the eye can still separate is one
+  // an order of magnitude below it.
+  const wag = Math.sin(t * Math.PI * 2 * V.wagHz) * V.wag * (1 - droop);
+  // Blue's clock is the scene's; the box is small, so his corners are ~70..130px
+  // apart against Violet's 68px-wide smear at eight times the frequency.
+  const age = Math.max(0, frame - droopFrom + 400);
+  const blue = blueRicochet(age, S20_BLUE_BOX, 5.5);
   return (
     <>
-      <WideLayer zIndex={18} opacity={u}>
-        <path
-          d={trail(violetAt, violetT)}
-          stroke={SPECTRUM[6].fill}
-          strokeWidth={11}
-          fill="none"
-          strokeLinecap="round"
-          opacity={0.45 * (1 - droop)}
-        />
-        <path
-          d={trail(blueAt, t)}
-          stroke={SPECTRUM[4].fill}
-          strokeWidth={11}
-          fill="none"
-          strokeLinecap="round"
-          opacity={0.45}
-        />
-        <circle cx={b.x} cy={b.y} r={34} fill={SPECTRUM[4].fill} />
-        <circle cx={b.x - 10} cy={b.y - 11} r={13} fill={SPECTRUM[4].light} />
-      </WideLayer>
-      <RayShard
-        color={6}
-        x={v.x}
-        y={v.y + droop * 30}
+      <Shard
+        who="blue"
+        x={blue.x}
+        y={hover("shard", blue.y, S20_BLUE_SCALE)}
+        scale={S20_BLUE_SCALE}
+        heading={blue.angle}
+        trail={blueTrail(age, S20_BLUE_BOX, 5.5)}
+        emotion="happy"
+        look="camera"
+        opacity={u}
+        zIndex={18}
+      />
+      <Shard
+        who="violet"
+        x={V.x + wag}
+        y={hover("shard", V.y + droop * 30, V.scale * (1 - droop * 0.06))}
         scale={V.scale * (1 - droop * 0.06)}
-        // Violet is the seventh of the arc and keeps the seventh phase, so the
-        // same body blinks on the same clock in Scenes 9, 10, 11, 20 and 28.
-        // He is the same blob every time or he is three different accidents.
-        phase={SHARD_PHASE[6]}
+        // Zero on the beat: the fastest body in the episode stops dead, which is
+        // the only thing that enters those twenty frames.
+        vibrate={1 - droop}
         emotion={emotion}
-        // Both arms out, at the lens, for as long as anybody might look.
-        arms
+        // Both arms out, at the lens, for as long as anybody might look — and
+        // then down.
+        arms={droop < 0.5}
         look={droop > 0.5 ? "down" : "camera"}
-        bank={lean}
         idle={1 - droop}
         eyeLife={1 - droop * 0.8}
         opacity={u}
@@ -1909,15 +2400,38 @@ const S21_BUBBLES: Record<string, string> = {
 };
 
 /**
- * Scene 21 — the house Big Word beat, third firing in the episode, unchanged.
+ * **The box Blue throws from**, and Indigo four frames behind him.
  *
- * script.md asks for "letters bouncing in one at a time, each one arriving from
- * a different direction". The card's letters are the show's signature and are
- * identical in every firing (that is *why* a six-year-old joins in), so the
- * directions are staged as what the letters arrive **on**: seven blue streaks
- * converging on the banner from seven different angles, one per letter, on the
- * card's own stagger. The word is spelled the way it always is; the picture
- * says where it came from.
+ * Under the banner and clear of Ray's corner: the card owns the top of the frame
+ * for the whole scene, which — per the bubble rule about persistent graphics —
+ * fixes where anybody underneath it is allowed to be before a single body is
+ * staged.
+ */
+const S21_BLUE_BOX: Box = { x: 640, y: 616, w: 1040, h: 300 };
+const S21_SEED = 12.4;
+
+/**
+ * Scene 21 — the house Big Word beat, third firing, and **the letters have a
+ * cause now** (revision §6.9).
+ *
+ * Everything about the card is untouched: five lines, both 12-frame beats, the
+ * `WordCard`, the freeze, the chant, the syllable blocks. What changes is that
+ * the letters no longer arrive by themselves — **Blue throws them**, one per
+ * ricochet, from wherever he happens to be on that frame, and Indigo throws one
+ * four frames late and misses.
+ *
+ * **On perching this, and a kit gap.** The brief asks for the business to be
+ * perched on `syllableBlock()` letters and never on composition coordinates.
+ * There is no such function: `WordCard` lays its letters out as DOM flex
+ * children whose widths are the browser's answer to a font, and `SyllableBlocks`
+ * does the same — the kit exports no per-letter or per-block geometry, and the
+ * kit is frozen for this batch. So the throws are perched on the two things the
+ * card *does* guarantee by construction, both of which survive a font change and
+ * a reword: the banner is centred (`left:0; right:0; justify-content:center` at
+ * `top:y`), and the letters land on the card's own `stagger`, which is 2.5
+ * frames and is `WordCard`'s default. Guessing per-letter x offsets from a font
+ * size would have been exactly the 2026-07-28 mistake this instruction exists to
+ * prevent. Flagged to the showrunner rather than fixed here.
  */
 const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -1945,6 +2459,11 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     offset: 340,
   };
 
+  const throwerAt = (f: number): { x: number; y: number; angle: number } =>
+    blueRicochet(Math.max(0, f), S21_BLUE_BOX, S21_SEED);
+  const blue = throwerAt(frame);
+  const indigo = indigoEcho(throwerAt, frame);
+
   return (
     <AbsoluteFill style={{ background: "#eaf6ff" }}>
       <BigWordBeat
@@ -1961,7 +2480,30 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         {/* Blue trails keep moving faintly behind the banner: the mechanism does
             not stop for the vocabulary. */}
         <BlueDrift t={frame / fps} />
-        <ScatterArrivals from={slamAt} letters={7} />
+        <ScatterThrows from={slamAt} letters={7} at={throwerAt} />
+        <Shard
+          who="indigo"
+          x={indigo.x}
+          y={hover("shard", indigo.y, 0.5)}
+          scale={0.5}
+          heading={indigo.angle}
+          trail={blueTrail(Math.max(0, frame - INDIGO_LAG), S21_BLUE_BOX, S21_SEED)}
+          emotion="happy"
+          look="camera"
+          opacity={0.82}
+          zIndex={40}
+        />
+        <Shard
+          who="blue"
+          x={blue.x}
+          y={hover("shard", blue.y, 0.68)}
+          scale={0.68}
+          heading={blue.angle}
+          trail={blueTrail(frame, S21_BLUE_BOX, S21_SEED)}
+          emotion="excited"
+          look="camera"
+          zIndex={42}
+        />
         <Ray
           x={S21_RAY.x}
           y={rayMark.y}
@@ -1987,6 +2529,8 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** The action the Big Word freezes: Scene 19's corridor, at full criss-cross. */
+const S21_FREEZE_AGE = 700;
+
 const PinballStill: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -1994,7 +2538,7 @@ const PinballStill: React.FC = () => {
     <AbsoluteFill style={{ background: "#eaf6ff" }}>
       <CorridorBed phase={15.6} />
       <Corridor t={frame / fps} />
-      <BlueTrails u={1} now={{ ...BOUNCE[BOUNCE.length - 1], leg: BOUNCE.length - 1 }} />
+      <BlueMesh age={S21_FREEZE_AGE} keep={32} />
       <BlueSpray u={1} span={SPRAY_LOOP} />
     </AbsoluteFill>
   );
@@ -2023,28 +2567,63 @@ const BlueDrift: React.FC<{ t: number }> = ({ t }) => (
   </WideLayer>
 );
 
-/** One streak per letter, each arriving from its own direction, on the card's
- *  own stagger (`WordCard`'s default is 2.5 frames a letter). */
-const ScatterArrivals: React.FC<{ from: number; letters: number }> = ({ from, letters }) => {
+/**
+ * **Blue throwing the letters in, one per ricochet.**
+ *
+ * One throw per letter, launched from wherever Blue is twelve frames before that
+ * letter is due — so a still of any throw shows the streak leaving the body that
+ * threw it, which is the only thing that makes "Blue throws them" a picture
+ * rather than a caption. The arrival frames are the card's own stagger
+ * (`WordCard`'s `stagger`, 2.5 frames) counted off the slam, so the throws land
+ * with the letters however long the narrator's clip turns out to be.
+ *
+ * **And Indigo throws one, four frames late, and misses.** Same launch, same
+ * arc, `INDIGO_LAG` behind it and aimed past the banner's bottom-right corner —
+ * he arrives after the joke has finished and hits nothing, which is the whole of
+ * him. It is the only throw in the scene that does not stop at the card.
+ */
+const S21_THROW_LEAD = 12;
+const S21_MISS = { i: 4, dx: 330, dy: 250 } as const;
+
+const ScatterThrows: React.FC<{
+  from: number;
+  letters: number;
+  at: (f: number) => { x: number; y: number };
+}> = ({ from, letters, at }) => {
   const frame = useCurrentFrame();
+  // The banner's centre, which is the one point on the card whose position is
+  // guaranteed by the card's own layout rather than by a measurement. See the
+  // kit-gap note on the scene.
+  const cardX = W / 2;
+  const cardY = 300;
   return (
     <WideLayer zIndex={44}>
-      {Array.from({ length: letters }, (_, i) => {
-        const u = (frame - from - i * 2.5) / 12;
+      {Array.from({ length: letters + 1 }, (_, n) => {
+        const miss = n === letters;
+        const i = miss ? S21_MISS.i : n;
+        const land = from + i * 2.5 + (miss ? INDIGO_LAG : 0);
+        const launch = land - S21_THROW_LEAD;
+        const u = (frame - launch) / (miss ? S21_THROW_LEAD * 1.9 : S21_THROW_LEAD);
         if (u < 0 || u > 1) return null;
-        const angle = (i / letters) * Math.PI * 2 + 0.4;
-        const d = (1 - kidEase.easeOutCubic(u)) * 900 + 40;
-        const x = 960 + Math.cos(angle) * d;
-        const y = 300 + Math.sin(angle) * d * 0.8;
+        const src = at(launch);
+        const dst = miss
+          ? { x: cardX + S21_MISS.dx, y: cardY + S21_MISS.dy }
+          : { x: cardX, y: cardY };
+        const k = kidEase.easeOutCubic(Math.min(1, u));
+        const head = { x: src.x + (dst.x - src.x) * k, y: src.y + (dst.y - src.y) * k };
+        const back = Math.min(0.34, k);
+        const tail = {
+          x: head.x - (dst.x - src.x) * back,
+          y: head.y - (dst.y - src.y) * back,
+        };
+        const [one, two] = twinLeg(tail, head, 6);
+        const hue = miss ? SPECTRUM[5] : SPECTRUM[4];
         return (
-          <path
-            key={i}
-            d={`M ${x + Math.cos(angle) * 210} ${y + Math.sin(angle) * 168} L ${x} ${y}`}
-            stroke={SPECTRUM[4].fill}
-            strokeWidth={16}
-            strokeLinecap="round"
-            opacity={0.75 * (1 - u)}
-          />
+          <g key={n} opacity={(miss ? 0.6 : 0.8) * (1 - Math.max(0, (u - 0.7) / 0.3))}>
+            <path d={one} stroke={hue.fill} strokeWidth={13} strokeLinecap="round" />
+            <path d={two} stroke={hue.fill} strokeWidth={13} strokeLinecap="round" />
+            <circle cx={head.x} cy={head.y} r={miss ? 15 : 19} fill={hue.fill} />
+          </g>
         );
       })}
     </WideLayer>
@@ -2151,7 +2730,7 @@ const InterlockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 // ---------------------------------------------------------------------------
-// Scene 23 — Sunny is wrong
+// Scene 23 — Sunny has a point
 // ---------------------------------------------------------------------------
 
 const S23_SUNNY: Mark = { x: 1466, y: hover("sunny", 396, 1), scale: 1, who: "sunny", side: "left" };
@@ -2170,67 +2749,109 @@ const S23_BUBBLES: Record<string, string> = {
   a2_45_sunny: "Whose light is that?",
   a2_46_ray: "Um. Yours.",
   a2_47_sunny: "I painted it! Obviously!",
-  a2_50_sunny: "I have NEVER been wrong.",
-  a2_52_ray: "That blue is your light.",
+  // The line is "I DO have a point! I have LOADS of points!" — the pun is the
+  // scene's one joke and the bubble is the half with the pun in it. (The old
+  // bubble here still said "I have NEVER been wrong.", which is the line this
+  // one replaced: the revision turned his moment of doubt into his moment of
+  // triumph and the bubble had not followed.)
+  a2_50_sunny: "I have LOADS of points!",
+  // Likewise: `a2_52_ray` is now "But the AIR did the painting." — the old
+  // bubble was the sentence the Narrator says one line *earlier*.
+  a2_52_ray: "The AIR did the painting.",
   a2_53_sunny: "THE SKY IS MY LIGHT!",
 };
+
+/**
+ * **R9 — Red walks across the finished diagram.** The revision offers this as a
+ * free, droppable visual on `a2_51_narrator`, never inside a held beat; the
+ * showrunner ruled it IN unless the builder's own stills showed it crowding the
+ * frame.
+ *
+ * **It is OUT, and the reason is arithmetic before it is taste.** `a2_51` is 93
+ * frames and the beat after `a2_52_ray` opens 78 frames later, so Red has 171
+ * frames — 5.7 seconds — in which to be on screen. At `RED_SPEED` (108px/s, the
+ * one number the whole character is, and one a scene is explicitly forbidden to
+ * raise to make an entrance land) that is 615px: a quarter of the crossing. He
+ * cannot get in and out. Every staging of it therefore ends the same way — Red
+ * still walking, in shot, through "It lands on him. Nobody helps.", which is a
+ * thirty-frame silence whose entire content is that nobody moves.
+ *
+ * The stills confirmed the second half of it independently: at the only place
+ * he fits — the band under the rebuilt diagram — he arrives on top of Ray, who
+ * is staged at (306, 892) and who is *speaking* through that stretch.
+ *
+ * Kept as a constant with its own argument rather than deleted, because "should
+ * Red walk through here?" is a question this scene will be asked again.
+ */
+const S23_RED_WALK = false;
 
 /**
  * Scene 23 — the longest scene in the episode, five held beats, and the one the
  * whole series has been setting up.
  *
  * Episode two planted "One day Sunny will be wrong about something. It is not
- * today." four minutes before its end so that this scene could collect it. The
- * staging has three jobs and they are all timing:
+ * today." four minutes before its end. **This episode declines to collect it**,
+ * and that decision is the whole of this rewrite: the Narrator's verdict became
+ * a concession ("He has a point."), so every piece of staging that used to
+ * perform *being wrong* has gone with it.
  *
- *   **The diagram is built out of his own beams while he brags** — sun, beam,
- *   sky, blue — so the thing that is about to be corrected is visibly *his*.
- *   **It stops dead on "He is wrong"** and the beams holding it up droop. Not a
- *   fade: a fade is the picture leaving, and this picture has to stay on screen
- *   being wrong.
- *   **His grin comes apart inside the 36-frame beat, and not before.** The
- *   script is exact — "Sunny's grin does not move for the first half of this
- *   beat and comes apart in the second" — so the change is staged in the
- *   silence with `emotionAt`, at the beat's midpoint, which is precisely what
- *   that helper exists for. There is no line to hang it on and a `useEmotion`
- *   lead would put it under the Narrator's three words.
+ *   **The diagram never stops.** The delivered cut halted it on "He is wrong"
+ *   and let the beams holding it up droop. That ceremony is deleted — not
+ *   softened, deleted. It assembles from his first brag straight through to the
+ *   rebuild without a single frame of hesitation, which is what makes the
+ *   correction feel like *more* rather than like a collapse.
  *
- * Then the diagram reassembles with the air drawn *in* it, bigger and more
- * accurate than the one he built, and he poses in front of it for forty-five
- * frames not having noticed.
+ *   **The grin GROWS.** Same 36-frame beat, opposite content: it does not come
+ *   apart, it swells slowly across the whole silence while the diagram keeps
+ *   assembling behind him. `emotionAt` morphs proud → excited over exactly the
+ *   beat's own length, so the change is spread across it rather than landing in
+ *   it; there is no line to hang it on and a `useEmotion` lead would put it
+ *   under the Narrator's three words.
+ *
+ *   **He is not dimmed and never was wrong.** The old staging desaturated him
+ *   while the verdict landed. He now runs at full brightness for the entire
+ *   scene, which is what "undefeated" looks like.
+ *
+ * The camera pushes in for "I checked" so that the 45-frame beat is a man alone
+ * in frame with an enormous smug grin, and pulls back out **on `a2_49`** — on
+ * the line, not in the beat — so that the 36 frames after it have the diagram
+ * visibly still building behind him, which is what the revision asks for and
+ * what the close-up would otherwise have hidden.
  */
 const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const [bragFrom, bragTo] = lineWindow(scene, "a2_47_sunny");
+  const [bragFrom] = lineWindow(scene, "a2_47_sunny");
   const [checkFrom] = lineWindow(scene, "a2_48_narrator");
-  const [grinFrom, grinTo] = heldBeat(scene, "a2_48_narrator");
+  const [grinFrom] = heldBeat(scene, "a2_48_narrator");
   const [wrongFrom, wrongTo] = lineWindow(scene, "a2_49_narrator");
-  const [apartFrom, apartTo] = heldBeat(scene, "a2_49_narrator");
+  const [growFrom, growTo] = heldBeat(scene, "a2_49_narrator");
+  const [pointsFrom, pointsTo] = lineWindow(scene, "a2_50_sunny");
   const [rebuildFrom, rebuildTo] = lineWindow(scene, "a2_51_narrator");
   const [landFrom, landTo] = heldBeat(scene, "a2_52_ray");
-  const [backFrom] = lineWindow(scene, "a2_53_sunny");
 
-  // He builds it as he brags, one element per third of the line. The three
-  // halves of `a2_47_sunny` used to be separated by two MiniMax pause markers;
-  // Sunny is back on kokoro, which has no such thing, so the separation is
-  // bought with `speed: 0.92` instead. Nothing here changes either way — the
-  // build is `bragFrom`..`bragTo`, so it simply spans whatever the clip is.
-  const build = kidEase.easeInOutSine((frame - bragFrom) / Math.max(1, (bragTo - bragFrom) * 0.94));
-  // And it stops, and sags, on "He is wrong".
-  const droop = kidEase.easeOutCubic((frame - wrongFrom - Math.round((wrongTo - wrongFrom) * 0.45)) / 22);
-  // Then it comes back with the air in it, bigger than his.
-  const air = kidEase.easeInOutSine((frame - rebuildFrom - 8) / Math.max(1, (rebuildTo - rebuildFrom) * 0.92));
+  // **One continuous assembly, from his first brag to the rebuild.** It used to
+  // finish inside `a2_47` and then sit there; spread across the whole stretch it
+  // is still visibly adding pieces through the 36-frame beat, which is the one
+  // thing that beat asks for besides the grin.
+  const build = clamp01(
+    kidEase.easeInOutSine((frame - bragFrom) / Math.max(1, rebuildFrom - bragFrom)),
+  );
+  // Then it comes back with the air in it, bigger than his, around him.
+  const air = clamp01(
+    kidEase.easeInOutSine((frame - rebuildFrom - 6) / Math.max(1, (rebuildTo - rebuildFrom) * 0.9)),
+  );
 
   // The camera pushes onto Sunny for "I checked", so "alone in frame" is
-  // literally true for both of the beats in the middle of the scene, and pulls
-  // back for the rebuild.
+  // literally true for the 45-frame beat, and comes back out **on `a2_49`** so
+  // that the beat after it has the diagram in shot. No camera move begins or
+  // ends inside either beat.
   const inOn = interpolate(frame, [checkFrom, grinFrom - 6], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: kidEase.easeInOutSine,
   });
-  const backOut = interpolate(frame, [rebuildFrom - 16, rebuildFrom + 26], [0, 1], {
+  const backOut = interpolate(frame, [wrongFrom, wrongTo - 6], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: kidEase.easeInOutSine,
@@ -2240,7 +2861,8 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // was still sitting in the corner of the frame, and the beat is "Sunny
   // holding an enormous smug grin, *alone in frame*". At 2.5×, with the frame
   // slid left so he is centred rather than parked on the right, the visible
-  // world starts at x≈1080 — which is why the diagram is built to end at 1060.
+  // world starts at x≈1080 — which is why his half of the diagram is built to
+  // end at 1060.
   const cam: Cam = {
     x: S23_SUNNY.x,
     y: 400,
@@ -2248,11 +2870,18 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     dx: -close * 500,
   };
 
-  // **His brightness is the other half of the performance.** He arrives at
-  // maximum, dims while he is being wrong, and is restored for the button —
-  // done as a filter on the wrapper because his own component has no such prop
-  // and inventing one for a joke would put it in every episode.
-  const dim = Math.max(0, Math.min(1, droop)) * (1 - Math.max(0, Math.min(1, kidEase.easeInOutSine((frame - backFrom) / 20))));
+  // **The grin, growing across the whole beat.** Nothing else in the scene is
+  // allowed into those 36 frames, so it is one morph the length of the silence
+  // plus a slow swell in the body underneath it — a face that reaches its new
+  // pose in eight frames and then holds for twenty-eight has landed a cut in the
+  // middle of a beat, which is the thing the revision reversed.
+  const grow = clamp01((frame - growFrom) / Math.max(1, growTo - growFrom));
+  // And the ray-fan, on the word. `a2_50_sunny` is "I DO have a point! I have
+  // LOADS of points!", 2.93s; `silencedetect` puts its three spoken runs at
+  // 0.27–0.99, 1.09–1.74 and 1.81–2.28s, so the last one — "of points!" — starts
+  // at 0.62 of the clip. He fans on it and stays fanned: the pun is that he is
+  // covered in points, and a fan that retracts is a man taking it back.
+  const fan = clamp01((frame - (pointsFrom + (pointsTo - pointsFrom) * 0.62)) / 15);
 
   // Every face change in this scene happens in a silence, so all of them are
   // `emotionAt` and none of them are mapped to a line.
@@ -2262,10 +2891,8 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       { at: bragFrom, emotion: "excited" },
       // Held, absolutely still, through "I checked. Then I checked again."
       { at: checkFrom, emotion: "proud" },
-      // The grin comes apart in the *second half* of the 36f beat.
-      { at: apartFrom + Math.round((apartTo - apartFrom) * 0.5), emotion: "amazed", frames: 12 },
-      { at: rebuildFrom, emotion: "sad" },
-      { at: backFrom, emotion: "excited" },
+      // The grin grows across the *whole* 36f beat, at the beat's own length.
+      { at: growFrom, emotion: "excited", frames: Math.max(8, growTo - growFrom) },
     ],
     "proud",
     9,
@@ -2289,51 +2916,59 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   };
   // He is out of frame for the two beats in the middle; he does not creep back
   // in behind them either, so his bubble mark travels with him.
-  const rayVisible = 1 - Math.max(0, Math.min(1, (close - 0.25) / 0.35));
+  const rayVisible = 1 - clamp01((close - 0.25) / 0.35);
+  const sunnyScale = 1 + grow * 0.05;
+  const sunnyMark: Mark = { ...S23_SUNNY, y: hover("sunny", 396, sunnyScale), scale: sunnyScale };
 
   return (
     <AbsoluteFill>
       <PaintedSky bg="sky_dome_day" phase={20} drift={9} />
       <Camera cam={cam}>
-        <WrongDiagram
-          build={Math.max(0, Math.min(1, build))}
-          droop={Math.max(0, Math.min(1, droop))}
-          air={Math.max(0, Math.min(1, air))}
-          from={{ x: S23_SUNNY.x - 150, y: 420 }}
-        />
+        <WrongDiagram build={build} air={air} from={{ x: S23_SUNNY.x - 150, y: 420 }} />
 
         {/* Still holding it, seven scenes later, and still dry. `wet` is 1
-            exactly once in the episode and that was the cold open. */}
-        <PaintRoller x={1310} y={700} scale={0.82} rot={-96} wet={0} zIndex={20} />
+            exactly once in the episode and that was the cold open.
+            Anchored to Sunny's own mark — tucked against his lower-left spike
+            tips (radius ~250 of a ~246px spike reach) and riding his hover bob
+            — because a roller at fixed world coordinates floated beside him,
+            visibly detached, once the ray fan enlarged his silhouette
+            (showrunner still review, batch (b)). z 23 keeps it in FRONT of the
+            fan (z 22): held prop, not a thing lost among the points. */}
+        <PaintRoller
+          x={S23_SUNNY.x - 88}
+          y={sunnyMark.y + 235}
+          scale={0.82}
+          rot={-96}
+          wet={0}
+          zIndex={23}
+        />
 
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            filter: `brightness(${1 - dim * 0.12}) saturate(${1 - dim * 0.24})`,
-          }}
-        >
-          <Sunny
-            x={S23_SUNNY.x}
-            y={S23_SUNNY.y}
-            scale={1}
-            phase={PHASE.sunny}
-            emotion={sunnyEmotion}
-            speaking={stage.speaking("sunny")}
-            look={
-              frame >= apartFrom && frame < landTo
-                ? { x: -0.2, y: 0.15 }
-                : { x: -0.7, y: 0.25 }
-            }
-            // He is *held* in the smug beat and stopped dead in the one after
-            // it. Both are stillness, and they are the two halves of the joke.
-            idle={frame >= grinFrom && frame < apartTo ? 0.35 : 1}
-            eyeLife={frame >= grinFrom && frame < apartTo ? 0.3 : 1}
-            raySpeed={0.16 - dim * 0.13}
-            enter={{ at: 0, kind: "slideRight" }}
-            zIndex={24}
-          />
-        </div>
+        {/* **The pun, drawn.** Extra rays, behind the disc, fanning out on the
+            word "points" — twenty-four of them on top of the twelve his own
+            component spins, so a six-year-old who has just heard "LOADS of
+            points" is looking at loads of points. Behind him rather than over
+            him: the fan is his silhouette getting bigger, not a graphic. */}
+        <RayFan x={S23_SUNNY.x} y={sunnyMark.y} scale={sunnyScale} fan={fan} />
+
+        <Sunny
+          x={S23_SUNNY.x}
+          y={sunnyMark.y}
+          scale={sunnyScale}
+          phase={PHASE.sunny}
+          emotion={sunnyEmotion}
+          speaking={stage.speaking("sunny")}
+          look={frame >= growFrom && frame < landTo ? { x: -0.2, y: 0.15 } : { x: -0.7, y: 0.25 }}
+          // He is *held* in the smug beat and he swells in the one after it.
+          // Both are stillness of a kind, and they are the two halves of the
+          // joke: certainty, then vindication.
+          idle={frame >= grinFrom && frame < growTo ? 0.35 : 1}
+          eyeLife={frame >= grinFrom && frame < growTo ? 0.3 : 1}
+          raySpeed={0.16}
+          enter={{ at: 0, kind: "slideRight" }}
+          zIndex={24}
+        />
+
+        {S23_RED_WALK ? <RedAcross from={rebuildFrom} frame={frame} fps={fps} /> : null}
 
         <div style={{ position: "absolute", inset: 0, opacity: rayVisible }}>
           <Ray
@@ -2359,7 +2994,7 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         cast={
           {
-            sunny: projectMark(cam, S23_SUNNY),
+            sunny: projectMark(cam, sunnyMark),
             ray: projectMark(cam, rayMark),
           } as Cast
         }
@@ -2381,14 +3016,85 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /**
- * The diagram Sunny builds out of his own beams, and the one that replaces it.
+ * The extra points. Twenty-four spikes behind Sunny's disc, growing out of it on
+ * the word and staying out.
+ *
+ * Drawn here rather than added to the `Sunny` component on purpose: fanning is
+ * not something the character does, it is something he does *once*, in one
+ * scene, for one pun, and a `fan` prop on the kit's sun would be a joke living
+ * in every episode forever.
+ */
+const RAY_FAN_N = 24;
+
+const RayFan: React.FC<{ x: number; y: number; scale: number; fan: number }> = ({
+  x,
+  y,
+  scale,
+  fan,
+}) => {
+  if (fan <= 0.01) return null;
+  const eased = kidEase.easeOutBack(fan, 1.6);
+  return (
+    <WideLayer zIndex={22}>
+      <g transform={`translate(${x} ${y}) scale(${scale})`} opacity={Math.min(1, fan * 2)}>
+        {Array.from({ length: RAY_FAN_N }, (_, i) => {
+          const long = i % 3 === 0;
+          const len = (long ? 236 : 188) * eased;
+          const half = long ? 20 : 15;
+          return (
+            <path
+              key={i}
+              transform={`rotate(${(360 / RAY_FAN_N) * i + 7.5})`}
+              d={`M ${-half} -108 L 0 ${-108 - len} L ${half} -108 Z`}
+              fill={kidTheme.sunDark}
+              stroke={kidTheme.sunDeep}
+              strokeWidth={7}
+              strokeLinejoin="round"
+            />
+          );
+        })}
+      </g>
+    </WideLayer>
+  );
+};
+
+/**
+ * Red, walking across the finished diagram at his one speed. Kept behind
+ * `S23_RED_WALK`, which is off — see the argument on that constant.
+ */
+const RedAcross: React.FC<{ from: number; frame: number; fps: number }> = ({
+  from,
+  frame,
+  fps,
+}) => {
+  const p = redWalk(Math.max(0, frame - from) / fps, { x: -220, y: 706 });
+  return (
+    <Shard
+      who="red"
+      x={p.x}
+      y={hover("shard", p.y, 0.5)}
+      scale={0.5}
+      heading={p.angle}
+      emotion="happy"
+      look={{ x: 0.7, y: 0 }}
+      idle={0.42}
+      eyeLife={0.5}
+      zIndex={14}
+    />
+  );
+};
+
+/**
+ * The diagram Sunny builds out of his own beams, and the one that grows out of
+ * it.
  *
  * `build` assembles his version — sun, beam, sky, and a roller on top of it,
- * because his claim is paint. `droop` stops it and lets the beams holding it up
- * sag. `air` rebuilds it with the air drawn *in*: the same sun and the same
- * beam, arriving at a band of air, and blue leaving that band in every
- * direction. Bigger than his, and it is the only thing in the frame that has
- * got bigger by being corrected.
+ * because his claim is paint — and **never unbuilds it**: there is no `droop`
+ * parameter any more and there is not supposed to be. `air` then rebuilds it
+ * around him with the air drawn *in*: the same sun and the same beam, arriving
+ * at a band of air, and blue leaving that band in every direction. Bigger than
+ * his, shifted toward him so that he ends up standing inside it, and the only
+ * thing in the frame that has got bigger by being corrected.
  */
 /** The three puffs the corrected diagram's beam actually arrives at. */
 const AIR_BAND = [
@@ -2399,26 +3105,29 @@ const AIR_BAND = [
 
 const WrongDiagram: React.FC<{
   build: number;
-  droop: number;
   air: number;
   from: { x: number; y: number };
-}> = ({ build, droop, air, from }) => {
+}> = ({ build, air, from }) => {
   const step = (a: number, b: number): number => kidEase.easeInOutSine((build - a) / (b - a));
-  const sun = step(-0.2, 0.3);
-  const beam = step(0.28, 0.62);
-  const sky = step(0.6, 0.95);
-  const sag = 90 * droop;
-  const grow = 1 + air * 0.14;
-  // **Everything lives left of x = 1060**, which is what lets the close-up on
-  // Sunny be a close-up on Sunny (see `cam` in the scene).
+  const sun = step(-0.2, 0.22);
+  const beam = step(0.2, 0.48);
+  const sky = step(0.46, 0.78);
+  const clouds = step(0.76, 1);
+  // **It rebuilds AROUND him**: bigger, and slid toward the man it is about, so
+  // that on the button he is posing *inside* the corrected picture rather than
+  // next to it. His own half is built to end at x = 1060 so the close-up can be
+  // a close-up; grown and shifted, the corrected one reaches past 1400 and he is
+  // standing in it.
+  const grow = 1 + air * 0.28;
+  const shift = air * 240;
   const cx = 640;
   const cy = 540;
 
   return (
     <WideLayer zIndex={12}>
-      <g transform={`translate(${cx} ${cy + sag * 0.3}) scale(${grow}) translate(${-cx} ${-cy})`}>
-        {/* The construction beams: his light, holding his diagram up, and then
-            not. */}
+      <g transform={`translate(${cx + shift} ${cy}) scale(${grow}) translate(${-cx} ${-cy})`}>
+        {/* The construction beams: his light, holding his diagram up, and they
+            never let go of it. */}
         {[0, 1, 2].map((i) => {
           const target = [
             { x: 240, y: 470 },
@@ -2430,18 +3139,18 @@ const WrongDiagram: React.FC<{
           return (
             <path
               key={i}
-              d={`M ${from.x} ${from.y} Q ${(from.x + target.x) / 2} ${(from.y + target.y) / 2 + sag * (1 + i * 0.5)} ${target.x} ${target.y + sag * (0.6 + i * 0.3)}`}
+              d={`M ${from.x - shift} ${from.y} Q ${(from.x - shift + target.x) / 2} ${(from.y + target.y) / 2} ${target.x} ${target.y}`}
               stroke={kidTheme.sunLight}
               strokeWidth={13}
               strokeLinecap="round"
               fill="none"
-              opacity={0.42 * on * (1 - droop * 0.55)}
+              opacity={0.42 * on}
             />
           );
         })}
 
         {/* His sun. */}
-        <g opacity={sun} transform={`translate(240 ${470 + sag * 0.6})`}>
+        <g opacity={sun} transform="translate(240 470)">
           <circle r={86 * sun} fill={kidTheme.sun} stroke={kidTheme.sunDeep} strokeWidth={10} />
           {Array.from({ length: 10 }, (_, i) => (
             <path
@@ -2458,7 +3167,7 @@ const WrongDiagram: React.FC<{
             correction, drawn: sun to *air*, not sun to sky. */}
         <g opacity={beam}>
           <path
-            d={`M 344 ${482 + sag * 0.6} L ${344 + (560 - air * 260) * beam} ${492 + sag * 0.8}`}
+            d={`M 344 482 L ${344 + (560 - air * 260) * beam} 492`}
             stroke={kidTheme.sunLight}
             strokeWidth={26}
             strokeLinecap="round"
@@ -2498,14 +3207,14 @@ const WrongDiagram: React.FC<{
                     <path
                       d={`M ${p.x} ${p.y} L ${p.x + Math.cos(a) * d} ${p.y + Math.sin(a) * d}`}
                       stroke={SPECTRUM[4].fill}
-                      strokeWidth={10}
+                      strokeWidth={13}
                       strokeLinecap="round"
-                      opacity={0.8}
+                      opacity={0.9}
                     />
                     <circle
                       cx={p.x + Math.cos(a) * d}
                       cy={p.y + Math.sin(a) * d}
-                      r={12}
+                      r={15}
                       fill={SPECTRUM[4].fill}
                     />
                   </g>
@@ -2518,7 +3227,7 @@ const WrongDiagram: React.FC<{
         {/* The sky his version says goes blue, with his roller on it. On the
             rebuild the roller goes and the sky is filled by the blue arriving
             from the air instead. */}
-        <g opacity={sky} transform={`translate(0 ${sag * 0.9})`}>
+        <g opacity={sky}>
           <rect
             x={780}
             y={392}
@@ -2531,11 +3240,13 @@ const WrongDiagram: React.FC<{
             opacity={0.95}
           />
           {/* Two clouds in it, so a blue rounded rectangle reads as a sky
-              rather than as a screen. */}
-          {sky > 0.5 ? (
-            <g opacity={0.8}>
-              <ellipse cx={866} cy={462} rx={52} ry={23} fill={kidTheme.cloud} />
-              <ellipse cx={976} cy={522} rx={42} ry={19} fill={kidTheme.cloud} />
+              rather than as a screen — and they are the last thing to arrive,
+              which is what keeps the diagram visibly assembling through the
+              thirty-six frames after "He has a point." */}
+          {clouds > 0.02 ? (
+            <g opacity={0.8 * clouds}>
+              <ellipse cx={866} cy={462} rx={52 * clouds} ry={23 * clouds} fill={kidTheme.cloud} />
+              <ellipse cx={976} cy={522} rx={42 * clouds} ry={19 * clouds} fill={kidTheme.cloud} />
             </g>
           ) : null}
         </g>

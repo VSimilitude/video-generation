@@ -15,6 +15,7 @@ import {
   Camera,
   CutFlash,
   Drip,
+  INDIGO_LAG,
   KidContactShadow,
   PHASE,
   PaintedSky,
@@ -22,12 +23,19 @@ import {
   RAY_SPECTRUM,
   Ray,
   RayShard,
+  SEVEN,
+  SHARD_BODY,
   SHARD_PHASE,
   SPECTRUM,
+  Shard,
   SoftShade,
   Sunny,
   WideLayer,
+  YELLOW_WAVE,
   arcPoint,
+  blueRicochet,
+  faceOf,
+  greenSit,
   heldBeat,
   hover,
   interpolate,
@@ -40,6 +48,7 @@ import {
   useEmotion,
   useStage,
   useVideoConfig,
+  type Box,
   type Cam,
   type Cast,
   type Mark,
@@ -245,6 +254,40 @@ const BeamCrowd: React.FC = () => {
 // ---------------------------------------------------------------------------
 
 const S4_RAY = { x: 880, y: 512, scale: 0.85 };
+/** His `y` prop, once, so the mark and the props cannot drift apart. */
+const S4_RAY_Y = hover("ray", S4_RAY.y, S4_RAY.scale);
+/**
+ * **Where Ray actually is, vertically — and it is not the middle of his box.**
+ *
+ * F2 is a floating face over a wave ribbon with a deliberate gap between them,
+ * and the centre of his box lands *in that gap*: 512 is the hole in the middle
+ * of him. Two things in this scene were aimed at it and both were re-aimed here
+ * (wave-2 staging items 2 and 3):
+ *
+ *   - the **whip streak**, a 52px band that ran clean through the gap and
+ *     therefore appeared to be attached to neither half of him;
+ *   - **Sunny's pinch**, whose two fingers closed on the same empty space, so
+ *     the biggest character on screen was holding nothing.
+ *
+ * `faceOf` (the kit's per-body `faceOffset`, K4) is the fix and it is the only
+ * honest one: it is the same number every other character's `look` now aims at,
+ * so the fingers, the streak and Sunny's eyes agree about where Ray is. The
+ * wave ribbon hangs below the grip, free, which is what a beam of light held by
+ * the bright end should look like.
+ */
+const S4_FACE_Y = faceOf("ray", S4_RAY_Y, S4_RAY.scale);
+/**
+ * The **other** half of him: the wave ribbon's centreline, as a composition y.
+ *
+ * The kit declares the face (`FACE_OFFSET` in `scenes/common.tsx`, −68 local)
+ * because that is what eyes aim at; nothing aims at the ribbon, so nothing
+ * declares it. +72 is the same arithmetic run on `F_WAVE_Y` (66) through F2's
+ * fit transform (`translate(0 20) scale(0.78)` and the brightness-driven
+ * `0.9 + 0.18b`, which at `RAY_LIGHT.actOne` is 1.008). It is used for exactly
+ * one thing — the second, fainter streak band — and if it ever needs a second
+ * use it should be promoted next to `faceOffset` rather than copied.
+ */
+const S4_WAVE_Y = S4_RAY.y + 72 * S4_RAY.scale;
 
 const S4_BUBBLES: Record<string, string> = {
   a1_09_sunny: "You are going to EARTH!",
@@ -295,7 +338,7 @@ const FlickScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const rayMark: Mark = {
     x: rayX,
-    y: hover("ray", S4_RAY.y, S4_RAY.scale),
+    y: S4_RAY_Y,
     scale: S4_RAY.scale,
     who: "ray",
   };
@@ -328,7 +371,10 @@ const FlickScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             rather than stopping in mid-air on top of his face. */}
         <SunnyPinch
           x={S4_RAY.x}
-          y={S4_RAY.y}
+          // The face, not the box centre — see `S4_FACE_Y`. The fingers now
+          // close on the bright disc that is the character; before this they
+          // met in the gap between his face and his wave.
+          y={S4_FACE_Y}
           open={gone}
           // They let go, then they go home. Without this the hand is still
           // hanging open in an empty frame twenty frames after Ray left, which
@@ -339,7 +385,7 @@ const FlickScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Ray
         x={rayX}
-        y={hover("ray", S4_RAY.y, S4_RAY.scale)}
+        y={S4_RAY_Y}
         scale={S4_RAY.scale * (1 - whipU * 0.55)}
         brightness={RAY_LIGHT.actOne}
         spectrum={RAY_SPECTRUM.none}
@@ -353,17 +399,31 @@ const FlickScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         streak={gone > 0.05 ? 1 : 0.25}
         zIndex={20}
       />
-      {/* The streak he leaves. Four frames long, and gone. */}
+      {/* The streak he leaves. Four frames long, and gone.
+          **Two bands, aimed at the two halves of him** (staging item 2). One
+          band on the box centre crossed the face/wave gap and read as a bar
+          near Ray rather than as light coming off him. The bright one now runs
+          on `S4_FACE_Y`; the fainter, thinner one runs on the wave ribbon, so
+          what the frame says is "both of those things went that way". */}
       {gone > 0.02 && gone < 1 ? (
         <WideLayer zIndex={19}>
           <rect
             x={S4_RAY.x - 200}
-            y={S4_RAY.y - 26}
+            y={S4_FACE_Y - 26}
             width={Math.max(0, rayX - S4_RAY.x + 200)}
             height={52}
             rx={26}
             fill={kidTheme.sunLight}
             opacity={0.7 * (1 - gone)}
+          />
+          <rect
+            x={S4_RAY.x - 160}
+            y={S4_WAVE_Y - 16}
+            width={Math.max(0, rayX - S4_RAY.x + 160)}
+            height={32}
+            rx={16}
+            fill={kidTheme.sunLight}
+            opacity={0.4 * (1 - gone)}
           />
         </WideLayer>
       ) : null}
@@ -379,8 +439,9 @@ const FlickScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           a1_12_ray: { x: 620, y: 250, tail: "right", tailAt: 810 },
         }}
       />
-      {/* A hair of extra frames of settle on the pinch when it opens. */}
-      <FlickRing at={flickAt} x={S4_RAY.x} y={S4_RAY.y} fps={fps} />
+      {/* A hair of extra frames of settle on the pinch when it opens. Centred
+          where the fingers actually were, which is now the face. */}
+      <FlickRing at={flickAt} x={S4_RAY.x} y={S4_FACE_Y} fps={fps} />
     </AbsoluteFill>
   );
 };
@@ -519,25 +580,69 @@ const FarEarth: React.FC<{ x: number; y: number; r: number; halo?: boolean }> = 
 // Scene 5 — Are we there yet
 // ---------------------------------------------------------------------------
 
+/**
+ * **Five firings, one bubble, written out five times.**
+ *
+ * `a1_13_ray` is the only synthesis in the scene; the other four are `sameAs`
+ * aliases of that exact recording, so the audio is five identical clips, the
+ * mouth is five identical shapes — and the bubble has to be the fifth identical
+ * thing or the picture is less flat than the sound. Same text, same override
+ * below (same `x`, same `y`, same tail, same `tailAt`), so the five are the
+ * same drawing at the same place on the screen five times.
+ *
+ * Do not "vary" one of them. The sameness *is* the joke, and the only thing in
+ * the scene that is not a repetition is the fifth one going unanswered.
+ */
+const S5_BUBBLE = "Are we there yet?";
 const S5_BUBBLES: Record<string, string> = {
-  a1_13_ray: "Are we there yet?",
-  // Identical text and, in the audio, the identical recording (`sameAs`). The
-  // bubble is identical too: the sameness *is* the joke.
-  a1_15_ray: "Are we there yet?",
+  a1_13_ray: S5_BUBBLE,
+  a1_15_ray: S5_BUBBLE,
+  a1_15c_ray: S5_BUBBLE,
+  a1_15e_ray: S5_BUBBLE,
+  a1_16b_ray: S5_BUBBLE,
 };
 
 /**
- * Scene 5 — and the whole scene is one staging decision.
+ * One override, reused five times, so the five bubbles cannot drift apart.
+ *
+ * `tailAt` sits **just to the right of the furthest right Ray ever gets** (he
+ * ends the scene at x≈753). A tail is read as a direction rather than as a
+ * point, and a fixed tail left of him on the fifth firing pointed *past* him —
+ * the one firing the whole gag is built to land. Right of him on all five, it
+ * leans back down at him every time, and the bubble is still the same drawing
+ * in the same place.
+ */
+const S5_BUBBLE_AT = { x: 980, y: 268, tail: "left" as const, tailAt: 782 };
+
+/**
+ * Scene 5 — twenty-five and a half seconds, and the whole scene is one staging
+ * decision.
  *
  * The shot never cuts, and **nothing in it changes**: Ray travels left to right
  * and gets nowhere, so the star field slides past him at a constant rate and
- * the blue dot on the right stays exactly the size it was. Six minutes of story
- * time pass inside the sixty-frame silence in the middle and the audience is
- * allowed to get bored on purpose.
+ * the blue dot on the right stays exactly the size it was. Five identical
+ * firings of "Are we there yet?", four flat almanac answers, and silences that
+ * grow 30 / 45 / 60 / 75 — the escalation is in the *gaps*, which live in
+ * `Video.tsx`, and this file's entire job is to make sure the picture adds
+ * nothing to them.
  *
  * The one thing that does move is Ray's own x, by two hundred pixels across the
  * entire scene. It is far too slow to see and it is the reason the shot does
  * not read as a loop: he *is* travelling, he is just not arriving.
+ *
+ * **Nothing may telegraph the cut.** The fifth firing is not answered: the
+ * scene has a 6-frame tail and Scene 6 hard-cuts to a garden at full brightness
+ * on the frame after it, and that cut is the joke's button. So there is no
+ * brightening, no lean into it, no emotion change, no acceleration and no
+ * change in the star drift anywhere in the last silence — the last seventy-five
+ * frames are drawn by exactly the same expressions as the first thirty. The
+ * things that do move (the constant star drift, the slow ±2.5° roll, his
+ * two-hundred-pixel crawl) have all been doing it since frame one at a constant
+ * rate, which is why none of them is a signal.
+ *
+ * The list of props deliberately *not* driven by anything in this scene:
+ * `brightness`, `emotion`, `look`, `streak`, `scale`. A single mapped emotion or
+ * a bright-up in the last beat would spend the button before the cut lands.
  */
 const JourneyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -562,10 +667,14 @@ const JourneyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         brightness={RAY_LIGHT.actOne}
         spectrum={RAY_SPECTRUM.none}
         phase={PHASE.ray}
-        // No mapped emotions at all. Nothing enters the beat, including a face.
+        // No mapped emotions at all, in any of the five firings. Nothing enters
+        // the beats, including a face.
         emotion="happy"
         speaking={stage.speaking("ray")}
         look={{ x: 0.55, y: -0.05 }}
+        // A nine-second roll he has been doing since the first frame. Periodic
+        // and unchanging, so it is texture rather than a change — and without
+        // it a beam of light crossing space reads as a parked sprite.
         bank={Math.sin(t * 0.7) * 2.5}
         streak={1}
         zIndex={20}
@@ -574,9 +683,15 @@ const JourneyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         cast={{ ray: { x, y: hover("ray", y, 0.62), scale: 0.62, who: "ray", side: "right" } } as Cast}
         text={S5_BUBBLES}
+        // The same five numbers five times — see `S5_BUBBLE_AT`. A `tailAt`
+        // that followed his crawl would make five *slightly* different pictures,
+        // which is the one thing this scene cannot afford.
         at={{
-          a1_13_ray: { x: 980, y: 268, tail: "left", tailAt: 700 },
-          a1_15_ray: { x: 980, y: 268, tail: "left", tailAt: 700 },
+          a1_13_ray: S5_BUBBLE_AT,
+          a1_15_ray: S5_BUBBLE_AT,
+          a1_15c_ray: S5_BUBBLE_AT,
+          a1_15e_ray: S5_BUBBLE_AT,
+          a1_16b_ray: S5_BUBBLE_AT,
         }}
       />
     </AbsoluteFill>
@@ -1173,6 +1288,195 @@ const SunlitRain: React.FC<{ t: number; skip: number }> = ({ t, skip }) => (
 );
 
 // ---------------------------------------------------------------------------
+// The ensemble, as Act One stages it (Scenes 9, 10 and 11)
+// ---------------------------------------------------------------------------
+//
+// **Who each of the seven is lives in `SEVEN` (scenes/common.tsx, API 6) and
+// nowhere else.** What lives here is the one thing the table deliberately does
+// not carry: *when* a colour is allowed to be himself.
+//
+// Act One is the only place in the episode where that question has an answer
+// other than "always". Scene 9's sixty-frame reveal beat is a **count** — seven
+// blobs, seven faces, all of them his — and the revision is explicit that no
+// personality may enter it: for those sixty frames they are seven identical
+// shapes in an arc, and the ensemble is born on `a1_37_ray`, one colour every
+// eight frames, in spectrum order. So every shard on the arc goes through
+// `ArcShard`, which takes an `alive` and hands the kit a body that is either one
+// of seven identical shapes (0) or itself (1).
+//
+// Red's `alive` is 1 from the first frame he exists, and that is not an
+// exception — it is the joke stated in code. He does not come alive because he
+// never stopped: the state the other six wake *out of* is Red's, so waking him
+// is a no-op and the audience sees six things change around one that does not.
+
+/**
+ * The idle the seven share before any of them is anybody — Red's, because Red
+ * is what "not yet a personality" looks like in this cast. A dead idle would
+ * read as a frozen sprite (a mistake this kit has made before); 0.5 reads as
+ * seven calm identical shapes, which is exactly what the count needs.
+ */
+const ASLEEP_IDLE = SEVEN[0].idleScale;
+
+/**
+ * Yellow's resting wave, and the reason it is not 1.
+ *
+ * He waves continuously from the moment he wakes and never stops, so the *only*
+ * headroom the roll call has for "he waves harder" is amplitude. 0.82 is his
+ * normal; 1.0 is him being greeted. `wave` also runs down to a whisker above
+ * zero in a held beat, where the arms stay up and stop moving — which is the
+ * deflation-by-stillness the series runs on, and is why it is 0.1 and not 0:
+ * `ShardArms` drops the arms entirely below 0.01.
+ */
+const YELLOW_REST = YELLOW_WAVE * 0.82;
+/** Arms up, flap off. What "nobody keeps waving" looks like on the one who does. */
+const YELLOW_FROZEN = 0.1;
+
+/**
+ * **One of the seven, on the arc, with a birthday.**
+ *
+ * A thin wrapper over the kit's `<Shard>` — the identity (phase, lean, blur,
+ * Yellow's arm, Violet's vibration, Green's sit) is all the kit's, and all this
+ * adds is the `alive` fade between "one of seven identical shapes" and "himself":
+ *
+ *   - the **idle** runs from `ASLEEP_IDLE` to the colour's own,
+ *   - the **lean** is scaled by it, so nothing banks before it is anybody,
+ *   - **Yellow's arms** come out on it and **Violet's vibration** ramps up on it.
+ *
+ * Pass `alive={1}` in any scene that opens with them already awake (Scenes 10
+ * and 11 do), and the wrapper costs nothing.
+ */
+const ArcShard: React.FC<{
+  i: number;
+  x: number;
+  y: number;
+  scale?: number;
+  /** 0 = one of seven identical shapes; 1 = himself. */
+  alive?: number;
+  /** Green only: 0..1 from `greenSit`. */
+  sit?: number;
+  /** Yellow only: overrides `YELLOW_REST`. */
+  wave?: number;
+  /** Violet only: overrides his full vibration. */
+  vibrate?: number;
+  /**
+   * A scene-wide damping on the identity idle, 0..1. For a shot where all seven
+   * are 40px tall and the letters behind them are the thing to read — it scales
+   * every colour's idle by the same amount, so the *differences* between them
+   * survive. Not a way to give one colour somebody else's idle.
+   */
+  calm?: number;
+  /** A heading from a travel helper — `Shard` turns it into a lean. */
+  heading?: number;
+  arms?: boolean;
+  trail?: { x: number; y: number }[];
+  opacity?: number;
+  emotion?: Parameters<typeof RayShard>[0]["emotion"];
+  speaking?: boolean;
+  look?: Parameters<typeof RayShard>[0]["look"];
+  eyeLife?: number;
+  zIndex?: number;
+}> = ({
+  i,
+  x,
+  y,
+  scale = 1,
+  alive = 1,
+  sit = 0,
+  wave,
+  vibrate,
+  calm = 1,
+  heading = 0,
+  arms,
+  trail,
+  opacity = 1,
+  emotion,
+  speaking,
+  look,
+  eyeLife,
+  zIndex,
+}) => {
+  const id = SEVEN[i];
+  const a = Math.max(0, Math.min(1, alive));
+  return (
+    <Shard
+      who={id.who}
+      x={x}
+      y={y}
+      scale={scale}
+      heading={heading * a}
+      sit={sit}
+      wave={a * (wave ?? YELLOW_REST)}
+      vibrate={a * (vibrate ?? 1)}
+      // Yellow's arm is his signature and it arrives *with* him. Everyone else
+      // takes whatever the scene asked for (Violet holding on to a letter).
+      arms={id.who === "yellow" ? a > 0.2 : arms}
+      trail={trail}
+      // `Shard`'s own idle default would give each colour its identity from the
+      // first frame, which is the thing the reveal beat may not have. Green's
+      // sit still damps it, because a sat body with a standing body's breathing
+      // is two statements about the same character.
+      idle={
+        (ASLEEP_IDLE + (id.idleScale - ASLEEP_IDLE) * a) *
+        calm *
+        (id.who === "green" ? 1 - 0.85 * sit : 1)
+      }
+      opacity={opacity}
+      emotion={emotion}
+      speaking={speaking}
+      look={look}
+      eyeLife={eyeLife}
+      zIndex={zIndex}
+    />
+  );
+};
+
+/**
+ * **The stagger the ensemble is born on**, as fractions of `a1_37_ray`.
+ *
+ * `beats()`' own arithmetic (fractions of the clip, so the stagger rides the
+ * voice rather than the frame rate) run against the line window, because
+ * `beats` is not one of the things `scenes/common.tsx` re-exports and an act
+ * file's imports are `./common` plus the character kit. Against the 77-frame
+ * clip these land on 0, 8, 16, 24, 32, 40, 48 — one colour every eight frames,
+ * spectrum order, left to right, finishing well before the line does.
+ *
+ * Seven simultaneous personalities is noise; seven sequential ones is a cast
+ * list. Never collapse this.
+ */
+const BIRTH_AT = [0, 0.104, 0.208, 0.312, 0.416, 0.52, 0.624] as const;
+/** How long one colour takes to become himself. Six frames — a wake, not a cut. */
+const BIRTH_FRAMES = 6;
+
+/**
+ * Blue's box when he is only *drifting out of formation* rather than crossing a
+ * room: small, centred on wherever the scene put him, so `blueRicochet`'s legs
+ * come out at 47–88px and there is a hard corner in every eighteen frames. The
+ * kit clamps leg length to the box, which is the whole reason a small box gives
+ * a small ricochet instead of a twitch.
+ */
+const DRIFT_BOX: Box = { x: -78, y: -56, w: 156, h: 112 };
+
+/**
+ * 1 inside one of `windows`, 0 outside, with a short ease at each edge.
+ *
+ * This is what makes Blue's drift happen a countable number of times rather
+ * than continuously: the ricochet underneath is running always (it is a pure
+ * function of the frame), and the envelope decides when any of it reaches the
+ * screen. `blueRicochet`'s own start is the box centre, so an envelope of 0 puts
+ * him exactly back in formation with nothing to blend.
+ */
+function driftEnvelope(f: number, windows: ReadonlyArray<readonly [number, number]>): number {
+  for (const [a, b] of windows) {
+    if (f >= a && f < b) {
+      const inU = Math.min(1, (f - a) / 5);
+      const outU = Math.min(1, (b - f) / 6);
+      return kidEase.easeInOutSine(Math.min(inU, outU));
+    }
+  }
+  return 0;
+}
+
+// ---------------------------------------------------------------------------
 // Scene 9 — Seven pieces. THE SPLIT.
 // ---------------------------------------------------------------------------
 
@@ -1213,12 +1517,23 @@ const SplitScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const [walkFrom, walkTo] = lineWindow(scene, "a1_35_narrator");
   const [sevenFrom, sevenTo] = lineWindow(scene, "a1_36_narrator");
-  const [beatFrom, beatTo] = heldBeat(scene, "a1_36_narrator");
+  const [beatFrom] = heldBeat(scene, "a1_36_narrator");
+  // The ensemble's birthday, one colour at a time, riding Ray's own line.
+  const [aliveFrom, aliveTo] = lineWindow(scene, "a1_37_ray");
+  const bornAt = (i: number): number =>
+    aliveFrom + Math.round(BIRTH_AT[i] * (aliveTo - aliveFrom));
 
   // Into the drop, bending, and out the far side.
   const enterAt = walkFrom + Math.round((walkTo - walkFrom) * 0.26);
   const emergeAt = sevenFrom + Math.round((sevenTo - sevenFrom) * 0.34);
-  const arcAt = beatFrom + Math.round((beatTo - beatFrom) * 0.5);
+  // **The fan finishes eight frames into the silence, not halfway through it.**
+  // It used to land on `beatFrom + 30`, which meant the first second of a beat
+  // bought for *counting* still had the picture moving in it. The script asks
+  // for the arc to be "still very slightly settling as the silence opens and
+  // then completely still inside it", and eight frames of an `easeOutCubic`
+  // tail is exactly that. The beat's own length is untouched — it is a
+  // `gapFrames` in Video.tsx and none of this may change it.
+  const arcAt = beatFrom + 8;
 
   const walk = kidEase.easeInOutSine((frame - enterAt) / Math.max(1, emergeAt - enterAt));
   // Inside the drop he bends — the path curves down and the body leans with it,
@@ -1296,9 +1611,10 @@ const SplitScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           zIndex={12}
         />
 
-        <SevenArc
+        <SevenBorn
           u={split}
           from={EMERGE}
+          bornAt={bornAt}
           speaking={stage.speaking("ray")}
           emotion={emotion}
           look={split > 0.9 ? "camera" : { x: 0.3, y: -0.2 }}
@@ -1379,6 +1695,153 @@ const SevenArc: React.FC<{
   </>
 );
 
+/** The scale the seven are staged at on the arc, in Scenes 9 and 10. */
+const ARC_SCALE = 0.9;
+
+/**
+ * Orange's two marks: where he lands in the fan, and where he settles once he
+ * is himself.
+ *
+ * His law is "matches Red's stride exactly, one body-length behind", and on a
+ * still the readable half of that is the **gap**: exactly `SHARD_BODY` of it,
+ * measured along the chord to Red. The arc's own spacing puts him at about 230
+ * against a body of 216 at this scale, which is a fourteen-pixel correction —
+ * invisible. So the *fan* drops him thirty pixels wide of where he belongs and
+ * the settle closes forty-odd, which is a fifth of a body and reads as a man
+ * taking up his position next to somebody.
+ */
+const ORANGE_MARKS = (() => {
+  const red = shardPoint(0);
+  const slot = shardPoint(1);
+  const d = Math.max(1, Math.hypot(slot.x - red.x, slot.y - red.y));
+  const u = { x: (slot.x - red.x) / d, y: (slot.y - red.y) / d };
+  const gap = SHARD_BODY * ARC_SCALE;
+  return {
+    loose: { x: red.x + u.x * (gap + 44), y: red.y + u.y * (gap + 44) },
+    home: { x: red.x + u.x * gap, y: red.y + u.y * gap },
+  };
+})();
+
+/**
+ * The two windows Blue leaves formation in, in frames after he wakes, and they
+ * are two on purpose: revision §6.2 says he "drifts a few pixels out of
+ * formation, **twice**". Eighteen usable frames each is two `BLUE_LEG`s, so
+ * there is a hard corner inside both of them — a Blue who drifts out and back
+ * on one smooth arc is a float, and the corner is the entire character.
+ */
+const S9_BLUE_OUT = [
+  [0, 20],
+  [28, 50],
+] as const;
+
+/**
+ * **Scene 9's seven: the fan, and then the birth.**
+ *
+ * One component for both halves rather than two swapped at the beat, because
+ * two components is two hook counts and Remotion renders frames in a pool of
+ * tabs (PROCESS.md §5). The fan is `SevenArc`'s geometry unchanged; everything
+ * after it is `alive`.
+ *
+ * What each colour does with its birthday, from `SEVEN`:
+ *
+ *   Red     nothing. He is born alive and stays exactly as he was — the frame
+ *           where six things change around one that does not.
+ *   Orange  closes on Red and levels off (`ORANGE_MARKS`).
+ *   Yellow  arms out, and he never puts them down again.
+ *   Green   sits, in five frames, and stays sat.
+ *   Blue    two drifts out of formation with a corner in each, trailing the
+ *           kit's bent-line blur.
+ *   Indigo  the same drift, four frames stale, from his own slot.
+ *   Violet  vibrates, hardest of the seven, in place, at the far end.
+ */
+const SevenBorn: React.FC<{
+  u: number;
+  from: { x: number; y: number };
+  bornAt: (i: number) => number;
+  speaking?: boolean;
+  emotion?: Parameters<typeof RayShard>[0]["emotion"];
+  look?: Parameters<typeof RayShard>[0]["look"];
+}> = ({ u, from, bornAt, speaking, emotion, look }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  // Blue's drift, and Indigo's copy of it, are both read off Blue's clock.
+  const blueF = frame - bornAt(4);
+  const drift = (f: number): { dx: number; dy: number; angle: number; env: number } => {
+    const env = driftEnvelope(f, S9_BLUE_OUT);
+    const p = blueRicochet(Math.max(0, f), DRIFT_BOX, 4);
+    return { dx: p.x * env, dy: p.y * env, angle: p.angle, env };
+  };
+  return (
+    <>
+      {SPECTRUM.map((c, i) => {
+        // --- the fan, exactly as it was -------------------------------------
+        const slot =
+          i === 1 ? ORANGE_MARKS.loose : shardPoint(i);
+        const stagger = i * 0.055;
+        const t = Math.max(0, Math.min(1, (u - stagger) / (1 - stagger * 0.9)));
+        const p = moveAlong(from, slot, t, {
+          arc: -0.1 - (SPECTRUM.length - 1 - i) * 0.045,
+          ease: kidEase.easeOutCubic,
+        });
+
+        // --- the birth -------------------------------------------------------
+        // Red is 1 from the first frame: he never stopped being alive, so the
+        // state the other six wake out of is his and waking him is a no-op.
+        const since = frame - bornAt(i);
+        const alive =
+          i === 0 ? 1 : kidEase.easeOutQuad(Math.max(0, Math.min(1, since / BIRTH_FRAMES)));
+
+        // Orange closes the gap with a settle on the way in.
+        const close = i === 1 ? alive : 0;
+        const bounce =
+          i === 1 && since >= 0
+            ? // `phase = -π/2` so the ring starts at rest and overshoots — a
+              // settle, not an impact that is already compressed on frame one.
+              settleWave(since / (fps * 0.6), 1.25, 4.2, -Math.PI / 2) * 0.18
+            : 0;
+        const home = {
+          x: p.x + (ORANGE_MARKS.home.x - ORANGE_MARKS.loose.x) * (close + bounce),
+          y: p.y + (ORANGE_MARKS.home.y - ORANGE_MARKS.loose.y) * (close + bounce),
+        };
+
+        // Blue drifts; Indigo drifts four frames late.
+        const d = i === 4 ? drift(blueF) : i === 5 ? drift(blueF - INDIGO_LAG) : null;
+        const x = (i === 1 ? home.x : p.x) + (d ? d.dx * alive : 0);
+        const y = (i === 1 ? home.y : p.y) + (d ? d.dy * alive : 0);
+
+        const sit = i === 3 ? greenSit(frame, bornAt(3), true) : 0;
+        return (
+          <ArcShard
+            key={c.name}
+            i={i}
+            x={x}
+            y={y}
+            scale={ARC_SCALE}
+            alive={alive}
+            sit={sit}
+            heading={d ? d.angle : p.angle}
+            // **No trail on the drift, and that is a measurement rather than a
+            // taste call.** `blueTrail`'s two-leg window is as long as the legs
+            // it is made of, and a drift small enough to be "a few pixels out of
+            // formation" makes legs of fifty pixels against a body two hundred
+            // wide — so the whole trail hides behind Blue and the only part that
+            // pokes out is a stub, which reads as a bead stuck to his neck. It
+            // is the exact failure the kit's own note on `blueTrail` describes.
+            // At this amplitude the *corner in the path* and the lean into the
+            // new leg are the blur; the drawn trail arrives in Scene 10, where
+            // his box is big enough to out-measure him.
+            emotion={emotion}
+            speaking={speaking}
+            look={look}
+            opacity={Math.max(0, Math.min(1, (t - 0.02) * 14))}
+            zIndex={14 + i}
+          />
+        );
+      })}
+    </>
+  );
+};
+
 // ---------------------------------------------------------------------------
 // Scene 10 — The roll call
 // ---------------------------------------------------------------------------
@@ -1405,16 +1868,43 @@ const S10_BUBBLES: Record<string, string> = {
  */
 const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const [greetFrom, greetTo] = lineWindow(scene, "a1_42_ray");
   const [landFrom] = heldBeat(scene, "a1_42_ray");
   const [stillFrom, stillTo] = heldBeat(scene, "a1_43_narrator");
 
   const greeting = frame >= greetFrom && frame < greetTo;
   // He walks the line left to right across his own line, one greeting per
-  // seventh of it.
-  const along = Math.max(0, Math.min(1, (frame - greetFrom) / Math.max(1, greetTo - greetFrom)));
-  const track = arcPointLifted(0.02 + along * 0.96);
+  // seventh of it — but he **runs out of line one name early**. His walk tops
+  // out over Indigo and his eyes go back to camera as Violet's turn opens, so
+  // that the seventh greeting is delivered to a blob Ray has already stopped
+  // looking at. That is Violet's firing zero, and it is the plant that makes
+  // Scene 11's W and Scene 20's dome land; it costs no frames and no line.
+  const slot = Math.max(1, greetTo - greetFrom) / SPECTRUM.length;
+  const violetFrom = greetFrom + 6 * slot;
+  const along = Math.max(0, Math.min(1, (frame - greetFrom) / (6 * slot)));
+  // **He walks the middle of the bow, not the ends of it.** The lifted ellipse
+  // clears the shards handsomely at the apex and barely at all where the bow
+  // turns down — a still of the first frame of this scene had Ray materialising
+  // on top of Red, which is a bad cut and, worse, the wrong first picture for
+  // the one character whose whole moment is that nothing happens to him. So the
+  // walk runs 0.18 → 0.78 of the arc: he hovers up and to the right of Red for
+  // the first greeting and stops over Indigo for the last, which is also where
+  // "he has already turned away" comes from.
+  const track = arcPointLifted(0.18 + along * 0.6);
+  const lookingAtTheLine = greeting && frame < violetFrom + 4;
+
+  // **The eye-line is the scene.** script.md: "the gag is seven eye-lines and a
+  // wave." A fixed downward look was fine when he walked the whole bow; now that
+  // he walks the middle of it, the same look points at the lawn on the first two
+  // names. So he aims at *the mark of whoever he is naming*, one seventh of the
+  // line at a time.
+  //
+  // He aims at Blue's **slot**, not at Blue, and that is the joke rather than a
+  // bug: the answer comes back from wherever Blue has got to, and Ray never
+  // finds out.
+  const naming = Math.max(0, Math.min(6, Math.floor((frame - greetFrom) / slot)));
+  const at = naming === 1 ? ORANGE_MARKS.home : shardPoint(naming);
+  const gaze = aimAt(track, at);
 
   // The wave dies over ten frames as the first beat opens: the arms stay up and
   // stop moving, which is the deflation-by-stillness the series runs on.
@@ -1434,19 +1924,7 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   return (
     <AbsoluteFill>
       <PaintedSky bg="garden_day" phase={6.8} vignette={0.2} />
-      <SevenArc
-        u={1}
-        from={EMERGE}
-        look={greeting ? { x: 0, y: -0.55 } : { x: 0.1, y: -0.15 }}
-        bob={(i) => {
-          // Each one bobs back as it is named — its own seventh of the line,
-          // one settle each, and nothing after the line ends.
-          if (!greeting) return 0;
-          const slot = (greetTo - greetFrom) / SPECTRUM.length;
-          const since = frame - (greetFrom + i * slot);
-          return since >= 0 && since < slot ? Math.max(0, settleWave(since / (fps * 0.7), 1.1, 4.4)) : 0;
-        }}
-      />
+      <SevenGreeted greetFrom={greetFrom} greetTo={greetTo} />
       {/* Bigger than the seven he is greeting, not smaller: he is the one doing
           the greeting and the joke is that they are all him. At 0.62 he read as
           an eighth blob a row behind them. */}
@@ -1459,7 +1937,7 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.ray}
         emotion={emotion}
         speaking={stage.speaking("ray")}
-        look={greeting ? { x: 0.15, y: 0.7 } : "camera"}
+        look={lookingAtTheLine ? gaze : "camera"}
         bank={track.angle * 0.3}
         pose={inButtonBeat || wave <= 0.02 ? "rest" : "wave"}
         wave={wave}
@@ -1481,6 +1959,219 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         }}
       />
     </AbsoluteFill>
+  );
+};
+
+/**
+ * A `look` direction from one mark to another: the unit vector between them,
+ * pushed a little past unit so a near-vertical glance actually reaches the
+ * bottom of the eye rather than stopping halfway, then clamped.
+ */
+function aimAt(from: { x: number; y: number }, to: { x: number; y: number }): {
+  x: number;
+  y: number;
+} {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const m = Math.max(1, Math.hypot(dx, dy));
+  const k = 1.35;
+  return {
+    x: Math.max(-1, Math.min(1, (dx / m) * k)),
+    y: Math.max(-1, Math.min(1, (dy / m) * k)),
+  };
+}
+
+/** 0 → 1 → 0 across `[a, b)`, with `ramp` frames of ease at each end. */
+function pulse(f: number, a: number, b: number, ramp = 5): number {
+  if (f <= a || f >= b) return 0;
+  return kidEase.easeInOutSine(Math.min(1, Math.min((f - a) / ramp, (b - f) / ramp)));
+}
+
+/**
+ * The box Blue is *not where Ray is looking* inside. Placed on his own slot on
+ * the arc, and big enough that he is reliably a hundred-odd pixels off it —
+ * which is the whole of his moment: Ray greets the spot, and the answer comes
+ * from somewhere else in frame.
+ *
+ * It is **biased downward** (−120 up, +170 down) because Ray walks the arc
+ * *above* the seven, and a box centred on the slot put Blue through him — a
+ * still had Ray's wave ribbon crossing Blue's face on the frame Ray was
+ * greeting somebody else. It is otherwise as big as the arc will tolerate: the
+ * legs `blueRicochet` cuts are 45–85% of the box's short side, so a tight box
+ * gives a Blue who twitches instead of one who changes his mind.
+ */
+const S10_BLUE_BOX: Box = { x: -180, y: -70, w: 360, h: 260 };
+/**
+ * Indigo runs Blue's identical path, four frames late — but anchored a body and
+ * a half to the LEFT of his own slot.
+ *
+ * The lag is the character and it is untouched; the anchor is staging. Blue's
+ * box is as wide as the arc will take, and Indigo's slot is the second from the
+ * right, so the same box hung on his own mark walked him straight through
+ * Violet — a still had the two of them sharing one square of lawn while Ray was
+ * greeting somebody else. Two of the seven in the same place is not a joke, it
+ * is a bug, and Violet is the one character in the episode whose entire gag
+ * depends on being findable.
+ */
+const INDIGO_NUDGE = { x: -130, y: 0 } as const;
+/** How late Blue is. Twenty-six frames into his own thirty-frame slot. */
+const BLUE_LATE = 26;
+
+/**
+ * **Scene 10's seven: one greeting each, and seven different answers.**
+ *
+ * `a1_42_ray` runs at 0.88 — the slowest character line in the episode — and
+ * leaves a clear gap between items, so each colour gets its own thirtieth of a
+ * second-and-a-bit to answer in. Nobody answers *out loud* (ruling R1): six of
+ * them have voices by Act Two and not one of them uses it here, because the
+ * roll call's three-episode shape is name → flat narrator line → unbothered
+ * button, and a spoken reply breaks it. Every reply is a movement.
+ *
+ *   Red     **nothing. Zero frames.** He does not turn, does not bob, does not
+ *           lean, and his eyes never leave the middle distance — he is the only
+ *           one of the seven who is still looking straight ahead at the end of
+ *           the scene. This is the scene's best moment and it is made entirely
+ *           of the absence of code.
+ *   Orange  one nod, then a glance at Red to check that was allowed.
+ *   Yellow  was already waving; waves harder (`YELLOW_REST` → 1).
+ *   Green   stands up, wags, and sits straight back down.
+ *   Blue    is not where Ray is looking. He answers twenty-six frames late,
+ *           from somewhere else in frame, and dips at the end of it — the
+ *           nearest thing to "apologises with his hands" the shard rig has,
+ *           because a raised arm belongs to Yellow and to nobody else.
+ *   Indigo  does Blue's answer four frames later, from the place Blue just
+ *           left — literally: his position is `blueRicochet` four frames stale,
+ *           so the wag and the spot are both second-hand.
+ *   Violet  last, both arms out, waving with the only thing he has — amplitude.
+ *           Ray has already turned back to camera.
+ *
+ * **The freeze.** Every reaction below is a function of `held`, which stops at
+ * the end of the greeting: through the 20f beat, the 24f beat and the button
+ * the seven hold whatever pose the greeting left them in — Yellow's arms up and
+ * still, Green sat, Blue stopped somewhere he should not be, Indigo stopped
+ * where Blue was. Nobody keeps waving and nothing enters.
+ *
+ * The one thing that does not stop is Violet's vibration, and that is correct:
+ * the kit applies it unconditionally (`<Shard who="violet">`) because there is
+ * no frame of this episode in which Violet holds still. It is his resting
+ * state, not a gesture — the rule the beat enforces is that no *gesture*
+ * outlives the line.
+ */
+const SevenGreeted: React.FC<{ greetFrom: number; greetTo: number }> = ({
+  greetFrom,
+  greetTo,
+}) => {
+  const frame = useCurrentFrame();
+  const slot = Math.max(1, greetTo - greetFrom) / SPECTRUM.length;
+  // Everything below reads this clock, and it stops when the greeting does.
+  const held = Math.min(frame, greetTo);
+  const since = (i: number): number => held - (greetFrom + i * slot);
+  // Six frames of the greeting ending, and the only thing it drives is Yellow's
+  // arms: they stay exactly where they are and stop moving. Everybody else is
+  // already frozen by `held`, but a flap is not a position — `ShardArms` reads
+  // the wall clock — so his is the one gesture that has to be told to stop.
+  const stilling = Math.max(0, Math.min(1, (frame - greetTo) / 6));
+
+  // Blue's whole scene, and Indigo's four frames behind it. It runs from the
+  // first frame rather than from the greeting: Scene 9 left Blue alive, and
+  // `blueRicochet(0)` is the centre of its own box, so he starts exactly on the
+  // slot Scene 9 put him on and leaves it on his own.
+  const blue = blueRicochet(held, S10_BLUE_BOX, 9);
+  const indigo = blueRicochet(held - INDIGO_LAG, S10_BLUE_BOX, 9);
+  // The wag: a heading swung between straight up and straight down, which
+  // `Shard` reads as a lean either way. A wag is what a body with no arms has.
+  const wagAt = (f: number): number => Math.sin(f * 0.85) * 90;
+  const blueWave = pulse(since(4), BLUE_LATE, BLUE_LATE + 22, 4);
+  const indigoWave = pulse(since(4) - INDIGO_LAG, BLUE_LATE, BLUE_LATE + 22, 4);
+  const blueSorry = pulse(since(4), BLUE_LATE + 18, BLUE_LATE + 34, 6);
+
+  return (
+    <>
+      {SPECTRUM.map((c, i) => {
+        const p = shardPoint(i);
+        const home = i === 1 ? ORANGE_MARKS.home : p;
+        const f = since(i);
+        // Nobody turns to Ray until Ray gets to them, so the eye-line walks the
+        // arc a third time. Red never turns at all.
+        let look: { x: number; y: number } =
+          i === 0 || f < -6 ? { x: 0.1, y: -0.15 } : { x: 0, y: -0.55 };
+
+        let x = home.x;
+        let y = home.y;
+        let heading = 0;
+        let sit = 0;
+        let wave: number | undefined;
+        let vibrate: number | undefined;
+        let arms: boolean | undefined;
+
+        if (i === 1) {
+          // One nod — and then the sideways check. He does not look back up
+          // afterwards, so the pose the freeze catches him in is a man still
+          // waiting to hear whether that was allowed.
+          y += pulse(f, 0, 15, 6) * 18;
+          if (f >= 12) look = { x: -0.8, y: 0.15 };
+        } else if (i === 2) {
+          const loud = YELLOW_REST + (1 - YELLOW_REST) * pulse(f, 0, 26, 6);
+          wave = loud + (YELLOW_FROZEN - loud) * stilling;
+          y -= pulse(f, 0, 26, 6) * 10;
+        } else if (i === 3) {
+          // Sat since Scene 9. He gets up, wags, and is sitting again before
+          // Ray has finished the next name.
+          const up = pulse(f, 3, 26, 5);
+          sit = 1 - up;
+          heading = wagAt(f) * pulse(f, 8, 22, 4);
+        } else if (i === 4) {
+          x += blue.x;
+          y += blue.y;
+          heading = blue.angle + (wagAt(held) - blue.angle) * blueWave;
+          y += blueSorry * 16;
+        } else if (i === 5) {
+          x += indigo.x + INDIGO_NUDGE.x;
+          y += indigo.y + INDIGO_NUDGE.y;
+          heading = indigo.angle + (wagAt(held - INDIGO_LAG) - indigo.angle) * indigoWave;
+        } else if (i === 6) {
+          // His wave is amplitude, because amplitude is all he is. It is also
+          // the only wave in the scene nobody sees.
+          vibrate = 1 + pulse(f, 0, 30, 6) * 0.7;
+          arms = f >= -4;
+        }
+
+        return (
+          <ArcShard
+            key={c.name}
+            i={i}
+            x={x}
+            y={y}
+            scale={ARC_SCALE}
+            sit={sit}
+            wave={wave}
+            vibrate={vibrate}
+            arms={arms}
+            heading={heading}
+            // **No drawn trail here either — and this one was rendered three
+            // ways before it was dropped.** `blueTrail`'s two-leg window is as
+            // long as the legs it is made of, and any box small enough to keep
+            // Blue inside the arc gives legs about as long as a shard is wide.
+            // The near half of the trail therefore sits *behind* him and only
+            // the oldest band shows — a thin 12%-alpha hook, detached, hanging
+            // off his side, which over `garden_day`'s lawn is neither blue nor a
+            // blur but a grey J. It reads as a rendering fault, which is the
+            // exact failure revision §11 warns about by name.
+            //
+            // What carries his signature instead is what a paused frame can
+            // actually see: he is the only one of the seven **off formation**,
+            // he is leaning a full `SHARD_LEAN` into whichever leg he is on
+            // (`lean: 1`, the joint highest in the table), and the path he is on
+            // has hard corners in it rather than curves. Indigo is the same
+            // picture four frames stale. Violet, next to them, is a smear of
+            // ghosts around a point he never leaves — still two visibly
+            // different kinds of blur, which is the requirement.
+            look={look}
+            zIndex={14 + i}
+          />
+        );
+      })}
+    </>
   );
 };
 
@@ -1513,19 +2204,19 @@ const CARD_Y = 300;
  * his own letter** rather than moving to somebody else's, and because the
  * letter he is sitting on is the one the seventh colour needs.
  *
- * `B_TOP` moved left and down (was 1010, 250) for the same change: Blue's perch
- * is the top of the B, and Drip standing on it too put her head inside him.
+ * `B_TOP` moved left and down (was 1010, 250) when Blue was going to take the
+ * top of the B and Drip standing on it too put her head inside him. Under
+ * ruling R8 Blue does *not* get the B — he bounces off her and ends up under
+ * "Rain" — but the mark stays where the still put it, because that is where it
+ * looks right: she reads as standing at the shoulder of the B, which is her
+ * letter, and Blue arrives at her rather than at a seat.
+ *
+ * **Both are card-phase marks only.** Once the word breaks into blocks, Ray and
+ * Drip perch on `syllableBlock()` letters like the seven do (`wSeat`,
+ * `DRIP_ON_B`) — a character nailed to a composition coordinate slides off its
+ * own letter the moment the block hops.
  */
 const W_BAR = { x: 1272, y: 258 };
-/**
- * **Over the w, not over the o** (it was 1128).
- *
- * The W of RAINBOW *becomes* the w of "Bow" when the word splits, so this is
- * Ray staying on his own letter rather than hopping to a different one — and it
- * is what makes the punch-up's C1 land: the last of the seven arrives to find
- * the W taken, and there is nowhere else on the word to go.
- */
-const BOW_BLOCK = { x: 1230, y: 216 };
 const B_TOP = { x: 990, y: 274 };
 const PERCH = 0.36;
 
@@ -1577,19 +2268,143 @@ const PERCH_DY = -86;
 const VIOLET_CLING = { dx: 182, dy: -48, bank: 26 } as const;
 const SHARD_PERCH = 0.36;
 
+/** Frames one of the seven spends in the air on its way to its letter. */
+const FLIGHT = 44;
+/** The card's own letter stagger, and therefore theirs. */
+const RISE_STAGGER = 2.5;
+/**
+ * How early Red sets off.
+ *
+ * His law is one unvaried speed and a dead-straight line, and the only way to
+ * obey it *and* land on the beat his letter does is to leave before everybody
+ * else and take longer over it — which is the whole of him. (`RED_SPEED`, the
+ * 108 px/s the rest of the episode walks him at, is not available here: the R is
+ * eight hundred pixels from the arc and 108 px/s would need two hundred frames.
+ * What survives at card scale is the *shape* of the law — constant speed, no
+ * arc, no ease, no anticipation — and that is what is drawn. He is the only one
+ * of the seven on a straight line, in motion and in a paused frame.)
+ */
+const RED_EARLY = 14;
+/**
+ * Orange's lag: the frames Red takes to cover one body length on the way in
+ * (`SHARD_BODY` at the perch scale, over Red's own px-per-frame). Specified as a
+ * *delay*, not as a subtraction — so when Red arrives, Orange is exactly one
+ * body behind him on his own line, and never overtakes.
+ */
+const ORANGE_LAG = 6;
+
+/**
+ * **Drip's mark, on the B, expressed on the block rather than in composition
+ * coordinates** (the 2026-07-28 finding, now applied to her as well as to the
+ * seven): the blocks spring in, hop through the chant and sit at a two-degree
+ * tilt, and a character nailed to a fixed point slides off her letter the
+ * moment her block bounces. These two numbers reproduce the mark that was
+ * hand-tuned against a still, and now they ride the letter.
+ */
+const DRIP_ON_B = { dx: -170, dy: -26 } as const;
+
+/**
+ * **RULING R8 (showrunner, 2026-08-02) — DECIDED, DO NOT "FIX" THIS.**
+ *
+ * Blue's letter is the B and Drip is already sitting on it. The revision (§6.4)
+ * offered two ways out — move Drip to the second "n", or leave her where she is
+ * and let Blue bounce off her — and the ruling takes the second: **Drip stays on
+ * the B, and Blue ricochets off her twice before settling somewhere else
+ * entirely.** It is funnier than moving either of them and it is one more free
+ * firing of the only signature Blue has.
+ *
+ * So this is where Blue actually ends up: underneath the far side of "Rain",
+ * across the word from the letter he was aiming at, hanging off the bottom edge.
+ * Nobody moves him back and nobody mentions it.
+ */
+const BLUE_SETTLE = { block: 0 as const, dx: 46, dy: 88 };
+/**
+ * The two bounces, as unit directions and distances. Two *different* directions
+ * rather than one repeated: a change of direction is Blue's entire blur, and two
+ * identical hops off the same point read as a bobble.
+ */
+const BOUNCE = [
+  { x: 0.64, y: -0.77, px: 156 },
+  { x: -0.58, y: 0.81, px: 112 },
+] as const;
+/** Frames per bounce: out on the first eight, back on the second eight. */
+const BOUNCE_LEG = 8;
+/** Frames Blue spends leaving for `BLUE_SETTLE` once he gives up on the B. */
+const BLUE_DEPART = 16;
+
+/** A triangle: 0 at both ends, 1 in the middle of `[0, len]`. Hard corner at the top. */
+function tri(f: number, len: number): number {
+  if (f <= 0 || f >= len) return 0;
+  const h = len / 2;
+  return f < h ? f / h : 2 - f / h;
+}
+
+/**
+ * **Blue's two bounces off Drip, as a displacement from the letter he wanted.**
+ *
+ * `f` is frames since he first reaches her. Linear on every leg with a hard
+ * corner at each end of it — no ease anywhere, because a ricochet that
+ * decelerates into its own bounce is a float. Returns `{x: 0, y: 0}` before the
+ * first contact and after the second bounce is spent, so a caller can add it to
+ * a mark and get "he is on the mark" for free.
+ *
+ * Indigo runs this same function four frames late against his own letter, which
+ * is what "does Blue's overshoot four frames later, on the o" means when it is
+ * written down rather than eyeballed.
+ */
+function bounceOff(f: number): { x: number; y: number } {
+  const a = tri(f, BOUNCE_LEG * 2);
+  const b = tri(f - BOUNCE_LEG * 2, BOUNCE_LEG * 2);
+  return {
+    x: BOUNCE[0].x * BOUNCE[0].px * a + BOUNCE[1].x * BOUNCE[1].px * b,
+    y: BOUNCE[0].y * BOUNCE[0].px * a + BOUNCE[1].y * BOUNCE[1].px * b,
+  };
+}
+
+/** The last `span` frames of a path, oldest first — a trail with its corners in. */
+function sampleTrail(
+  path: (f: number) => { x: number; y: number },
+  frame: number,
+  span = 18,
+  n = 14,
+): { x: number; y: number }[] {
+  const out: { x: number; y: number }[] = [];
+  for (let s = 0; s <= n; s++) out.push(path(frame - span + (span * s) / n));
+  return out;
+}
+
 const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const [wordFrom, wordTo] = lineWindow(scene, "a1_46_narrator");
-  const [chantFrom] = lineWindow(scene, "a1_47_ray");
+  const [chantFrom, chantTo] = lineWindow(scene, "a1_47_ray");
   // The freeze lands on the word itself — "…It is a rainbow."
   const slamAt = Math.round(wordFrom + (wordTo - wordFrom) * 0.86);
   const splitAt = Math.max(slamAt + 20, chantFrom - 8);
+  const chantLen = Math.max(1, chantTo - chantFrom);
 
-  // He rides the letters apart: a hop from the W's crossbar to the top of the
-  // "Bow" block, on an arc, landing with a settle.
+  // **The two syllable blocks, live.** Everything that perches perches on one of
+  // these — Ray, Drip and all seven — rather than on a composition coordinate.
+  const blocks = BLOCK_X.map((_, j) =>
+    syllableBlock(j, frame, fps, splitAt, chantFrom, chantLen),
+  );
+
+  // He rides the letters apart: a hop from the W's crossbar on the card to the
+  // **w of "Bow"**, which is the same letter after the word splits — Ray staying
+  // put rather than moving to somebody else's. It is also the seat the seventh
+  // colour is about to need, which is the whole of C1's punchline.
+  const wSeat = onBlock(blocks[1], LETTER_AT[6].dx, PERCH_DY);
   const hopU = (frame - splitAt + 6) / 16;
-  const perch = moveAlong(W_BAR, BOW_BLOCK, hopU, { arc: 0.34, ease: kidEase.easeInOutSine });
+  const perch = moveAlong(W_BAR, wSeat, hopU, { arc: 0.34, ease: kidEase.easeInOutSine });
   const land = hopU > 1 ? settleWave((hopU - 1) / 2.2, 1.3, 4.4) : 0;
+
+  // Drip crosses from the WordCard's B to the block's B as the word breaks up.
+  const bSeat = onBlock(blocks[1], DRIP_ON_B.dx, DRIP_ON_B.dy);
+  const cross = Math.max(0, Math.min(1, (frame - splitAt) / 12));
+  const dripCentre = {
+    x: B_TOP.x + (bSeat.x - B_TOP.x) * cross,
+    y: B_TOP.y + (bSeat.y - B_TOP.y) * cross,
+  };
 
   const stage = useStage(scene);
   const emotion = useEmotion(
@@ -1601,7 +2416,23 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     NO_LEAD,
   );
 
-  const dripMark: Mark = { x: B_TOP.x, y: hover("drip", B_TOP.y, 0.3), scale: 0.3, who: "drip", side: "left" };
+  // **She gets hit. Twice.** (R8.) Blue reaches her `FLIGHT` frames after his
+  // own take-off and bounces off her again sixteen frames later, and each
+  // contact rings through her — because a Drip who does not move is a Drip he
+  // went past rather than a Drip he hit.
+  const riseAt = slamAt - 22;
+  const hitAt = riseAt + 4 * RISE_STAGGER + FLIGHT;
+  const knock =
+    settleWave((frame - hitAt) / 22, 1.6, 5, -Math.PI / 2) +
+    settleWave((frame - hitAt - BOUNCE_LEG * 2) / 22, 1.6, 5, -Math.PI / 2) * 0.7;
+
+  const dripMark: Mark = {
+    x: dripCentre.x,
+    y: hover("drip", dripCentre.y + knock * 7, 0.3),
+    scale: 0.3,
+    who: "drip",
+    side: "left",
+  };
 
   return (
     <AbsoluteFill>
@@ -1621,12 +2452,7 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             child watches is the arc emptying into the word. They start at
             exactly the positions `ArcStill` used to hold, so nothing changes
             until they move. */}
-        <SevenOnTheWord
-          slamAt={slamAt}
-          splitAt={splitAt}
-          chantKey="a1_47_ray"
-          scene={scene}
-        />
+        <SevenOnTheWord riseAt={riseAt} blocks={blocks} dripAt={dripCentre} />
         <Ray
           x={perch.x}
           y={hover("ray", perch.y + land * 8, PERCH)}
@@ -1644,7 +2470,7 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         <Drip
           x={dripMark.x}
           y={dripMark.y}
-          scale={0.3}
+          scale={0.3 * (1 + knock * 0.1)}
           phase={PHASE.drip}
           emotion={useEmotion(scene, "drip", { a1_49_drip: "excited" }, "happy", NO_LEAD)}
           speaking={stage.speaking("drip")}
@@ -1662,7 +2488,7 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         cast={{ drip: dripMark } as Cast}
         text={S11_BUBBLES}
-        at={{ a1_49_drip: { x: 640, y: 620, tail: "right", tailAt: B_TOP.x } }}
+        at={{ a1_49_drip: { x: 640, y: 620, tail: "right", tailAt: dripCentre.x } }}
       />
     </AbsoluteFill>
   );
@@ -1732,25 +2558,20 @@ function onBlock(
  * **continuously visible for the whole shot**, or it reads as a bug.
  */
 const SevenOnTheWord: React.FC<{
-  scene: TimedScene;
-  slamAt: number;
-  splitAt: number;
-  chantKey: string;
-}> = ({ scene, slamAt, splitAt, chantKey }) => {
+  riseAt: number;
+  blocks: ReadonlyArray<{ cx: number; cy: number; scale: number; rot: number }>;
+  /** Drip's live centre on the B — the thing Blue keeps hitting. */
+  dripAt: { x: number; y: number };
+}> = ({ riseAt, blocks, dripAt }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const [chantFrom, chantTo] = lineWindow(scene, chantKey);
-  const chantLen = Math.max(1, chantTo - chantFrom);
-  // They set off before the slam and land as the word does. 44 frames of
-  // flight, so the last of them is still arriving after the split — which is
-  // the point: Violet is late.
-  const riseAt = slamAt - 22;
-  const blocks = BLOCK_X.map((_, j) =>
-    syllableBlock(j, frame, fps, splitAt, chantFrom, chantLen),
-  );
   // Violet finds the W taken eight frames after he lands on it, and is squeezed
   // off the end over the next sixteen.
-  const squeeze = kidEase.easeInOutSine((frame - (riseAt + 6 * 2.5 + 44 + 8)) / 16);
+  const squeeze = kidEase.easeInOutSine(
+    (frame - (riseAt + 6 * RISE_STAGGER + FLIGHT + 8)) / 16,
+  );
+  // Blue aims at Drip's shoulder, because Drip is on the letter he wants.
+  const hitAt = riseAt + 4 * RISE_STAGGER + FLIGHT;
+  const contact = { x: dripAt.x - 42, y: dripAt.y - 8 };
 
   return (
     <>
@@ -1765,42 +2586,99 @@ const SevenOnTheWord: React.FC<{
                 x: seatAt.x + (clingAt.x - seatAt.x) * squeeze,
                 y: seatAt.y + (clingAt.y - seatAt.y) * squeeze,
               }
-            : seatAt;
+            : i === 4
+              ? contact
+              : seatAt;
         // `onBlock` gives the blob's **centre**; `RayShard`'s `y` is the top of
         // its box, which is what `shardPoint` is already in. Mixing the two is
         // the classic 64-pixel error (`hover` exists for exactly this).
         const target = { x: centre.x, y: hover("shard", centre.y, SHARD_PERCH) };
         const from = shardPoint(i);
-        const u = kidEase.easeInOutSine((frame - (riseAt + i * 2.5)) / 44);
-        const p = moveAlong(from, target, u, { arc: -0.3, ease: kidEase.easeInOutSine });
+
+        // --- take-off, in character ------------------------------------------
+        // Red leaves early and travels at one speed on a dead-straight line;
+        // Orange runs the same law one body-length behind him; the other five
+        // get the card's stagger and a bowed, eased flight.
+        const leaveAt =
+          i === 0 ? riseAt - RED_EARLY : i === 1 ? riseAt - RED_EARLY + ORANGE_LAG : riseAt + i * RISE_STAGGER;
+        const span = i <= 1 ? FLIGHT + RED_EARLY : FLIGHT;
+        const u = Math.max(0, Math.min(1, (frame - leaveAt) / span));
+        const p =
+          i <= 1
+            ? moveAlong(from, target, u, { arc: 0, ease: (v) => v })
+            : moveAlong(from, target, kidEase.easeInOutSine(u), {
+                arc: -0.3,
+                ease: kidEase.easeInOutSine,
+              });
+
+        // --- what happens once they get there --------------------------------
+        // Blue bounces off Drip twice (R8) and then leaves the word entirely;
+        // Indigo does the identical bounce four frames later against his own
+        // letter and stays on it. Both trails are sampled off the path itself,
+        // so the corner in the blur is the corner they actually turned.
+        const bluePath = (f: number): { x: number; y: number } => {
+          const away = Math.max(0, Math.min(1, (f - BOUNCE_LEG * 4) / BLUE_DEPART));
+          const off = bounceOff(f);
+          const gone = onBlock(blocks[BLUE_SETTLE.block], BLUE_SETTLE.dx, BLUE_SETTLE.dy);
+          const at = { x: target.x + off.x, y: target.y + off.y };
+          return {
+            x: at.x + (gone.x - at.x) * away,
+            y: at.y + (hover("shard", gone.y, SHARD_PERCH) - at.y) * away,
+          };
+        };
+        const indigoPath = (f: number): { x: number; y: number } => {
+          const off = bounceOff(f - INDIGO_LAG);
+          return { x: target.x + off.x, y: target.y + off.y };
+        };
+
+        const landed = frame >= leaveAt + span;
+        const path = i === 4 ? bluePath : i === 5 ? indigoPath : null;
+        const here = path && landed ? path(frame - hitAt) : { x: p.x, y: p.y };
+
         // Settles onto the letter, then sits still: a blob that keeps bobbing
-        // on a Big Word card is competing with the letters for the eye.
-        const settle = u >= 1 ? settleWave((frame - (riseAt + i * 2.5) - 44) / 26, 1, 4.2) : 0;
+        // on a Big Word card is competing with the letters for the eye. Green
+        // does not settle, he sits — five frames, and he stays sat.
+        const settle =
+          u >= 1 && !path ? settleWave((frame - leaveAt - span) / 26, 1, 4.2) : 0;
+        const sit = i === 3 ? greenSit(frame, leaveAt + span, true) : 0;
         // **Everything before take-off has to be the arc, exactly.** Scene 10
-        // ends on `SevenArc u={1}` at 0.9 with the arc's own tangent for a bank
-        // and its own look, and Scene 11 opens on the same frame — so scale,
-        // bank and look all start at those values and only then become the
-        // perch's. Getting this wrong is a visible jump on the cut.
+        // ends on the arc at 0.9 with its own tangent for a lean and its own
+        // look, and Scene 11 opens on the same frame — so scale, lean and look
+        // all start at those values and only then become the perch's. Getting
+        // this wrong is a visible jump on the cut.
         const off = Math.min(1, Math.max(0, u * 2.5));
         return (
-          <RayShard
+          <ArcShard
             key={c.name}
-            color={i}
-            x={p.x}
-            y={p.y - settle * 9}
+            i={i}
+            x={here.x}
+            y={here.y - settle * 9}
             scale={(0.9 + (SHARD_PERCH - 0.9) * u) * (1 + settle * 0.08)}
-            phase={SHARD_PHASE[i]}
-            emotion="happy"
-            look={off > 0.5 ? "camera" : { x: 0.1, y: -0.15 }}
-            bank={
-              from.angle * 0.25 * (1 - off) +
-              p.angle * 0.3 * off +
-              (i === 6 ? VIOLET_CLING.bank * squeeze : 0)
+            sit={sit}
+            // Yellow waves at the audience from the "i" the whole time he is on
+            // it, which for him is not a reaction — it is the resting state.
+            wave={YELLOW_REST}
+            // Everything on this card is 40px tall and the letters are what the
+            // shot is for, so the whole ensemble breathes at half strength once
+            // it has landed. Relative, so Blue is still the twitchy one.
+            calm={u >= 1 ? 0.45 : 1}
+            heading={
+              path && landed
+                ? headingOf(path, frame - hitAt)
+                : from.angle * (1 - off) + p.angle * off
             }
-            // Both arms out only while he is hanging off the end. Six seated
-            // blobs with arms is six pairs of arms on a word card.
-            arms={i === 6 && squeeze > 0.2}
-            idle={u >= 1 ? 0.45 : 1}
+            // The blur is only there while there is a direction change in it.
+            // A trail behind a body that has stopped collapses to a point and
+            // draws as a bead.
+            trail={
+              path && landed && frame - hitAt < BOUNCE_LEG * 4 + BLUE_DEPART + 8
+                ? sampleTrail((f) => path(f), frame - hitAt, BOUNCE_LEG * 2)
+                : undefined
+            }
+            look={off > 0.5 ? "camera" : { x: 0.1, y: -0.15 }}
+            // Violet holds on to the end of the block with both of them. Six
+            // seated blobs with arms is six pairs of arms on a word card.
+            arms={i === 6 ? squeeze > 0.2 : undefined}
             zIndex={53}
           />
         );
@@ -1808,6 +2686,13 @@ const SevenOnTheWord: React.FC<{
     </>
   );
 };
+
+/** The heading of a sampled path right now, in degrees. */
+function headingOf(path: (f: number) => { x: number; y: number }, f: number): number {
+  const a = path(f - 1.5);
+  const b = path(f + 1.5);
+  return (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
+}
 
 /** Rain running down the front of the card. */
 const RainStreaks: React.FC<{ from: number }> = ({ from }) => {
