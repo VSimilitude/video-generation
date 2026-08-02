@@ -4,6 +4,7 @@ import {
   Drip,
   KidBackdrop,
   Sunny,
+  kidInkOutline,
   kidRadius,
   kidShadow,
   kidTheme,
@@ -226,7 +227,7 @@ const ChantPanel: React.FC<{
               fontWeight: 900,
               letterSpacing: -1,
               color: kidTheme.paper,
-              WebkitTextStroke: `4px ${kidTheme.ink}`,
+              textShadow: kidInkOutline(2),
               boxShadow: kidShadow(1.1),
               transform: `scale(${0.5 + 0.5 * wordIn}) rotate(${-1.5 + (1 - wordIn) * 6}deg)`,
             }}
@@ -483,7 +484,7 @@ const DiagramLabel: React.FC<{ text: string; color: string; x: number; y: number
         fontWeight: 900,
         letterSpacing: 2,
         color: kidTheme.paper,
-        WebkitTextStroke: `3px ${kidTheme.ink}`,
+        textShadow: kidInkOutline(1.5),
         whiteSpace: "nowrap",
         boxShadow: kidShadow(1),
         fontFamily: kidTheme.fontFamily,
@@ -980,7 +981,7 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             fontWeight: 900,
             letterSpacing: 2,
             color: kidTheme.purple,
-            WebkitTextStroke: `6px ${kidTheme.ink}`,
+            textShadow: kidInkOutline(3),
           }}
         >
           THE WIND

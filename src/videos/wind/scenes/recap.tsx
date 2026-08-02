@@ -4,6 +4,7 @@ import {
   Puff,
   Sunny,
   kidEase,
+  kidInkOutline,
   kidRadius,
   kidShadow,
   kidTheme,
@@ -218,7 +219,7 @@ const ChantPanel: React.FC<{
               fontWeight: 900,
               letterSpacing: -1,
               color: kidTheme.paper,
-              WebkitTextStroke: `4px ${kidTheme.ink}`,
+              textShadow: kidInkOutline(2),
               whiteSpace: "nowrap",
               boxShadow: kidShadow(1.1),
               transform: `scale(${0.5 + 0.5 * wordIn}) rotate(${-1.5 + (1 - wordIn) * 6}deg)`,
@@ -419,7 +420,7 @@ const AllFourScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
                   fontWeight: 900,
                   letterSpacing: 1,
                   color: kidTheme.paper,
-                  WebkitTextStroke: `5px ${kidTheme.ink}`,
+                  textShadow: kidInkOutline(2.5),
                   boxShadow: kidShadow(1.2),
                   whiteSpace: "nowrap",
                   transform: `scale(${0.55 + 0.45 * s}) rotate(${(i % 2 ? 1.4 : -1.4) * (2 - s)}deg)`,
@@ -763,8 +764,7 @@ const MapLabel: React.FC<{ x: number; y: number; text: string; small?: boolean }
       fontWeight: 900,
       letterSpacing: 3,
       color: kidTheme.paper,
-      WebkitTextStroke: `5px ${kidTheme.ink}`,
-      paintOrder: "stroke",
+      textShadow: kidInkOutline(2.5),
       whiteSpace: "nowrap",
       pointerEvents: "none",
     }}
@@ -933,8 +933,7 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             lineHeight: 1.02,
             letterSpacing: 1,
             color: ACT_COLOR.wind,
-            WebkitTextStroke: `6px ${kidTheme.ink}`,
-            paintOrder: "stroke",
+            textShadow: kidInkOutline(3),
           }}
         >
           WHY IS THE

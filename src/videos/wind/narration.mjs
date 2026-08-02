@@ -1114,7 +1114,10 @@ export default {
     // Scene 33: one lit panel per character, each taking a bow for their own Big
     // Word — same note that puts rc_03 and rc_04 on `happy`.
     rc_02_puff: {
-      text: "AIR! You cannot see it, you CAN feel it, and it is real stuff! That is me!",
+      // "Aire" not "AIR": MiniMax sings a standalone all-caps "AIR!" as "Aiiii"
+      // with no R (same caps-word bug as Cloudia's "Wine-d"). The -e respelling
+      // forces the R; the on-screen panel still shows "AIR".
+      text: "Aire! You cannot see it, you CAN feel it, and it is real stuff! That is me!",
       ...PUFF,
       emotion: "happy",
     },

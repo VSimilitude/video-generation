@@ -1,5 +1,5 @@
 import React from "react";
-import { kidEase, kidRadius, kidShadow, kidTheme, kidType, moveAlong, settleWave } from "../../../lib/kid";
+import { kidEase, kidInkOutline, kidRadius, kidShadow, kidTheme, kidType, moveAlong, settleWave } from "../../../lib/kid";
 import {
   AbsoluteFill,
   CHAR_BOX,
@@ -344,9 +344,7 @@ const BlownTitle: React.FC<{ from: number }> = ({ from }) => {
                   fontWeight: 900,
                   lineHeight: 1.04,
                   color: kidTheme.paper,
-                  WebkitTextStroke: `${Math.round(line.size * 0.055)}px ${kidTheme.ink}`,
-                  paintOrder: "stroke",
-                  textShadow: `0 ${Math.round(line.size * 0.05)}px 0 rgba(36,52,71,0.35)`,
+                  textShadow: `${kidInkOutline(line.size * 0.028)}, 0 ${Math.round(line.size * 0.05)}px 0 rgba(36,52,71,0.35)`,
                   transform: `translate(${(1 - inU) * 760 + ring * 14}px, ${ring * -9}px) rotate(${(1 - inU) * 16 + ring * 5}deg)`,
                   opacity: Math.max(0, Math.min(1, f / 3)),
                 }}

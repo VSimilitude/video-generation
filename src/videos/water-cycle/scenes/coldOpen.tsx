@@ -1,5 +1,5 @@
 import React from "react";
-import { Drip, kidRadius, kidShadow, kidTheme, kidType } from "../../../lib/kid";
+import { Drip, kidInkOutline, kidRadius, kidShadow, kidTheme, kidType } from "../../../lib/kid";
 import { useSpeaking } from "../../../lib/narration";
 import {
   AbsoluteFill,
@@ -384,9 +384,7 @@ const TitleLetter: React.FC<{ ch: string; index: number; from: number }> = ({
         fontWeight: 900,
         lineHeight: 1,
         color: kidTheme.waterLight,
-        WebkitTextStroke: `9px ${kidTheme.ink}`,
-        paintOrder: "stroke",
-        textShadow: `0 8px 0 rgba(36,52,71,0.4)`,
+        textShadow: `${kidInkOutline(4.5)}, 0 8px 0 rgba(36,52,71,0.4)`,
         transform: `translateY(${(1 - s) * -160}px) scale(${0.4 + 0.6 * s}) rotate(${(1 - s) * -10}deg)`,
         opacity: Math.min(1, Math.max(0, (frame - from) / 3)),
       }}

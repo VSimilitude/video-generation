@@ -5,6 +5,7 @@ import {
   Cloudia,
   Drip,
   Sunny,
+  kidInkOutline,
   kidOutline,
   kidRadius,
   kidShadow,
@@ -1144,8 +1145,7 @@ const Foomp: React.FC<{ x: number; y: number; at: number }> = ({ x, y, at }) => 
         fontSize: 96,
         fontWeight: 900,
         color: kidTheme.paper,
-        WebkitTextStroke: `9px ${kidTheme.ink}`,
-        paintOrder: "stroke",
+        textShadow: kidInkOutline(4.5),
         letterSpacing: 2,
         zIndex: 30,
       }}

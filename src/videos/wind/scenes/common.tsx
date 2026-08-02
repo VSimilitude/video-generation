@@ -19,6 +19,7 @@ import {
   Sunny,
   EMOTION_EASE,
   kidEase,
+  kidInkOutline,
   kidOutline,
   kidRadius,
   kidShadow,
@@ -553,8 +554,7 @@ export const RuleStamp: React.FC<{
           letterSpacing: 2,
           lineHeight: 1.02,
           color: kidTheme.paper,
-          WebkitTextStroke: `6px ${kidTheme.ink}`,
-          paintOrder: "stroke",
+          textShadow: kidInkOutline(3),
           boxShadow: kidShadow(1.3),
           whiteSpace: "nowrap",
         }}

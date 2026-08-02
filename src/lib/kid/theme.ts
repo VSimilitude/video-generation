@@ -168,6 +168,31 @@ export function kidOutline(w = 3, color: string = kidTheme.paper): string {
   ].join(", ");
 }
 
+/**
+ * Ink ring for big display text — the replacement for `-webkit-text-stroke`
+ * everywhere in the kid suite (2026-08-01).
+ *
+ * Stroking text outlines each glyph *contour* on its own, and an iPhone
+ * resolves `system-ui` to a variable font whose letterforms keep their
+ * overlapping components — so a stroked "A" renders as the three bars it is
+ * assembled from, each wearing its own outline. `paint-order: stroke` hides
+ * that in Chrome (it paints the seams under the fill) but WebKit only honours
+ * it for SVG, which is why every laptop preview looked fine and the phone did
+ * not. A ring of text-shadows is cast by the glyph's *finished* silhouette,
+ * so it is seamless on every platform.
+ *
+ * `w` is the ring's thickness outside the glyph: pass HALF the stroke width
+ * it replaces, because a centred stroke only ever showed half of itself.
+ */
+export function kidInkOutline(w: number, color: string = kidTheme.ink): string {
+  // Enough points that adjacent shadow copies overlap (spacing < ~1px).
+  const steps = Math.max(8, Math.ceil(w * 6.5));
+  return Array.from({ length: steps }, (_, i) => {
+    const a = (i / steps) * Math.PI * 2;
+    return `${(Math.cos(a) * w).toFixed(2)}px ${(Math.sin(a) * w).toFixed(2)}px 0 ${color}`;
+  }).join(", ");
+}
+
 /** SVG counterpart: a stroke painted under the glyph fill. */
 export function kidSvgOutline(
   w = 6,

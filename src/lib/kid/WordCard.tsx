@@ -1,6 +1,6 @@
 import React from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { kidRadius, kidShadow, kidTheme, kidType } from "./theme";
+import { kidInkOutline, kidRadius, kidShadow, kidTheme, kidType } from "./theme";
 
 // The Big Word card. When a vocabulary word lands in the narration —
 // EVAPORATION, CONDENSATION — it arrives as an event: a starburst behind, a
@@ -139,8 +139,7 @@ const Letter: React.FC<{
         fontWeight: 900,
         lineHeight: 1,
         color,
-        WebkitTextStroke: `${Math.round(fontSize * 0.055)}px ${kidTheme.ink}`,
-        textShadow: `0 ${Math.round(fontSize * 0.05)}px 0 rgba(36,52,71,0.35)`,
+        textShadow: `${kidInkOutline(fontSize * 0.028)}, 0 ${Math.round(fontSize * 0.05)}px 0 rgba(36,52,71,0.35)`,
         transform: `translateY(${(1 - s) * -120}px) scale(${0.3 + 0.7 * s}) rotate(${(1 - s) * 14}deg)`,
         opacity: Math.min(1, Math.max(0, frame / 2)),
       }}
