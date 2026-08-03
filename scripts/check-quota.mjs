@@ -13,6 +13,10 @@
 // ~452k and ~546k output tokens. Ceiling assumed 450k; default batch cost
 // 200k (observed showrunner batches: 160-260k). Threshold = ceiling - batch.
 // Re-calibrate CEILING if a kill happens below it or plans change.
+// Validated 2026-08-03 against a live /usage reading: 25% used ↔ 127k
+// output tokens measured → implied true ceiling ~508k (~5.1k output tokens
+// per /usage percent). The kills bracket that at -11%/+7% (workload-mix
+// noise), so CEILING=450k is kept as the conservative floor.
 //
 // Caveat (researched 2026-08-02): there is NO supported programmatic quota
 // API — the live state is only in the interactive /usage command. ccusage
