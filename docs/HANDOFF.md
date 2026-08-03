@@ -24,7 +24,41 @@ redesign talk.
 - Ep-1 full-family watch verdict still pending (Claire liked it; crash
   fixed since). Ep-2 third-cut ear-checks pending (list in wind/script.md).
 
-## IN FLIGHT: ep-3 rebuild campaign ("Ray and the Sky Nobody Painted")
+## IN FLIGHT: ep-3 COMEDY REWRITE (wave 3) — screening verdict received
+
+**2026-08-02, family screening verdict (Mike, verbatim):** "I don't think we
+accomplished what we wanted with the rewrite. We didn't change much to be
+honest. It's still quite dry most of the episode. The colors need to drive
+the humor much more. Give them more personality, let them shine. Make room
+for them to have fun interactions (even if it stretches the episode longer).
+Rewrite as much as necessary to get some real humor and fun in the episode
+from the moment the colors are introduced to the end. Even the race felt
+very dry, they barely interacted, and we zoomed through the whole thing."
+Mandate: script-level rewrite, Scene 9 → end. NO implementation until Mike
+signs off the revision. Runtime ceiling lifted; R1 (reply-free roll call)
+overridden in substance; R2 superseded.
+
+**Showrunner session (this one, talking to Mike directly) progress:**
+- Design brief written: `src/videos/sky-blue/rewrite-brief.md` (diagnosis +
+  pillars P1–P6 + hard constraints; authoritative for the rewrite).
+- Measured comedy audit: `scratchpad/ep3_comedy_audit.md` (max laugh gap
+  92.9s, four gaps >50s; colors = 4.5% of spoken time, zero colour-to-colour
+  dialogue; race 50% narrator, three exits in one 5s window).
+- Two treatments DONE: `scratchpad/ep3_treatment_A.md` (sitcom ensemble —
+  wins acts 1–2) and `ep3_treatment_B.md` (race centerpiece — wins act 3).
+- Showrunner synthesis DONE: `scratchpad/ep3_synthesis.md` (binding rulings
+  G1–G8 + scene-by-scene; spine = B's act 3 + A's acts 1–2; target ~16:30–
+  17:00 with trim menu; new scenes s27b start line + s28b2 two walkers).
+- Dialogue-draft story-writer spawned 05:10Z on check-quota PROCEED and was
+  KILLED by the real session limit (resets 1:20am ET = 05:20Z — the script's
+  window estimate was 20 min early; calibration caveat: trust the /usage
+  reset TIME over the script's transcript-derived boundary near a rollover).
+  Recovery in progress: timer armed, SendMessage-resume the same agent after
+  05:22Z ("check on-disk revision2.md, repair partials, continue"). Then:
+  showrunner edit pass → revision doc to Mike for sign-off. NO
+  implementation until Mike approves.
+
+## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
 THREE ADDENDA at the bottom (race supersedes §6.13/6.14; six-voice cast;
 Ray=F2 + frequency ladder). ⚠-banners mark superseded sections.
