@@ -47,6 +47,13 @@ import { RECAP_SCENES } from "./scenes/recap";
 // silence that runs to the cut — mean those scenes carry a short tail rather
 // than the house 30, because the beat already is the tail.
 //
+// REVISION 2 IS WIRED IN (2026-08-03, script layer). Ninety-five new line keys,
+// two new scenes (`s27b_start_line`, `s28b2_two_walkers`) that play their real
+// dialogue over `ScenePlaceholder` until they are staged, one retired key
+// (`a3_12b_narrator`), and Scene 5's silences re-specced to 45/75/105/135 with
+// an interrupted sixth firing. `revision2.md` is the contract; where it and
+// `script.md` disagree it wins, pending the wave-end fold.
+//
 // A THIRD KIND OF NUMBER LIVES HERE SINCE 2026-08-01: the two cast colours'
 // approach gaps. Red takes **16f** before every line he says (a2_23_narrator,
 // rc_04_sunny) and Blue takes **4f** before every line he says (a2_25_narrator,
@@ -147,30 +154,47 @@ const SCRIPT: SceneSpec[] = [
       "a1_15e_ray",
       "a1_16_narrator",
       "a1_16b_ray",
+      "a1_16c_ray",
+      "a1_16d_narrator",
     ],
     gaps: {
-      // THE ESCALATION — 30 / 45 / 60 / 75, and it is the whole architecture of
-      // the gag. Five identical firings of one recording, four flat almanac
-      // answers, and a silence that grows by half a second every time.
+      // THE ESCALATION — 45 / 75 / 105 / 135 since revision2 (Mike's sign-off
+      // amendment, 2026-08-03; was 30 / 45 / 60 / 75), and it is the whole
+      // architecture of the gag. Five identical firings of one recording, four
+      // flat almanac answers, and a silence that grows by a second every time.
+      // "Drag out the pauses… more spacing between are we there yets."
       //
-      // 30f — "**HELD BEAT — 30f (1.0s) after `a1_14_narrator`.**" The first
-      // one is short: the pattern has to be established before it can stretch.
-      a1_14_narrator: 30,
-      // 45f — the second. Same star field, same speed, same distance to go.
-      a1_15b_narrator: 45,
-      // 60f — the third, and the length the delivered cut used for its only
-      // hold here. "Six minutes of story time pass inside two seconds."
-      a1_15d_narrator: 60,
-      // 75f — "**The longest silence in Act One, and the peak of the gag.**
-      // Nothing enters it — no bubble, no gesture, no emotion change, and above
-      // all no sign that anything is about to happen." Equal to the episode's
-      // own ending hold, and the script is explicit that no single silence here
-      // goes past it.
-      a1_16_narrator: 75,
+      // 45f — the first is still the short one: the pattern has to be
+      // established before it can stretch.
+      a1_14_narrator: 45,
+      // 75f — the second. Same star field, same speed, same distance to go.
+      a1_15b_narrator: 75,
+      // 105f — the third. "Six minutes of story time pass inside two seconds"
+      // is now three and a half.
+      a1_15d_narrator: 105,
+      // 135f — "**the longest silence in the episode now lives here, where the
+      // pattern is at its peak and a six-year-old is saying the line with
+      // him.**" Nothing enters it — no bubble, no gesture, no emotion change,
+      // and above all no sign that anything is about to happen. It is now
+      // longer than the ending hold, on Mike's explicit note.
+      a1_16_narrator: 135,
+      // 90f — **the fifth firing goes unanswered.** No answer comes; same star
+      // field, same speed, same dot. The Narrator has simply stopped, and the
+      // audience gets three seconds to understand that. (Was a 6f tail straight
+      // into the cut; the cut is now inherited by the sixth firing's answer.)
+      a1_16b_ray: 90,
+      // 0f — **THE INTERRUPTION.** The Narrator does not wait for the end of
+      // the word. This is the only zero in the file and it is the joke: the one
+      // thing repetition cannot absorb.
+      a1_16c_ray: 0,
+      // 90f — "A bit more traveling, per the amendment: same shot, nothing
+      // changes, nobody speaks." Then the hard cut to Scene 6, which is still
+      // the real answer and now also answers the "No."
+      a1_16d_narrator: 90,
     },
-    // 6f — "Scene tail: 6f. *(Deliberately almost nothing.)* The fifth firing
-    // is **not answered**. Scene 6 cuts hard to a garden at full brightness on
-    // the frame after it… The joke's button is a cut."
+    // 6f — "**Scene tail: 6f.** *(Deliberately almost nothing.)*" The gag's
+    // button is still a cut; it now buttons the sixth firing rather than the
+    // fifth.
     tailFrames: 6,
   },
   {
@@ -227,24 +251,71 @@ const SCRIPT: SceneSpec[] = [
       "a1_38_narrator",
       "a1_39_ray",
       "a1_40_narrator",
+      // The scene's new button (revision2): Blue does a full lap of the arc —
+      // the first thing any colour ever does is a victory lap — and the
+      // ensemble's first words are an identity dispute that plants the race and
+      // births the echo engine in one beat.
+      "a1_40b_blue",
+      "a1_40c_ray",
+      "a1_40d_blue",
+      "a1_40e_indigo",
+      "a1_40f_blue",
     ],
-    // 60f — "**The reveal, and the second longest silence in the episode.** The
-    // arc fans out and holds, with nothing over it. A six-year-old needs to
-    // *count* — seven blobs, seven faces, all of them his — and counting takes
-    // two seconds."
-    gaps: { a1_36_narrator: 60 },
-    tailFrames: 30,
+    gaps: {
+      // 60f — "**The reveal, and the second longest silence in the episode.**
+      // The arc fans out and holds, with nothing over it. A six-year-old needs
+      // to *count* — seven blobs, seven faces, all of them his — and counting
+      // takes two seconds." **Sacred, and it stays empty.**
+      a1_36_narrator: 60,
+      // 4f — Blue's house gap. He breaks formation before the thesis line has
+      // landed.
+      a1_40_narrator: 4,
+      // 4f — Blue again, over the top of the pedant.
+      a1_40c_ray: 4,
+      // 12f — Indigo's gap, from the spot in the arc Blue has just left.
+      a1_40d_blue: 12,
+      // 4f — Blue's objection, which is the source recording of the series
+      // button.
+      a1_40e_indigo: 4,
+      // 16f, trailing — "Indigo does Blue's indignant pose, four frames late.
+      // Nothing else enters. Hard into Scene 10."
+      a1_40f_blue: 16,
+    },
+    // Short, because the held beat above *is* this scene's tail.
+    tailFrames: 14,
   },
   {
     id: "s10_rollcall",
-    lines: ["a1_41_narrator", "a1_42_ray", "a1_43_narrator", "a1_44_ray"],
+    lines: [
+      "a1_41_narrator",
+      "a1_42_ray",
+      // THE VOLLEY (revision2) — the R1 override, and this episode's fresh
+      // roll-call variant. It lands in the MIDDLE of the sacred shape: after
+      // the 20f hold, before the flat narrator line. Nothing lands between
+      // `a1_43` and `a1_44`, ever.
+      "a1_42b_yellow",
+      "a1_42c_green",
+      "a1_42d_blue",
+      "a1_42e_orange",
+      "a1_42f_narrator",
+      "a1_42g_orange",
+      "a1_42h_narrator",
+      "a1_43_narrator",
+      "a1_44_ray",
+    ],
     gaps: {
       // 20f — "The greeting lands. He is still beaming down the line while the
-      // audience works out what they just watched."
+      // audience works out what they just watched." Unchanged; the volley
+      // arrives after it.
       a1_42_ray: 20,
+      // 4f — Blue's house gap; he is talking to Ray, who is made of him.
+      a1_42c_green: 4,
+      // 16f — Red's house gap, spent on a NON-REPLY: Ray looks at Red, Red does
+      // nothing, and the silence is on screen and marked. Orange answers it.
+      a1_42d_blue: 16,
       // 24f — "**Nothing enters this.** No wave, no bubble, no entrance, no
       // emotion change… Deadpan is stillness, and the laugh lives in the
-      // silence rather than in the read."
+      // silence rather than in the read." Unchanged.
       a1_43_narrator: 24,
     },
     tailFrames: 30,
@@ -253,15 +324,26 @@ const SCRIPT: SceneSpec[] = [
     id: "s11_bigword_rainbow",
     lines: [
       "a1_45_narrator",
+      // The letters get sound as they are taken: Green lands seated on the "n"
+      // (chain firing #1), and Blue ricochets off Drip on the B.
+      "a1_45b_green",
+      "a1_45c_blue",
+      "a1_45d_drip",
       "a1_46_narrator",
       "a1_47_ray",
       "a1_48_narrator",
       "a1_49_drip",
+      "a1_49b_drip",
     ],
-    // 12f + 12f — "The house Big Word rhythm, unchanged since episode one.
-    // Short, but they are what make the card feel like a prompt to join in
-    // rather than a slide."
-    gaps: { a1_46_narrator: 12, a1_47_ray: 12 },
+    gaps: {
+      // 4f — Blue's house gap, mid-second-ricochet.
+      a1_45b_green: 4,
+      // 12f + 12f — "The house Big Word rhythm, unchanged since episode one.
+      // Short, but they are what make the card feel like a prompt to join in
+      // rather than a slide."
+      a1_46_narrator: 12,
+      a1_47_ray: 12,
+    },
     tailFrames: 36,
   },
   {
@@ -282,6 +364,9 @@ const SCRIPT: SceneSpec[] = [
   {
     id: "s13_not_plain",
     lines: [
+      // The seven snap back into one Ray and Green is pulled off the "n"
+      // mid-sit. Keyed off Scene 12's closing line; it opens this scene.
+      "a1_54b_green",
       "a1_55_ray",
       "a1_56_ray",
       "a1_57_narrator",
@@ -305,16 +390,34 @@ const SCRIPT: SceneSpec[] = [
     id: "s15_myth_sea",
     lines: [
       "a2_04_narrator",
+      // Blue is IN the postcard, meeting the thing that takes his credit.
+      "a2_04b_blue",
       "a2_05_narrator",
       "a2_06_narrator",
       "a2_07_ray",
       "a2_08_narrator",
       "a2_09_narrator",
+      // The reveal that the sea copies the sky, carried by the character it is
+      // about — and then copied.
+      "a2_09b_blue",
+      "a2_09c_indigo",
     ],
-    // 30f — "The stamp alone on screen, cracked, silent. The house myth-bust
-    // beat."
-    gaps: { a2_05_narrator: 30 },
-    tailFrames: 30,
+    gaps: {
+      // 4f — Blue's house gap.
+      a2_04_narrator: 4,
+      // 30f — "The stamp alone on screen, cracked, silent. The house myth-bust
+      // beat." Unchanged, and nothing enters it.
+      a2_05_narrator: 30,
+      // 4f — Blue, on "The sea copies the sky."
+      a2_09_narrator: 4,
+      // 12f — Indigo's gap.
+      a2_09b_blue: 12,
+      // 20f, trailing — "Blue looks at Indigo. Nothing enters. Blue decides to
+      // be pleased."
+      a2_09c_indigo: 20,
+    },
+    // Short, because the held beat above *is* this scene's tail.
+    tailFrames: 14,
   },
   {
     id: "s16_myth_paint",
@@ -336,8 +439,23 @@ const SCRIPT: SceneSpec[] = [
       "a2_18_narrator",
       "a2_19_ray",
       "a2_20_puff",
+      // Blue's WANT — to be everywhere first — planted here, in the crowd he
+      // will spend the race bouncing off. The race's fuse, lit ten scenes
+      // early.
+      "a2_20b_blue",
+      "a2_20c_indigo",
       "a2_21_narrator",
     ],
+    gaps: {
+      // 4f — Blue's house gap; he pops out of the puff crowd, where he has
+      // evidently been for some time.
+      a2_20_puff: 4,
+      // 12f — Indigo's gap, from shallower in the crowd.
+      a2_20b_blue: 12,
+      // 16f — "Blue's face does the arithmetic on being copied. He lets it go.
+      // Nothing else enters."
+      a2_20c_indigo: 16,
+    },
     tailFrames: 30,
   },
   {
@@ -346,8 +464,16 @@ const SCRIPT: SceneSpec[] = [
       "a2_22_narrator",
       "a2_23_narrator",
       "a2_23b_red",
+      // Orange's devotion now scores the designed boredom: a character
+      // reference for a fact the Narrator has already stated.
+      "a2_23c_orange",
       "a2_24_narrator",
       "a2_24b_red",
+      // Ladder firing #2 of "What Red said." — it retroactively marks "Lovely
+      // air." as a joke for the first-watch kid. Then Yellow, from the frame
+      // edge, cheering a departure.
+      "a2_24c_orange",
+      "a2_24d_yellow",
     ],
     gaps: {
       // 16f — "*(New, and short.)* Red takes his time about answering. **Every
@@ -355,13 +481,17 @@ const SCRIPT: SceneSpec[] = [
       // frames**; that is the character encoded in the timeline rather than in
       // the read."
       a2_23_narrator: 16,
-      // 30f — moved here from `a2_23_narrator`, same length: "Red crosses the
-      // whole frame in silence, dead straight, with Orange behind him… The
-      // audience has to see *boring* before bouncy means anything."
-      a2_23b_red: 30,
+      // 30f — the walk beat, moved one line down the scene now that Orange
+      // answers Red at the house eight: "Red crosses the whole frame in
+      // silence, dead straight, with Orange behind him… The audience has to see
+      // *boring* before bouncy means anything." Nothing enters it.
+      a2_23c_orange: 30,
       // 20f — "**Nothing enters this.** Red is most of the way out of frame.
       // Puff is still holding the shrug. Deadpan is stillness."
       a2_24_narrator: 20,
+      // 12f — the gap the ladder firing needs: "Lovely air." has to be allowed
+      // to be a complete thought before Orange agrees with it.
+      a2_24b_red: 12,
     },
     // 40f — "Red exits during it, at exactly the same speed, and Puff watches
     // him go."
@@ -377,6 +507,13 @@ const SCRIPT: SceneSpec[] = [
       "a2_28_ray",
       "a2_28b_blue",
       "a2_28c_indigo",
+      // THE ECHO ARGUMENT (revision2) — the series' first colour-on-colour
+      // conflict, built entirely from the two-hander the staging already runs.
+      // Blue loses it by playing.
+      "a2_28d_blue",
+      "a2_28e_indigo",
+      "a2_28f_blue",
+      "a2_28g_indigo",
       "a2_29_narrator",
     ],
     gaps: {
@@ -396,6 +533,15 @@ const SCRIPT: SceneSpec[] = [
       // early. Longer than the house eight so the echo arrives after the joke
       // has finished rather than inside it.
       a2_28b_blue: 12,
+      // The argument, alternating house gaps: Blue 4f (he interrupts), Indigo
+      // 12f (he is late), all the way down.
+      a2_28c_indigo: 4,
+      a2_28d_blue: 12,
+      a2_28e_indigo: 4,
+      a2_28f_blue: 12,
+      // 20f — "Blue keeps ricocheting — he never stops moving — but his FACE
+      // gives up mid-ricochet. Nothing enters."
+      a2_28g_indigo: 20,
     },
     tailFrames: 30,
   },
@@ -405,16 +551,25 @@ const SCRIPT: SceneSpec[] = [
       "a2_30_narrator",
       "a2_31_narrator",
       "a2_32_ray",
+      // ONE clip, FOUR bubbles from four corners of the dome: the mechanism as
+      // a greeting. New material lands in the first half only — the "Sorry,
+      // Violet." button is protected absolutely and nothing follows it.
+      "a2_32b_blue",
       "a2_33_narrator",
+      // Yellow points at Violet, to a room that does not look. He bounces
+      // HARDER when cheered.
+      "a2_33b_yellow",
       "a2_34_ray",
       "a2_35_narrator",
       "a2_36_narrator",
       "a2_36b_ray",
     ],
     gaps: {
+      // 4f — Blue's house gap, four bubbles at once.
+      a2_32_ray: 4,
       // 36f — "The full dome, glowing, with nothing over it. The answer to the
       // cold open's question is on screen for the first time and it deserves a
-      // look."
+      // look." Unchanged and empty; Yellow arrives after it.
       a2_33_narrator: 36,
       // 20f — "Violet stops bouncing and droops. **Nothing else enters this
       // beat** — no bubble, no arrow, no emotion change on Ray. Deadpan is
@@ -431,18 +586,37 @@ const SCRIPT: SceneSpec[] = [
       "a2_39_ray",
       "a2_40_narrator",
       "a2_41_ray",
+      // The letter-throwing gag gets un-muted, and the credit-allocation series
+      // gag gets its fourth speaker.
+      "a2_41b_blue",
+      "a2_41c_indigo",
+      "a2_41d_ray",
     ],
-    // 12f + 12f — house Big Word rhythm.
-    gaps: { a2_38_narrator: 12, a2_39_ray: 12 },
+    gaps: {
+      // 12f + 12f — house Big Word rhythm.
+      a2_38_narrator: 12,
+      a2_39_ray: 12,
+      // 4f — Blue's house gap, mid-throw.
+      a2_41_ray: 4,
+      // 12f — Indigo's gap; his letter missed and he claims it anyway.
+      a2_41b_blue: 12,
+      // 12f — the pedant needs the claim to finish standing before he corrects
+      // it.
+      a2_41c_indigo: 12,
+    },
     tailFrames: 36,
   },
   {
     id: "s22_interlock",
-    lines: ["a2_42_narrator", "a2_43_narrator", "a2_44_puff"],
-    // 45f — "The sentence alone on screen, with the AIR ghost behind it.
-    // Nothing enters. This is the series interlock and it is said **once in the
-    // episode**."
-    gaps: { a2_43_narrator: 45 },
+    lines: ["a2_42_narrator", "a2_43_narrator", "a2_44_puff", "a2_44b_blue"],
+    gaps: {
+      // 45f — "The sentence alone on screen, with the AIR ghost behind it.
+      // Nothing enters. This is the series interlock and it is said **once in
+      // the episode**."
+      a2_43_narrator: 45,
+      // 4f — Blue's house gap; the cheapest possible bridge into s23.
+      a2_44_puff: 4,
+    },
     tailFrames: 32,
   },
   {
@@ -499,10 +673,26 @@ const SCRIPT: SceneSpec[] = [
       "a3_01_narrator",
       "a3_02_narrator",
       "a3_03_narrator",
+      // Green is already on the rock Ray's shadow falls off, as if this were
+      // the plan — chain firing #2 — and the narrator never explains it.
+      "a3_03b_green",
+      "a3_03c_ray",
+      "a3_03d_green",
       "a3_04_ray",
       "a3_05_narrator",
+      // Then Blue arrives the way Blue arrives, and plants "first" at the
+      // sunset location.
+      "a3_05b_blue",
+      "a3_05c_ray",
     ],
-    tailFrames: 30,
+    gaps: {
+      // 4f — Blue's house gap; he crashes into the rock beside Ray.
+      a3_05_narrator: 4,
+      // 12f, trailing — "Nobody answers. The next three scenes are the answer."
+      a3_05c_ray: 12,
+    },
+    // Short, because the held beat above *is* this scene's tail.
+    tailFrames: 14,
   },
   // `s26_volcano` IS CUT (2026-08-01). Its one line and its 60f hold are gone
   // and the scene ceases to exist: the volcano gag's entire value is that the
@@ -516,26 +706,122 @@ const SCRIPT: SceneSpec[] = [
     lines: [
       "a3_07_narrator",
       "a3_08_narrator",
+      // The two characters already ON the beams speak: Blue's short trip is
+      // over instantly and he declares victory over an empty finish line.
+      "a3_08b_blue",
+      "a3_08c_narrator",
+      "a3_08d_blue",
       "a3_09_narrator",
       "a3_10_ray",
       "a3_11_narrator",
+      // Green appraises the course. The declaration itself is spent at the
+      // start line, not here — no double declaration.
+      "a3_11b_green",
     ],
+    gaps: {
+      // 4f — Blue's house gap, arriving off the short midday beam.
+      a3_08_narrator: 4,
+      // 4f — Blue again, over the top of the Narrator's correction.
+      a3_08c_narrator: 4,
+    },
     tailFrames: 30,
   },
-  // --- THE SUNSET RACE — three legs, three scenes -------------------------
-  // The 2026-08-01 addendum turns Scene 28's drain into a race down two hundred
-  // miles of sideways air and absorbs the proposed Scene 28b into its finish
-  // line. The scene id `s28_blue_runs_out` is KEPT — it is wiring, read by the
+  // --- SCENE 27b: THE START LINE (NEW, revision2) --------------------------
+  // No component yet: it falls through to `ScenePlaceholder` and plays its real
+  // dialogue in the real voices, which is the campaign's skeleton pattern.
+  // Staging is a later batch — the seven across the beam-head in spectrum
+  // order, Ray on the beam, Sunny enormous behind them (he IS the start line),
+  // and Violet running a full wordless racer warm-up that nobody watches.
+  {
+    id: "s27b_start_line",
+    lines: [
+      "a3_11c_narrator",
+      "a3_11d_blue",
+      "a3_11e_indigo",
+      "a3_11f_blue",
+      "a3_11g_red",
+      "a3_11h_blue",
+      "a3_11i_orange",
+      "a3_11j_blue",
+      "a3_11k_red",
+      "a3_11l_orange",
+      "a3_11m_green",
+      "a3_11n_narrator",
+      "a3_11o_green",
+      "a3_11p_yellow",
+      "a3_11q_narrator",
+      "a3_11r_narrator",
+      "a3_11s_ray",
+      "a3_11t_blue",
+      "a3_11u_red",
+      "a3_11v_sunny",
+    ],
+    gaps: {
+      // 4f — Blue's house gap. He declares over the sportscast.
+      a3_11c_narrator: 4,
+      // 12f — Indigo's gap. His tail goes unanswered: the "I just said that!"
+      // chain is capped at four firings and Blue is busy declaring.
+      a3_11d_blue: 12,
+      // 4f — Blue again, orbiting Red.
+      a3_11e_indigo: 4,
+      // 16f — **Red's approach, and Blue completes another orbit inside it.**
+      a3_11f_blue: 16,
+      // 4f — Blue's house gap, mishearing a monosyllable.
+      a3_11g_red: 4,
+      // 4f — Blue, over the top of Orange's correction.
+      a3_11i_orange: 4,
+      // 16f — Red's approach again, and the engine line lands in it.
+      a3_11j_blue: 16,
+      // 12f — the Narrator's answer has to be allowed to be a complete thought
+      // before Green solves it his own way.
+      a3_11n_narrator: 12,
+      // 20f — "Violet waves both arms." Nobody looks. The head-count joke is
+      // built entirely out of this silence.
+      a3_11q_narrator: 20,
+      // 4f — Blue's house gap; the only word he has left is YES.
+      a3_11s_ray: 4,
+      // 16f — Red's approach, half off frame. Both approach gaps in one
+      // exchange, and both of them are right.
+      a3_11t_blue: 16,
+      // 12f, trailing — "seven bodies strung out down the beam" — then the hard
+      // cut to leg one.
+      a3_11v_sunny: 12,
+    },
+    // 6f — the hard cut, the same almost-nothing Scene 5 uses. The held beat
+    // above is the silence; the tail is just the frame it cuts on.
+    tailFrames: 6,
+  },
+  // --- THE SUNSET RACE — five legs, five scenes ---------------------------
+  // The 2026-08-01 addendum turned Scene 28's drain into a race down two
+  // hundred miles of sideways air; revision2 (2026-08-03) gives it a start line
+  // and a breathing leg, so it now runs start line -> high air -> over the sea
+  // -> two walkers -> the finish, ~3:55 in all. The scene id
+  // `s28_blue_runs_out` is KEPT — it is wiring, read by the
   // act file and by every bubble map, and the note on the ep-2 cameo keys
   // applies: check whether anything actually reads a name before changing it.
   {
     id: "s28_blue_runs_out",
     lines: [
       "a3_12_narrator",
-      "a3_12b_narrator",
+      // `a3_12b_narrator` IS RETIRED (revision2): its substance opens the start
+      // line as `a3_11c_narrator`, where the race actually begins. `a3_12`
+      // chains straight into `a3_13`.
       "a3_13_narrator",
+      // MID-LEG BANTER, before the exits — the leg is now ~55s instead of 36,
+      // and the declared favourite goes out FIRST, in denial, with three other
+      // characters reacting. Two-letter suffixes keep lexical order = playback
+      // order between the already-lettered keys.
+      "a3_13a_blue",
+      "a3_13aa_orange",
+      "a3_13ab_indigo",
       "a3_13b_blue",
+      "a3_13bb_blue",
+      "a3_13bc_yellow",
+      "a3_13bd_narrator",
       "a3_13c_indigo",
+      "a3_13cb_indigo",
+      "a3_13cc_blue",
+      "a3_13cd_yellow",
       "a3_13d_yellow",
       "a3_14_narrator",
       "a3_14b_ray",
@@ -546,17 +832,32 @@ const SCRIPT: SceneSpec[] = [
       // 45f — "The blue drains out of the beam in silence, one ping at a time,
       // over most of the width of the frame. This is Act Two's mechanism doing
       // something *new*, and it needs to be watched rather than described."
-      // It is now also the start of the race: seven colours set off inside it.
+      // It is now also the field stringing out down the beam.
       a3_13_narrator: 45,
+      // 16f — Red's approach, spent on nothing: Red keeps walking, and Orange
+      // answers the taunt for him.
+      a3_13a_blue: 16,
+      // 12f — Indigo's gap, arriving at the puff Blue just left.
+      a3_13aa_orange: 12,
+      // 4f + 4f — Blue's house gap. The drain hold is no longer his approach;
+      // the banter is, and he is mid-air on the line as before.
+      a3_13ab_indigo: 4,
+      a3_13b_blue: 4,
       // 12f — Indigo's gap, the same one he takes in Scene 19: he is four beats
       // behind Blue, always, and the echo has to arrive after the line rather
       // than under it.
-      a3_13b_blue: 12,
-      // 20f — VIOLET'S EXIT GOES HERE, in silence, between Indigo's echo and
-      // Yellow shouting after him. He goes last, highest and furthest, and he
-      // is the only one who does not say anything on his way out. Nothing else
-      // enters this beat: the silence *is* the joke and a bubble would spend it.
-      a3_13c_indigo: 20,
+      a3_13bd_narrator: 12,
+      a3_13c_indigo: 12,
+      // 4f — Blue's house gap, faint from high above. Byte-identical clip; the
+      // "faint" is the mix and the tiny top-of-frame bubble.
+      a3_13cb_indigo: 4,
+      // 20f — VIOLET'S EXIT GOES HERE, in silence, after the cheers and before
+      // Yellow shouts after him. He goes last, highest and furthest, and he is
+      // the only one who does not say anything on his way out. Nothing else
+      // enters this beat: the silence *is* the joke and a bubble would spend
+      // it. **Unchanged in content — it has moved down the scene with the
+      // exits.**
+      a3_13cd_yellow: 20,
       // 20f — "The goodbye lands. Ray is still waving after them while the
       // audience works out who just left." Unchanged.
       a3_14b_ray: 20,
@@ -572,12 +873,22 @@ const SCRIPT: SceneSpec[] = [
     id: "s28b_race_island",
     lines: [
       "a3_14e_narrator",
+      // Orange's play-by-play, at walking pace, of events Red personally
+      // attended.
+      "a3_14eb_orange",
+      "a3_14ec_orange",
       "a3_14f_green",
+      // Green's exit as a want achieved: the start-line promise, kept.
+      "a3_14fb_green",
+      "a3_14fc_yellow",
       "a3_14g_narrator",
       "a3_14h_yellow",
       "a3_14i_narrator",
     ],
     gaps: {
+      // 16f — Red's approach, spent on Red walking and saying nothing, which is
+      // what Orange is about to translate.
+      a3_14eb_orange: 16,
       // 20f — Green sits down on a becalmed sailboat and stays sat. The beat is
       // him not getting up again, which is the whole character.
       a3_14f_green: 20,
@@ -591,6 +902,36 @@ const SCRIPT: SceneSpec[] = [
     // Short, because the held beat above *is* this scene's tail.
     tailFrames: 14,
   },
+  // --- SCENE 28b2: TWO WALKERS (NEW, revision2) ---------------------------
+  // The breathing leg, and the direct answer to "we zoomed through the whole
+  // thing": Red and Orange walking, Ray on the beam, and above them the whole
+  // sky decorated by the five who have already bounced out. No component yet —
+  // it plays its real dialogue over `ScenePlaceholder`.
+  {
+    id: "s28b2_two_walkers",
+    lines: [
+      "a3_14j_yellow",
+      "a3_14k_ray",
+      "a3_14l_narrator",
+      "a3_14m_orange",
+      "a3_14n_ray",
+      "a3_14o_orange",
+      "a3_14p_ray",
+      "a3_14q_red",
+    ],
+    gaps: {
+      // 12f — the pedant's correction has to stand for a moment before the
+      // devotion thesis lands on top of it.
+      a3_14n_ray: 12,
+      // 45f — **the mandate's "room", spent as room.** The two walkers, the
+      // decorated sky, the sea. The race breathes and nothing enters. (The trim
+      // menu lists 45f -> 30f here and nothing more.)
+      a3_14o_orange: 45,
+      // 16f — Red's approach, and the whole engine arrives in four words.
+      a3_14p_ray: 16,
+    },
+    tailFrames: 30,
+  },
   {
     id: "s28c_red_arrives",
     lines: [
@@ -598,6 +939,14 @@ const SCRIPT: SceneSpec[] = [
       "a3_16_narrator",
       "a3_17_ray",
       "a3_18_narrator",
+      // THE FINISH HAPPENS TO RED — comedy first, then the earned quiet. He
+      // walks out of the end of the beam at the speed he has walked at all
+      // episode, never speeds up, and never finds out what he won.
+      "a3_18a_ray",
+      "a3_18ab_red",
+      "a3_18ac_orange",
+      "a3_18ad_orange",
+      "a3_18ae_narrator",
       "a3_18b_narrator",
       "a3_18c_red",
       "a3_18d_red",
@@ -605,6 +954,11 @@ const SCRIPT: SceneSpec[] = [
       "a3_18f_narrator",
     ],
     gaps: {
+      // 16f — Red's approach. "He takes his time. He always takes his time."
+      a3_18a_ray: 16,
+      // 12f — Orange's climax lands in two pieces; the second is the want,
+      // named, and nobody corrects him.
+      a3_18ac_orange: 12,
       // 36f — "Red walks. Orange walks. The sky is entirely his colour and
       // there is nobody else in it. **Nothing enters this beat.**"
       a3_18b_narrator: 36,
@@ -630,10 +984,18 @@ const SCRIPT: SceneSpec[] = [
       "a3_20_ray",
       "a3_21_narrator",
       "a3_22_sunny",
+      // One line of sound ON the Red-and-Orange walk-behind: the actual sunset
+      // reviews the show about him, passing, not stopping, not looking.
+      "a3_22b_red",
       "a3_23_narrator",
     ],
-    // 12f + 12f — house Big Word rhythm, third and last firing.
-    gaps: { a3_19_narrator: 12, a3_20_ray: 12 },
+    gaps: {
+      // 12f + 12f — house Big Word rhythm, third and last firing.
+      a3_19_narrator: 12,
+      a3_20_ray: 12,
+      // 16f — Red's house gap, crossing behind the card.
+      a3_22_sunny: 16,
+    },
     tailFrames: 36,
   },
   {
@@ -678,6 +1040,11 @@ const SCRIPT: SceneSpec[] = [
       "rc_02_ray",
       "rc_03_puff",
       "rc_03b_blue",
+      // The SCATTER panel's argument gains its third claimant — the echo
+      // engine's final firing, at maximum: the copy claims the mechanism
+      // itself, and all three of them are right.
+      "rc_03c_indigo",
+      "rc_03d_blue",
       "rc_04_sunny",
       "rc_04b_red",
       "rc_05_narrator",
@@ -686,6 +1053,11 @@ const SCRIPT: SceneSpec[] = [
       // 4f — Blue's house gap. He shoves into Puff's panel before Puff has
       // finished claiming the word, and neither of them concedes.
       rc_03_puff: 4,
+      // 12f — Indigo's gap, one last time.
+      rc_03b_blue: 12,
+      // 4f — Blue's house gap, and G2's fourth and final firing. Nobody
+      // adjudicates; the panel light moves on.
+      rc_03c_indigo: 4,
       // 16f — Red's house gap. He takes his time, then walks into Sunny's panel
       // from the side and out of the far edge of it.
       rc_04_sunny: 16,

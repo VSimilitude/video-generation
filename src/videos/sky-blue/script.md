@@ -4,8 +4,20 @@
 **Topic:** why the sky is blue — and why a sunset is not
 **Audience:** six-year-olds — and the grown-up in the room
 **Target:** ~10.5–12 minutes of finished video
-**Shape:** cold open, three acts, recap. Thirty-six scenes, two hundred and
-eight spoken lines.
+**Shape:** cold open, three acts, recap. Thirty-eight scenes, three hundred and
+two spoken lines (revision 2, 2026-08-03; was thirty-six and two hundred and
+eight).
+
+> **REVISION 2 APPLIED, 2026-08-03** — `revision2.md` is wired in; where the
+> two disagree, `revision2.md` wins pending the wave-end fold.
+>
+> The script layer only: ninety-five new line keys in `narration.mjs`, all of
+> their timing in `Video.tsx`, two new scenes (`s27b_start_line`,
+> `s28b2_two_walkers`) playing their dialogue over the placeholder until they
+> are staged, one retired key (`a3_12b_narrator`), and Scene 5 re-specced below.
+> The scene-by-scene fold of the other thirty-odd scenes is wave-end work and
+> has NOT happened: for every scene except Scene 5, read `revision2.md` for what
+> is now in it.
 
 > **MAJOR REVISION APPLIED, 2026-08-01.** `revision.md` and its three addenda
 > are wired in: the seven colours become the ensemble and six of them are cast;
@@ -73,13 +85,23 @@ existed (`a2_23`, `a2_25`).
 
 | Colour | Engine | Voice | Speed | Lines | Temperament, and the physical signature that must survive a paused frame |
 |---|---|---|---|---|---|
-| **Red** | minimax | `Patient_Man` `calm` | 0.9 | 5 | Big, slow, deep and entirely unbothered; has never hurried in his life and does not intend to start. **Walks.** Always the same speed, always a dead-straight line, never reacts to anything crossing his path. |
-| **Orange** | minimax | `Determined_Man` `calm`, pitch **+2** | 0.95 | 1 | Red's second. Agrees with Red about everything, including the pace. **Matches Red's stride exactly**, one body-length behind, and never overtakes him. |
-| **Yellow** | minimax | `Sweet_Girl_2` `happy` | 1.0 | 2 | Cheerful about literally everything, including bad news. **Waves.** At everyone, continuously, including at things that are leaving. |
-| **Green** | minimax | `Friendly_Person` `calm` | 0.95 | 1 | The mellow one. Content. Has no notes. **Sits down** the instant anything on screen stops moving. |
-| **Blue** | minimax | `Decent_Boy` `happy` | 1.05 | 4 | Fast, eager, permanently over-caffeinated, interrupts himself, apologises to everything he hits. **Ricochets.** Never travels more than half a frame without changing direction. |
-| **Indigo** | minimax | `Decent_Boy` `happy`, pitch **+3** | 1.1 | 2 | Blue's shadow, vocally as well as physically — the same casting, thinner and faster. **Copies Blue's last move on a delay** and arrives after the joke. Every line he has is the *tail* of the Blue line before it. |
+| **Red** | minimax | `Patient_Man` `calm` | 0.9 | 11 | Big, slow, deep and entirely unbothered; has never hurried in his life and does not intend to start. **Walks.** Always the same speed, always a dead-straight line, never reacts to anything crossing his path. |
+| **Orange** | minimax | `Determined_Man` `calm`, pitch **+2** | 0.95 | 14 | Red's second. Agrees with Red about everything, including the pace. **Matches Red's stride exactly**, one body-length behind, and never overtakes him. |
+| **Yellow** | minimax | `Sweet_Girl_2` `happy` | 1.0 | 10 | Cheerful about literally everything, including bad news. **Waves.** At everyone, continuously, including at things that are leaving. |
+| **Green** | minimax | `Friendly_Person` `calm` | 0.95 | 10 | The mellow one. Content. Has no notes. **Sits down** the instant anything on screen stops moving. |
+| **Blue** | minimax | `Decent_Boy` `happy` | 1.05 | 29 | Fast, eager, permanently over-caffeinated, interrupts himself, apologises to everything he hits. **Ricochets.** Never travels more than half a frame without changing direction. |
+| **Indigo** | minimax | `Decent_Boy` `happy`, pitch **+3** | 1.1 | 12 | Blue's shadow, vocally as well as physically — the same casting, thinner and faster. **Copies Blue's last move on a delay** and arrives after the joke. Every line he has is the *tail* of the Blue line before it. |
 | **Violet** | — | **NONE, EVER** | — | **0** | Works harder than anybody on screen and is never once looked at. **Vibrates** so hard his own outline blurs — the fastest object in any frame he is in. |
+
+**The Lines column is revision2's count** (2026-08-03), and it counts *firings*
+rather than recordings: a `sameAs` alias is a line the character says and a clip
+nobody paid for twice. Across the whole episode revision 2 adds ninety-five
+keys: seventy-six new paid MiniMax recordings, twelve free kokoro, and nine
+aliases (and it retires one). The old one-or-two-lines-each cap
+is gone; what replaced it is a hard cap of **one want per colour** — Blue wants
+to be first, Indigo wants to be Blue, Red wants peace and quiet, Orange wants to
+be Red, Yellow wants everyone to have a wonderful time, Green wants to sit down,
+and Violet wants to be noticed and never is.
 
 **`speed: 1.05` and `speed: 1.1` are firsts for the suite.** No line in three
 episodes had ever run above 1.0. Blue's does because the character is faster than
@@ -144,9 +166,10 @@ a free re-time that costs the acting and nothing else.
 the moment a line is reworded — **and so does Sunny**, who went back to
 `am_puck` after the MiniMax read was rejected. Ray, Drip, Puff and the six cast
 colours are on MiniMax speech-2.8-hd (via Replicate), which is paid but takes an
-`emotion` and a `pitch` per line and honours inline pause markers. **Sixty-nine
-MiniMax lines, one hundred and thirty-four kokoro lines and five `sameAs`
-aliases**; the aliases are copies rather than recordings and cost nothing at all.
+`emotion` and a `pitch` per line and honours inline pause markers. **One hundred and
+forty-three MiniMax lines, one hundred and forty-five kokoro lines and fourteen
+`sameAs` aliases** (revision 2; was 69 / 134 / 5); the aliases are copies rather
+than recordings and cost nothing at all.
 Sunny's nineteen (eighteen recordings plus the `sameAs` greeting) are free and re-time for nothing whenever a word of his changes.
 
 **Most MiniMax lines are not seasoned.** Ray's fifty are twenty-one `auto`,
@@ -209,8 +232,9 @@ means: that line's `gapFrames` in `Video.tsx` is **45**, the picture is alone on
 screen for a second and a half, and **nothing** — no line, no entrance, no
 emotion change — starts inside it. Thirty frames is one second. These numbers
 are the script's, not the builder's; raising one is a note, lowering one is a
-change to the joke. **There are forty-two of them here**, and `Video.tsx` carries
-forty-eight `gaps` entries in total — the other six are the approach gaps below.
+change to the joke. `Video.tsx` carries **one hundred and seventeen** `gaps`
+entries since revision 2 (was forty-eight): the held beats proper, plus the
+approach gaps below, which the ensemble now spends on nearly every turn.
 
 **And a third kind of number, new since 2026-08-01: the approach gaps.** Red
 takes **16f** before every line he says and Blue takes **4f** — twice and half
@@ -361,7 +385,14 @@ speed, not the size of the dot. That is the whole set and it must stay that
 boring for twenty-five seconds.
 **Lines:** `a1_13_ray`, `a1_14_narrator`, `a1_15_ray`, **`a1_15b_narrator`**,
 **`a1_15c_ray`**, **`a1_15d_narrator`**, **`a1_15e_ray`**, `a1_16_narrator`,
-**`a1_16b_ray`**
+**`a1_16b_ray`**, **`a1_16c_ray`**, **`a1_16d_narrator`**
+
+**REVISED 2026-08-03** (revision2, Mike's sign-off amendment: *"drag out the
+pauses… more spacing between are we there yets,"* plus an interrupted sixth
+firing *"as the last one with a bit more traveling after and then hop to the
+arrival scene"*). The silences stretch, the fifth firing goes unanswered into a
+long dead hold, and the gag gains a **sixth, different** firing. Firings 1–5 are
+still ONE recording (`a1_13_ray` + its four aliases), untouched.
 
 **HELD BEAT — 45f (1.5s) before `a1_13_ray`** (i.e. on `a1_12_ray`'s
 `gapFrames`, in Scene 4). Unchanged.
@@ -369,34 +400,54 @@ boring for twenty-five seconds.
 > **RAY:** Are we there yet?
 > **NARRATOR:** One minute down. Seven to go.
 
-**HELD BEAT — 30f (1.0s) after `a1_14_narrator`.**
+**HELD BEAT — 45f (1.5s) after `a1_14_narrator`.** *(was 30f)*
 
 > **RAY:** Are we there yet?
 > **NARRATOR:** Two minutes down. Six to go.
 
-**HELD BEAT — 45f (1.5s) after `a1_15b_narrator`.**
+**HELD BEAT — 75f (2.5s) after `a1_15b_narrator`.** *(was 45f)*
 
 > **RAY:** Are we there yet?
 > **NARRATOR:** Four minutes down. Four to go.
 
-**HELD BEAT — 60f (2.0s) after `a1_15d_narrator`.**
+**HELD BEAT — 105f (3.5s) after `a1_15d_narrator`.** *(was 60f)*
 
 > **RAY:** Are we there yet?
 > **NARRATOR:** Seven minutes down. One to go.
 
-**HELD BEAT — 75f (2.5s) after `a1_16_narrator`.** **The longest silence in Act
-One, and the peak of the gag.** Same star field, same speed, same distance to go.
-Nothing enters it — no bubble, no gesture, no emotion change, and above all no
-sign that anything is about to happen.
+**HELD BEAT — 135f (4.5s) after `a1_16_narrator`.** *(was 75f)* **The longest
+silence in the episode now lives here**, where the pattern is at its peak and a
+six-year-old is saying the line with him. Same star field, same speed, same
+distance to go. Nothing enters it — no bubble, no gesture, no emotion change,
+and above all no sign that anything is about to happen.
 
-> **RAY:** Are we there yet?
+> **RAY:** Are we there yet? *(`a1_16b_ray`, fifth firing, unchanged)*
 
-**Scene tail: 6f.** *(Deliberately almost nothing.)* The fifth firing is **not
-answered**. Scene 6 cuts hard to a garden at full brightness on the frame after
-it, and `a1_17_narrator` — *"And then Ray arrived, all at once, the way light
-always does"* — is the answer. The joke's button is a cut.
+**HELD BEAT — 90f (3.0s) after `a1_16b_ray`.** *(Was a 6f tail straight into the
+cut.)* **No answer comes.** Same star field, same speed, same dot. The Narrator
+has simply stopped answering, and the audience gets three seconds to understand
+that.
 
-**The escalation, and why it is built this way.** Three tools are used and they
+> **RAY:** Are we— *(`a1_16c_ray` — NEW recording, text deliberately truncated
+> to "Are we"; bubble reads `"Are we—"`)*
+
+**GAP — 0f.** The interruption. The Narrator does not wait for the end of the
+word.
+
+> **NARRATOR** *(unamused, drawn out)*: No. *(`a1_16d_narrator` — kokoro at
+> **0.8, the new deadpan floor**; flat, bored, final — the almanac voice with
+> the almanac removed. She is bored, not cross.)*
+
+**HELD BEAT — 90f (3.0s) after `a1_16d_narrator`.** A bit more traveling: same
+shot, nothing changes, nobody speaks.
+
+**Scene tail: 6f.** *(Deliberately almost nothing.)* Scene 6 cuts hard to a
+garden at full brightness on the frame after it, and `a1_17_narrator` — *"And
+then Ray arrived, all at once, the way light always does"* — is still the real
+answer, and it now also answers the "No." The joke's button is still a cut; it
+buttons the sixth firing instead of the fifth.
+
+**The escalation, and why it is built this way.** Four tools are used and they
 do different jobs:
 
 - **The five firings are one recording.** `a1_13_ray` is the only synthesis; the
@@ -405,16 +456,19 @@ do different jobs:
   *only* the sameness. Five identical clips also mean five identical mouth shapes
   and five identical bubbles, which is what makes the picture as flat as the
   sound.
-- **The gaps escalate: 30 / 45 / 60 / 75.** The escalation is the *rhythm*, not
-  an attempt to bore anybody. No single silence here is longer than the 75f the
-  episode already spends on its ending, and the effect being bought is a child
-  recognising a pattern and starting to say the line *with* Ray.
+- **The gaps escalate: 45 / 75 / 105 / 135.** The escalation is the *rhythm*,
+  not an attempt to bore anybody, and the effect being bought is a child
+  recognising a pattern and starting to say the line *with* Ray — which is
+  exactly what the longer silences buy more of. This is now the only place in
+  the episode that runs past the 75f ending hold, on Mike's explicit note.
 - **The answers stay flat and the arithmetic skips.** One/seven, two/six,
   **four/four**, seven/one. The skip from two to four is the grown-up smirk and
   it stops the four answers being a recitation. All four are the same shape, the
   same speed (0.92) and the same complete lack of interest.
-- **The fifth is interrupted**, and that is the only thing in the scene that is
-  not a repetition.
+- **The sixth is interrupted**, and it is the only thing in the scene that is
+  not a repetition. The fifth firing inherits the old button (a cut) as a dead
+  hold instead; the sixth being audibly DIFFERENT is what tells the ear the gag
+  is over.
 
 **Pedagogy:** none, still, and it now buys more of what it always bought — eight
 minutes for ninety three million miles, stated as a travel time a child can be

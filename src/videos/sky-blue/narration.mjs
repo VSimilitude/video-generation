@@ -23,21 +23,28 @@
 //   Puff      minimax  Exuberant_Girl   1.0   five short lines. He is the air
 //                                             that does the scattering
 //
-// AND THE COLOURS — six of the seven, since the 2026-08-01 revision:
+// AND THE COLOURS — six of the seven, since the 2026-08-01 revision, and the
+// ensemble the episode is now built on since REVISION 2 (2026-08-03), which
+// multiplied every one of these counts:
 //
-//   Red       minimax  Patient_Man      0.9   five lines, all `calm`. The calm
-//                                             end of the spectrum, and the
-//                                             owner of the sunset
-//   Orange    minimax  Determined_Man   0.95  ONE line. Red's second. Agrees
-//                                             with Red about everything
-//                                             (pitch +2)
-//   Yellow    minimax  Sweet_Girl_2     1.0   two lines. Cheerful about
+//   Red       minimax  Patient_Man      0.9   eleven lines, all `calm`. The
+//                                             calm end of the spectrum, the
+//                                             owner of the sunset, and the man
+//                                             who never finds out it was a race
+//   Orange    minimax  Determined_Man   0.95  fourteen lines. Red's second.
+//                                             Agrees with Red about everything,
+//                                             including his silences (pitch +2)
+//   Yellow    minimax  Sweet_Girl_2     1.0   ten lines. Cheerful about
 //                                             literally everything, including
-//                                             bad news
-//   Green     minimax  Friendly_Person  0.95  one line. Content. Has no notes
-//   Blue      minimax  Decent_Boy       1.05  four lines. The jittery end, and
-//                                             the reason the sky is blue
-//   Indigo    minimax  Decent_Boy       1.1   two lines. Blue's echo — same
+//                                             bad news, and she cheers every
+//                                             exit as an achievement
+//   Green     minimax  Friendly_Person  0.95  ten lines. Content. Has no notes
+//                                             about anything except spots
+//   Blue      minimax  Decent_Boy       1.05  twenty-nine lines. The jittery
+//                                             end, the reason the sky is blue,
+//                                             and the declared favourite who
+//                                             goes out first
+//   Indigo    minimax  Decent_Boy       1.1   twelve lines. Blue's echo — same
 //                                             casting, pitch +3, faster, and
 //                                             his lines are the TAILS of
 //                                             Blue's, arriving late
@@ -78,7 +85,7 @@
 // proves it: each one carries exactly ONE emotion for the whole episode and
 // never changes it, because the emotion *is* the character. Red is `calm` in
 // every frame he is in; a Red who plays a reaction has stopped being Red.
-// Ray's fifty keys are twenty-one
+// Ray's sixty keys are thirty-one
 // "auto", twenty-five seasoned and four `sameAs` aliases of one shared
 // recording, and the seasoning is
 // his arc:
@@ -209,13 +216,15 @@ const PUFF = { engine: "minimax", voiceId: "Exuberant_Girl", speed: 1.0 };
 // stated as a property of light; both are staged as a temperament and then
 // named by the Narrator in lines that already existed (`a2_23`, `a2_25`).
 //
-// LINE BUDGET, AND IT IS THE DISCIPLINE THE WHOLE THING RESTS ON. Blue and Red
-// are the double act (four and five lines). Orange, Yellow, Green and Indigo
-// get ONE OR TWO LINES EACH and every one of them is the character in a
-// sentence — Orange only ever agrees with Red, Yellow is cheerful about
-// anything including bad news, Green is content, Indigo repeats the tail of
-// whatever Blue just said, late. Nobody gets a second personality trait and
-// nobody gets a third line.
+// LINE BUDGET — REPLACED BY REVISION 2 (2026-08-03), and the discipline moved
+// rather than went away. The old rule was a hard line cap (one or two each);
+// the new rule is a hard WANT cap. Every colour now speaks from the frame it
+// exists, and every one of them wants exactly one thing, forever: Blue wants to
+// be first, Indigo wants to be Blue, Red wants peace and quiet, Orange wants to
+// be Red, Yellow wants everyone to have a wonderful time, Green wants to sit
+// down, and Violet wants to be noticed and never is. Nobody gets a second
+// personality trait, no line is longer than fifteen words, and every repeated
+// line in the episode is ONE recording played twice (see `sameAs` below).
 //
 // ============================ VIOLET =======================================
 // VIOLET HAS NO LINES. NOT ONE, NOT EVER, IN THIS EPISODE OR ANY OTHER.
@@ -230,10 +239,13 @@ const PUFF = { engine: "minimax", voiceId: "Exuberant_Girl", speed: 1.0 };
 // That is the same joke, load-bearing, for zero clips and zero seconds. The
 // moment he speaks he is a twelfth voice and the gag is gone.
 //
-// He is greeted by name in Scene 10, half falls off the W in Scene 11, is
-// apologised to in Scene 20, exits the race in silence in Scene 28 while
-// everybody around him is shouting, and waves from the edge of the recap panel.
-// Five firings, no clips.
+// He is greeted by name in Scene 10 (and freezes mid-wave when Yellow notices
+// him, which nobody else does), half falls off the W in Scene 11, bounces
+// HARDER when cheered in Scene 20, is apologised to in the same scene, runs a
+// full wordless racer warm-up at the start line in Scene 27b while the Narrator
+// counts "Six racers." and then "Make that seven.", exits the race in silence
+// in Scene 28 while everybody around him is shouting, and waves from the edge
+// of the recap panel. Nine firings, no clips.
 // ===========================================================================
 //
 // CASTING, decided by Mike 2026-08-01. Each colour is behind its own constant
@@ -422,7 +434,11 @@ export default {
       emotion: "happy",
     },
     // Scene 5, the eight minutes. FIVE FIRINGS OF ONE QUESTION, with a flat
-    // almanac answer after four of them and nothing at all after the fifth.
+    // almanac answer after four of them and nothing at all after the fifth —
+    // and, since revision2 (Mike's sign-off amendment, 2026-08-03), a SIXTH
+    // firing that is deliberately different: Ray is cut off mid-word and the
+    // Narrator answers "No." The interruption is the only thing in the scene
+    // that is not a repetition, which is what tells the ear the gag is over.
     //
     // THE FIVE FIRINGS ARE ONE RECORDING. a1_13_ray is the only synthesis; the
     // other four are aliases of it. Not four takes — MiniMax returned episode
@@ -433,8 +449,9 @@ export default {
     // as flat as the sound. The text lives on a1_13; changing it there
     // re-copies all four, and there is nothing to keep in step by hand.
     //
-    // The escalation lives in `Video.tsx` (30 / 45 / 60 / 75), not here. The
-    // clips must not vary at all: it is the gaps that grow.
+    // The escalation lives in `Video.tsx` (45 / 75 / 105 / 135 since the
+    // amendment, was 30 / 45 / 60 / 75), not here. The clips must not vary at
+    // all: it is the gaps that grow.
     a1_13_ray: { text: "Are we there yet?", ...RAY },
     a1_14_narrator: {
       text: "One minute down. Seven to go.",
@@ -462,11 +479,22 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
-    // FIRING FIVE, AND IT IS NOT ANSWERED. Scene 6 cuts hard to a garden at
-    // full brightness on the frame after it, and a1_17_narrator ("And then Ray
-    // arrived, all at once, the way light always does") is the answer. The
-    // button of the whole gag is a cut, which is why Scene 5's tail is 6f.
+    // FIRING FIVE, AND IT GOES UNANSWERED — the Narrator has simply stopped.
+    // 90f of nothing after it (Video.tsx), then the sixth firing.
     a1_16b_ray: { sameAs: "a1_13_ray" },
+    // FIRING SIX, AND IT IS A DIFFERENT RECORDING ON PURPOSE (amendment,
+    // 2026-08-03). Deliberately truncated text — Ray is cut off mid-word by the
+    // Narrator, on a 0f gap. Bubble reads "Are we—"; the truncation is in the
+    // TEXT, never in an edit of the clip.
+    // EAR-CHECK: it must read as an interruption rather than as a complete
+    // utterance (MiniMax may append falling intonation). Fallback text: "Are we
+    // there" — still truncated. Audition two takes.
+    a1_16c_ray: { text: "Are we", ...RAY },
+    // THE NEW DEADPAN FLOOR, 0.8 (a2_49_narrator's 0.85 was the old one).
+    // Unamused, drawn out, final: the almanac voice with the almanac removed.
+    // She is bored, not cross — the tone guardrail. Kokoro, so free to re-take;
+    // if 0.8 distorts, 0.85 and let the 90f hold after it do the dragging.
+    a1_16d_narrator: { text: "No.", ...NARRATOR, speed: 0.8 },
     a1_17_narrator: {
       text: "And then Ray arrived, all at once, the way light always does.",
       ...NARRATOR,
@@ -573,6 +601,29 @@ export default {
       ...NARRATOR,
       speed: 0.95,
     },
+    // --- Scene 9's button (revision2) — the ensemble's first words -----------
+    // The first thing any colour ever does is a victory lap, and the first
+    // thing any colour ever says is a claim about it. Blue laps the whole arc
+    // the audience has just watched come out together.
+    a1_40b_blue: {
+      text: "I came out first! I am the fastest me!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // The pedant, on the record, twenty seconds after the ensemble exists.
+    a1_40c_ray: { text: "We came out at the same time.", ...RAY },
+    // Unfalsifiable kid logic. 4f in front of it, like every Blue line.
+    a1_40d_blue: { text: "Yes! And I was first!", ...BLUE, emotion: "happy" },
+    // Indigo, from the spot in the arc Blue has just left. Strict tail of the
+    // line above — he never gets a sentence of his own.
+    a1_40e_indigo: { text: "I was first.", ...INDIGO, emotion: "happy" },
+    // **SOURCE RECORDING** for the series' repetition button: this exact clip
+    // fires four times (s19 `a2_28d_blue`, s28 `a3_13cc_blue`, s32
+    // `rc_03d_blue`), byte-identical, capped at four.
+    // EAR-CHECK FIRST: it has to survive all four placements — birth, argument,
+    // faint-from-the-sky, recap. Indignant but FLAT; if the take is too sold,
+    // the s28 faint firing reads as a scream. Audition two takes before locking.
+    a1_40f_blue: { text: "I just said that!", ...BLUE, emotion: "happy" },
     a1_41_narrator: {
       text: "And now they were not travelling together at all.",
       ...NARRATOR,
@@ -598,6 +649,48 @@ export default {
       speed: 0.88,
       emotion: "happy",
     },
+    // --- Scene 10's volley (revision2) — the replies, in the MIDDLE ---------
+    // The sacred shape is untouched: names -> 20f hold -> THIS -> flat narrator
+    // line -> 24f -> unbothered button. Nothing lands between a1_43 and a1_44,
+    // ever.
+    //
+    // Yellow answers all seven at once and then notices Violet, who freezes
+    // mid-wave. Nobody else looks. EAR-CHECK the caps on "GREAT": emphasis, not
+    // shout distortion; fallback drops the caps.
+    a1_42b_yellow: {
+      text: "Hi! Hello! Hi! And Violet — GREAT waving!",
+      ...YELLOW,
+      emotion: "happy",
+    },
+    // He sits. That is the whole character and he does it on his first line.
+    a1_42c_green: {
+      text: "Hello. I am going to sit down now.",
+      ...GREEN,
+      emotion: "calm",
+    },
+    // To Ray, who is made of him.
+    a1_42d_blue: { text: "Hi! Are you new? I'm Blue!", ...BLUE, emotion: "happy" },
+    // **CHAIN SOURCE, and the direction is deliberate** — see the sameAs note
+    // at a3_18e_orange. Orange agrees with a silence: Red said NOTHING, and
+    // this is the devotion engine's thesis. Ladder firing #1 of three
+    // (`a2_24c_orange` s18, `a3_18e_orange` s28c).
+    // EAR-CHECK: flat `calm`, and it has to port to both later contexts.
+    a1_42e_orange: { text: "What Red said.", ...ORANGE, emotion: "calm" },
+    // The straight line the joke needs, said flat.
+    a1_42f_narrator: {
+      text: "Red did not say anything.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
+    // **SOURCE RECORDING** — fires again byte-identical as `a3_14o_orange` in
+    // Scene 28b2. Two firings, per the ruling.
+    a1_42g_orange: { text: "He meant to.", ...ORANGE, emotion: "calm" },
+    // A small formal throat-clear, moving the meeting along (amendment,
+    // 2026-08-03). EAR-CHECK: kokoro's read must land as a throat-clear; if it
+    // reads as a WORD, CUT the clip — the beat works without it. Never
+    // substitute "Hmm.", which is her established beat at a1_27/rc_18b and must
+    // not be diluted.
+    a1_42h_narrator: { text: "Ahem.", ...NARRATOR, speed: 0.92 },
     // The straight line. Flat, slow, and the 24f held beat after it does the
     // work. Narrator, so it stays on kokoro and re-times for free.
     a1_43_narrator: {
@@ -612,6 +705,26 @@ export default {
     a1_45_narrator: {
       text: "Seven colours, side by side, bending out of the rain.",
       ...NARRATOR,
+    },
+    // **CHAIN SOURCE** for "This is a nice spot." — three firings, byte
+    // identical: here (landing seated on the "n" of RAINBOW), s25 on the rock
+    // (`a3_03b_green`) and s28b on the becalmed sailboat (`a3_14f_green`, which
+    // used to be the recording and is now the alias — see the note there).
+    // Planted BEFORE the race on purpose: the s28b firing has to read as
+    // deadpan repetition, which it cannot do cold.
+    a1_45b_green: { text: "This is a nice spot.", ...GREEN, emotion: "calm" },
+    // Mid-second-ricochet off Drip on the B. The funniest visual in the act
+    // stops being silent.
+    a1_45c_blue: {
+      text: "Hi! Sorry! Are you a letter?",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // The rainbow is hers and she knows it.
+    a1_45d_drip: {
+      text: "I'm the RAIN! I made this whole word!",
+      ...DRIP,
+      emotion: "happy",
     },
     a1_46_narrator: {
       text: "You already know its name. It is a rainbow.",
@@ -635,6 +748,10 @@ export default {
       ...DRIP,
       emotion: "happy",
     },
+    // To Ray, deadpan, watching Blue ricochet off her again.
+    // **TRIM-OPTIONAL** (revision2's trim menu, −3s) — first cut if the episode
+    // needs to lose seconds.
+    a1_49b_drip: { text: "He is very you.", ...DRIP, emotion: "happy" },
     a1_50_narrator: {
       text: "Here is one to try, next time it rains while the sun is out.",
       ...NARRATOR,
@@ -658,6 +775,10 @@ export default {
       text: "Every rainbow you have seen was light coming back out of rain.",
       ...NARRATOR,
     },
+    // Scene 13's opener: the seven snap back into one Ray and Green is pulled
+    // off the "n" mid-sit. Calm, zero rancour — he is not complaining, he is
+    // reporting. Caps emphasis only, no stretched vowel.
+    a1_54b_green: { text: "I had JUST sat down.", ...GREEN, emotion: "calm" },
     a1_55_ray: { text: "So I am not the plain one.", ...RAY },
     // Scene 13: the act's turn. Same fact as a1_26, opposite feeling.
     a1_56_ray: {
@@ -701,6 +822,13 @@ export default {
       text: "Lots of people think the sky is blue because the sea is blue.",
       ...NARRATOR,
     },
+    // Blue is IN the postcard, hovering over the bay, meeting the thing that
+    // takes his credit — and being delighted about it.
+    a2_04b_blue: {
+      text: "Hi! You're blue! I'm Blue! Twins!",
+      ...BLUE,
+      emotion: "happy",
+    },
     // Episode one's MYTH stamp, back for its second firing in the series.
     a2_05_narrator: { text: "Big myth. Busted.", ...NARRATOR, speed: 0.9 },
     a2_06_narrator: {
@@ -718,6 +846,15 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
+    // On "The sea copies the sky." — the mechanism carried by its character.
+    // **TRIM-OPTIONAL PAIR** with a2_09c (revision2's trim menu, −5s).
+    a2_09b_blue: {
+      text: "Copy me! Everybody copy me!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // The copy, demanding copies. Tail rule intact.
+    a2_09c_indigo: { text: "Copy me.", ...INDIGO, emotion: "happy" },
     // TEXT CHANGED 2026-08-01 (was "It was PAINT! I painted it! I am extremely
     // good at painting!"). Three claims that now ESCALATE, and the middle one
     // names the colour the episode is about. The old middle claim had no
@@ -776,6 +913,16 @@ export default {
       ...PUFF,
       emotion: "happy",
     },
+    // Blue pops out from deep inside the puff crowd, where he has evidently
+    // been for some time. THE WANT IS PLANTED HERE — "first" has to be an
+    // established want ten scenes before s25 and s27b spend it.
+    a2_20b_blue: {
+      text: "I know! I met them! I got here FIRST!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // From shallower in the crowd. Tail.
+    a2_20c_indigo: { text: "Got here first.", ...INDIGO, emotion: "happy" },
     a2_21_narrator: {
       text: "Air is real stuff, made of bits far too small to see.",
       ...NARRATOR,
@@ -804,6 +951,10 @@ export default {
     // 16f of approach in front of it, in Video.tsx: every Red line takes twice
     // the house turn gap, so the character is in the timeline and not the read.
     a2_23b_red: { text: "I go straight through. Always have.", ...RED, emotion: "calm" },
+    // Orange's first line, and it is a character reference for a fact the
+    // Narrator has already stated: devotion as corroboration. The 30f walk beat
+    // now sits after THIS line rather than after Red's (Video.tsx).
+    a2_23c_orange: { text: "He does. I've seen him.", ...ORANGE, emotion: "calm" },
     a2_24_narrator: {
       text: "Straight through. Barely touched the sides.",
       ...NARRATOR,
@@ -817,6 +968,13 @@ export default {
     // shortest and slowest clip in the file; listen for clipping. Fallback if
     // it clips: "Lovely air, that."
     a2_24b_red: { text: "Lovely air.", ...RED, emotion: "calm" },
+    // LADDER FIRING #2 of "What Red said." — the same recording as
+    // `a1_42e_orange`, and it retroactively marks "Lovely air." as a joke for
+    // the first-watch kid. 12f in front of it (Video.tsx).
+    a2_24c_orange: { sameAs: "a1_42e_orange" },
+    // Yellow from the frame edge, cheering a DEPARTURE — the "Great ___, ___!"
+    // format planted before the race fires it five times. Red does not react.
+    a2_24d_yellow: { text: "Great walking, Red!", ...YELLOW, emotion: "happy" },
     a2_25_narrator: {
       text: "Now Blue. Blue is jumpy. Blue is the bounciest one there is.",
       ...NARRATOR,
@@ -861,6 +1019,20 @@ export default {
     // making a point and he is not joining in — he is four frames behind a joke
     // that has finished. Same casting as Blue, pitch +3, faster: audibly a copy.
     a2_28c_indigo: { text: "And here. And here.", ...INDIGO, emotion: "happy" },
+    // THE ECHO ARGUMENT — the series' first colour-on-colour conflict, and Blue
+    // acknowledges Indigo for the first time. He loses it by playing.
+    // G2 firing #2: the same recording as `a1_40f_blue`, byte-identical.
+    a2_28d_blue: { sameAs: "a1_40f_blue" },
+    // The echo eats the objection. Tail rule intact.
+    a2_28e_indigo: { text: "Said that.", ...INDIGO, emotion: "happy" },
+    a2_28f_blue: {
+      text: "Stop saying what I say!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // Tail again, and the argument is over: 20f after this Blue's FACE gives up
+    // mid-ricochet and nothing enters.
+    a2_28g_indigo: { text: "What I say.", ...INDIGO, emotion: "happy" },
     // Now a CONFIRMATION rather than an announcement, which is strictly better:
     // the audience got the answer from Blue and the Narrator agrees with them.
     a2_29_narrator: {
@@ -884,9 +1056,24 @@ export default {
       ...RAY,
       emotion: "surprised",
     },
+    // ONE CLIP, FOUR BUBBLES, popping from four corners of the dome: Ray's
+    // roll-call greeting returned from everywhere at once — the mechanism as a
+    // greeting. Deliberate override of script.md's "this scene does not get a
+    // Blue line"; it lands in the first half, clear of the "Sorry, Violet."
+    // button, which nothing follows.
+    a2_32b_blue: { text: "Hi! Hi! Hi! Hi!", ...BLUE, emotion: "happy" },
     a2_33_narrator: {
       text: "So blue is not a patch of the sky. Blue is the WHOLE sky.",
       ...NARRATOR,
+    },
+    // From the bottom corner, pointing at Violet, to a room that does not look.
+    // Violet bounces HARDER when cheered. Nobody looks. Wordless chain, next
+    // firing — and it sharpens a2_34_ray, because Ray is the only one who
+    // listened to her.
+    a2_33b_yellow: {
+      text: "Look at Violet go! LOOK at him!",
+      ...YELLOW,
+      emotion: "happy",
     },
     a2_34_ray: { text: "Hold on. Violet bounces even more than Blue does.", ...RAY },
     // The honest answer, and a grown-up smirk. Our eyes are the reason, not the
@@ -938,6 +1125,17 @@ export default {
       ...RAY,
       emotion: "happy",
     },
+    // Mid-throw. The letter-throwing gag stops being silent.
+    a2_41b_blue: {
+      text: "I threw those letters! That was me!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // His letter missed. He claims credit for it anyway. Tail.
+    a2_41c_indigo: { text: "That was me.", ...INDIGO, emotion: "happy" },
+    // The credit-allocation series gag ("Technically, that one is mostly Drip",
+    // a1_59), fourth speaker — and the first time it is the pedant's.
+    a2_41d_ray: { text: "It was mostly Blue.", ...RAY },
     a2_42_narrator: {
       text: "And here is the bit that joins the whole show together.",
       ...NARRATOR,
@@ -953,6 +1151,13 @@ export default {
     a2_44_puff: {
       text: "I TOLD you I was real stuff!",
       ...PUFF,
+      emotion: "happy",
+    },
+    // The cheapest possible bridge across the interlock into s23, and it plants
+    // the recap's SCATTER squabble. **TRIM-OPTIONAL** (trim menu, −2s).
+    a2_44b_blue: {
+      text: "And I do the bouncing part!",
+      ...BLUE,
       emotion: "happy",
     },
     a2_45_sunny: { text: "EXCUSE ME. Whose light is that?", ...SUNNY },
@@ -1070,6 +1275,21 @@ export default {
       text: "So we went down to the sea to watch.",
       ...NARRATOR,
     },
+    // CHAIN FIRING #2 of "This is a nice spot." — the same recording as
+    // `a1_45b_green`. He is already on the rock Ray's shadow falls off, as if
+    // this were the plan, and the narrator never explains it (the same
+    // convention that puts Red on Sunny's diagram in s23).
+    a3_03b_green: { sameAs: "a1_45b_green" },
+    a3_03c_ray: {
+      text: "Green? How long have you been down here?",
+      ...RAY,
+    },
+    // Opinions ONLY about spots.
+    a3_03d_green: {
+      text: "Don't know. It is a good rock.",
+      ...GREEN,
+      emotion: "calm",
+    },
     a3_04_ray: {
       text: "Why is it going orange? Did somebody change me?",
       ...RAY,
@@ -1079,6 +1299,16 @@ export default {
       text: "Nobody changed you. You are the same light you were this morning.",
       ...NARRATOR,
     },
+    // Blue crashes into the rock beside Ray and plants "first" at the sunset
+    // location, three scenes before the start line.
+    a3_05b_blue: {
+      text: "First! Sorry, rock! I am FIRST!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // Nobody answers this. The next three scenes are the answer — 12f, then the
+    // cut.
+    a3_05c_ray: { text: "First at what?", ...RAY },
     // a3_06_narrator IS DELETED (2026-08-01), and Scene 26 with it. The volcano
     // gag's entire value is that the show appears not to think it is important,
     // and the delivered cut stopped the episode, pointed a camera at it for
@@ -1097,6 +1327,16 @@ export default {
       text: "At lunchtime, Ray came straight down. A short trip through the air.",
       ...NARRATOR,
     },
+    // He arrives off the short midday beam instantly and declares victory over
+    // an empty finish line.
+    a3_08b_blue: { text: "Done! First place!", ...BLUE, emotion: "happy" },
+    // Flat. The Narrator is not arguing, she is filing a fact.
+    a3_08c_narrator: {
+      text: "He was the only one there.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
+    a3_08d_blue: { text: "Still counts!", ...BLUE, emotion: "happy" },
     a3_09_narrator: {
       text: "Now the sun is low. So Ray comes in sideways, along the ground.",
       ...NARRATOR,
@@ -1108,6 +1348,110 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
+    // Studying the long beam, approvingly: spot-hunting aimed down the course.
+    // **TRIM-OPTIONAL** (trim menu, −5s).
+    a3_11b_green: {
+      text: "A long way past a lot of nice spots.",
+      ...GREEN,
+      emotion: "calm",
+    },
+
+    // --- Scene 27b: THE START LINE (NEW SCENE, revision2) ------------------
+    // The seven line up across the beam-head in spectrum order, Ray on the
+    // beam, Sunny enormous behind them — he IS the start line, the beam comes
+    // out of him. Violet runs a full wordless racer warm-up at the far end and
+    // nobody watches. Keys continue letter-suffixes off `a3_11`, so nothing is
+    // renumbered; `a3_12b_narrator` is RETIRED and its substance opens this
+    // scene as `a3_11c_narrator`.
+    //
+    // Flat sportscast. Carries the retired line's job: tell the audience what
+    // to watch without promising a winner.
+    a3_11c_narrator: {
+      text: "Seven colours. Two hundred miles of sideways air. Watch who lasts.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
+    a3_11d_blue: {
+      text: "I will win! I am the fastest one there is!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // Tail — and it goes UNANSWERED, because the "I just said that!" chain is
+    // capped at four firings and Blue is busy declaring.
+    a3_11e_indigo: {
+      text: "The fastest one there is.",
+      ...INDIGO,
+      emotion: "happy",
+    },
+    // Orbiting Red, two full loops of him per line.
+    a3_11f_blue: {
+      text: "Red! Race you to the sunset! Red! RACE you!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // **SOURCE RECORDING**, and the shortest clip in the file. Fires again
+    // byte-identical as `a3_11u_red` inside this same scene, and both of them
+    // are right.
+    // EAR-CHECK FIRST, WITH THE REST OF RED'S RACE QUARTET (`a3_11k`,
+    // `a3_18ab`, `a3_14q`): contented, never tired — a tired Red turns the race
+    // into the light dying. Listen for clipping at both ends (the a2_24b note).
+    // Fallback: "No. Thank you."
+    a3_11g_red: { text: "No.", ...RED, emotion: "calm" },
+    a3_11h_blue: {
+      text: "He means yes! See you there!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // Flat, to nobody. Orange translates Red for a room that heard him.
+    a3_11i_orange: { text: "He said no.", ...ORANGE, emotion: "calm" },
+    // Red walks straight through the assembled start line without stopping.
+    a3_11j_blue: {
+      text: "Red! Wait! It has not started yet!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // THE ENGINE LINE — he will never find out it was a race. FULL STOP, not a
+    // question mark, and the read must match. EAR-CHECK (quartet).
+    // Fallback: "The start of what."
+    a3_11k_red: { text: "Start of what.", ...RED, emotion: "calm" },
+    // Setting off after him at exactly Red's speed. The audience heard what Red
+    // said.
+    a3_11l_orange: {
+      text: "Red says good luck, everybody.",
+      ...ORANGE,
+      emotion: "calm",
+    },
+    a3_11m_green: { text: "Is there anywhere to sit?", ...GREEN, emotion: "calm" },
+    a3_11n_narrator: {
+      text: "It is two hundred miles of air.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
+    // A want, declared — and paid off at the sailboat in s28b (`a3_14fb`).
+    a3_11o_green: { text: "I will find something.", ...GREEN, emotion: "calm" },
+    // Cheering the whole field, both sides, which is her entire person — and it
+    // properly arms "Great bounce, Violet!" ninety seconds early.
+    a3_11p_yellow: {
+      text: "Good luck, Blue! Good luck, Green! Good luck, Violet!",
+      ...YELLOW,
+      emotion: "happy",
+    },
+    // EAR-CHECK the pair: nobody-notices-Violet, never the show being mean.
+    // Kokoro, free to re-take; fallback softens the second to "And that makes
+    // seven."
+    a3_11q_narrator: { text: "Six racers.", ...NARRATOR, speed: 0.92 },
+    a3_11r_narrator: { text: "Make that seven.", ...NARRATOR, speed: 0.92 },
+    a3_11s_ray: { text: "Wait. Are we racing?", ...RAY },
+    a3_11t_blue: { text: "YES!", ...BLUE, emotion: "happy" },
+    // The second firing of "No.", byte-identical, half off frame. Both approach
+    // gaps in one exchange.
+    a3_11u_red: { sameAs: "a3_11g_red" },
+    // SUNNY IS THE STARTING GUN, and this is his only race appearance — then he
+    // is scenery sinking behind the field. No "You're welcome!", no "HA! HA!":
+    // the catchphrase ceiling stays where it is. Kokoro, like every Sunny line.
+    // EAR-CHECK: the three items must SEPARATE (the a2_47 three-halves test).
+    // The fix is `speed` 0.92, never the text.
+    a3_11v_sunny: { text: "READY! STEADY! SUNSET!", ...SUNNY },
     // ---------------------------------------------------------------
     // THE SUNSET RACE (Scenes 28 / 28b / 28c) — the 2026-08-01 addendum.
     //
@@ -1126,14 +1470,11 @@ export default {
       text: "And you know what blue does in air. Blue bounces.",
       ...NARRATOR,
     },
-    // NEW. Starts the race and tells the audience what to watch, without
-    // promising a winner — the survivors are not better, they are just the ones
-    // that did not bounce. Slowed; it is a setup line for a ninety-second gag.
-    a3_12b_narrator: {
-      text: "All seven set off down it together. Watch who lasts.",
-      ...NARRATOR,
-      speed: 0.92,
-    },
+    // `a3_12b_narrator` ("All seven set off down it together. Watch who
+    // lasts.") IS RETIRED (revision2, 2026-08-03). Its substance opens the new
+    // start line as `a3_11c_narrator`, where the race actually begins; moving
+    // the key itself would have broken the file's strict playback order.
+    // Kokoro, so the retirement is free.
     // Three beats of the same word, and the 45f beat after it is the race
     // starting — blue pinging out of the beam one colour at a time. Slowed so
     // they are three bounces and not one noise.
@@ -1142,21 +1483,63 @@ export default {
       ...NARRATOR,
       speed: 0.88,
     },
+    // MID-LEG BANTER (revision2) — the 45f drain hold is no longer Blue's
+    // approach; this is. Ricocheting past Red BACKWARDS: a taunt with an
+    // apology inside it, because nobody in this show is unkind.
+    // EAR-CHECK: if `happy` at 1.05 reads jeering, fallback is "You are too
+    // slow! Sorry!"
+    a3_13a_blue: {
+      text: "Too slow, Red! Sorry! You are too slow!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // Devotion, escalating: Red does not answer taunts, so Orange answers them.
+    a3_13aa_orange: {
+      text: "Red is going the right speed.",
+      ...ORANGE,
+      emotion: "calm",
+    },
+    // Tail, arriving at the puff Blue just left, to a Red who has already been
+    // taunted. (Two-letter suffix: the only place an insertion falls between
+    // two already-lettered keys. Lexical order is still playback order.)
+    a3_13ab_indigo: { text: "Too slow. Sorry.", ...INDIGO, emotion: "happy" },
     // BLUE IS OUT FIRST, and he goes UP, cheerfully, apologising to the air on
-    // his way — the same joke as a2_25b, landing after the 45f race-start beat:
-    // the one place in the episode he does NOT get his 4f interruption gap
-    // (see script.md, Scene 28 — the race start is held, not interrupted). He is not
-    // losing a race, he is becoming the sky, which is what the whole episode
-    // has been about for four minutes.
+    // his way — the same joke as a2_25b. He is not losing a race, he is
+    // becoming the sky, which is what the whole episode has been about for four
+    // minutes.
     a3_13b_blue: {
       text: "Sorry! Sorry! I am going UP now! Bye!",
       ...BLUE,
       emotion: "happy",
     },
+    // PHYSICS-HONEST DENIAL, and the s9 claim detonating: he really is going
+    // up, and nothing is being taken away from him.
+    a3_13bb_blue: {
+      text: "I am still winning! I am winning UPWARDS!",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // Cheer #1 of five. She cheers exits as achievements, because they are.
+    a3_13bc_yellow: { text: "Great winning, Blue!", ...YELLOW, emotion: "happy" },
+    // Physics honesty as validation — the exit IS a victory. Flat.
+    a3_13bd_narrator: {
+      text: "He does win the sky.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
     // INDIGO, four beats late, from the place Blue has just left, saying the
-    // TAIL of Blue's line and nothing of his own. Second and last firing of the
-    // rule established at a2_28c. Do not give him a new sentence here.
+    // TAIL of Blue's line and nothing of his own. Do not give him a new
+    // sentence here.
     a3_13c_indigo: { text: "Going up now. Bye.", ...INDIGO, emotion: "happy" },
+    // Rising after him: the credit-claim in its final form.
+    a3_13cb_indigo: { text: "Winning upwards.", ...INDIGO, emotion: "happy" },
+    // G2 firing #3, byte-identical, faint from high above. "Faint" is the MIX
+    // and the picture (a tiny bubble at the top of frame), NOT a quieter
+    // re-record: the sameness is the gag. If the pipeline has no per-clip gain,
+    // play it at level.
+    a3_13cc_blue: { sameAs: "a1_40f_blue" },
+    // Cheer #2. **TRIM-OPTIONAL** (trim menu, −2s).
+    a3_13cd_yellow: { text: "Great echo, Indigo!", ...YELLOW, emotion: "happy" },
     // ============================ VIOLET ===================================
     // VIOLET EXITS HERE AND HE DOES NOT SAY ANYTHING. He goes last of the
     // three, highest and furthest, out-bouncing both of them — and while Blue
@@ -1210,11 +1593,31 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
-    // GREEN'S ONE LINE, and it is his entire character: he sits down the
-    // instant anything stops moving, and out here that is a becalmed sailboat.
-    // He is not giving up and he is not sad — he has simply arrived somewhere
-    // nice and has no further notes. `calm`, and he never carries anything else.
-    a3_14f_green: { text: "This is a nice spot.", ...GREEN, emotion: "calm" },
+    // A flat recap of events Red personally attended, delivered at walking
+    // pace, one body-length behind him.
+    a3_14eb_orange: {
+      text: "Blue went up. Indigo went up. Violet went up.",
+      ...ORANGE,
+      emotion: "calm",
+    },
+    // Translating a silence. Red walks.
+    a3_14ec_orange: { text: "Red says he noticed.", ...ORANGE, emotion: "calm" },
+    // GREEN'S EXIT, and it is his entire character: he sits down the instant
+    // anything stops moving, and out here that is a becalmed sailboat. He is
+    // not giving up and he is not sad — he has simply arrived somewhere nice
+    // and has no further notes.
+    //
+    // CHAIN FIRING #3, and the direction was FLIPPED at implementation: this
+    // key used to be the recording, but the generator resolves `sameAs`
+    // strictly backwards through the file (see specProblems in
+    // scripts/generate-narration.mjs), and the chain's first firing is now
+    // Scene 11's. So the source is `a1_45b_green` and this is the alias —
+    // byte-identical either way, which is the whole ruling.
+    a3_14f_green: { sameAs: "a1_45b_green" },
+    // The start-line promise, kept. Settling, eyes closing.
+    a3_14fb_green: { text: "I found one.", ...GREEN, emotion: "calm" },
+    // Cheer #4 — waving, walking, winning, echoing, now sitting.
+    a3_14fc_yellow: { text: "Great sitting, Green!", ...YELLOW, emotion: "happy" },
     // Physics honesty, said plainly, because green scattering less than blue
     // and more than red is the actual shape of the thing and this is the one
     // place the episode can show a MIDDLE of the spectrum. Not "Green gave up".
@@ -1247,6 +1650,39 @@ export default {
       speed: 0.9,
     },
 
+    // --- Scene 28b2: the race, leg three — two walkers (NEW SCENE) ---------
+    // The breathing leg, and the anti-zoom: Red and Orange walking, Ray on the
+    // beam, warm light, sea below, and the whole sky above them decorated by
+    // the five who have already bounced out. "Nobody loses," as one picture.
+    //
+    // Cheer #5 and the chain's button: the only one left who would think to
+    // cheer Yellow is Yellow. Tiny and delighted — the MIX does the "distant",
+    // not the read. Safely one scene clear of the volcano hold.
+    // EAR-CHECK. Fallback: "Great bounce, Yellow!" (third person, may test
+    // funnier).
+    a3_14j_yellow: { text: "Great bounce, me!", ...YELLOW, emotion: "happy" },
+    // Waving up. NO cheer format — Ray does not inherit it.
+    a3_14k_ray: { text: "Bye Yellow!", ...RAY },
+    a3_14l_narrator: {
+      text: "Two colours left. Neither of them is hurrying.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
+    a3_14m_orange: {
+      text: "Red says we are nearly there.",
+      ...ORANGE,
+      emotion: "calm",
+    },
+    // The pedant inheriting the Narrator's s10 line, word for word.
+    a3_14n_ray: { text: "Red did not say anything.", ...RAY },
+    // The devotion thesis in three words, byte-identical to `a1_42g_orange`.
+    // 45f of nothing after it: the race breathes.
+    a3_14o_orange: { sameAs: "a1_42g_orange" },
+    a3_14p_ray: { text: "Are we still racing?", ...RAY },
+    // THE WHOLE ENGINE IN FOUR WORDS, and the last of Red's race quartet.
+    // EAR-CHECK: contented, never tired. Fallback: "I am just walking home."
+    a3_14q_red: { text: "I am walking home.", ...RED, emotion: "calm" },
+
     // --- Scene 28c: the race, finish line ----------------------------------
     a3_15_ray: { text: "So who is left?", ...RAY },
     a3_16_narrator: {
@@ -1258,6 +1694,29 @@ export default {
     a3_18_narrator: {
       text: "The calm ones. Straight down the middle, all the way to your eyes.",
       ...NARRATOR,
+    },
+    // THE FINISH HAPPENS TO RED. He walks out of the end of the beam at the
+    // speed he has walked at all episode, and comedy comes first — the earned
+    // quiet (a3_18b onward) is untouched behind it.
+    a3_18a_ray: { text: "Red! You won!", ...RAY },
+    // The bookend of "Start of what." Full stop, dead straight. He never finds
+    // out. EAR-CHECK (quartet); fallback: "Won what, exactly."
+    a3_18ab_red: { text: "Won what.", ...RED, emotion: "calm" },
+    // ORANGE'S CLIMAX. It must read THRILLED INSIDE `calm` — never deflated —
+    // and the emotion field does not move, because one emotion per colour is
+    // hard. EAR-CHECK; the fallback is textual, not tonal: "I came second!
+    // Right behind Red!" as one line if the two-clip build reads flat.
+    a3_18ac_orange: { text: "Second! I came second!", ...ORANGE, emotion: "calm" },
+    // The want, named: second place is where he LIVES, and nobody corrects him.
+    a3_18ad_orange: {
+      text: "Second is right behind Red!",
+      ...ORANGE,
+      emotion: "calm",
+    },
+    a3_18ae_narrator: {
+      text: "That is the happiest anyone has been all day.",
+      ...NARRATOR,
+      speed: 0.92,
     },
     // RED'S MOMENT — the payoff of five scenes of being boring on purpose, and
     // the only place in the episode where the sunset is allowed to be lovely
@@ -1276,11 +1735,17 @@ export default {
     // dying, and this is the clip where that call gets made. 45f of silence
     // after it, and nothing enters. EAR-CHECK before any of Act Three is staged.
     a3_18d_red: { text: "Peace and quiet.", ...RED, emotion: "calm" },
-    // ORANGE'S ONE LINE IN THE EPISODE, and possibly his entire vocabulary for
-    // the series: he agrees with Red, about everything, including this. It
-    // lands AFTER the 45f silence rather than inside it, one body-length
-    // behind, which is where he has been all episode.
-    a3_18e_orange: { text: "What Red said.", ...ORANGE, emotion: "calm" },
+    // ORANGE'S CATCHPHRASE, third and last firing: he agrees with Red, about
+    // everything, including this. It lands AFTER the 45f silence rather than
+    // inside it, one body-length behind, which is where he has been all
+    // episode.
+    //
+    // DIRECTION FLIPPED at implementation (revision2's stated fallback): this
+    // key was the recording, but `sameAs` resolves strictly backwards through
+    // the file (specProblems, scripts/generate-narration.mjs), and the ladder
+    // now opens in Scene 10. The source is `a1_42e_orange`; every firing is
+    // still ONE recording, byte-identical, which is the whole ruling.
+    a3_18e_orange: { sameAs: "a1_42e_orange" },
     // About anticipation, not loss. The tone guardrail lives in this line.
     a3_18f_narrator: {
       text: "Red has waited all day for this.",
@@ -1310,6 +1775,10 @@ export default {
       text: "I do this bit ON PURPOSE! For the drama! You're welcome!",
       ...SUNNY,
     },
+    // Passing behind the card, not stopping, not looking: the "Lovely air."
+    // shape, and the actual sunset reviewing the show about him. Feeds
+    // rc_04b_red, which is why this one is not "It is mostly Red."
+    a3_22b_red: { text: "Nice drama.", ...RED, emotion: "calm" },
     a3_23_narrator: {
       text: "A sunset is not different light. It is the same light, taking the long way.",
       ...NARRATOR,
@@ -1351,7 +1820,7 @@ export default {
       speed: 0.95,
     },
     // SAME RECORDING as a1_03, heard faintly from over the far horizon — the
-    // second and last `sameAs` in the file, and the better one. The joke only
+    // oldest `sameAs` in the file and still the best one. The joke only
     // works if it is audibly the identical take of the identical greeting.
     //
     // KEPT DELIBERATELY, NOW THAT SUNNY IS BACK ON KOKORO. Kokoro is
@@ -1392,6 +1861,13 @@ export default {
       ...BLUE,
       emotion: "happy",
     },
+    // The SCATTER panel gains its third claimant, at maximum: the copy claims
+    // the mechanism itself. Tail.
+    rc_03c_indigo: { text: "That is me.", ...INDIGO, emotion: "happy" },
+    // **G2's FOURTH AND FINAL FIRING**, byte-identical. Nobody adjudicates, the
+    // panel light moves on, and all three claimants are right — which is the
+    // mechanism.
+    rc_03d_blue: { sameAs: "a1_40f_blue" },
     rc_04_sunny: {
       text: "SUNSET! That is my light taking the long way! You're welcome!",
       ...SUNNY,
