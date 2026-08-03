@@ -13,6 +13,12 @@
 // ~452k and ~546k output tokens. Ceiling assumed 450k; default batch cost
 // 200k (observed showrunner batches: 160-260k). Threshold = ceiling - batch.
 // Re-calibrate CEILING if a kill happens below it or plans change.
+//
+// Caveat (researched 2026-08-02): there is NO supported programmatic quota
+// API — the live state is only in the interactive /usage command. ccusage
+// estimates from Claude Code's internal transcript JSONL, a format that may
+// change between CC versions. If this script starts erroring or reading
+// nonsense, fall back to Mike running /usage manually at checkpoints.
 
 import { execSync } from "node:child_process";
 
