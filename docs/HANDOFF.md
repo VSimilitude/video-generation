@@ -143,10 +143,10 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   = 13:32.5. Gates on final tree ALL GREEN: typecheck 0, lint:hooks 0,
   both caches 0-to-synthesize, full every-frame --scale=0.25 render
   RENDER_EXIT=0 hand-verified (log + 85.6MB mp4). **WAVE 2 COMPLETE —
-  showrunner signs off GO. Awaiting orchestrator commit + clean-worktree
-  deploy**, then the deployed link + watch-items go to Mike for the
-  family screening (deliverable list in the showrunner's checkpoint
-  report; wave-terminal distillation at
+  committed (a9d1750) and DEPLOYED 2026-08-03 (clean worktree, URL
+  verified 200)**. Screening link + watch-items + distillation sent to
+  Mike; campaign now awaits the family screening → tweak round, then the
+  wave-3 boundary items (retro, bible, kit cleanup — see distillation at
   src/videos/sky-blue/wave2-distillation.md).
 
 **The staging worklist is now authoritative:
