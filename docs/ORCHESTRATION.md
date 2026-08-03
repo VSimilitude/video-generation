@@ -54,6 +54,15 @@ one, not free capacity.
 - **Watch quota; restart at wave boundaries.** Wave ends = state committed,
   HANDOFF current → end the session and start fresh. Late turns in a long
   session are what eat quota.
+- **Quota gate between batches** (adopted 2026-08-02 after two mid-batch
+  kills lost showrunner transcripts): at every batch checkpoint, BEFORE
+  sending the "proceed", run `node scripts/check-quota.mjs` (measures the
+  active 5-hour window from local transcripts; calibrated ceiling in the
+  script header). On PAUSE: hold the proceed message and schedule it for the
+  window reset (cron/Monitor) — the showrunner sits cleanly stopped with its
+  transcript intact and resumes with full context. A clean stop always
+  resumes; a mid-flight kill loses the transcript and forces a fresh boot +
+  audit. Re-calibrate the script's CEILING when a kill contradicts it.
 
 ## Boot sequence for a fresh orchestrator
 
