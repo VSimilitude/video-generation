@@ -691,8 +691,12 @@ const SCRIPT: SceneSpec[] = [
       // 12f, trailing — "Nobody answers. The next three scenes are the answer."
       a3_05c_ray: 12,
     },
-    // Short, because the held beat above *is* this scene's tail.
-    tailFrames: 14,
+    // **Showrunner re-time RT-1 (2026-08-03): 14 -> 40.** The 12f trailing gap
+    // plus a 14f tail gave Ray's wordless collect of Green fourteen frames of
+    // room, and at fourteen it read as "Green got up" rather than as *being
+    // collected* (the staging batch flagged it as CRAMPED #1). The extra 26
+    // frames are spent entirely on the lift; nothing else enters the tail.
+    tailFrames: 40,
   },
   // `s26_volcano` IS CUT (2026-08-01). Its one line and its 60f hold are gone
   // and the scene ceases to exist: the volcano gag's entire value is that the
@@ -923,10 +927,14 @@ const SCRIPT: SceneSpec[] = [
       // 12f — the pedant's correction has to stand for a moment before the
       // devotion thesis lands on top of it.
       a3_14n_ray: 12,
-      // 45f — **the mandate's "room", spent as room.** The two walkers, the
-      // decorated sky, the sea. The race breathes and nothing enters. (The trim
-      // menu lists 45f -> 30f here and nothing more.)
-      a3_14o_orange: 45,
+      // **Showrunner re-time RT-2 (2026-08-03): 45f -> 75f.** The mandate's
+      // "room", spent as room — the two walkers, the decorated sky, the sea.
+      // The breathing leg is the one scene in the act whose subject is the
+      // sky, so the beat that carries it gets a full breath rather than a
+      // sentence-length pause. Still nothing enters it. (The trim menu's
+      // 45f -> 30f entry is now a 75f -> 30f entry: it is the first place to
+      // look if the episode ever needs a second back.)
+      a3_14o_orange: 75,
       // 16f — Red's approach, and the whole engine arrives in four words.
       a3_14p_ray: 16,
     },

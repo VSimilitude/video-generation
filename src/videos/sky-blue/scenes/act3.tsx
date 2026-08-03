@@ -8,6 +8,7 @@ import {
   Bubbles,
   Camera,
   GREEN_SIT_DROP,
+  GREEN_SIT_FRAMES,
   HEIGHT,
   INDIGO_LAG,
   PHASE,
@@ -34,12 +35,14 @@ import {
   kidTheme,
   kidType,
   lineWindow,
+  markCentre,
   moveAlong,
   orangeFollow,
   plateY,
   redWalk,
   settleWave,
   spring,
+  stand,
   useCurrentFrame,
   useEmotion,
   useStage,
@@ -51,6 +54,8 @@ import {
   type ShardName,
   type TimedScene,
 } from "./common";
+import { StartLineScene } from "./s27b_start_line";
+import { TwoWalkersScene } from "./s28b2_two_walkers";
 import {
   BLUE_CRAYON,
   CRAYONS,
@@ -472,8 +477,40 @@ const S25_RAY = { x: 940, y: 748, scale: 1.05 };
 /** Rock front-right, so the sideways light throws its shadow across frame. */
 const S25_ROCK = { x: 1548, ground: 942, scale: 0.62 };
 
+/**
+ * **Green is already on the rock when the scene opens** (revision2), and the
+ * show never explains how — the same convention that puts Red on Sunny's
+ * diagram in Scene 23. He is the chain's second firing of "This is a nice
+ * spot." and the joke is entirely that he got here first.
+ *
+ * The seat is measured off `Rock`, not eyeballed. The prop is a 620×340 box
+ * drawn about its own bottom edge (`transformOrigin: 50% 100%`) at
+ * `S25_ROCK.ground`, and its crest sits at local y ≈ −92 in that box, i.e.
+ * `ground − (170 + 92) · scale` = 942 − 162 ≈ **780**, spanning roughly
+ * x 1427..1699. He sits left of the crown so the rock still reads as a rock and
+ * not as a plinth.
+ */
+const S25_GREEN = { x: 1508, seat: 782, scale: 0.46 };
+
+/**
+ * Where Blue hits, and the cupboard he ricochets in afterwards.
+ *
+ * He comes in over the water from up and left and **hits the rock's left
+ * flank**, which is the one thing in frame he can apologise to. The box is
+ * between Ray and the rock, clear of Green's seat: two of the seven sharing one
+ * square of a still is a bug, and Green's whole beat is that he was there
+ * first and is not moving.
+ */
+const S25_BLUE_HIT = { x: 1406, y: 798 };
+const S25_BLUE_BOX: Box = { x: 1046, y: 552, w: 292, h: 192 };
+
 const S25_BUBBLES: Record<string, string> = {
+  a3_03b_green: "This is a nice spot.",
+  a3_03c_ray: "How long have you been here?",
+  a3_03d_green: "It is a good rock.",
   a3_04_ray: "Why is it going orange?",
+  a3_05b_blue: "First! Sorry, rock!",
+  a3_05c_ray: "First at what?",
 };
 
 /**
@@ -489,8 +526,13 @@ const S25_BUBBLES: Record<string, string> = {
  */
 const SeaSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const [, drainFrom] = lineWindow(scene, "a3_01_narrator");
   const [, drainTo] = lineWindow(scene, "a3_02_narrator");
+  const [greenFrom] = lineWindow(scene, "a3_03b_green");
+  const [, greenTo] = lineWindow(scene, "a3_03d_green");
+  const [blueFrom] = lineWindow(scene, "a3_05b_blue");
+  const [, lastTo] = lineWindow(scene, "a3_05c_ray");
 
   const horizon = plateY(SEA_SUNSET_FRAC, { drift: SEA_DRIFT });
 
@@ -504,6 +546,24 @@ const SeaSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const stage = useStage(scene);
   const emotion = useEmotion(scene, "ray", { a3_04_ray: "amazed" }, "happy");
+
+  // --- THE COLLECTION, and it is the tightest beat in the act ---------------
+  //
+  // "Ray collects Green wordlessly on the way out — Green is back in the beam
+  // for s27b and no one mentions it" (revision2, staging note, no line). The
+  // scripted 12f hold after `a3_05c_ray` is *deadpan*, so nothing moves inside
+  // it; what is left is the 14-frame tail, which is all the room there is. So
+  // the collection is played by GREEN rather than by Ray: Ray only turns his
+  // head, and Green unsticks himself from the rock and drifts up after him —
+  // a reflex, at `GREEN_SIT_FRAMES` speed, which is the one gesture this
+  // character owns that is fast enough to land in half a second.
+  //
+  // **Flagged to the showrunner as cramped**: at ~45 frames it would read as
+  // "collected"; at 14 it reads as "Green got up". The fix is a longer trailing
+  // gap on `a3_05c_ray`, which is a script number and not the builder's.
+  const collectFrom = lastTo + 12;
+  const collect = clamp01((frame - collectFrom) / GREEN_SIT_FRAMES);
+
   // He drifts a little further out over the water across the shot; a hero
   // parked on one x for twenty seconds is a sticker.
   const rayX = S25_RAY.x + Math.sin(frame / 90) * 26 - (frame / scene.durationInFrames) * 40;
@@ -514,6 +574,60 @@ const SeaSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     who: "ray",
     side: "right",
   };
+
+  // --- GREEN, on the rock, and then off it ---------------------------------
+  const greenP = {
+    // Up and only a little across: Blue is ricocheting in a cupboard between
+    // Ray and the rock, and a lift that carried Green sideways put the two of
+    // them in the same square of a still.
+    x: S25_GREEN.x - collect * 56,
+    // Off the rock and up into the beam's height, in one small lift.
+    y: stand("shard", S25_GREEN.seat) - collect * 130,
+  };
+  const greenMark: Mark = {
+    x: greenP.x,
+    y: greenP.y,
+    scale: S25_GREEN.scale,
+    who: "shard",
+    side: "left",
+  };
+  // Sat before the episode got here, and up only on the way out. `greenSit`
+  // wants a frame the world changed at; his sit has no beginning inside this
+  // scene, so it is 1 until the collection and then it is a reflex.
+  const greenSat = 1 - collect;
+
+  // --- BLUE, arriving the way Blue arrives ---------------------------------
+  //
+  // His 4-frame gap is spent in the air: he crosses the frame, hits the rock on
+  // the frame before his line opens, apologises to it, and then cannot hold
+  // still. The ricochet clock starts at the impact, so `blueRicochet(0)` — the
+  // centre of the box — is where the bounce throws him.
+  const hitAt = blueFrom - 2;
+  const blueIn = clamp01((frame - (hitAt - 18)) / 18);
+  const blueBox = blueRicochet(Math.max(0, frame - hitAt), S25_BLUE_BOX);
+  const blueFly = moveAlong({ x: 470, y: 214 }, S25_BLUE_HIT, blueIn, {
+    arc: 0.16,
+    ease: kidEase.easeInQuad,
+  });
+  const blueP = frame < hitAt ? blueFly : blueBox;
+  const blueMark: Mark = {
+    x: blueP.x,
+    y: hover("shard", blueP.y, 0.4),
+    scale: 0.4,
+    who: "shard",
+    side: "left",
+  };
+
+  // His eyes are the scene's other pointer: down at Green for the exchange, at
+  // the thing that just hit the rock, and out at the water otherwise. Aimed at
+  // FACES (`markCentre`), not at box centres — Ray's box centre is the gap
+  // between his face and his ribbon.
+  const rayLook = ((): { x: number; y: number } => {
+    if (frame >= collectFrom) return faceAim(rayMark, greenMark);
+    if (frame >= hitAt) return faceAim(rayMark, blueMark);
+    if (frame >= greenFrom - 6 && frame < greenTo + 10) return faceAim(rayMark, greenMark);
+    return frame > drainTo ? { x: 0.15, y: -0.5 } : { x: 0.7, y: -0.15 };
+  })();
 
   return (
     <AbsoluteFill>
@@ -566,6 +680,20 @@ const SeaSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       />
       <Rock x={S25_ROCK.x} y={S25_ROCK.ground - 170} scale={S25_ROCK.scale} speaking={false} />
 
+      {/* GREEN, who was already here. Sat, on the rock, from the first frame of
+          the scene — the audience meets him mid-decision, which is the whole
+          gag, and Ray's question is the only acknowledgement it ever gets. */}
+      <Shard
+        who="green"
+        x={greenMark.x}
+        y={greenMark.y}
+        scale={S25_GREEN.scale}
+        sit={greenSat}
+        look={collect > 0 ? { x: -0.55, y: -0.25 } : { x: -0.4, y: 0.05 }}
+        speaking={stage.speaking("green")}
+        zIndex={22}
+      />
+
       {/* He is warm-white over warm water, which is the Ray legibility problem
           in its mildest form. Shade behind him rather than a brighter Ray. */}
       <SoftShade x={rayX} y={S25_RAY.y - 30} rx={520} ry={380} strength={0.24} color="60,32,64" />
@@ -578,11 +706,29 @@ const SeaSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.ray}
         emotion={emotion}
         speaking={stage.speaking("ray")}
-        look={frame > drainTo ? { x: 0.15, y: -0.5 } : { x: 0.7, y: -0.15 }}
+        look={rayLook}
         streak={0.3}
         bank={-3}
         zIndex={20}
       />
+
+      {/* BLUE. Off the top-left of frame, into the rock, and then a pinball in
+          a cupboard between Ray and it — "First!" is planted at the sunset
+          location, twenty seconds before there is anything to be first at. */}
+      {frame >= hitAt - 18 ? (
+        <Shard
+          who="blue"
+          x={blueMark.x}
+          y={blueMark.y}
+          scale={0.4}
+          heading={frame < hitAt ? blueFly.angle : blueBox.angle}
+          look={{ x: -0.4, y: 0 }}
+          speaking={stage.speaking("blue")}
+          zIndex={26}
+        />
+      ) : null}
+      {/* The mark he leaves on the thing he apologises to. */}
+      <PingRing at={hitAt} frame={frame} fps={fps} p={S25_BLUE_HIT} size={0.6} />
       {/* The water under him takes the light back. */}
       <WideLayer zIndex={12}>
         <ellipse
@@ -595,10 +741,40 @@ const SeaSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         />
       </WideLayer>
 
-      <Bubbles scene={scene} cast={{ ray: rayMark } as Cast} text={S25_BUBBLES} />
+      <Bubbles
+        scene={scene}
+        cast={{ ray: rayMark, green: greenMark, blue: blueMark } as Cast}
+        text={S25_BUBBLES}
+        at={{
+          // Green is against the right-hand edge on a rock, so both of his go
+          // out over the water on his left, tail reaching back at him.
+          a3_03b_green: { x: 1150, y: 452, tail: "right", tailAt: S25_GREEN.x },
+          a3_03d_green: { x: 1150, y: 452, tail: "right", tailAt: S25_GREEN.x },
+          // Ray's two questions share one place — the clear band of sky above
+          // the water between him and the rock.
+          a3_03c_ray: { x: 700, y: 300, tail: "left", tailAt: rayX },
+          a3_05c_ray: { x: 700, y: 300, tail: "left", tailAt: rayX },
+          // Blue is mid-ricochet through his own line, so the bubble parks and
+          // the tail follows him. Left of the rock, clear of Green's.
+          a3_05b_blue: { x: 1000, y: 226, tail: "right", tailAt: blueP.x },
+        }}
+      />
     </AbsoluteFill>
   );
 };
+
+/**
+ * **A pupil offset from one staged body's FACE to another's** — the only
+ * sanctioned way to aim a look in this episode (K4).
+ *
+ * `markCentre` routes through each body's own `faceOffset`, so an aim at Ray
+ * lands on Ray's eyes rather than on the gap between his face and his ribbon,
+ * and an aim at a shard lands 77 units up from its box centre. Aiming at raw
+ * marks is the bug this replaces.
+ */
+function faceAim(from: Mark, to: Mark): { x: number; y: number } {
+  return aim(markCentre(from), markCentre(to));
+}
 
 /**
  * Long flat bars of light lying *along* the water, coming in from the right.
@@ -840,7 +1016,26 @@ const NOON_TOP = airTopY(EARTH.cx);
 
 const S27_BUBBLES: Record<string, string> = {
   a3_10_ray: "How long is that trip?",
+  // Blue, who arrived ages ago, over a finish line with nobody on it.
+  a3_08b_blue: "Done! First place!",
+  a3_08d_blue: "Still counts!",
+  // Green, appraising two hundred miles of course for the only thing he has
+  // ever wanted out of any of it.
+  a3_11b_green: "Lots of nice spots.",
 };
+
+/**
+ * **Green, appraising the course** (revision2's optional trim-menu line, staged
+ * as if it stays — a scene that only works when a line is present is a scene
+ * that breaks when the trim lands, so he is on stage from the first frame and
+ * the line is the only thing that would go).
+ *
+ * He stands to the right of the observer, clear of both trips, and looks back
+ * down the long one. He is the third character on the diagram and the last one
+ * it will take: Blue is bouncing in the shell, Red is walking the chord, and
+ * a fourth body would put the geometry behind a crowd.
+ */
+const S27_GREEN = { x: 1568, ground: 606, scale: 0.4 };
 
 /**
  * **The two beams are not abstractions** (revision §6.12, visual only).
@@ -921,6 +1116,18 @@ const LongWayScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const onNoon = frame < lowFrom - 6;
 
+  // GREEN. He stands for as long as the diagram is still being drawn and sits
+  // the instant the long trip finishes arriving, which is his law applied to a
+  // *diagram* — the joke costs one number and no new staging.
+  const greenSits = lowFrom + 10 + Math.round((scene.durationInFrames - lowFrom - 10) / 1.09);
+  const greenMark: Mark = {
+    x: S27_GREEN.x,
+    y: stand("shard", S27_GREEN.ground),
+    scale: S27_GREEN.scale,
+    who: "shard",
+    side: "left",
+  };
+
   const stage = useStage(scene);
   const emotion = useEmotion(scene, "ray", { a3_10_ray: "amazed" }, "happy");
 
@@ -962,9 +1169,22 @@ const LongWayScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           trail={blueAge > 14 ? blueTrail(blueAge - 8, S27_BLUE_BOX) : undefined}
           opacity={blueOn}
           look={{ x: 0.2, y: 0 }}
+          speaking={stage.speaking("blue")}
           zIndex={22}
         />
       ) : null}
+
+      {/* GREEN, off to the side of the diagram, reading the course. */}
+      <Shard
+        who="green"
+        x={greenMark.x}
+        y={greenMark.y}
+        scale={S27_GREEN.scale}
+        sit={greenSit(frame, greenSits, frame >= greenSits)}
+        look={{ x: -0.75, y: 0.1 }}
+        speaking={stage.speaking("green")}
+        zIndex={20}
+      />
 
       {/* RED, still walking. Dead level, one speed, no lean — `Shard` refuses
           to bank him however enthusiastic the heading it is handed, which is
@@ -999,9 +1219,25 @@ const LongWayScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Bubbles
         scene={scene}
-        cast={{ ray: rayMark } as Cast}
+        cast={
+          {
+            ray: rayMark,
+            green: greenMark,
+            blue: { x: blueP.x, y: hover("shard", blueP.y, 0.34), scale: 0.34, who: "shard" },
+          } as Cast
+        }
         text={S27_BUBBLES}
-        at={{ a3_10_ray: { x: 1060, y: 214, tail: "right", tailAt: S27_RAY.x } }}
+        at={{
+          a3_10_ray: { x: 1060, y: 214, tail: "right", tailAt: S27_RAY.x },
+          // Blue is in a 240px cupboard in the middle of the shell, so his two
+          // go up and left into the empty half of the frame, tail following
+          // him. Both are clear of Ray's, which lands between them.
+          a3_08b_blue: { x: 700, y: 208, tail: "right", tailAt: blueP.x },
+          a3_08d_blue: { x: 700, y: 208, tail: "right", tailAt: blueP.x },
+          // Green is bottom-right under Ray; his bubble goes left along the
+          // course he is appraising, well under Ray's own.
+          a3_11b_green: { x: 1150, y: 424, tail: "right", tailAt: S27_GREEN.x },
+        }}
       />
     </AbsoluteFill>
   );
@@ -1250,7 +1486,51 @@ const S28_BUBBLES: Record<string, string> = {
   a3_13b_blue: "Sorry! I am going UP!",
   a3_13c_indigo: "Going up now. Bye.",
   a3_13d_yellow: "Great bounce, Violet!",
+  // --- the mid-leg banter (revision2) --------------------------------------
+  a3_13a_blue: "Too slow! Sorry!",
+  a3_13aa_orange: "Red is the right speed.",
+  a3_13ab_indigo: "Too slow. Sorry.",
+  a3_13bb_blue: "Winning UPWARDS!",
+  a3_13bc_yellow: "Great winning, Blue!",
+  a3_13cb_indigo: "Winning upwards.",
+  a3_13cd_yellow: "Great echo, Indigo!",
 };
+
+/**
+ * **The faint one, and it is a separate bubble map because it is a separate
+ * SIZE.**
+ *
+ * `a3_13cc_blue` is "I just said that!" — the chain's third firing, `sameAs`
+ * `a1_40f_blue`, delivered from somewhere above the top of the frame. The page
+ * asks for it *faint*, and faint is a mix note: **the audio pipeline has no
+ * per-clip gain** (`DialogueAudio` mounts each turn's `<Audio>` straight off
+ * the manifest; `narration.mjs` has `speed` and `emotion` and nothing that
+ * attenuates), and re-rolling the clip is forbidden — it is a byte-identical
+ * alias and the sameness *is* the gag. So it plays at level and the PICTURE
+ * carries "faint": a tiny bubble, top of frame, no tail, nobody under it.
+ *
+ * `Bubbles` takes one `fontSize` for all of its lines, so a bubble at a
+ * different size is a second `<Bubbles>`. That is the whole reason this map
+ * exists and it is two entries away from being a kit feature.
+ */
+const S28_FAR_BUBBLES: Record<string, string> = {
+  a3_13cc_blue: "I just said that!",
+};
+/**
+ * **Small enough to read as distance, big enough to read at all — and 34 was
+ * not small enough** (showrunner fix, 2026-08-03).
+ *
+ * At 34 on a 420px box the bubble is two thirds the size of everybody else's
+ * and it sat dead centre at the top of the frame, which is where a *title*
+ * goes: it read as a full-size bubble that had been parked somewhere odd
+ * rather than as a voice a long way off. 24 on a 250px box is unmistakably a
+ * different order of thing — about the size of one of the sky's parked bodies
+ * — and it is placed in Blue's own exit column rather than in the middle of
+ * the sky. **Size and position are what carry "faint" here**, because the
+ * audio cannot: the clip is a byte-identical alias of `a1_40f_blue` and the
+ * pipeline has no per-clip gain.
+ */
+const FAR_BUBBLE = { fontSize: 24, maxWidth: 250 };
 
 /**
  * **The pack, and the box each colour is allowed to be in while it is in it.**
@@ -1264,9 +1544,64 @@ const S28_BUBBLES: Record<string, string> = {
 // so at 46 the seven were a single seven-headed animal and the frequency ladder
 // — the thing the file exists to show — was unreadable in a paused frame.
 const PACK_STEP = 112;
-function packSlot(i: number): { x: number; y: number } {
-  return { x: -i * PACK_STEP, y: ((i % 2) - 0.5) * 26 };
+function packSlot(i: number, spread = 1): { x: number; y: number } {
+  return { x: -i * PACK_STEP * spread, y: ((i % 2) - 0.5) * 26 };
 }
+/**
+ * **How far the file has strung out**, 1 at the start line and `SPREAD_MAX` by
+ * the end of the drain hold.
+ *
+ * revision2 adds one sentence to the 45f beat after `a3_13_narrator`: it is
+ * still the blue draining out of the beam in silence, "and it is now also the
+ * field stringing out". Nothing *enters* the beat — the seven who are already
+ * in it simply stop being a rank and start being a race, which is the one
+ * thing a held beat is allowed to contain.
+ *
+ * **1.10, and the ceiling is arithmetic rather than taste**: the pack head sits
+ * at `TRACK_X` = 900 and Violet is six steps behind it, so every percent of
+ * spread costs him 6.7px of screen. At 1.10 he is at x≈161 with his own exit
+ * still eight seconds away and Yellow's bubble still pointing at somebody; at
+ * the 1.42 a first pass used he is at −54, i.e. the character whose entire gag
+ * is being findable has been pushed off the left of the frame.
+ */
+const SPREAD_MAX = 1.1;
+const SPREAD_FRAMES = 90;
+
+/**
+ * Frames Blue spends leaving the top of the frame after his bounce has topped
+ * out, and frames Indigo spends on the whole climb. Both are set by *lines*
+ * rather than by taste — see the two exits in the scene below.
+ */
+const BLUE_CLIMB = 86;
+const INDIGO_CLIMB = 410;
+/** How far the climb takes him past the top of his own bounce. */
+const BLUE_OUT_DY = 700;
+/**
+ * Frames Blue's backwards pass takes — **36, not the whole line**.
+ *
+ * A sweep that lasted all 99 frames of `a3_13a_blue` moved him at 9px a frame,
+ * a quarter of the speed of his own slowest ricochet leg, which draws a Blue
+ * *drifting* past Red while calling him too slow. He crosses the file in a
+ * second and a quarter and spends the rest of the line ricocheting behind it,
+ * which is both the character and the joke.
+ */
+const PASS_FRAMES = 36;
+/**
+ * Where Blue is **on screen** when his bounce tops out. He is the one leaver
+ * with no sky mark — he does not park, he keeps going — but his arc still has
+ * to be aimed in screen space or the tracking camera takes him out of the side
+ * of the picture (see `exitOf`).
+ *
+ * **It is under `a3_13b_blue`'s bubble rather than in it, and that is the whole
+ * choice.** That bubble has sat at (560, 180) since wave 2, where it was placed
+ * for a Blue who had already gone; now that revision2 has him still climbing on
+ * the line, a bounce that topped out at (520, 126) put the character *behind
+ * his own speech bubble* for the whole of it — invisible, in the one shot where
+ * "he really is going up" is the joke. Topping out at (330, 286) puts him just
+ * under the bubble's tail, which is where a tail is supposed to point, and the
+ * shipped placement does not move.
+ */
+const BLUE_TOP = { x: 330, y: 286 };
 /**
  * The box Blue ricochets in **relative to the pack** — so his corners come out
  * of `blueRicochet` in one fixed frame of reference and the whole thing travels
@@ -1333,7 +1668,12 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [bounceFrom, bounceTo] = lineWindow(scene, "a3_13_narrator");
   const [beatFrom, beatTo] = heldBeat(scene, "a3_13_narrator");
   const [, arriveTo] = lineWindow(scene, "a3_14_narrator");
-  const [, indigoLineTo] = lineWindow(scene, "a3_13c_indigo");
+  const [tauntFrom, tauntTo] = lineWindow(scene, "a3_13a_blue");
+  const [blueGoFrom, blueGoTo] = lineWindow(scene, "a3_13b_blue");
+  const [, blueUpTo] = lineWindow(scene, "a3_13bb_blue");
+  const [indigoGoFrom] = lineWindow(scene, "a3_13c_indigo");
+  const [, indigoEchoTo] = lineWindow(scene, "a3_13cb_indigo");
+  const [, cheerTo] = lineWindow(scene, "a3_13cd_yellow");
 
   // --- who leaves, and when -------------------------------------------------
   //
@@ -1341,18 +1681,40 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // opens on "and then there were four". See the file header for the spec
   // conflict this resolves.
   //
-  //   blue    inside the 45f drain beat, in SILENCE. That beat is the race
-  //           starting and it is the one place in the episode Blue does not get
-  //           his four-frame interruption gap, "because he is busy being
-  //           bounced out of a race and the picture has to be watched first"
-  //           (script.md). He is already gone by the time he says it.
-  //   indigo  `INDIGO_LAG` frames later, off the puff Blue has just left.
-  //   violet  in the 20f beat after Indigo's echo, last, highest, furthest, and
-  //           he does not say anything. The silence *is* the joke.
+  // **revision2 moved all three down the scene**, and that is the whole shape
+  // change: the leg used to be 36 seconds with a five-second triple exit at the
+  // end of it and is now 52 with a scene per exit. The 45f drain hold is no
+  // longer anybody's approach — the mid-leg banter is — so what is left in the
+  // hold is the picture it was always described as: blue draining out of the
+  // beam, in silence, with the field stringing out down it (`SPREAD_MAX`).
+  //
+  //   blue    twelve frames before `a3_13b_blue`, so he is **mid-air on the
+  //           line as before** — the phrase is revision2's. He bounces off the
+  //           big puff, says it going up, and detonates the s9 claim on the way
+  //           ("I am winning UPWARDS!") while he is still visibly climbing.
+  //   indigo  `INDIGO_LAG` frames later. Four. It is the law and it does not
+  //           bend for a re-time — what bends is how long he takes over it: his
+  //           arc runs `INDIGO_CLIMB` frames against Blue's, so he is *still
+  //           rising* through both of his own lines, which is what "rising
+  //           after him" means and is also why an adjacent wavelength being a
+  //           faded, slower copy is drawn rather than asserted.
+  //   violet  in the 20f beat after `a3_13cd_yellow`, last, highest, furthest,
+  //           and he does not say anything. The silence *is* the joke and the
+  //           beat stays empty of everything else.
   const bounceSpan = Math.max(1, bounceTo - bounceFrom);
-  const blueOut = beatFrom + 6;
+  const blueOut = blueGoFrom - 12;
   const indigoOut = blueOut + INDIGO_LAG;
-  const violetOut = indigoLineTo + 4;
+  const violetOut = cheerTo + 4;
+
+  /**
+   * The field stringing out inside the drain hold — see `SPREAD_MAX`. It is a
+   * pure function of the frame and it is applied at every call site of
+   * `packSlot` in this scene, so no two of them can disagree about where the
+   * tail of the file is.
+   */
+  const spreadAt = (f: number): number =>
+    1 + (SPREAD_MAX - 1) * kidEase.easeInOutSine(clamp01((f - beatFrom) / SPREAD_FRAMES));
+  const slotAt = (i: number, f: number) => packSlot(i, spreadAt(f));
 
   // The three pings Blue leaves on the air on "Bounce. Bounce. Bounce." — the
   // line runs at 0.88 so that they are three bounces and not one noise. He is
@@ -1408,7 +1770,56 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // exactly like everything else in the kit — and Indigo is literally the same
   // function, `INDIGO_LAG` frames ago, so he inherits Blue's corners with the
   // same elbow in them four frames stale.
-  const blueLegs = (f: number) => blueRicochet(Math.max(0, f - travelFrom), S28_BLUE_BOX);
+  //
+  // **THE TAUNT IS A LEG OF THE RICOCHET, NOT A DETOUR FROM IT.** revision2
+  // stages `a3_13a_blue` as Blue "ricocheting past Red BACKWARDS" — so the pass
+  // is folded into the same function everything else reads, and Indigo
+  // therefore does it four frames late without being told to, which is how he
+  // ends up saying "Too slow. Sorry." *at the puff Blue has just left*. It runs
+  // right to left across the whole file at a heading of 180°, which is the one
+  // direction nothing else in this scene ever travels, and it clears the top of
+  // Red's box by about thirty pixels: a near miss reads as a taunt, and an
+  // overlap reads as a bug.
+  //
+  // **The blend starts ON the line, not before it.** A ten-frame anticipation
+  // is the house default and it is wrong here: `a3_13a_blue` opens the frame
+  // after the 45f drain hold ends, so an early ramp puts a blue streak across
+  // the pack *inside* a beat whose entire content is that nothing enters it.
+  const passOn = (f: number): number =>
+    clamp01((f - tauntFrom) / 6) - clamp01((f - (tauntFrom + PASS_FRAMES)) / 14);
+  const passAt = (f: number): { x: number; y: number } => {
+    const u = clamp01((f - tauntFrom) / PASS_FRAMES);
+    // **UNDER the file, not over it.** A first pass ran him along the top of
+    // the beam at pack-local y = −86, which is Ray's lane: a still had Blue
+    // sitting on Ray's face with the taunt's tail pointing at the pair of them,
+    // i.e. the frame read as *Ray* calling Red slow. Ray hangs 148px above the
+    // beam and Red's box reaches 31 below it, so the only clear lane in the
+    // shot is beneath them both.
+    return { x: 260 - 690 * u, y: 96 + Math.sin(u * Math.PI) * 26 };
+  };
+  const blueLegs = (f: number): { x: number; y: number; angle: number } => {
+    const b = blueRicochet(Math.max(0, f - travelFrom), S28_BLUE_BOX);
+    const on = passOn(f);
+    if (on <= 0) return b;
+    const p = passAt(f);
+    return {
+      x: b.x + (p.x - b.x) * on,
+      y: b.y + (p.y - b.y) * on,
+      angle: on > 0.5 ? 180 : b.angle,
+    };
+  };
+  /**
+   * His blur, sampled off `blueLegs` rather than off `blueRicochet` — two legs
+   * long, so a paused frame always has a corner in it, and so the taunt drags a
+   * straight backwards streak behind him instead of a ricochet he is not on.
+   */
+  const blueTrailAt = (f: number): { x: number; y: number }[] => {
+    const span = 18;
+    return Array.from({ length: 15 }, (_, s) => {
+      const p = blueLegs(f - span + (span * s) / 14);
+      return { x: p.x, y: p.y };
+    });
+  };
   const blueLocal = blueLegs(frame);
   const indigoLocal = indigoEcho(blueLegs, frame);
   /** Where a roamer actually is in the world on an arbitrary frame. */
@@ -1433,25 +1844,46 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       arc,
       runTo: m
         ? { x: m.x - camDxAt(end), y: m.y }
-        : // Blue: straight up and a little back the way he came, which is what
-          // a bounce off an air puff actually is, and out through the top.
-          { x: from.x - 240, y: BEAM.y - 1120 },
+        : // Blue: up and back the way he came, which is what a bounce off an
+          // air puff actually is — but **solved from a SCREEN mark, exactly
+          // like the other two**, and that is a fix rather than a flourish.
+          // The camera is chasing the beam at ~3px a frame, so an arc whose
+          // endpoint is picked in world space is dragged left by ~300px over
+          // its own length: a still of the first pass had Blue leaving through
+          // the *left-hand edge* of frame under a bubble that says he is going
+          // UP, and gone entirely by the time he says so. `BLUE_TOP` is where
+          // he is on screen when the bounce tops out; `BLUE_CLIMB` takes him
+          // out through the top from there.
+          { x: BLUE_TOP.x - camDxAt(end), y: BLUE_TOP.y },
     };
   };
   const blueFrom = roamAt(blueOut, 0, 0);
   const indigoFrom = roamAt(indigoOut, INDIGO_LAG, 26);
   const violetFrom = {
-    x: packAt(violetOut).x + packSlot(6).x,
-    y: packAt(violetOut).y + packSlot(6).y,
+    x: packAt(violetOut).x + slotAt(6, violetOut).x,
+    y: packAt(violetOut).y + slotAt(6, violetOut).y,
   };
-  const blueExit = exitOf("blue", blueOut, 132, blueFrom, 0.2);
-  // Indigo takes **more than twice as long** over the same job and does not get
-  // as far: an adjacent wavelength is a faded copy, and a faded copy is slower.
-  // It is also what puts him low enough in the frame to have a bubble over his
-  // head when his line lands, which a climb at Blue's rate does not.
-  const indigoExit = exitOf("indigo", indigoOut, 300, indigoFrom, 0.09);
+  // **Blue's exit is two stages, and the second one exists because of a line.**
+  // The bounce is 96 frames and stops him just under the top of the frame; then
+  // he climbs out of it over `BLUE_CLIMB` more. A single 132-frame arc to
+  // y = −524 (the shipped one) puts him off the top of the picture at local
+  // frame ~537, which was fine when his only line up there landed after he had
+  // gone and is wrong now that revision2 gives him `a3_13bb_blue` — "I am
+  // winning UPWARDS!" — to say **while he is still visibly going up**. He is on
+  // screen for the first two thirds of that line and out of frame for the last
+  // third, which is the exact shape of the joke.
+  const blueExit = exitOf("blue", blueOut, 96, blueFrom, 0.2);
+  const blueClimb = clamp01((frame - (blueOut + blueExit.frames)) / BLUE_CLIMB);
+  // Indigo takes **four times as long** over the same job and does not get as
+  // far: an adjacent wavelength is a faded copy, and a faded copy is slower. It
+  // is also what keeps him *still rising* through both of his own lines
+  // (`a3_13c` and `a3_13cb`), which is what revision2's "rising after him"
+  // asks for and what puts a findable body under each of his bubbles.
+  const indigoExit = exitOf("indigo", indigoOut, INDIGO_CLIMB, indigoFrom, 0.09);
   // Violet goes last, highest and furthest, and takes the longest doing it —
   // he is the fastest thing in any frame he is in and he still arrives last.
+  // 210 frames from the 20f beat lands him on his sky mark seven frames before
+  // the goodbye names him, which is the last possible moment and the right one.
   const violetExit = exitOf("violet", violetOut, 210, violetFrom, 0.09);
 
   /**
@@ -1471,15 +1903,22 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       const p = exitAt(frame, from, exit);
       return { x: p.x + dx, y: p.y };
     }
-    return m ? { x: m.x, y: m.y } : { x: exit.runTo.x + dx, y: exit.runTo.y };
+    return m
+      ? { x: m.x, y: m.y }
+      : // Blue, past the top of his bounce: still climbing, and still the thing
+        // his own bubble has to point at.
+        { x: exit.runTo.x + dx, y: exit.runTo.y - kidEase.easeInQuad(blueClimb) * BLUE_OUT_DY };
   };
   const indigoNow = leaverNow("indigo", indigoExit, indigoFrom);
+  const blueNow = leaverNow("blue", blueExit, blueFrom);
 
   // How much of the blue has gone up into the sky. Drives the wash at the top
   // of frame: what left the beam is what the sky is now made of, and the step
-  // that lands as Blue leaves the top of frame is Blue.
+  // that lands as Blue leaves the top of frame is Blue — which is why his term
+  // runs over the bounce *and* the climb rather than saturating at the top of
+  // the arc, where he is still very much in the picture.
   const gone =
-    (clamp01((frame - blueOut) / blueExit.frames) +
+    (clamp01((frame - blueOut) / (blueExit.frames + BLUE_CLIMB)) +
       clamp01((frame - indigoOut) / indigoExit.frames) +
       clamp01((frame - violetOut) / violetExit.frames)) /
     3;
@@ -1577,12 +2016,23 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             changes is where each one is. Red at the head of the file and violet
             at the tail, so the two that never bounce are the two at the front
             and the order of the file is the order they leave in. */}
-        <PackShard who="red" pack={{ x: packX, y: packY }} i={0} look={{ x: 0.6, y: 0 }} />
-        <PackShard who="orange" pack={{ x: packX, y: packY }} i={1} look={{ x: 0.6, y: 0 }} />
+        <PackShard who="red" pack={{ x: packX, y: packY }} i={0} spread={spreadAt(frame)} look={{ x: 0.6, y: 0 }} />
+        {/* Orange, one place behind Red and answering a taunt that was not
+            addressed to him. He does not look at Blue while he does it — he
+            looks at Red, which is the whole of the character. */}
+        <PackShard
+          who="orange"
+          pack={{ x: packX, y: packY }}
+          i={1}
+          spread={spreadAt(frame)}
+          look={{ x: 0.85, y: 0 }}
+          speaking={stage.speaking("orange")}
+        />
         <PackShard
           who="yellow"
           pack={{ x: packX, y: packY }}
           i={2}
+          spread={spreadAt(frame)}
           // He waves at somebody who is leaving, which is his entire character,
           // and he is the only one who ever addresses Violet by name. His look
           // goes up after Violet from `a3_13d` on; nobody else looks up.
@@ -1592,10 +2042,15 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // x=140. A first pass aimed this up-right, i.e. had the one character
           // who ever addresses Violet by name waving at the opposite corner of
           // the sky from him.
-          look={frame >= violetOut ? { x: -0.5, y: -0.8 } : { x: 0.6, y: 0 }}
+          //
+          // **From Blue's exit onward she is looking up, and she does not look
+          // back down.** revision2 gives her three cheers in this leg — winning,
+          // echoing, bouncing — and every one of them is aimed at somebody who
+          // has already left, so the eye-line is one decision rather than three.
+          look={frame >= blueOut ? { x: -0.5, y: -0.8 } : { x: 0.6, y: 0 }}
           speaking={stage.speaking("yellow")}
         />
-        <PackShard who="green" pack={{ x: packX, y: packY }} i={3} look={{ x: 0.6, y: 0 }} />
+        <PackShard who="green" pack={{ x: packX, y: packY }} i={3} spread={spreadAt(frame)} look={{ x: 0.6, y: 0 }} />
 
         {/* BLUE, ricocheting inside the pack until he ricochets out of it. His
             trail is two legs long, so a paused frame always has a corner in it
@@ -1607,10 +2062,7 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             y={hover("shard", packY + blueLocal.y, 0.44)}
             scale={0.44}
             heading={blueLocal.angle}
-            trail={blueTrail(Math.max(0, frame - travelFrom), S28_BLUE_BOX).map((p) => ({
-              x: p.x + packX,
-              y: p.y + packY,
-            }))}
+            trail={blueTrailAt(frame).map((p) => ({ x: p.x + packX, y: p.y + packY }))}
             look={{ x: 0.5, y: 0 }}
             speaking={stage.speaking("blue")}
             zIndex={30}
@@ -1625,10 +2077,10 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             y={hover("shard", packY + indigoLocal.y + 26, 0.42)}
             scale={0.42}
             heading={indigoLocal.angle}
-            trail={blueTrail(
-              Math.max(0, frame - travelFrom - INDIGO_LAG),
-              S28_BLUE_BOX,
-            ).map((p) => ({ x: p.x + packX, y: p.y + packY + 26 }))}
+            trail={blueTrailAt(frame - INDIGO_LAG).map((p) => ({
+              x: p.x + packX,
+              y: p.y + packY + 26,
+            }))}
             look={{ x: 0.5, y: 0 }}
             speaking={stage.speaking("indigo")}
             zIndex={28}
@@ -1638,7 +2090,13 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             scene asks, so there is no frame of this episode in which he is
             still. */}
         {frame < violetOut ? (
-          <PackShard who="violet" pack={{ x: packX, y: packY }} i={6} look={{ x: 0.6, y: 0 }} />
+          <PackShard
+            who="violet"
+            pack={{ x: packX, y: packY }}
+            i={6}
+            spread={spreadAt(frame)}
+            look={{ x: 0.6, y: 0 }}
+          />
         ) : null}
 
         {/* The ping each bounce leaves on the air it bounced off — the first
@@ -1658,7 +2116,14 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         {/* The leavers, mid-arc: off the beam, up, and still going. Drawn in
             world space only while the arc runs; after that they are sky (see
             the header note) and are drawn outside the camera below. */}
-        <Leaver who="blue" exit={blueExit} from={blueFrom} frame={frame} scale={0.44} />
+        <Leaver
+          who="blue"
+          exit={blueExit}
+          from={blueFrom}
+          frame={frame}
+          scale={0.44}
+          climb={{ frames: BLUE_CLIMB, dy: BLUE_OUT_DY }}
+        />
         <Leaver who="indigo" exit={indigoExit} from={indigoFrom} frame={frame} scale={0.42} />
         <Leaver who="violet" exit={violetExit} from={violetFrom} frame={frame} scale={0.42} />
 
@@ -1715,11 +2180,17 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             // through the top of frame — so this mark exists only to make him
             // a member of the cast. Every coordinate that matters is in the
             // `at` override below.
-            blue: { x: 560, y: 180, scale: 0.3, who: "shard" },
+            blue: { x: blueNow.x, y: blueNow.y, scale: 0.3, who: "shard" },
             indigo: { x: indigoNow.x, y: indigoNow.y, scale: 0.3, who: "shard" },
             yellow: {
-              x: packX + packSlot(2).x + dx,
-              y: hover("shard", packY + packSlot(2).y, 0.44),
+              x: packX + slotAt(2, frame).x + dx,
+              y: hover("shard", packY + slotAt(2, frame).y, 0.44),
+              scale: 0.44,
+              who: "shard",
+            },
+            orange: {
+              x: packX + slotAt(1, frame).x + dx,
+              y: hover("shard", packY + slotAt(1, frame).y, 0.44),
               scale: 0.44,
               who: "shard",
             },
@@ -1729,6 +2200,50 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         at={{
           a3_14b_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
           a3_14d_ray: { x: 700, y: 232, tail: "left", tailAt: rayMark.x + dx },
+          // --- the mid-leg banter ------------------------------------------
+          //
+          // Blue crosses the whole file backwards through his own line, so the
+          // bubble parks in the sky over it and the tail follows him across.
+          //
+          // **MOVED FROM x=1180 TO x=600 (showrunner fix, 2026-08-03), and the
+          // reason is the tail's clamp.** On the right the bubble ran 860…1500,
+          // so the tail could only travel 900…1460 — and Blue spends all but
+          // the first second of this line at x < 700, first sweeping backwards
+          // through the file and then ricocheting in his box (screen 290…610).
+          // The tail was therefore pinned at its own left-hand stop for the
+          // whole line, 400px above and 200px left of nothing, with **Ray's
+          // glow (1050, 420) the nearest bright object under it** — so the
+          // frame read as Ray calling Red slow, which is the exact failure the
+          // first pass at y≈240 was moved to avoid. Moving the bubble does what
+          // raising it could not.
+          //
+          // At x=600 the bubble runs 280…920 and the tail's travel is 320…880,
+          // which *contains* Blue's whole ricochet box and most of his
+          // backwards sweep: the tail is on him, on his own body's x (his face
+          // rides his body here — there is no offset to add), for ~90% of the
+          // line, and it is 450px clear of Ray on the other side of the frame.
+          // The first ~20 frames, while he is still out at 1160 finishing the
+          // pass, are the one stretch where it clamps — and it clamps *towards*
+          // him rather than away from him.
+          a3_13a_blue: { x: 600, y: 190, tail: "left", tailAt: packX + blueLocal.x + dx },
+          // Orange answers from the head of the file. Left and low, because Ray
+          // is parked at (1050, ~390) for the whole tracked stretch and a
+          // bubble on that side reads as his.
+          a3_13aa_orange: { x: 620, y: 268, tail: "right", tailAt: packX + slotAt(1, frame).x + dx },
+          // Indigo's tail arrives four beats later and has to read as HIS, so it
+          // lands in a different place from Blue's rather than in the same one.
+          a3_13ab_indigo: { x: 560, y: 420, tail: "right", tailAt: packX + indigoLocal.x + dx },
+          // Still climbing, top left, tail following him up: the denial is the
+          // one line in the episode that is *physically true*, and the picture
+          // has to show him genuinely going up while he says it.
+          a3_13bb_blue: { x: 660, y: 176, tail: "left", tailAt: blueNow.x },
+          // Yellow cheers from the file at somebody who has already left. Far
+          // right and high, out of the corridor the two climbers are in.
+          a3_13bc_yellow: { x: 1340, y: 300, tail: "left", tailAt: packX + slotAt(2, frame).x + dx },
+          a3_13cd_yellow: { x: 1340, y: 300, tail: "left", tailAt: packX + slotAt(2, frame).x + dx },
+          // Indigo's credit-claim, said while still rising, from the same place
+          // his first one came from — one voice, one corner of the sky.
+          a3_13cb_indigo: { x: 700, y: 176, tail: "left", tailAt: indigoNow.x },
           // **Blue is off the frame entirely when this lands** — up and out
           // through the top-left corner — so this is a bubble with nobody
           // under it, which is the joke (script.md: "He is already gone by the
@@ -1738,15 +2253,18 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // It was on the right at x=1330 for one pass and a still killed it:
           // the tail's clamped corner landed 70px above Ray's face, so the
           // frame read as *Ray* saying "Sorry! I am going UP!" — a bubble with
-          // nobody under it only works if there is nobody under it. Indigo is
-          // climbing through this quadrant but is 300px lower and to the right
-          // of the bubble's box for the whole of Blue's line, and Violet is
-          // still in the file down on the beam.
-          a3_13b_blue: { x: 560, y: 180, tail: "left", tailAt: 300 },
+          // nobody under it only works if there is nobody under it.
+          //
+          // **What changed in revision2:** the drain hold is no longer his
+          // approach, so he is now bounced and CLIMBING when this lands rather
+          // than gone. The bubble stays exactly where it was — top left, the
+          // way he went — and the tail now has a body on the end of it, which
+          // is a strictly better version of the same frame.
+          a3_13b_blue: { x: 560, y: 180, tail: "left", tailAt: blueNow.x },
           // Over on the far side of him, tail reaching back: he is still
           // climbing when this lands, and a bubble centred over a body that is
           // 300px up the frame sits on top of it.
-          a3_13c_indigo: { x: 440, y: 196, tail: "right", tailAt: indigoNow.x },
+          a3_13c_indigo: { x: 700, y: 176, tail: "left", tailAt: indigoNow.x },
           // Far right, clear of Ray's glow: the upper-left quadrant belongs to
           // the two who are still climbing through it, and Ray sits at a fixed
           // 1050 for the whole tracked stretch.
@@ -1754,9 +2272,39 @@ const BlueRunsOutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             x: 520,
             y: 400,
             tail: "right",
-            tailAt: packX + packSlot(2).x + dx,
+            tailAt: packX + slotAt(2, frame).x + dx,
           },
         }}
+      />
+
+      {/* THE FAINT ONE. A different size, so a different `<Bubbles>` — see
+          `S28_FAR_BUBBLES` and `FAR_BUBBLE`. Blue is hundreds of pixels above
+          the picture by now and the joke is that the line is *identical*, not
+          that it is far away.
+
+          **It no longer floats in the middle of the sky** (showrunner fix,
+          2026-08-03). It is tiny, it is jammed against the top edge of the
+          frame, and it is in **Blue's own exit column** — `blueNow.x`, i.e.
+          wherever the tracking camera has left the piece of sky he climbed out
+          through — so it sits beside the small parked body at the top of the
+          frame instead of dead centre above everybody.
+
+          **Still `tail: "none"`, and that is a deliberate refusal.** The kit's
+          tail leaves the bubble's *bottom* edge (cleanup item D-a1_49), and the
+          only body anywhere near the top-left corner at this moment is INDIGO,
+          parked on his sky mark at (300, 300) and still climbing. A tail would
+          therefore point down at Indigo and the frame would read as Indigo
+          saying Blue's catchphrase — which is not an imperfect tail, it is the
+          wrong speaker, in the one scene built on two adjacent blues saying the
+          same words four frames apart. Position does the attaching until the
+          kit grows a top-edge tail. */}
+      <Bubbles
+        scene={scene}
+        cast={{ blue: { x: blueNow.x, y: blueNow.y, scale: 0.2, who: "shard" } } as Cast}
+        text={S28_FAR_BUBBLES}
+        fontSize={FAR_BUBBLE.fontSize}
+        maxWidth={FAR_BUBBLE.maxWidth}
+        at={{ a3_13cc_blue: { x: blueNow.x, y: 172, tail: "none" } }}
       />
     </AbsoluteFill>
   );
@@ -1772,11 +2320,13 @@ const PackShard: React.FC<{
   who: ShardName;
   pack: { x: number; y: number };
   i: number;
+  /** How far the file has strung out — 1 at the start line. `SPREAD_MAX`. */
+  spread?: number;
   look?: Parameters<typeof Shard>[0]["look"];
   speaking?: boolean;
   scale?: number;
-}> = ({ who, pack, i, look, speaking, scale = 0.44 }) => {
-  const slot = packSlot(i);
+}> = ({ who, pack, i, spread = 1, look, speaking, scale = 0.44 }) => {
+  const slot = packSlot(i, spread);
   return (
     <Shard
       who={who}
@@ -1806,14 +2356,29 @@ const Leaver: React.FC<{
   from: { x: number; y: number };
   frame: number;
   scale: number;
-}> = ({ who, exit, from, frame, scale }) => {
-  if (frame < exit.out || frame > exit.out + exit.frames) return null;
-  const p = exitAt(frame, from, exit);
+  /**
+   * **Blue only: the second stage of his exit.** The bounce stops him just
+   * under the top of the frame and this carries him out of it, so that he is
+   * still visibly climbing while he says he is winning upwards. Nothing fades
+   * and nothing is deleted — he goes off the top of the picture at the same
+   * moment the blue wash finishes stepping up, which is one thing turning into
+   * the other.
+   */
+  climb?: { frames: number; dy: number };
+}> = ({ who, exit, from, frame, scale, climb }) => {
+  const held = climb ? climb.frames : 0;
+  if (frame < exit.out || frame > exit.out + exit.frames + held) return null;
+  const p = exitAt(Math.min(frame, exit.out + exit.frames), from, exit);
+  const up = climb
+    ? kidEase.easeInQuad(
+        Math.max(0, Math.min(1, (frame - (exit.out + exit.frames)) / climb.frames)),
+      ) * climb.dy
+    : 0;
   return (
     <Shard
       who={who}
       x={p.x}
-      y={hover("shard", p.y, scale * (1 - p.u * 0.34))}
+      y={hover("shard", p.y - up, scale * (1 - p.u * 0.34))}
       scale={scale * (1 - p.u * 0.34)}
       heading={p.angle}
       emotion="excited"
@@ -2020,10 +2585,52 @@ const S28B_ISLAND_X1 = 880;
 /** How far the near world travels. Fixes the island's parallax at 0.30. */
 const S28B_ISLAND_DEPTH = 0.3;
 const S28B_SCROLL = (S28B_ISLAND_X0 - S28B_ISLAND_X1) / S28B_ISLAND_DEPTH;
-/** Frames the world spends scrolling, and then the frames the push takes. */
+/** Frames the world spends scrolling. */
 const S28B_SCROLL_TO = 300;
-const S28B_PUSH_FROM = 310;
-const S28B_PUSH_TO = 400;
+/**
+ * **The push is keyed to Yellow, not to a frame number.**
+ *
+ * It used to be frames 310→400, which was right for the leg as delivered and is
+ * wrong now: revision2 adds Orange's play-by-play and Green's exit line ahead
+ * of it and the scene is 314 frames longer, so a fixed 310 pushed the shot in
+ * to 1.95× *during Green's sailboat beat* and left the frame at maximum zoom
+ * for fourteen seconds. Hung off `yellowOut` it stays where it always was
+ * relative to the picture — it starts as Yellow leaves the beam for the island
+ * and is finished long before the warn-off, so the 45-frame eye beat is still
+ * on a completely locked-off frame, which is the only thing that beat requires.
+ */
+const S28B_PUSH_LEAD = 20;
+const S28B_PUSH_FRAMES = 90;
+
+/**
+ * **Where the becalmed sailboat ends up, and why it is 3266 rather than 1490.**
+ *
+ * The boat rides the deepest parallax layer in the shot (0.72), so the scroll
+ * carries it 1,766px left — which is exactly right for a boat the beam passes
+ * *over*, and which put it off the left of the frame by local frame 250. That
+ * was fine when Green's whole beat was over by then; revision2 gives him a
+ * second line and Yellow a cheer, so his beat now runs to local 476, and a
+ * still had "I found one." landing on an empty sea with the tail pointing at
+ * nothing. Started at 3266 it settles at **x ≈ 1500** when the scroll stops —
+ * ahead of Green rather than behind him, so he peels off the beam *forwards*
+ * onto it — and the push-in later carries it off the right of frame, which is
+ * the camera leaving him behind rather than the character being deleted.
+ */
+const S28B_BOAT_X0 = 3266;
+/**
+ * **Yellow's glide, and the arithmetic that forces it.**
+ *
+ * Everybody on this beam walks at `RED_SPEED`, so a body that stays on it
+ * leaves the right-hand edge about eleven seconds in (local frame ~400). Red
+ * and Orange are supposed to (they walk off ahead, one body apart, having said
+ * their piece by 305) — but revision2 keeps Yellow in the scene until local
+ * 707, and her landing has to happen ON her line. So she leaves the beam before
+ * the edge takes her and takes **280 frames** getting down to the island: a
+ * long, lazy, waving drift across an emptying frame that lands under "A warm
+ * rock!". It is the same descent it always was, played nine seconds slower,
+ * and it is the only thing in the leg that is still moving while it happens.
+ */
+const YELLOW_GLIDE = 280;
 /**
  * How hard the shot pushes in for the eye.
  *
@@ -2037,6 +2644,13 @@ const S28B_PUSH = 0.95;
 const S28B_BUBBLES: Record<string, string> = {
   a3_14f_green: "This is a nice spot.",
   a3_14h_yellow: "A warm rock! A sit down!",
+  // Orange's play-by-play: a flat recap, at walking pace, of events Red
+  // personally attended.
+  a3_14eb_orange: "Everybody went up.",
+  a3_14ec_orange: "Red says he noticed.",
+  // The start-line promise, kept.
+  a3_14fb_green: "I found one.",
+  a3_14fc_yellow: "Great sitting, Green!",
 };
 
 const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
@@ -2047,6 +2661,7 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [seaFrom] = lineWindow(scene, "a3_14e_narrator");
   const [greenFrom] = lineWindow(scene, "a3_14f_green");
   const [sitFrom, sitTo] = heldBeat(scene, "a3_14f_green");
+  const [settleFrom] = lineWindow(scene, "a3_14fb_green");
   const [yellowFrom] = lineWindow(scene, "a3_14h_yellow");
   const [warnFrom] = lineWindow(scene, "a3_14i_narrator");
   const [eyeFrom, eyeTo] = heldBeat(scene, "a3_14i_narrator");
@@ -2056,9 +2671,10 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const at = (depth: number, x: number): number => x - scroll * depth;
   const islandX = at(S28B_ISLAND_DEPTH, S28B_ISLAND_X0);
 
-  const push = kidEase.easeInOutSine(
-    clamp01((frame - S28B_PUSH_FROM) / (S28B_PUSH_TO - S28B_PUSH_FROM)),
-  );
+  // Yellow leaves the beam 34 frames before her line, and the push starts 20
+  // frames before that — see `S28B_PUSH_LEAD`.
+  const pushFrom = yellowFrom - S28B_PUSH_LEAD - 70;
+  const push = kidEase.easeInOutSine(clamp01((frame - pushFrom) / S28B_PUSH_FRAMES));
   // **The plate is never inside the camera** (the Scene 26 lesson): a `Camera`
   // translate slides an `AbsoluteFill` bodily and walks the painting off its
   // own edge. The plate does its own, much smaller, push and the horizon is
@@ -2121,7 +2737,7 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // sentence. The bounce arcs UP out of the beam first and comes down onto the
   // boom — he is not dropping out, he scattered like everybody else and just
   // took longer, which is what `a3_14g_narrator` says out loud.
-  const boatX = at(0.72, 1490);
+  const boatX = at(0.72, S28B_BOAT_X0);
   const boatY = horizon + 168;
   const greenOut = greenFrom - 26;
   const greenU = clamp01((frame - greenOut) / 34);
@@ -2139,8 +2755,8 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   // --- YELLOW, who has spotted a warm rock ---------------------------------
   const craterY = horizon - VOLCANO.h * VOLCANO_AT.scale;
-  const yellowOut = yellowFrom - 34;
-  const yellowU = clamp01((frame - yellowOut) / 40);
+  const yellowOut = yellowFrom - YELLOW_GLIDE;
+  const yellowU = kidEase.easeInOutSine(clamp01((frame - yellowOut) / YELLOW_GLIDE));
   const yellowBeam = onBeam(2, yellowOut);
   const yellowSeat = { x: islandX + 30, y: craterY - 2 };
   const yellowDown =
@@ -2173,6 +2789,19 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         : yellowUp;
 
   const stage = useStage(scene);
+
+  // --- ORANGE, translating a silence at walking pace -----------------------
+  //
+  // He is one body behind Red for the whole leg and he never once looks at the
+  // person he is talking about — `orangeFollow` is doing the characterisation
+  // and the only thing this adds is a mouth and two bubbles.
+  const orangeMark: Mark = {
+    x: orange.x,
+    y: hover("shard", orange.y, 0.44),
+    scale: 0.44,
+    who: "shard",
+    side: "left",
+  };
 
   const greenMark: Mark = {
     x: greenP.x,
@@ -2265,7 +2894,10 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           y={hover("shard", orange.y, 0.44)}
           scale={0.44}
           heading={orange.angle}
+          // Straight down the course, exactly like the man in front of him.
+          // He is describing Red without looking at Red, which is the joke.
           look={{ x: 0.6, y: 0 }}
+          speaking={stage.speaking("orange")}
           zIndex={25}
         />
         <Shard
@@ -2275,7 +2907,16 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           scale={0.4}
           heading={greenU < 1 ? greenP.angle : 0}
           sit={sit}
-          look={greenU < 1 ? { x: 0.2, y: 0.6 } : { x: 0.35, y: 0.1 }}
+          // **"Eyes closing" is staged as stillness, because the kit has no
+          // lid control on `<Shard>`** — `lidBase` lives inside the rig's
+          // emotion record and nothing exposes it (kit gap, reported). What is
+          // available is everything else that says *settled*: the sit, the idle
+          // damped to a quarter, the saccades switched off (`eyeLife={0}`) and
+          // the eyes down at the boat rather than out at the course. From
+          // `a3_14fb_green` — "I found one." — he does not move again.
+          look={greenU < 1 ? { x: 0.2, y: 0.6 } : { x: 0.25, y: 0.45 }}
+          idle={frame >= settleFrom ? 0.25 : undefined}
+          eyeLife={frame >= settleFrom ? 0 : undefined}
           speaking={stage.speaking("green")}
           zIndex={26}
         />
@@ -2314,16 +2955,50 @@ const RaceIslandScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               x: (yellowMark.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
               y: (yellowMark.y - cam.y) * (cam.zoom ?? 1) + cam.y,
             },
+            orange: {
+              ...orangeMark,
+              x: (orangeMark.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
+              y: (orangeMark.y - cam.y) * (cam.zoom ?? 1) + cam.y,
+            },
           } as Cast
         }
         text={S28B_BUBBLES}
         at={{
-          a3_14f_green: {
-            x: 1330,
-            y: 690,
+          // Orange walks left to right under a beam that fills the top third,
+          // so both of his go up into the clear sky above it with the tail
+          // following him along. They land before the push, so the camera is
+          // still at 1× and the two coordinate systems agree.
+          a3_14eb_orange: {
+            x: 700,
+            y: 214,
             tail: "right",
-            tailAt: boatX,
+            tailAt: (orangeMark.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
           },
+          a3_14ec_orange: {
+            x: 700,
+            y: 214,
+            tail: "right",
+            tailAt: (orangeMark.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
+          },
+          // Green's second line comes from the same place as his first — he has
+          // sat down and he is not getting up, so the bubble does not move
+          // either. Yellow cheers his sitting from up on the beam.
+          a3_14fb_green: { x: 880, y: 700, tail: "right", tailAt: boatX },
+          // High and left of her glide, so the tail reaches down-right at a
+          // body that is still drifting — and so the box never crosses the
+          // island, which has to stay unobstructed as well as continuous.
+          a3_14fc_yellow: {
+            x: 560,
+            y: 176,
+            tail: "right",
+            tailAt: (yellowMark.x - cam.x) * (cam.zoom ?? 1) + cam.x + (cam.dx ?? 0),
+          },
+          // **Left of the boat, not over it.** The boat now settles at x≈1500
+          // (see `S28B_BOAT_X0`), and a bubble centred on 1330 sat on top of
+          // the character it belonged to — Green invisible behind his own line,
+          // twice. From 880 the tail reaches right at him across clear water,
+          // and the box stays clear of the island above it.
+          a3_14f_green: { x: 880, y: 700, tail: "right", tailAt: boatX },
           a3_14h_yellow: {
             x: 620,
             y: 250,
@@ -2377,9 +3052,16 @@ const Coast: React.FC<{ x: number; horizon: number }> = ({ x, horizon }) => (
  * the episode is that it is the one thing that has stopped moving, which is
  * what makes Green sit down.
  */
-const Sailboat: React.FC<{ x: number; y: number }> = ({ x, y }) => (
+export const Sailboat: React.FC<{ x: number; y: number; scale?: number }> = ({
+  x,
+  y,
+  // 1 in Scene 28b, where it is drawn at the distance it was designed for.
+  // Scene 28b2 is further along the leg and looking back at it, so it takes
+  // the same boat smaller rather than a second drawing of one.
+  scale = 1,
+}) => (
   <WideLayer zIndex={11}>
-    <g transform={`translate(${x} ${y})`}>
+    <g transform={`translate(${x} ${y}) scale(${scale})`}>
       <ellipse cx={0} cy={16} rx={112} ry={11} fill={kidTheme.ink} opacity={0.16} />
       {/* Hull. */}
       <path
@@ -2436,6 +3118,48 @@ const Sailboat: React.FC<{ x: number; y: number }> = ({ x, y }) => (
 
 /** Where the beam ends and Red comes out of it, in the wide shot. */
 const S28C_BEAM_END = 150;
+/**
+ * **THREE SHOTS NOW, AND THE MIDDLE ONE IS WHY.**
+ *
+ * The delivered scene was two shots either side of one 48-frame dissolve: the
+ * corridor and its eye, then the wide, empty, orange frame that carries the
+ * landing block. revision2 inserts nine seconds of comedy between them — the
+ * finish happening TO Red — and it cannot go in either of them:
+ *
+ *   in the corridor  Red walks into the eye. He crosses x=1160 (its left lash)
+ *                    about 130 frames after `a3_18_narrator` ends and would
+ *                    spend Orange's whole climax standing in somebody's pupil.
+ *   in the wide      the landing block needs him entering at the beam-end and
+ *                    still on screen 500 frames later. At `RED_SPEED` that is
+ *                    1,800px and the frame is 1,920, so the block *exactly*
+ *                    fills the shot — there is no room in front of it for
+ *                    another 390 frames of walking, which is 1,400px more.
+ *
+ * So the finish gets its own framing: a **closer** wide, dissolved to on the
+ * last pedagogy line, where Red walks out of the end of the beam under "Red!
+ * You won!" and Orange has his climax one body behind him. The landing block
+ * then **hard-cuts** to the shipped wide, which is otherwise completely
+ * unchanged — same `wideFrom`, same `walkFrom`, same path, same beam-end, same
+ * volcano — and the pull-back reads as exactly what the Narrator says over it:
+ * "At the end of all that air…".
+ *
+ * **The second transition is a CUT and the first one is a dissolve, and the
+ * difference is what each one has to claim** (showrunner call, 2026-08-03).
+ * Red is further along the beam in the closer shot than in the wider one that
+ * follows it. A dissolve asserts spatial continuity between its two framings,
+ * so a 30-frame cross-fade drew Red visibly sliding *backwards* through the
+ * mix — the one thing the shot cannot afford, in the scene whose whole subject
+ * is that he never stops and never changes speed. A cut asserts nothing: two
+ * framings, no claim about where the second one's camera was standing, and the
+ * audience simply accepts the wider vantage. The corridor -> finish dissolve
+ * stays, because those two agree about where he is.
+ */
+const S28C_FINISH_DISSOLVE = 20;
+/** The finish shot: closer plate, lower beam, bigger Red. `pan` is the wide
+ * shot's own pan plus 40 — see `S28C_PAN`, declared below it. */
+const S28C_FINISH = { panExtra: 40, zoom: 1.2, beamY: 560, beamEnd: 460, scale: 0.9 };
+/** Where Ray watches the finish from. Frame right, high, out of Red's lane. */
+const S28C_FINISH_RAY = { x: 1500, y: 214, scale: 0.5 };
 /** The dissolve out of the corridor, keyed to `a3_18b_narrator`. */
 const S28C_DISSOLVE = 48;
 /** How much of the frame Red is. Big: it is his scene and the sky is empty. */
@@ -2449,6 +3173,13 @@ const S28C_BUBBLES: Record<string, string> = {
   a3_18c_red: "Everybody bounced off.",
   a3_18d_red: "Peace and quiet.",
   a3_18e_orange: "What Red said.",
+  // --- the finish (revision2) ---------------------------------------------
+  a3_18a_ray: "Red! You won!",
+  // The bookend of "Start of what." — a full stop, not a question mark, in the
+  // read and on the drawn word.
+  a3_18ab_red: "Won what.",
+  a3_18ac_orange: "I came second!",
+  a3_18ad_orange: "Second is right behind Red!",
 };
 
 const RedArrivesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
@@ -2457,6 +3188,7 @@ const RedArrivesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const t = frame / fps;
 
   const [, landTo] = lineWindow(scene, "a3_18_narrator");
+  const [finishFrom] = lineWindow(scene, "a3_18a_ray");
   const [wideFrom] = lineWindow(scene, "a3_18b_narrator");
   const [warmFrom] = lineWindow(scene, "a3_18f_narrator");
 
@@ -2472,9 +3204,34 @@ const RedArrivesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const nearOrange = orangeFollow(nearRedPath, t, SHARD_BODY * 0.62);
   const arrive = clamp01((frame - landTo + 62) / 44);
 
-  // --- the dissolve ---------------------------------------------------------
-  const wide = clamp01((frame - wideFrom - 8) / S28C_DISSOLVE);
-  const wideEase = kidEase.easeInOutSine(wide);
+  // --- the dissolve, and the cut --------------------------------------------
+  //
+  // Corridor -> finish DISSOLVES on the last pedagogy line; finish -> the
+  // shipped wide is a HARD CUT on the first frame of `a3_18b_narrator`. See
+  // `S28C_FINISH_DISSOLVE` for why there are three shots in this scene and why
+  // only the first join is a mix.
+  const finishEase = kidEase.easeInOutSine(clamp01((frame - landTo) / S28C_FINISH_DISSOLVE));
+  const wideEase = frame >= wideFrom ? 1 : 0;
+
+  // --- shot two: the finish, closer ----------------------------------------
+  //
+  // Red walks out of the end of the beam at the speed he has walked at all
+  // episode, and the finish happens *to* him. The arithmetic picks his start,
+  // as ever: he crosses the beam's tip on the middle frame of "Red! You won!"
+  // and is still walking, on screen, when the shot dissolves away 380 frames
+  // later. Orange is `orangeFollow` at this shot's scale, so he is one drawn
+  // body behind and cannot overtake.
+  const finishHorizon = plateY(SEA_SUNSET_FRAC, {
+    drift: SEA_DRIFT,
+    dy: S28C_PAN + S28C_FINISH.panExtra,
+    zoom: S28C_FINISH.zoom,
+  });
+  const finishPath = (tt: number) => redWalk(tt, { x: -100, y: S28C_FINISH.beamY });
+  const finishWalkFrom =
+    finishFrom + 30 - ((S28C_FINISH.beamEnd + 100) / RED_SPEED) * fps;
+  const finishT = Math.max(0, frame - finishWalkFrom) / fps;
+  const finishRed = finishPath(finishT);
+  const finishOrange = orangeFollow(finishPath, finishT, SHARD_BODY * S28C_FINISH.scale);
 
   // --- shot two: the wide, empty, orange one --------------------------------
   const horizon = plateY(SEA_SUNSET_FRAC, { drift: SEA_DRIFT, dy: S28C_PAN });
@@ -2513,7 +3270,21 @@ const RedArrivesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   return (
     <AbsoluteFill style={{ background: kidTheme.sunsetLow, overflow: "hidden" }}>
       {/* --- shot one ------------------------------------------------------ */}
-      <div style={{ position: "absolute", inset: 0, opacity: 1 - wideEase }}>
+      {/* `isolation: "isolate"` on all three shots, and it is a BUG FIX rather
+          than tidiness. `opacity: 1` does **not** create a stacking context (only
+          a value below 1 does), so the moment a shot's cross-fade completed, its
+          own children's z-indices escaped into the scene's root context and
+          competed with the *next* shot's. A still of the landing block caught
+          exactly that: the finish shot's beam (`zIndex 9`) and the finish
+          shot's RAY (`zIndex 40`) were both painted on top of the wide shot's
+          plate — a second red-orange beam stub at frame left ending 300px away
+          from the real one, and a character who is deliberately not in the
+          landing block at all. Isolating each shot keeps every z-index local to
+          the shot that owns it and leaves the ordering between shots to DOM
+          order, which is what the three-shot structure always meant. Nothing
+          about the dissolves changes: a shot mid-fade was already its own
+          stacking context. */}
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - finishEase, isolation: "isolate" }}>
         <PaintedSky bg="sky_dome_day" phase={6.1} drift={8} />
         <div
           style={{
@@ -2576,8 +3347,104 @@ const RedArrivesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         />
       </div>
 
-      {/* --- shot two ------------------------------------------------------ */}
-      <div style={{ position: "absolute", inset: 0, opacity: wideEase }}>
+      {/* --- shot two: THE FINISH ------------------------------------------ */}
+      <div style={{ position: "absolute", inset: 0, opacity: finishEase, isolation: "isolate" }}>
+        <PaintedSky
+          bg="sea_sunset"
+          phase={7.8}
+          drift={SEA_DRIFT}
+          dy={S28C_PAN + S28C_FINISH.panExtra}
+          zoom={S28C_FINISH.zoom}
+        />
+        {/* The blue that left, still up there. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to bottom, rgba(58,160,236,0.5) 0%, rgba(58,160,236,0.2) 24%, rgba(58,160,236,0) 44%)",
+            pointerEvents: "none",
+          }}
+        />
+        {/* THE VOLCANO, asleep on this shot's own measured horizon, in frame
+            from the first frame of the shot to the last, and unmentioned. It is
+            a place: same x, same scale, only the horizon changes. */}
+        <SleepingVolcano
+          x={VOLCANO_AT.x}
+          base={finishHorizon}
+          scale={VOLCANO_AT.scale}
+          phase={0.62}
+        />
+        <SideLight horizon={finishHorizon} strength={0.44} />
+        {/* The end of the beam. Red walks out of it. */}
+        <WideLayer zIndex={9}>
+          <rect
+            x={-900}
+            y={S28C_FINISH.beamY - 58}
+            width={900 + S28C_FINISH.beamEnd}
+            height={116}
+            rx={58}
+            fill="url(#a3-beamend)"
+          />
+          <rect
+            x={-900}
+            y={S28C_FINISH.beamY - 19}
+            width={900 + S28C_FINISH.beamEnd}
+            height={38}
+            rx={19}
+            fill="url(#a3-beamendcore)"
+          />
+        </WideLayer>
+        <SoftShade
+          x={finishRed.x}
+          y={finishRed.y}
+          rx={520}
+          ry={330}
+          strength={0.13}
+          color="92,38,42"
+        />
+        <Shard
+          who="red"
+          x={finishRed.x}
+          y={hover("shard", finishRed.y, S28C_FINISH.scale)}
+          scale={S28C_FINISH.scale}
+          heading={finishRed.angle}
+          // He does not look at the person telling him he won, and he does not
+          // look back at the two hundred miles of air either.
+          look={{ x: 0.45, y: 0 }}
+          speaking={stage.speaking("red")}
+          zIndex={30}
+        />
+        <Shard
+          who="orange"
+          x={finishOrange.x}
+          y={hover("shard", finishOrange.y, S28C_FINISH.scale)}
+          scale={S28C_FINISH.scale}
+          heading={finishOrange.angle}
+          // Thrilled, and still not looking at him. Second place is where he
+          // lives and nobody corrects him.
+          look={{ x: 0.45, y: 0 }}
+          speaking={stage.speaking("orange")}
+          zIndex={29}
+        />
+        <Ray
+          x={S28C_FINISH_RAY.x}
+          y={hover("ray", S28C_FINISH_RAY.y, S28C_FINISH_RAY.scale)}
+          scale={S28C_FINISH_RAY.scale}
+          brightness={RAY_LIGHT.full}
+          spectrum={RAY_SPECTRUM.afterRainbow}
+          phase={PHASE.ray}
+          emotion={rayEmotion}
+          speaking={stage.speaking("ray")}
+          look={{ x: -0.5, y: 0.6 }}
+          streak={0.4}
+          bank={-3}
+          zIndex={40}
+        />
+      </div>
+
+      {/* --- shot three: the wide, empty, orange one ----------------------- */}
+      <div style={{ position: "absolute", inset: 0, opacity: wideEase, isolation: "isolate" }}>
         <PaintedSky bg="sea_sunset" phase={9.4} drift={SEA_DRIFT} dy={S28C_PAN} />
         {/* Warmer, not darker. See the tone guardrail above. */}
         <div
@@ -2655,6 +3522,18 @@ const RedArrivesScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         at={{
           a3_15_ray: { x: 520, y: 176, tail: "left", tailAt: rayMark.x },
           a3_17_ray: { x: 520, y: 176, tail: "left", tailAt: rayMark.x },
+          // --- the finish, in shot two --------------------------------------
+          //
+          // Every one of these is placed against the FINISH shot's geometry
+          // rather than the cast marks above, which are the wide shot's: Ray is
+          // up at frame right there, Red is walking out of a beam whose tip is
+          // at 460, and Orange is one drawn body behind him. `Bubbles` takes
+          // one mark per speaker, so a scene with two framings places the
+          // second one's bubbles by hand.
+          a3_18a_ray: { x: 1060, y: 214, tail: "right", tailAt: S28C_FINISH_RAY.x },
+          a3_18ab_red: { x: 1000, y: 214, tail: "left", tailAt: finishRed.x },
+          a3_18ac_orange: { x: 520, y: 348, tail: "right", tailAt: finishOrange.x },
+          a3_18ad_orange: { x: 520, y: 348, tail: "right", tailAt: finishOrange.x },
           a3_18c_red: { y: 214, tail: "left", tailAt: red.x },
           a3_18d_red: { y: 214, tail: "left", tailAt: red.x },
           // Over on his own side, above him, and the same height as Red's — the
@@ -2688,6 +3567,11 @@ const S29_PERCH = 0.34;
 
 const S29_BUBBLES: Record<string, string> = {
   a3_22_sunny: "I do this ON PURPOSE!",
+  // **The episode's one line of sound on the walk-behind** (revision2, audit
+  // finding #7: an inaudible stage joke is not a joke). The actual sunset
+  // reviews the show about him, passing, not stopping, not looking — and it is
+  // the "Lovely air." shape, which feeds `rc_04b_red` in the recap.
+  a3_22b_red: "Nice drama.",
 };
 
 /**
@@ -2900,13 +3784,23 @@ const BigWordSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Bubbles
         scene={scene}
-        cast={{ sunny: sunnyMark } as Cast}
+        cast={
+          {
+            sunny: sunnyMark,
+            red: {
+              x: redAt.x,
+              y: hover("shard", redAt.y, S29_WALK_SCALE),
+              scale: S29_WALK_SCALE,
+              who: "shard",
+              side: "left",
+            },
+          } as Cast
+        }
         text={S29_BUBBLES}
         // Above him and to the left, in the gap between the card and the
         // waterline: a bubble under its speaker points its tail at the floor,
         // and this frame has a Big Word card sitting in the only other place it
         // could go. One line, so it fits in that gap.
-        maxWidth={780}
         at={{
           a3_22_sunny: {
             x: 880,
@@ -2914,7 +3808,22 @@ const BigWordSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             tail: "right",
             tailAt: sunnyMark.x,
           },
+          // **He is entirely behind the word when this lands**, which is the
+          // picture: the sunset reviews the show about the sunset from behind
+          // the card, without stopping. So the bubble goes in the only clear
+          // air there is — left of the "Sun" block, above the waterline, clear
+          // of Sunny's rays and of his own bubble's place — and the tail
+          // reaches back at whatever piece of him is showing between the two
+          // syllables. It is up for 46 frames and he emerges under the next
+          // line, so nobody is left wondering who said it.
+          // 390, not 470: `BigWordBeat` draws the card at zIndex 50 and a
+          // bubble is 40, so the "Sun" block ate the right-hand third of this
+          // one at 470 — the joke's only line, half behind the word it is
+          // about. The card's left edge is at x≈636 and the bubble is ~430
+          // wide, so 390 clears it with room and still sits over open water.
+          a3_22b_red: { x: 390, y: 200, tail: "right", tailAt: redAt.x },
         }}
+        maxWidth={780}
       />
       {/* Nothing after the card may draw over Sunny's own line, so the glow
           the freeze is standing in is behind everything. */}
@@ -3792,13 +4701,34 @@ const Continents: React.FC<{ cx: number; cy: number; r: number; fill: string }> 
 
 // ---------------------------------------------------------------------------
 
+/**
+ * **The act's scene map, and the two scenes that live in their own files.**
+ *
+ * `s27b_start_line` and `s28b2_two_walkers` are revision2's new scenes and are
+ * big enough to own a file each (the start line has nine speakers in it). The
+ * import direction is the one thing to know about them:
+ *
+ *   - `s27b_start_line.tsx` imports **only** `./common`, so it is a leaf.
+ *   - `s28b2_two_walkers.tsx` imports the volcano, the boat and the sea
+ *     constants from **this** file, which imports it back for the map below —
+ *     a deliberate ES-module cycle, and the alternative was a third copy of
+ *     `SleepingVolcano` (there are already two; promoting it is the cleanup
+ *     list's headline and is not this batch's job). It is safe because that
+ *     file touches nothing of this one at module scope: every reference is
+ *     inside a component body, i.e. after both modules have finished
+ *     evaluating. **Do not hoist an act3 value into a module-level `const`
+ *     over there** — that is the one edit that would break it, and it would
+ *     break as a render-time TDZ error rather than as a type error.
+ */
 export const ACT3_SCENES: Record<string, React.FC<{ scene: TimedScene }>> = {
   s25_sea_sunset: SeaSunsetScene,
   // No `s26_volcano`: the scene was cut on 2026-08-01 and its component went
   // with it in wave 2 (A7). Nothing is renumbered and the id is not reused.
   s27_long_way: LongWayScene,
+  s27b_start_line: StartLineScene,
   s28_blue_runs_out: BlueRunsOutScene,
   s28b_race_island: RaceIslandScene,
+  s28b2_two_walkers: TwoWalkersScene,
   s28c_red_arrives: RedArrivesScene,
   s29_bigword_sunset: BigWordSunsetScene,
   s30_crayon_back: CrayonBackScene,
