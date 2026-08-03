@@ -49,14 +49,28 @@ overridden in substance; R2 superseded.
 - Showrunner synthesis DONE: `scratchpad/ep3_synthesis.md` (binding rulings
   G1–G8 + scene-by-scene; spine = B's act 3 + A's acts 1–2; target ~16:30–
   17:00 with trim menu; new scenes s27b start line + s28b2 two walkers).
-- Dialogue-draft story-writer spawned 05:10Z on check-quota PROCEED and was
-  KILLED by the real session limit (resets 1:20am ET = 05:20Z — the script's
-  window estimate was 20 min early; calibration caveat: trust the /usage
-  reset TIME over the script's transcript-derived boundary near a rollover).
-  Recovery in progress: timer armed, SendMessage-resume the same agent after
-  05:22Z ("check on-disk revision2.md, repair partials, continue"). Then:
-  showrunner edit pass → revision doc to Mike for sign-off. NO
-  implementation until Mike approves.
+- revision2.md drafted (story-writer, recovered from one session-limit kill
+  via SendMessage resume), showrunner edit pass done, committed 6c9c55e.
+- **MIKE SIGNED OFF 2026-08-03** with two amendments, both folded in and
+  committed (240724b): Scene 5 stretched gaps 45/75/105/135 + interrupted
+  sixth firing ("Are we—" / unamused "No." at 0.8); s10 Ray unamused look +
+  Narrator "Ahem." (cut-if-it-fails, never "Hmm."). New target ~17:05.
+- **NO ORCHESTRATOR THIS RUN** (Mike): this showrunner session also owns
+  committing (explicit paths, push immediately) and usage checking
+  (check-quota between batches; Mike reported 10% at green-light, reset
+  ~4:50h later; weekly-fable % ask still open).
+- **IMPLEMENTATION IN FLIGHT — batch plan:**
+  (1) script layer: opus builder spawned 2026-08-03 — narration.mjs +
+  Video.tsx + TTS (~$0.24) + s5 amendment + ScenePlaceholders for
+  s27b/s28b2 + ear-check packet (scratchpad/ep3_earcheck2/PACKET.md, goes
+  to Mike immediately — front-load ear latency); gates: typecheck, cache
+  0-to-synthesize, 3 scene-range smoke renders.
+  (2) staging: acts 1–2 fabric builder ∥ act 3 race builder (new scene
+  files s27b/s28b2 + restaged legs; different files, no conflicts).
+  (3) recap s32 + showrunner sampled still review + FULL every-frame
+  --scale=0.25 render + wave-end script.md fold + clean-worktree deploy.
+  Staging builders are briefed on revision2.md directly (script.md carries
+  only a banner + s5 until the wave-end fold).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
