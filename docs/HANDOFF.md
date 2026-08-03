@@ -72,12 +72,14 @@ overridden in substance; R2 superseded.
   packet. a2_32b_blue "Hi! Hi! Hi! Hi!" suspect (0.68 s/word, MiniMax
   exclamation padding pattern) — Mike's ear decides re-roll. Ear packet +
   9 clips SENT to Mike 2026-08-03.
-  (2a) act-3 race staging builder IN FLIGHT (2026-08-03): act3.tsx + NEW
-  s27b/s28b2 scene files + common.tsx additive wiring; stills →
-  scratchpad/w3act3/; gates incl. every-frame act-3 span render. Known
-  batch-1 flags for it: no bubble/stage entries existed for the 95 new
-  keys; Violet's wordless firings are pure staging; a3_14eb (4.50s) and
-  a3_11c (5.03s) run longer than the ledger assumed.
+  (2a) act-3 race staging DONE + committed add62f7 (builder + showrunner
+  still review + fix round: 2 bubble aims, faint-protest staging, s28c
+  dissolve→hard cut incl. a real stacking-context leak fix, beam
+  legibility; re-times RT-1 s25 tail 40f / RT-2 s28b2 hold 75f — recorded
+  in wave3-act3-report.md). 31,281 frames. Standing rulings from review:
+  a3_11u off-frame bubble approved; volcano in s28b2 approved (update the
+  volcano rule's scene list at the wave-end fold); Ray in finish shot
+  approved; s28c cut-to-empty-39f approved (deadpan).
   (2b) acts 1–2 + recap + s5 staging builder: NEXT WINDOW (window resets
   2026-08-04T01:00Z) — s9/s10/s11/s13 (act1.tsx incl. s5 bubbles +
   s10 Ray-unamused-look + Ahem beat), s15/s17/s18/s19/s20/s21/s22
