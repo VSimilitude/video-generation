@@ -33,14 +33,15 @@ the wants ARE the physics, which was always the design; now they are audible.
 
 | Block | Shipped | Delta | New |
 |---|---|---|---|
-| Cold open + Act One pre-split (s1–s8) | 3:01 | 0 | 3:01 (out of scope) |
-| Act One from the split (s9–s13) | 1:50 | **+33s** | 2:23 |
+| Cold open + Act One pre-split (s1–s8) | 3:01 | **+13s** (s5 amendment) | 3:14 |
+| Act One from the split (s9–s13) | 1:50 | **+34s** (incl. s10 "Ahem.") | 2:24 |
 | Act Two (s14–s24) | 3:59 | **+34s** | 4:33 |
 | Act Three (s25–s31) | 3:04 | **+129s** | 5:13 |
 | Recap (s32–s35) | 1:38 | **+3s** | 1:41 |
-| **Total** | **13:32.5** | **+199s** | **≈ 16:51** (range 16:35–17:05 pending clip lengths) |
+| **Total** | **13:32.5** | **+213s** | **≈ 17:05** (range 16:50–17:20 pending clip lengths) |
 
-Inside the synthesis target of 16:30–17:00 (ruling G1). The race proper —
+At the top of the synthesis target (16:30–17:00, ruling G1) plus Mike's
+sign-off amendment (+14s, Scene 5 + the s10 garnish). The race proper —
 start line to finish — runs **≈ 3:55 across five legs** (was 82.3s across
 three). A priced trim menu is in §6; the race and its exits are not on it.
 
@@ -65,6 +66,10 @@ three). A priced trim menu is in §6; the race and its exits are not on it.
 5. **One existing line retired**: `a3_12b_narrator` ("All seven set off down
    it together. Watch who lasts.") — its substance moves to the start line's
    sportscast open (`a3_11c_narrator`). Kokoro, so the retirement is free.
+6. **Mike's sign-off amendment (2026-08-03)**: Scene 5's silences stretch to
+   45/75/105/135f and the gag gains an interrupted sixth firing ("Are we—" /
+   an unamused, drawn-out "No."); Scene 10 gains Ray's confused-unamused
+   look into camera and a Narrator "Ahem." across the Orange exchange.
 
 **Two cover-note flags for Mike (rulings G5, G7):**
 
@@ -78,7 +83,7 @@ three). A priced trim menu is in §6; the race and its exits are not on it.
 
 ---
 
-# SCENE BY SCENE, 9 → END
+# SCENE BY SCENE (Scene 5 amendment + Scenes 9 → end)
 
 Engine defaults for every new colour line, from the cast table and never
 varied: **Red** `minimax Patient_Man` `calm` 0.9 (+16f approach) · **Orange**
@@ -95,6 +100,66 @@ preceding key; **nothing is renumbered**. Where an insertion must land between
 two already-lettered keys (leg one only), the suffix goes to two letters
 (`a3_13a` → `a3_13aa` → `a3_13ab` → `a3_13b`), which preserves strict lexical
 = playback order; flagged again at the ledger.
+
+---
+
+### Scene 5 — Are we there yet · **REVISE** (Mike's amendment, 2026-08-03) (+13s)
+
+*Scenes 1–8 were out of scope; Mike explicitly pulled this one in at
+sign-off: "drag out the pauses… more spacing between are we there yets," plus
+one new exchange — an interrupted sixth firing — "as the last one with a bit
+more traveling after and then hop to the arrival scene."*
+
+**On stage:** Narrator, Ray
+**Staging:** Unchanged and still binding: the shot never cuts and nothing in
+it ever changes — not the star field, not the speed, not the size of the dot.
+Firings 1–5 stay ONE recording (`a1_13_ray` + its four `sameAs` aliases,
+untouched). What changes: the silences stretch much further, the fifth firing
+now goes unanswered into a long dead hold (the Narrator has simply stopped),
+and the gag gains a sixth, DIFFERENT firing — Ray is cut off mid-word. The
+interruption is now literally the only thing in the scene that is not a
+repetition.
+
+The escalating gaps, re-specced (were 30/45/60/75):
+
+> **HELD BEAT after `a1_14_narrator`: 30f → 45f (1.5s).**
+> **HELD BEAT after `a1_15b_narrator`: 45f → 75f (2.5s).**
+> **HELD BEAT after `a1_15d_narrator`: 60f → 105f (3.5s).**
+> **HELD BEAT after `a1_16_narrator`: 75f → 135f (4.5s)** — the longest
+> silence in the episode now lives here, where the pattern is at its peak and
+> a six-year-old is saying the line with him.
+>
+> **RAY:** Are we there yet? *(`a1_16b_ray`, unchanged — still the same
+> recording, fifth firing)*
+>
+> **HELD BEAT — 90f (3.0s) after `a1_16b_ray`.** *(Was a 6f tail straight
+> into the cut.)* No answer comes. Same star field, same speed, same dot.
+> The Narrator has stopped answering, and the audience gets three seconds to
+> understand that.
+>
+> **RAY:** Are we— *(`a1_16c_ray` — minimax `Young_Knight` `auto` 1.0; NEW
+> text "Are we", deliberately truncated; bubble: `"Are we—"`. Ear-check the
+> truncation — see below.)*
+>
+> **GAP — 0f.** *(The interruption. The Narrator does not wait for the end of
+> the word.)*
+>
+> **NARRATOR** *(unamused, drawn out)*: No. *(`a1_16d_narrator` — kokoro
+> `af_heart` at **0.8, the new deadpan floor** (was 0.85); flat, bored,
+> final — the almanac voice with the almanac removed)*
+>
+> **HELD BEAT — 90f (3.0s) after `a1_16d_narrator`.** A bit more traveling,
+> per the amendment: same shot, nothing changes, nobody speaks. **Scene tail:
+> 6f**, then the hard cut to Scene 6 exactly as shipped — `a1_17_narrator`
+> ("And then Ray arrived, all at once, the way light always does") is still
+> the real answer, and it now also answers the "No."
+
+**Why:** the gag's own design note says the effect being bought is a child
+recognising a pattern and starting to say the line *with* Ray — the longer
+silences buy more of exactly that. The fifth firing's old button (a cut) is
+inherited by the sixth, which ends the gag with the one thing repetition
+cannot absorb: an interruption. Firings 1–5 remain byte-identical; the sixth
+being audibly DIFFERENT is what tells the ear the gag is over.
 
 ---
 
@@ -160,6 +225,16 @@ unbothered button. Nothing lands between `a1_43` and `a1_44`, ever.
 > **NARRATOR** *(flat, 0.92)*: Red did not say anything. *(`a1_42f_narrator` — kokoro `af_heart`)*
 >
 > **ORANGE:** He meant to. *(`a1_42g_orange` — minimax `Determined_Man` `calm` pitch +2, 0.95; **SOURCE recording** — fires again byte-identical in s28b2, ruling G4)*
+>
+> *(Across the whole Orange exchange, **Ray looks into the camera, confused
+> and unamused** — the audience's face, worn by the hero. Mike's note at
+> sign-off; the eye-line breaks back to the seven before `a1_43`.)*
+>
+> **NARRATOR** *(a small, formal throat-clear, moving the meeting along)*:
+> Ahem. *(`a1_42h_narrator` — kokoro `af_heart`; Mike's suggestion, free;
+> ear-check that kokoro's read lands as a throat-clear — the fallback is to
+> CUT it, never to substitute "Hmm." — that word is her established beat at
+> `a1_27`/`rc_18b` and must not be diluted)*
 >
 > **NARRATOR:** Every single one of them was also Ray. *(`a1_43_narrator`, unchanged)*
 >
@@ -840,7 +915,7 @@ character; no per-line seasoning anywhere below). No pause markers. No
 stretched vowels on MiniMax; emphasis is all-caps only. Est. seconds are
 planning numbers; durations flow from the manifest after `npm run narration`.
 
-**MiniMax (paid), 73 recordings:**
+**MiniMax (paid), 74 recordings:**
 
 | Key | Speaker | Text | Engine fields | Est. s |
 |---|---|---|---|---|
@@ -917,8 +992,9 @@ planning numbers; durations flow from the manifest after `npm run narration`.
 | `a3_18ad_orange` | Orange | Second is right behind Red! | `Determined_Man` calm +2 0.95 | 1.5 |
 | `a3_22b_red` | Red | Nice drama. | `Patient_Man` calm 0.9 | 1.0 |
 | `rc_03c_indigo` | Indigo | That is me. | `Decent_Boy` happy +3 1.1 | 0.9 |
+| `a1_16c_ray` | Ray | Are we | `Young_Knight` auto 1.0 — deliberately truncated (amendment) | 0.8 |
 
-**Kokoro (free), 10 recordings — all `af_heart` 0.92 flat unless noted:**
+**Kokoro (free), 12 recordings — all `af_heart` 0.92 flat unless noted:**
 
 | Key | Speaker | Text |
 |---|---|---|
@@ -932,6 +1008,8 @@ planning numbers; durations flow from the manifest after `npm run narration`.
 | `a3_13bd_narrator` | Narrator | He does win the sky. |
 | `a3_14l_narrator` | Narrator | Two colours left. Neither of them is hurrying. |
 | `a3_18ae_narrator` | Narrator | That is the happiest anyone has been all day. |
+| `a1_16d_narrator` | Narrator | No. *(0.8 — the new deadpan floor; unamused, drawn out; amendment)* |
+| `a1_42h_narrator` | Narrator | Ahem. *(throat-clear; cut if the read fails — never substitute "Hmm."; amendment)* |
 
 **Retired:** `a3_12b_narrator` ("All seven set off down it together. Watch
 who lasts.") — kokoro, substance absorbed by `a3_11c_narrator`; deletion is
@@ -964,9 +1042,9 @@ that clip keeps its single existing firing.
 
 ## Cost
 
-73 new MiniMax recordings ≈ 2,150 characters ≈ **$0.24** at ~$0.11/1k chars,
-plus 10 free kokoro clips and 9 zero-cost aliases. One retired kokoro line.
-Episode clip count: 208 → **299 entries** (289 recordings + 10 existing
+74 new MiniMax recordings ≈ 2,160 characters ≈ **$0.24** at ~$0.11/1k chars,
+plus 12 free kokoro clips and 9 zero-cost aliases. One retired kokoro line.
+Episode clip count: 208 → **302 entries** (292 recordings + 10 existing
 aliases + the 9 new ones, net of the retirement). No budget argument exists.
 
 ---
@@ -1016,6 +1094,17 @@ Items 1–4 are the synthesis memo's list; 5–10 are this draft's own.
     Act Three contexts; play each in its new scene against its neighbours.
     Both are flat `calm` reads and should port; if one audibly does not, flip
     the chain per the ledger's fallback (cents).
+11. **`a1_16c_ray` "Are we"** (amendment) — the truncation must read as an
+    interruption, not a complete utterance; the 0f gap into the Narrator does
+    half the work. Fallback text: "Are we there" (still truncated). MiniMax
+    may append falling intonation — audition two takes.
+12. **`a1_16d_narrator` "No."** (amendment) — at 0.8, the new deadpan floor:
+    unamused, drawn out, final; never annoyed (she is bored, not cross — the
+    tone guardrail). Kokoro, free to re-take; if 0.8 distorts, 0.85 and let
+    the 90f hold do the dragging.
+13. **`a1_42h_narrator` "Ahem."** (amendment) — kokoro's read must land as a
+    small formal throat-clear; if it reads as a word, CUT the clip (the beat
+    works without it) — never substitute "Hmm." (established elsewhere).
 
 ---
 
@@ -1136,12 +1225,16 @@ Verified line by line against THIS draft (Treatment B's form; rulings G8).
 
 # SUMMARY
 
-- **Runtime:** ≈ 16:51 (1,011s; range 16:35–17:05), inside the G1 target;
-  race proper ≈ 3:55 over five legs. Trim menu holds −17.5s if needed.
+- **Runtime:** ≈ 17:05 (1,025s; range 16:50–17:20) — the G1 target plus
+  Mike's sign-off amendment; race proper ≈ 3:55 over five legs. Trim menu
+  holds −17.5s if needed.
 - **Max in-scope gap:** ~33s (protected crayon close); all mandated >50s
   gaps fixed.
-- **New material:** 73 paid MiniMax recordings + 10 free kokoro + 9 sameAs
+- **New material:** 74 paid MiniMax recordings + 12 free kokoro + 9 sameAs
   aliases ≈ **$0.24**; one kokoro line retired (`a3_12b`).
+- **Sign-off amendment folded in (2026-08-03):** Scene 5 stretched gaps +
+  interrupted sixth firing; s10 Ray reaction + Narrator "Ahem.". Scene 5's
+  firings 1–5 remain one recording; the sixth is new text by design.
 - **Locked jokes, verbatim as ordered:** "I am winning UPWARDS!", "Start of
   what.", "He meant to.", "Great bounce, me!".
 
