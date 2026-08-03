@@ -63,6 +63,12 @@ one, not free capacity.
   transcript intact and resumes with full context. A clean stop always
   resumes; a mid-flight kill loses the transcript and forces a fresh boot +
   audit. Re-calibrate the script's CEILING when a kill contradicts it.
+  WEEKLY dimension (not in the script — only Mike's /usage sees it): the
+  fable weekly limit is the binding constraint, since orchestrator +
+  showrunner + story-writer are all fable; opus builders draw on the larger
+  all-models pool. Ask Mike for the weekly fable % at wave boundaries. Past
+  ~80%, finish only committed campaign work and defer fable-heavy optional
+  work (bible write-ups, retros, punch-up rounds) past the weekly reset.
 
 ## Boot sequence for a fresh orchestrator
 
