@@ -2691,6 +2691,38 @@ const S29_BUBBLES: Record<string, string> = {
 };
 
 /**
+ * **The episode's last free joke** (revision §6.15, wave-2 C2): Red walks
+ * *behind* the SUNSET card and out the far side of it while Sunny takes credit
+ * for the sunset, at exactly his one speed, without looking at either of them.
+ * Orange follows one drawn body-length behind. Neither the card nor Sunny
+ * acknowledges it, and nothing else in the scene moves for them.
+ *
+ * It is a credit-allocation gag — the character who actually *is* the sunset
+ * walking past the man taking the bow — and it is the setup for `rc_04b_red`
+ * in the recap, which is the same joke with a line on it.
+ *
+ * Three staging facts, all of them load-bearing:
+ *
+ *   - **He walks at the card's own height.** `BigWordBeat` draws the card at
+ *     zIndex 50 and everything it is handed as `children` underneath, so a body
+ *     at the banner's y is *occluded by the word* for the whole middle of its
+ *     crossing and comes out the far side. That is the joke's picture, and it
+ *     costs one number (`S29_WALK_Y`) rather than a mask.
+ *   - **He sets off inside `a3_21_narrator`, never inside a held beat.** The
+ *     scene's two 12f beats are both over by then; he is fully behind the card
+ *     across Sunny's brag and emerges under `a3_23_narrator`. He is still
+ *     walking at the cut, because he always is.
+ *   - **`RED_SPEED` is not negotiable and neither is the follow gap.** Orange
+ *     lags by the time Red takes to cover one *drawn* body length at this
+ *     shot's scale (batch (b)'s ruling on Scene 18: the rule travels, the
+ *     number does not).
+ */
+const S29_WALK_Y = 254;
+const S29_WALK_SCALE = 0.6;
+/** One body clear of frame left when he sets off. */
+const S29_WALK_FROM = { x: -170, y: S29_WALK_Y };
+
+/**
  * Scene 29 — Big Word Three, and the only one of the three lit from below.
  *
  * The freeze is the sea horizon at full sunset **with the island still on it**.
@@ -2706,8 +2738,10 @@ const S29_BUBBLES: Record<string, string> = {
  */
 const BigWordSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const [wordFrom, wordTo] = lineWindow(scene, "a3_19_narrator");
   const [chantFrom] = lineWindow(scene, "a3_20_ray");
+  const [thesisFrom] = lineWindow(scene, "a3_21_narrator");
   const [sunnyFrom] = lineWindow(scene, "a3_22_sunny");
 
   const horizon = plateY(SEA_SUNSET_FRAC, { drift: SEA_DRIFT });
@@ -2729,6 +2763,13 @@ const BigWordSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   });
   const at = frame < splitAt ? rise : perch;
   const land = hopU > 1 ? settleWave((hopU - 1) / 2.2, 1.3, 4.4) : 0;
+
+  // Red and Orange, going somewhere else. See `S29_WALK_Y` above.
+  const walkT = Math.max(0, frame - thesisFrom) / fps;
+  const redPath = (tt: number) => redWalk(tt, S29_WALK_FROM);
+  const redAt = redPath(walkT);
+  const orangeAt = orangeFollow(redPath, walkT, SHARD_BODY * S29_WALK_SCALE);
+  const walking = frame >= thesisFrom;
 
   const stage = useStage(scene);
   const emotion = useEmotion(
@@ -2782,6 +2823,32 @@ const BigWordSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         {/* Lit from below, in red and orange: a warm glow standing up off the
             waterline and under the card. */}
         <UpLight y={horizon} strength={0.85} />
+        {/* Red and Orange, crossing behind the word. Under zIndex 50, so the
+            card takes them for the middle of the crossing; over the frozen
+            water, because they are the only thing in the shot still happening.
+            Nobody looks, nobody stops, and neither of them looks back. */}
+        {walking ? (
+          <>
+            <Shard
+              who="red"
+              x={redAt.x}
+              y={hover("shard", redAt.y, S29_WALK_SCALE)}
+              scale={S29_WALK_SCALE}
+              heading={redAt.angle}
+              look={{ x: 0.7, y: 0 }}
+              zIndex={26}
+            />
+            <Shard
+              who="orange"
+              x={orangeAt.x}
+              y={hover("shard", orangeAt.y, S29_WALK_SCALE)}
+              scale={S29_WALK_SCALE}
+              heading={orangeAt.angle}
+              look={{ x: 0.7, y: 0 }}
+              zIndex={25}
+            />
+          </>
+        ) : null}
         <div
           style={{
             position: "absolute",

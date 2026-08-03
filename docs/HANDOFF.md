@@ -118,9 +118,36 @@ frequency ladder (Red single trough+peak → Violet fizz, shared wave speed).
   across w2b1/ + w2b2/; one fix (Scene 23 roller anchored to Sunny's
   spikes, showrunner-applied + re-stilled). Gates per builder: typecheck 0,
   lint:hooks 0, every-frame scene-range renders exit 0 (2140–3355,
-  5426–7284, 9869–15845). AWAITING CHECKPOINT COMMIT (act1.tsx + act2.tsx
-  + worklist + this file), then batch (c): recap C1–C2, showrunner full
-  sampled review C3, full gates C5, deploy-readiness distillation.
+  5426–7284, 9869–15845). Committed 8d7dc08; six preview stills to Mike
+  (no decision pending).
+- **Batch (c) IN FLIGHT** (2026-08-02): one builder on C1 (s32 chant
+  panels, recap.tsx + recap-wide stale-bubble sweep), C2 (s29 Red/Orange
+  walk-behind delta, act3.tsx — the one unbuilt REVISE row batch (a) did
+  not cover), C3-fix (a1_49_drip bubble tail). Stills → scratchpad/w2c/.
+  Builder runs the FULL gate stack incl. every-frame --scale=0.25 render.
+  Then: showrunner C3 sampled review (batch-(c) work + the act3 race
+  beats flagged in the worklist: one-eye 45f, s28c eye→volcano dissolve,
+  s28 pack crossing 17500–17610), checkpoint report, and the
+  wave-terminal distillation (deploy-readiness note + retro inputs).
+  Deploy = orchestrator, after showrunner sign-off.
+  **2026-08-02, successor showrunner — batch (c) RECOVERED + CLOSED:**
+  predecessor session AND its builder were quota-killed with batch (c)
+  uncommitted (no gate results, no DONE section). Recovery: auditor pass
+  on the inherited diff (C1/C2/C3-fix CONFIRMED; one real WRONG resolved
+  by ruling R10, one by accepted deviation D-a1_49; all post-audit edits
+  comment-only) + showrunner C3 sampled review on fresh stills
+  (scratchpad/w2c3sr/, all pass — incl. the flagged one-eye 45f, s28c
+  dissolve, s28 pack crossing). Full DONE section + R10 + ratifications in
+  wave2-worklist.md; wave-terminal distillation at
+  src/videos/sky-blue/wave2-distillation.md. Post-B12 total 24,374 frames
+  = 13:32.5. Gates on final tree ALL GREEN: typecheck 0, lint:hooks 0,
+  both caches 0-to-synthesize, full every-frame --scale=0.25 render
+  RENDER_EXIT=0 hand-verified (log + 85.6MB mp4). **WAVE 2 COMPLETE —
+  showrunner signs off GO. Awaiting orchestrator commit + clean-worktree
+  deploy**, then the deployed link + watch-items go to Mike for the
+  family screening (deliverable list in the showrunner's checkpoint
+  report; wave-terminal distillation at
+  src/videos/sky-blue/wave2-distillation.md).
 
 **The staging worklist is now authoritative:
 `src/videos/sky-blue/wave2-worklist.md`** (showrunner, 2026-08-02 — merges

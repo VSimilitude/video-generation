@@ -11,12 +11,15 @@ import {
   Puff,
   RAY_LIGHT,
   RAY_SPECTRUM,
+  RED_SPEED,
   Ray,
   SPECTRUM,
+  Shard,
   SoftShade,
   Sunny,
   WIDTH,
   WideLayer,
+  blueRicochet,
   heldBeat,
   hover,
   interpolate,
@@ -27,11 +30,14 @@ import {
   kidType,
   lineWindow,
   plateY,
+  redWalk,
+  settleWave,
   spring,
   useCurrentFrame,
   useEmotion,
   useStage,
   useVideoConfig,
+  type Box,
   type Cam,
   type Cast,
   type Mark,
@@ -88,8 +94,140 @@ const H = HEIGHT;
 // instead of a word. Each panel lights as its character takes theirs and stays
 // lit, so the last line plays over all three at once, which is the shape of the
 // recap: the episode, reassembled, in one frame.
+//
+// **The shape is unchanged and two of the three panels are now argued with from
+// INSIDE** (revision §6.16, wave-2 C1). What is new is a second claimant on two
+// of the three words, and the point is that both claimants are right:
+//
+//   SCATTER  Blue shoves in on his 4f house gap and claims the word off Puff.
+//            Neither concedes, neither is wrong (scattering takes light *and*
+//            air) and **nobody adjudicates** — no verdict, no narrator ruling,
+//            no cutaway. They end the panel sharing it, both still claiming it,
+//            side by side in one lit cell.
+//   SUNSET   Red walks in from the side, says "It is mostly me." underneath the
+//            man taking credit for it, and walks out of the far edge. Sunny
+//            does not hear him, does not look at him and takes his bow anyway.
+//   RAINBOW  Violet is half out of the panel's own frame edge, waving, for the
+//            whole scene. Nobody re-frames to include him. **Firing four.**
+//
+// Three rules govern the staging and all three are about restraint:
+//
+//   1. **Bodies entering a panel clip at that panel's edges.** A shard sticking
+//      out of a split-screen cell reads as a rendering bug rather than as a
+//      character. `ChantPanel` already has `overflow: hidden`, so an intruder is
+//      drawn *inside* it in **panel-local** coordinates and the cell does the
+//      cutting. Violet is the one deliberate exception, and even he is not one:
+//      the edge he hangs off is the RAINBOW panel's outer edge, which *is* the
+//      frame's edge, so the frame cuts him and the panel does not have to.
+//   2. **Bubbles are NOT inside the panels.** They are placed in composition
+//      coordinates at the top of the scene, like every other bubble in the
+//      episode, and each one is sized (`maxWidth`) so it lands entirely inside
+//      its own speaker's cell. A bubble clipped by a panel wall is unreadable;
+//      a bubble spanning two cells breaks the split screen.
+//   3. **The 20f beat after `rc_04b_red` is stillness.** Nothing enters it, and
+//      the three panel owners stop moving inside it — idle and eye-life ramped
+//      to nothing across it and back out, the s34 way, so no body *snaps*. Three
+//      motions CONTINUE through it, all of them laws already in progress rather
+//      than gestures entering (ruling R10, wave-2 batch (c), extending batch
+//      (b)'s Scene-20 comparator-Blue ruling):
+//        - Red, still walking out — the revision itself stages him mid-exit;
+//        - Blue, still ricocheting in his small box — his law, and stopping him
+//          would be a second event;
+//        - Violet, still waving half out of the RAINBOW panel — firing four IS
+//          the continuous unnoticed wave, it has run since `rc_02`, and a
+//          freeze two panels from the deadpan would pull the eye to him at the
+//          one moment it must sit on Sunny not hearing. The deadpan is carried
+//          by Sunny's frozen clock, not by the frame going dead.
 
 const PANEL_W = W / 3;
+
+/** A bubble a claimant gets. Six words is the house ceiling; these are four. */
+const S32_BUBBLES: Record<string, string> = {
+  // Clip: "SCATTER! That is ME bouncing! That is ME!" — the summary keeps the
+  // half of the mechanism Puff's own line does not have, which is the whole
+  // reason the line exists.
+  rc_03b_blue: "That is ME bouncing!",
+  // Clip: "It is mostly me." Four words, said flat, and the bubble is the line.
+  rc_04b_red: "It is mostly me.",
+};
+
+/**
+ * **Blue's cupboard, inside Puff's panel** — panel-local, because everything
+ * drawn inside a `ChantPanel` is.
+ *
+ * Small on purpose. "Blue at rest is Blue in a cupboard" (the `SEVEN` table),
+ * and a ricochet that owns half the cell would push Puff out of his own panel,
+ * which is exactly the concession the beat is not allowed to contain. It sits
+ * left of Puff so the two of them read as sharing the frame rather than as one
+ * standing behind the other, and Blue is drawn *behind* him so the overlap at
+ * the far end of a leg reads as depth instead of a collision.
+ */
+const S32_BLUE_BOX: Box = { x: 86, y: 440, w: 134, h: 268 };
+const S32_BLUE_SCALE = 0.72;
+/** How far Blue's arrival shunts Puff across. See `shunt` in the scene. */
+const S32_PUFF_SHIFT = 100;
+/**
+ * The shove. He comes in from off the panel's left edge in seven frames — about
+ * 1,600 px/s, four times Red's whole personality — because a character who
+ * *strolls* into somebody else's panel is not interrupting them. It starts on
+ * `rc_03_puff`'s 4f house gap, which is Blue's gap everywhere in the episode.
+ */
+const S32_SHOVE_PX = 400;
+const S32_SHOVE_FRAMES = 7;
+
+/**
+ * **Red crosses the SUNSET panel at `RED_SPEED` and the panel is 640px wide**,
+ * so the crossing takes just under six seconds and the arithmetic decides when
+ * he sets off rather than the other way round: he is under Sunny on the middle
+ * frame of his own line (`S32_RED_FROM_X` → the panel's centre at 108 px/s),
+ * which puts the claim and the man being cheated in the same frame, and he is
+ * still walking out of the far edge when the light moves on to the Narrator.
+ * He is never re-timed to make an entrance land — that is the character.
+ */
+const S32_RED_SCALE = 0.74;
+/**
+ * Over the water, under Sunny. The sunset panel's only free band: Sunny owns
+ * the horizon, the word owns the bottom 100px, and this is the strip between
+ * them.
+ */
+const S32_RED_Y = 876;
+/** Where he is when he sets off: one body clear of the panel's left wall. */
+const S32_RED_FROM_X = -150;
+
+/**
+ * **The waterline in a 640×1080 panel, measured off a still** rather than taken
+ * from `plateY`. `plateY` models the *frame's* overscan (1920×1080); a panel is
+ * a third as wide, so `KidPaintedBackdrop` covers it on a different axis and the
+ * arithmetic does not carry. `sea_sunset`'s horizon fraction is 0.5391 and the
+ * plate covers the panel to full height, so 0.5391 · 1080 ≈ 582 — and 584 is
+ * where the still puts it.
+ *
+ * Sunny is clipped to it, which is the same staging Scene 29 gives him ("half
+ * sunk behind the sea") and therefore the picture this panel is recapping. It
+ * is also what buys the bottom third of the cell for Red and his bubble.
+ */
+const S32_SEA_Y = 584;
+
+/**
+ * Violet, hanging off the RAINBOW panel's outer edge — which is the frame's own
+ * left edge, so he is half out of the *picture* rather than half out of a cell.
+ * Above the outermost arc (the red band passes y≈682 at x=0) and well clear of
+ * Ray, who is at the middle of the panel.
+ */
+const S32_VIOLET = { x: 20, y: 404, scale: 0.86 } as const;
+/**
+ * **Violet's wave, and it is a body wag.** `<Shard>` hardcodes `pose="wave"` for
+ * Yellow alone — a raised arm is Yellow's and nobody else's — so every other
+ * colour who has to wave in this episode does it by leaning the whole body,
+ * which is act3's `waveBack` (`SkyLeaver`, Scene 28). This is that motion with
+ * the decay taken out: act3's version fades because those waves are goodbyes,
+ * and Violet's is not a goodbye, it is his entire screen life. He does it for
+ * the whole scene and nobody ever looks.
+ */
+function violetWag(age: number): { dx: number; dy: number } {
+  const a = Math.sin(age * 0.52);
+  return { dx: a * 26, dy: -Math.abs(a) * 8 };
+}
 
 type Panel = {
   key: Extract<Stage, "ray" | "puff" | "sunny">;
@@ -107,11 +245,79 @@ const PANELS: Panel[] = [
 
 const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
   const stage = useStage(scene);
   const windows = {
     ray: lineWindow(scene, "rc_02_ray"),
     puff: lineWindow(scene, "rc_03_puff"),
     sunny: lineWindow(scene, "rc_04_sunny"),
+  };
+  const [, puffTo] = windows.puff;
+  const [redFrom, redTo] = lineWindow(scene, "rc_04b_red");
+  const [beatFrom, beatTo] = heldBeat(scene, "rc_04b_red");
+
+  // **The 20 frames after "It is mostly me.", and nothing enters them.** Ramped
+  // in and back out rather than switched, the way Scene 34's 60f hold is: a
+  // body whose idle is *cut* to zero snaps on the beat's first frame, and a
+  // snap is an event. Both ramps run FORWARD, 6f each — the in-ramp eats the
+  // beat's first six frames and the out-ramp runs after `beatTo` — so true
+  // stillness is 14 of the 20 (Scene 34's shape exactly: 12 of its 60).
+  const still =
+    kidEase.easeInOutSine((frame - beatFrom) / 6) *
+    (1 - kidEase.easeInOutSine((frame - beatTo) / 6));
+
+  // --- Blue, shoving into the SCATTER panel --------------------------------
+  const shove = kidEase.easeOutQuad((frame - puffTo) / S32_SHOVE_FRAMES);
+  const blueAt = blueRicochet(frame, S32_BLUE_BOX, 32);
+  const blue = { x: blueAt.x - (1 - shove) * S32_SHOVE_PX, y: blueAt.y, angle: blueAt.angle };
+  // The bump, and the ground it costs. Puff is shunted about ninety pixels
+  // across and **stays there, arms still up**: he is not shoved out of his own
+  // panel and he does not stop claiming the word, he is shoved over far enough
+  // for two of them to stand in one cell. That is the difference between
+  // sharing and conceding, and it is the only way a 640px cell holds a Puff at
+  // 1.5 and a Blue with a box to ricochet in. The wobble on top of it decays;
+  // the ground does not come back.
+  const shunt = S32_PUFF_SHIFT * kidEase.easeOutQuad((frame - puffTo) / 10);
+  const knock = settleWave((frame - puffTo - 5) / 20, 1.4, 5, -Math.PI / 2);
+
+  // --- Red, crossing the SUNSET panel --------------------------------------
+  //
+  // Set off so that the middle frame of his line has him at the middle of the
+  // panel, i.e. directly under Sunny. Everything else follows from `RED_SPEED`.
+  const redWalkFrom =
+    (redFrom + redTo) / 2 - ((PANEL_W / 2 - S32_RED_FROM_X) / RED_SPEED) * fps;
+  const red = redWalk(Math.max(0, frame - redWalkFrom) / fps, {
+    x: S32_RED_FROM_X,
+    y: S32_RED_Y,
+  });
+  const redIn = frame >= redWalkFrom && red.x < PANEL_W + 200;
+
+  // Marks are in **composition** coordinates — the panels are drawn in their
+  // own, the bubbles are not.
+  const blueMark: Mark = {
+    x: PANEL_W + blue.x,
+    y: hover("shard", blue.y, S32_BLUE_SCALE),
+    scale: S32_BLUE_SCALE,
+    who: "shard",
+  };
+  const redMark: Mark = {
+    x: PANEL_W * 2 + red.x,
+    y: hover("shard", red.y, S32_RED_SCALE),
+    scale: S32_RED_SCALE,
+    who: "shard",
+  };
+
+  const inside: Record<Panel["key"], React.ReactNode> = {
+    ray: <PanelViolet from={windows.ray[0] - 8} />,
+    puff: (
+      <PanelBlue
+        at={blue}
+        show={frame >= puffTo}
+        speaking={stage.speaking("blue")}
+        lookAtPuff={frame >= puffTo && frame < puffTo + 46}
+      />
+    ),
+    sunny: redIn ? <PanelRed at={red} speaking={stage.speaking("red")} /> : null,
   };
 
   return (
@@ -130,7 +336,21 @@ const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             live={live}
             slam={from + 4}
             speaking={stage.speaking(p.key)}
-          />
+            still={still}
+            // Puff is claiming the word from his own line to the cut: arms up,
+            // grinning at camera, exactly as unmoved by Blue's arrival as Blue
+            // is by his. Nobody in this scene is talked out of anything.
+            claiming={p.key === "puff" && frame >= from}
+            nudge={p.key === "puff" ? knock : 0}
+            shift={p.key === "puff" ? shunt : 0}
+            lookAt={
+              p.key === "puff" && frame >= puffTo && frame < puffTo + 34
+                ? { x: -0.7, y: 0.25 }
+                : undefined
+            }
+          >
+            {inside[p.key]}
+          </ChantPanel>
         );
       })}
       {/* Grid lines, so three pictures read as one split screen. */}
@@ -155,9 +375,108 @@ const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           }}
         />
       ))}
+
+      {/* The claimants' bubbles, over the grid, in composition coordinates and
+          each one sized to sit inside its own cell. `tailAt` tracks the body,
+          which is doing 108 px/s in one case and ricocheting in the other; the
+          bubble itself does not move, because a bubble that chases its speaker
+          is unreadable (the Scene 19 finding).
+
+          **Two `<Bubbles>` rather than one, and it is not tidiness.** A
+          `SpeechBubble` is an absolutely-positioned shrink-to-fit box, so the
+          width it is *allowed* is the frame minus its own `left` — a bubble
+          centred at x=1600 can never be wider than 320px however large its
+          `maxWidth`, and Red's four words came out as three stacked lines with
+          the tail landing on his face. His therefore gets its own element, at
+          its own size, sitting one line high in the strip between the waterline
+          and his crown. */}
+      <Bubbles
+        scene={scene}
+        cast={{ blue: blueMark } as Cast}
+        text={S32_BUBBLES}
+        maxWidth={520}
+        at={{ rc_03b_blue: { x: 958, y: 262, tail: "left", tailAt: blueMark.x } }}
+      />
+      <Bubbles
+        scene={scene}
+        cast={{ red: redMark } as Cast}
+        text={S32_BUBBLES}
+        fontSize={50}
+        maxWidth={420}
+        at={{ rc_04b_red: { x: 1500, y: 644, tail: "left", tailAt: redMark.x } }}
+      />
     </AbsoluteFill>
   );
 };
+
+/**
+ * **Violet, firing four**: half out of the frame's left edge, waving, for the
+ * whole of the RAINBOW panel's life. Nobody re-frames, nobody looks, and he is
+ * still there at the cut.
+ */
+const PanelViolet: React.FC<{ from: number }> = ({ from }) => {
+  const frame = useCurrentFrame();
+  if (frame < from) return null;
+  const wag = violetWag(frame - from);
+  return (
+    <Shard
+      who="violet"
+      x={S32_VIOLET.x + wag.dx}
+      y={hover("shard", S32_VIOLET.y + wag.dy, S32_VIOLET.scale)}
+      scale={S32_VIOLET.scale}
+      emotion="excited"
+      // At the middle of the panel, where the word and the character who owns
+      // it are — he is waving *at* them, which is what makes being ignored land.
+      look={{ x: 0.8, y: 0.1 }}
+      zIndex={22}
+    />
+  );
+};
+
+/** Blue, in Puff's panel, claiming Puff's word. */
+const PanelBlue: React.FC<{
+  at: { x: number; y: number; angle: number };
+  show: boolean;
+  speaking: boolean;
+  lookAtPuff: boolean;
+}> = ({ at, show, speaking, lookAtPuff }) => {
+  if (!show) return null;
+  return (
+    <Shard
+      who="blue"
+      x={at.x}
+      y={hover("shard", at.y, S32_BLUE_SCALE)}
+      scale={S32_BLUE_SCALE}
+      heading={at.angle}
+      emotion="excited"
+      speaking={speaking}
+      // He argues with Puff for about a second and then claims it to the
+      // camera, which is what Puff is doing. Neither of them is talking to the
+      // other by the end of it and neither has moved an inch.
+      look={lookAtPuff ? { x: 0.75, y: 0.1 } : "camera"}
+      zIndex={18}
+    />
+  );
+};
+
+/** Red, crossing the SUNSET panel under the man taking credit for it. */
+const PanelRed: React.FC<{
+  at: { x: number; y: number; angle: number };
+  speaking: boolean;
+}> = ({ at, speaking }) => (
+  <Shard
+    who="red"
+    x={at.x}
+    y={hover("shard", at.y, S32_RED_SCALE)}
+    scale={S32_RED_SCALE}
+    heading={at.angle}
+    speaking={speaking}
+    // Straight ahead, at where he is going. He does not look up at Sunny, he
+    // does not look at camera, and he does not stop.
+    look={{ x: 0.7, y: 0 }}
+    zIndex={24}
+  />
+);
 
 const ChantPanel: React.FC<{
   panel: Panel;
@@ -165,7 +484,27 @@ const ChantPanel: React.FC<{
   live: boolean;
   slam: number;
   speaking: boolean;
-}> = ({ panel, index, live, slam, speaking }) => {
+  /** 0..1 across the 20f held beat: everything in the cell holds still. */
+  still: number;
+  claiming?: boolean;
+  nudge?: number;
+  shift?: number;
+  lookAt?: { x: number; y: number };
+  /** Whoever has walked, bounced or clung into this cell. Clipped by it. */
+  children?: React.ReactNode;
+}> = ({
+  panel,
+  index,
+  live,
+  slam,
+  speaking,
+  still,
+  claiming,
+  nudge,
+  shift,
+  lookAt,
+  children,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const wordIn = spring({ frame: frame - slam, fps, config: { damping: 11, mass: 0.7 } });
@@ -182,7 +521,17 @@ const ChantPanel: React.FC<{
       }}
     >
       <PaintedSky bg={panel.plate} drift={7} phase={index * 2.3} />
-      <PanelCast who={panel.key} speaking={speaking} live={live} />
+      <PanelCast
+        who={panel.key}
+        speaking={speaking}
+        live={live}
+        still={still}
+        claiming={claiming}
+        nudge={nudge}
+        shift={shift}
+        lookAt={lookAt}
+      />
+      {children}
       <div
         style={{
           position: "absolute",
@@ -249,14 +598,27 @@ const ChantPanel: React.FC<{
  * because seven stops behind seven white letters is a smear, so the rainbow
  * reading has to come from what he is standing in front of.
  */
-const PanelCast: React.FC<{ who: Panel["key"]; speaking: boolean; live: boolean }> = ({
-  who,
-  speaking,
-  live,
-}) => {
+const PanelCast: React.FC<{
+  who: Panel["key"];
+  speaking: boolean;
+  live: boolean;
+  still: number;
+  claiming?: boolean;
+  nudge?: number;
+  shift?: number;
+  lookAt?: { x: number; y: number };
+}> = ({ who, speaking, live, still, claiming, nudge = 0, shift = 0, lookAt }) => {
   const frame = useCurrentFrame();
   const cx = PANEL_W / 2;
-  const bob = Math.sin(frame / 14 + (who === "puff" ? 1.4 : who === "sunny" ? 3.4 : 0)) * 8;
+  // The panel bob, damped to nothing across the held beat along with the rigs'
+  // own idle. Damping the *amplitude* rather than stopping the clock is what
+  // keeps it from jumping when the beat opens and again when it closes.
+  const hold = 1 - still;
+  const bob =
+    Math.sin(frame / 14 + (who === "puff" ? 1.4 : who === "sunny" ? 3.4 : 0)) * 8 * hold;
+  const idle = 1 - 0.9 * still;
+  const eyeLife = 1 - still;
+  const look = lookAt ?? "camera";
   return (
     <>
       {who === "ray" ? <PanelRainbow cx={cx} /> : null}
@@ -270,39 +632,64 @@ const PanelCast: React.FC<{ who: Panel["key"]; speaking: boolean; live: boolean 
           phase={PHASE.ray}
           emotion={live ? "excited" : "happy"}
           speaking={speaking}
-          look="camera"
+          look={look}
           pose={speaking ? "cheer" : "rest"}
           streak={0.2}
+          idle={idle}
+          eyeLife={eyeLife}
           zIndex={20}
         />
       ) : null}
       {who === "puff" ? (
         <Puff
-          x={cx}
+          x={cx + shift + nudge * 16}
           y={hover("puff", 540 + bob, 1.5)}
           scale={1.5}
           opacity={0.9}
           phase={PHASE.puff}
           emotion={live ? "excited" : "happy"}
           speaking={speaking}
-          look="camera"
-          pose={speaking ? "cheer" : "rest"}
+          look={look}
+          // **He is still claiming it at the cut.** Arms up from his own line
+          // to the end of the scene rather than only while his mouth is moving:
+          // Blue arrives eight frames after he stops talking, and a Puff who
+          // has dropped his arms by then has conceded the word in mime.
+          pose={speaking || claiming ? "cheer" : "rest"}
+          bank={nudge * 5}
           wisps={2}
+          idle={idle}
+          eyeLife={eyeLife}
           zIndex={20}
         />
       ) : null}
       {who === "sunny" ? (
-        <Sunny
-          x={cx}
-          y={hover("sunny", 520 + bob, 1.2)}
-          scale={1.2}
-          phase={PHASE.sunny}
-          emotion={live ? "proud" : "happy"}
-          speaking={speaking}
-          look="camera"
-          raySpeed={live ? 0.3 : 0.12}
-          zIndex={20}
-        />
+        // **Half sunk behind the sea, exactly as in Scene 29** — which is the
+        // shot this panel is recapping, and which leaves the bottom third of
+        // the cell to the character who actually is the sunset. Clipped at the
+        // measured waterline rather than painted over: the plate is behind him.
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            clipPath: `inset(0 0 ${Math.max(0, H - S32_SEA_Y)}px 0)`,
+          }}
+        >
+          <Sunny
+            x={cx}
+            y={hover("sunny", 500 + bob, 1.2)}
+            scale={1.2}
+            phase={PHASE.sunny}
+            emotion={live ? "proud" : "happy"}
+            speaking={speaking}
+            // He does not hear Red and he does not look at him, in this frame
+            // or in any other. Undefeated and insufferable, on the record.
+            look={look}
+            raySpeed={live ? 0.3 : 0.12}
+            idle={idle}
+            eyeLife={eyeLife}
+            zIndex={20}
+          />
+        </div>
       ) : null}
     </>
   );
@@ -486,6 +873,10 @@ const S34_BUBBLES: Record<string, string> = {
   // A summary, not a transcript: the clip is "So the blue sky is a thing the
   // AIR does." Six words is the ceiling and this is five.
   rc_14_ray: "The AIR does the blue!",
+  // Both Sunny bubbles are DELIBERATE TRIMS to the punch clause (house law:
+  // six words is the ceiling; the clips are 10 and 8 words). Clips:
+  // "THAT IS ME! I am shining on the MOON as well!" / "So where is the sky?
+  // I am RIGHT HERE." Not drift — checked against narration.mjs, batch (c).
   rc_09b_sunny: "That is ME!",
   rc_11b_sunny: "I am RIGHT HERE!",
 };

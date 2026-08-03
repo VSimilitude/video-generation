@@ -271,8 +271,10 @@ re-open):**
   gap; the 20f beat after "It is mostly me." is total stillness — Sunny does
   not hear, does not look); Violet half out of the RAINBOW panel edge, waving,
   unre-framed (firing four).
-- **C2 — Remaining recap rows** from script.md's staging worklist (Scene 35
-  already in A5; Moon/Scene 34 untouched — 60f black-sky hold sacred).
+- **C2 — Scene 29 Red/Orange walk-behind delta** (act3.tsx, §6.15 — the one
+  REVISE row batches (a)/(b) left unbuilt; script.md's staging worklist
+  confirms s29 + s32 were the only open rows). Scene 35 was already in A5;
+  Moon/Scene 34 untouched — 60f black-sky hold sacred.
 - **C3 — Showrunner sampled still review** (mine, not a builder's): riskiest
   beats — race exits MID-animation, the one-eye 45f, s28c's empty orange
   frame, Scene 19's three-corner bubbles mid-ricochet, Scene 23 grin growth
@@ -292,6 +294,75 @@ re-open):**
 - **C6 — Clean-worktree deploy** (CLAUDE.md recipe; never `git add -A` — the
   technical session may have WIP). Then, per HANDOFF: send Mike the deployed
   link for the full-context family screening.
+
+## Batch (c) — DONE 2026-08-02 (recovered + showrunner-reviewed; rulings below)
+
+- Built by a builder that was QUOTA-KILLED before reporting (no DONE section,
+  no gate results left behind); its uncommitted diff (act1/act3/recap.tsx)
+  was recovered by the successor showrunner session: full auditor pass, then
+  showrunner still review on FRESH renders (the dead builder's last recap
+  edit postdated all but 4 of its 169 stills in scratchpad/w2c/ — builder
+  stills are only evidence when still mtime > code mtime).
+- **Audit verdict (full report): CONFIRMED 24 / MISSING 2 / WRONG 2 /
+  SUSPECT 7.** C1 frame math reproduced by hand (beat = abs 22100–22120);
+  C2 confirmed against §6.15 with B6's drawn-body-length ruling travelling
+  correctly; recap bubble sweep clean (all three tables vs narration.mjs,
+  zero mismatches — showrunner additionally added trim comments to the two
+  S34 Sunny bubbles so future sweeps don't re-litigate them); scope clean,
+  R1–R9 intact, S34/S35 zero diff lines, no droppings. The two MISSING were
+  the C5 render (run by showrunner, result below) and the dead builder's
+  report (unrecoverable — this section is its replacement).
+- **WRONG-1 resolved by ruling R10 (do not re-open): Red walking, Blue
+  ricocheting, AND Violet waving all CONTINUE through the 20f beat after
+  rc_04b** — laws/firings already in progress, not entrances; the deadpan
+  is carried by Sunny's frozen clock. The file's rule-3 comment enumerated
+  Red and Blue but omitted Violet (the audit's find); Violet is now written
+  in with the argument (recap.tsx header, rule 3). Freezing him two panels
+  from the deadpan would itself be a second event, and firing four IS the
+  continuous unnoticed wave. Comment-only fix; render-identical.
+- **WRONG-2 = D-a1_49 below** (audit agrees the builder's survey is factually
+  right about the kit; ruling was the showrunner's to make, and is made).
+- **Ratified SUSPECTs (showrunner, evidence = w2c3sr stills + audit):**
+  Red entering the SUNSET panel ~3.5s before his line (forced by 640px ÷
+  RED_SPEED; mirrors s29's walk-through-the-brag and strengthens it);
+  Sunny now dimming WITH his panel (the clip wrapper's stacking context —
+  an unintended improvement: a panel owner full-saturation on a dim panel
+  was the odder picture; kept); Red's wave grazing the SUNSET banner
+  (cosmetic, in-motion, invisible at speed); S32_SEA_Y=584 (verified
+  against C3 stills — horizon and half-sunk Sunny read correctly). The
+  "six frames either side" ramp comment corrected (both ramps run forward;
+  stillness is 14 of 20 — Scene 34's exact shape). violetWag joins the
+  cleanup list as the second scene-local wave forced by <Shard>'s
+  Yellow-only pose.
+- **Showrunner C3 sampled review (this session, stills scratchpad/w2c3sr/,
+  51 rendered / 20 Read): ALL PASS, one accepted deviation.**
+  - Committed regions: s28 pack crossing 17500–17610 (the faint expanding
+    ring is the DESIGNED exit ping — `pingAt`, act3.tsx — not an artifact);
+    s28b race exits in-character + Green sailboat bubble; one-eye 45f
+    (right eye only, nothing enters, Yellow off apologetically upward);
+    s28c dissolve clean (scanned for stray bodies programmatically: none);
+    s28c empty orange frame (Red leads, Orange one body-length back, all
+    three beats, contented); s19 corner bubbles + sacred pinball beat.
+  - Batch (c): C1 progressive panel lighting, Blue shove + "That is ME
+    bouncing!" tailed right, Red delivers into a deaf panel and is still
+    walking out under rc_05, 20f stillness holds (Sunny frozen via held
+    clock, Red walking through it = the comparator-Blue precedent); C2 Red
+    peeking between the Sun/Set blocks mid-crossing is the free joke
+    working.
+  - **Accepted deviation D-a1_49:** Drip's bubble sits under the card with
+    its bottom tail at her x — the tail points at floor while she is above.
+    Every in-kit alternative is worse (bubble above covers the seven-on-
+    blocks gag; left clamps the tail onto RED). Proper fix = top-edge tail,
+    ships with the SpeechBubble cleanup-list work. The argument is written
+    in act1.tsx at the call site.
+- **Gates on the final tree (post comment-only edits): typecheck 0,
+  lint:hooks 0 findings, narration cache 0-to-synthesize, backgrounds cache
+  0-to-generate, full every-frame RaySkyBlue render --scale=0.25
+  RENDER_EXIT=0 verified by hand against the log AND the 85.6MB mp4
+  artifact (24,374 frames = 13:32.5; scratchpad/gate_render.mp4,
+  2026-08-02 21:16).**
+- C4 was already DONE (wave-1 ear packet + B12 re-heard pairing, both
+  Mike-approved). C6 (deploy) is the orchestrator's, after sign-off.
 
 ## Watch items (screening, not wave-2 work)
 

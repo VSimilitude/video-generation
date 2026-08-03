@@ -2484,11 +2484,29 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           bottom edge. Drawn *over* the card (which owns zIndex 50) and kept
           faint — the letters have to stay the most legible thing on screen. */}
       <RainStreaks from={slamAt} />
+      {/* **Drip's bubble is under her, and that is the frame's decision rather
+          than a preference** (batch (c), C3). It was at (640, 620) — stranded
+          in the middle of the empty lawn with its tail clamped short of her, so
+          it read as narration lying on the grass. It is now snug under the card
+          with its tail **at her own x**, which is the treatment Scene 34 gives
+          Sunny for the same reason and in the same words.
+
+          Above her is not available and it is worth writing down why, because
+          the next reader will try it: `SpeechBubble`'s tail leaves the BOTTOM
+          edge and nothing else (kit gap, reported), so a bubble above a speaker
+          needs clear frame above the speaker — and Drip is perched on a Big
+          Word card at y≈286 with the seven straddling the blocks' top edge at
+          y≈138..252 across x≈668..1342. Any bubble above her covers five of the
+          seven, which is a punch-up gag paid for in Scene 11 and the picture the
+          beat is built on; any bubble placed left of the blocks instead has its
+          tail clamped to x≈560, where it points at RED. A tail pointing at the
+          wrong character is worse than a tail pointing at floor. */}
       <Bubbles
         scene={scene}
         cast={{ drip: dripMark } as Cast}
         text={S11_BUBBLES}
-        at={{ a1_49_drip: { x: 640, y: 620, tail: "right", tailAt: dripCentre.x } }}
+        maxWidth={560}
+        at={{ a1_49_drip: { x: 980, y: 470, tail: "right", tailAt: dripCentre.x } }}
       />
     </AbsoluteFill>
   );
