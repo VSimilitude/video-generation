@@ -59,18 +59,31 @@ overridden in substance; R2 superseded.
   committing (explicit paths, push immediately) and usage checking
   (check-quota between batches; Mike reported 10% at green-light, reset
   ~4:50h later; weekly-fable % ask still open).
-- **IMPLEMENTATION IN FLIGHT — batch plan:**
-  (1) script layer: opus builder spawned 2026-08-03 — narration.mjs +
-  Video.tsx + TTS (~$0.24) + s5 amendment + ScenePlaceholders for
-  s27b/s28b2 + ear-check packet (scratchpad/ep3_earcheck2/PACKET.md, goes
-  to Mike immediately — front-load ear latency); gates: typecheck, cache
-  0-to-synthesize, 3 scene-range smoke renders.
-  (2) staging: acts 1–2 fabric builder ∥ act 3 race builder (new scene
-  files s27b/s28b2 + restaged legs; different files, no conflicts).
-  (3) recap s32 + showrunner sampled still review + FULL every-frame
+- **IMPLEMENTATION IN FLIGHT — batch plan (staging SERIALIZED: batch-1
+  builder alone consumed ~300k of the ~450k window, so one builder at a
+  time; check-quota before each):**
+  (1) script layer: DONE + committed 169acbe — 88 clips synthesized $0.19,
+  caches 0-to-synthesize, typecheck 0, 3 scene-range smoke renders exit 0,
+  measured 31,225f = 17:20.8 (race s27b→s28c = 3:12 vs ~3:55 booked —
+  showrunner assesses breathing room at still review, may re-time gaps).
+  NOTE: sameAs chains FLIPPED to earliest-firing sources (generator rejects
+  forward aliases) → a3_18e_orange "What Red said." and a3_14f_green "This
+  is a nice spot." are NEW takes replacing approved clips — in Mike's ear
+  packet. a2_32b_blue "Hi! Hi! Hi! Hi!" suspect (0.68 s/word, MiniMax
+  exclamation padding pattern) — Mike's ear decides re-roll. Ear packet +
+  9 clips SENT to Mike 2026-08-03.
+  (2a) act-3 race staging builder IN FLIGHT (2026-08-03): act3.tsx + NEW
+  s27b/s28b2 scene files + common.tsx additive wiring; stills →
+  scratchpad/w3act3/; gates incl. every-frame act-3 span render. Known
+  batch-1 flags for it: no bubble/stage entries existed for the 95 new
+  keys; Violet's wordless firings are pure staging; a3_14eb (4.50s) and
+  a3_11c (5.03s) run longer than the ledger assumed.
+  (2b) acts 1–2 + recap + s5 staging builder: NEXT WINDOW (window resets
+  2026-08-04T01:00Z) — s9/s10/s11/s13 (act1.tsx incl. s5 bubbles +
+  s10 Ray-unamused-look + Ahem beat), s15/s17/s18/s19/s20/s21/s22
+  (act2.tsx), s32 (recap.tsx).
+  (3) showrunner sampled still review + any re-timing + FULL every-frame
   --scale=0.25 render + wave-end script.md fold + clean-worktree deploy.
-  Staging builders are briefed on revision2.md directly (script.md carries
-  only a banner + s5 until the wave-end fold).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
