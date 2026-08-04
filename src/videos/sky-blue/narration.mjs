@@ -880,7 +880,8 @@ export default {
     a2_12_sunny: { text: "I keep the paint somewhere else.", ...SUNNY, speed: 0.95 },
     // TEXT CHANGED 2026-08-01 (was "We will come back to Sunny."), because the
     // episode no longer comes back to declare him wrong — the wrongness
-    // ceremony moved to episode four. This turns Act Two into a SEARCH, which
+    // ceremony moved to the volcano episode (ep 5, per Mike's 2026-08-04
+    // series order; ep 4 is plants). This turns Act Two into a SEARCH, which
     // motivates the next seven scenes; it chains straight into a2_14_narrator
     // ("To find the real answer, look at the sky and see nothing"); and it
     // plants Scene 23's new payoff exactly — the paint turns out to be real,
@@ -1202,7 +1203,7 @@ export default {
     // audience to expect "He is right. Again."; this episode's cold open
     // trained them to expect the opposite. They get a third thing, and the
     // third thing is a joke rather than a ruling. The wrongness ceremony — and
-    // "That is not me." with it — is banked for episode four.
+    // "That is not me." with it — is banked for the volcano episode (ep 5).
     // EAR-CHECK THIS ONE FIRST, before anything else in the revision is built:
     // it has to be FLAT, not amused and not apologetic. The whole arc change
     // rests on this clip landing as a surprise rather than as a dodge.
@@ -1650,7 +1651,7 @@ export default {
     // closes it. No line, no bubble, no rumble on the soundtrack, no reaction
     // from anybody — the first time in three episodes it has shown it is aware,
     // and the whole value of it is that the show does not comment. (ep 2: asleep
-    // and unmentioned -> ep 3: one eye -> ep 4: awake.) Yellow bounces off
+    // and unmentioned -> ep 3: one eye -> ep 5: awake.) Yellow bounces off
     // apologetically and goes up after the others, in silence.
     a3_14i_narrator: {
       text: "That is not a rest stop.",
@@ -1960,7 +1961,12 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
-    rc_16_narrator: { text: "Next time.", ...NARRATOR, speed: 0.9 },
+    // `rc_16_narrator` ("Next time.") IS CUT, 2026-08-04, with Mike's
+    // series-order decision (ep 4 = plants, ep 5 = volcano). It used to tether
+    // the volcano stir to the *next* episode, which the schedule no longer
+    // supports. The stir beats now open in silence and promise nothing with a
+    // number on it; "Next time." comes back at `rc_20_narrator`, where it
+    // belongs — over the card that says what next time actually is.
     // Scene 35: a wobbling smoke ring and a rumble under it. Kept wondrous, not
     // frightening — see the tone guardrail in script.md.
     rc_17_narrator: {
@@ -1969,14 +1975,15 @@ export default {
       speed: 0.9,
     },
     // TEXT CHANGED 2026-08-01 (was "That is not me."). THE INVERSION IS
-    // WITHDRAWN AND BANKED FOR EPISODE FOUR, where it can land *after* the
+    // WITHDRAWN AND BANKED FOR THE VOLCANO EPISODE (ep 5), where it can land *after* the
     // wrongness ceremony instead of instead of it. What fires here is the gag's
     // STANDARD firing, in the wording it has had since ep 2's rc_14_sunny:
     // reflexive, instant, completely unearned. Three episodes of a character
     // claiming everything end with him claiming one more thing, which is the
     // honest ending for a character who has not been corrected.
     // EAR-CHECK at 1.0: full confidence, no doubt anywhere in it. If it plays
-    // as unsure the tease has gone the wrong way and taken episode four with it.
+    // as unsure the tease has gone the wrong way and taken the volcano episode
+    // with it.
     rc_18_sunny: { text: "OH! That one is me as well! HA! HA!", ...SUNNY },
     // NEW. The doubt, planted without a verdict. "Hmm." is the Narrator's own
     // established deadpan (a1_27_narrator, where she declines to argue with Ray
@@ -1985,11 +1992,36 @@ export default {
     // slow. Nothing enters the 30f after it.
     rc_18b_narrator: { text: "Hmm. We will find out.", ...NARRATOR, speed: 0.9 },
     // Third and last firing of the catchphrase, waving from the corner of the
-    // episode four card.
+    // next-time card.
     rc_19_ray: {
       text: "Bye! Look up. That's me.",
       ...RAY,
       emotion: "happy",
+    },
+    // NEW 2026-08-04. THE CARD READ, and it is the series' oldest piece of
+    // grammar: episodes one and two both end with the Narrator saying "Next
+    // time." over next time's *question* ("WHY IS THE SKY BLUE?"), and this
+    // episode had lost it when the tease pointed at a volcano nobody had
+    // written yet. Ep 4 is plants, so the card asks the plants question and she
+    // reads it. Slow, at the sign-off's 0.9, and flat: it is a title card, not
+    // a cliffhanger.
+    rc_20_narrator: {
+      text: "Next time. What do plants eat?",
+      ...NARRATOR,
+      speed: 0.9,
+    },
+    // NEW 2026-08-04 — Mike's gag, verbatim. The light ray hears "what do
+    // plants eat" and is afraid of the answer, and he is right to be: plants
+    // eat light. The fear must read FUNNY and never distressing — small, high,
+    // and over in three syllables. The stage direction is the read: his wave
+    // has frozen mid-air for a full second and he has just done the maths.
+    // `fearful` is one of MiniMax's supported emotions (see MINIMAX_EMOTIONS in
+    // scripts/generate-narration.mjs); at 1.0 like every other Ray line, so the
+    // squeak comes from the emotion and not from a slowed read.
+    rc_21_ray: {
+      text: "Is it me??",
+      ...RAY,
+      emotion: "fearful",
     },
   },
 };

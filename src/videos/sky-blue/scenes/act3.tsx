@@ -146,7 +146,8 @@ import {
 //   - **The escalation is exactly one eyelid.** It opens ONE eye inside Scene
 //     28b's 45-frame held beat, holds, closes it, and the show declines to
 //     comment (`eye` below). ep 2 asleep and unmentioned -> ep 3 one eye ->
-//     ep 4 awake. There is **no rumble here**: the rumble belongs to Scene 35
+//     ep 5 awake (the volcano episode; ep 4 is plants — Mike 2026-08-04).
+//     There is **no rumble here**: the rumble belongs to Scene 35
 //     and firing it twice spends it.
 //
 // `sea_sunset` and `sea_dusk` were both prompted for one straight unambiguous
@@ -244,7 +245,7 @@ export const SleepingVolcano: React.FC<{
    *
    * 0 is the closed happy arc it has worn for two episodes; 1 is the right eye
    * fully open. The left one never moves, because "one eye" is the joke — two
-   * would be the volcano waking up, which is episode four's.
+   * would be the volcano waking up, which belongs to the volcano episode (ep 5).
    *
    * It looks **straight ahead**, not at Yellow, who is sitting on it. Aiming
    * the pupil at him would make this a reaction, and the value of the beat is

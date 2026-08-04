@@ -32,7 +32,8 @@ eight).
 
 > **MAJOR REVISION APPLIED, 2026-08-01.** `revision.md` and its three addenda
 > are wired in: the seven colours become the ensemble and six of them are cast;
-> the wrongness ceremony moves out of this episode and into episode four; the
+> the wrongness ceremony moves out of this episode and into the volcano episode
+> (ep 5, per Mike's 2026-08-04 series order; ep 4 is plants); the
 > journey gag fires five times; Scene 26 is cut; Scene 28's drain becomes **the
 > sunset race**, run over three scenes, which absorbs the proposed Scene 28b and
 > gives the volcano its first in-world acknowledgement (one eye, no dialogue).
@@ -244,8 +245,9 @@ means: that line's `gapFrames` in `Video.tsx` is **45**, the picture is alone on
 screen for a second and a half, and **nothing** — no line, no entrance, no
 emotion change — starts inside it. Thirty frames is one second. These numbers
 are the script's, not the builder's; raising one is a note, lowering one is a
-change to the joke. `Video.tsx` carries **one hundred and seventeen** `gaps`
-entries since revision 2 (was forty-eight): the held beats proper, plus the
+change to the joke. `Video.tsx` carries **one hundred and eighteen** `gaps`
+entries since the 2026-08-04 re-tease (revision 2 had one hundred and
+seventeen; before it, forty-eight): the held beats proper, plus the
 approach gaps below, which the ensemble now spends on nearly every turn.
 
 **And a third kind of number, new since 2026-08-01: the approach gaps.** Red
@@ -1748,11 +1750,11 @@ beat — the two-sentence check, the held silence, the three-word ruling — and
 a different word out of it, which is a better use of a plant than spending it on
 schedule. It was a long fuse and it is now a longer one.
 
-**What is banked for episode four:** the verdict itself, the ceremony that
+**What is banked for the volcano episode (ep 5):** the verdict itself, the ceremony that
 carries it (*"I did that." / "No. He really didn't."*), and **"That is not me."**
 — the inversion of the show's oldest running gag, withdrawn from `rc_18` and
 saved so it can land *after* the wrongness ceremony rather than instead of it.
-Episode four inherits a character who has claimed a volcano out loud, on the
+That episode inherits a character who has claimed a volcano out loud, on the
 record, in the last twenty seconds of this one, which is the strongest possible
 opening position for a verdict that is finally payable.
 
@@ -1865,7 +1867,7 @@ Yellow lands on the island to have a sit down, the Narrator warns *Yellow* off,
 and **the volcano opens one eye** for 45 frames and closes it. No line about it,
 no explanation, no reaction from anybody. That is the sleeping gag's next
 escalation and it costs no scene of its own: ep 2 asleep and unmentioned → ep 3
-one eye → ep 4 awake.
+one eye → ep 5 awake.
 
 **Cost of the cut:** the density map loses one adult-leaning LAUGH beat at 8:45
 and one grown-up smirk. That is the right trade — an eight-second deadpan the
@@ -1887,7 +1889,7 @@ over by Red and Blue in the same act.
 > it, nobody points at it, no arrow marks it, no music sting acknowledges it, and
 > **the Narrator has no line about it anywhere in this episode** — `a3_14i` is
 > addressed to Yellow and never names the thing she is sitting on. It opens one
-> eye in Scene 28b, in silence, and it wakes up in Scene 35.
+> eye in Scene 28b, in silence, and it stirs in Scene 35.
 
 ---
 
@@ -2338,7 +2340,7 @@ silence.
 must not notice it.** `a3_14i_narrator` is addressed to **Yellow**, not to the
 volcano; it does not name it, does not explain it, and does not concede that it
 is anything other than a warm rock. The escalation is exactly one eyelid: ep 2
-asleep and unmentioned → **ep 3 one eye** → ep 4 awake. Do not add a rumble here;
+asleep and unmentioned → **ep 3 one eye** → ep 5 awake. Do not add a rumble here;
 the rumble belongs to Scene 35 and firing it twice spends it.
 
 **Pedagogy:** none new, and one thing restated as a picture — the colours do not
@@ -2838,7 +2840,7 @@ of them are the same joke fired twice, and that is now the point. `rc_09b` and
 `rc_11b` are him claiming the Moon and then demanding to know where its sky went;
 `rc_18` is him claiming a volcano. Three claims in ninety seconds, none of them
 corrected, from a character the episode has declined to declare wrong — which is
-exactly the state episode four wants to inherit him in. **The inversion that used
+exactly the state the volcano episode (ep 5) wants to inherit him in. **The inversion that used
 to live at `rc_18` is gone**, so these two lines no longer have to set anything
 up: they are an unbroken gag rather than a ramp. Neither uses "You're welcome!"
 (seven firings is the ceiling) and neither uses "EXCUSE ME" (`a2_45` is its only
@@ -2852,15 +2854,15 @@ firing).
 has been in every sea shot this act and with nothing having drawn attention to it
 since it closed its eye in Scene 28b. Then one smoke ring comes out **wobbling**,
 and does not close. A low rumble moves the water. Sunny, half under the horizon,
-stops mid-pose and looks at it. Then the episode four title card, with Ray waving
-from the corner.
-**Lines:** `rc_16_narrator`, `rc_17_narrator`, `rc_18_sunny`,
-**`rc_18b_narrator`**, `rc_19_ray`
+stops mid-pose and looks at it. Then the next-time title card (the plants
+question — see below), with Ray waving from the corner.
+**Lines:** `rc_17_narrator`, `rc_18_sunny`, **`rc_18b_narrator`**, `rc_19_ray`,
+**`rc_20_narrator`**, **`rc_21_ray`**
 
-> **NARRATOR:** Next time.
-
-**HELD BEAT — 45f (1.5s) after `rc_16_narrator`.** The wobbling smoke ring,
-alone, in silence.
+**SILENT OPEN — 45f (1.5s) before `rc_17_narrator`.** The wobbling smoke ring,
+alone, in silence. (This replaces the cut "Next time." — see *What changed,
+2026-08-04* below. The stir is now a long-arc promise with no episode number
+attached to it.)
 
 > **NARRATOR:** Something is waking up.
 
@@ -2886,15 +2888,49 @@ Sunny still beaming. Nothing enters.
 
 > **RAY:** Bye! Look up. That's me.
 
+**CARD POP after `rc_19_ray`.** The next-time card swings up (same entrance as
+the delivered cut), **with the smoke ring removed from the poster** — the card
+no longer advertises the volcano. It reads **NEXT TIME / WHAT DO PLANTS EAT?**,
+restoring the series grammar of episodes one and two (next time's *question* on
+the card — "WHY IS THE SKY BLUE?"). Ray keeps waving from the corner.
+
+> **NARRATOR:** Next time. What do plants eat?
+
+**HELD BEAT — 30f (1.0s) after `rc_20_narrator`.** Ray's wave **freezes
+mid-air**. The features hold. He has just done the maths.
+
+> **RAY (fearful):** Is it me??
+
+**HELD BEAT — 40f (1.3s) after `rc_21_ray`.** Nothing enters, nothing answers.
+The card, the frozen wave, out. The episode ends on the question.
+
+**What changed, 2026-08-04** (Mike's series-order decision: ep 4 = plants,
+ep 5 = volcano — see `docs/roles/audience.md`):
+
+- **`rc_16_narrator` "Next time." is CUT.** The stir beats (ring, rumble,
+  Sunny's claim, "Hmm. We will find out.") are untethered from any episode
+  number and become a long-arc promise; the scene now opens on the ring in
+  silence. All stir clips are cache hits, $0.
+- **The card returns to question grammar** and points at the *actual* next
+  episode: **WHAT DO PLANTS EAT?** New narrator read `rc_20_narrator` (kokoro,
+  free).
+- **`rc_21_ray` "Is it me??" (fearful) is NEW — Mike's gag, verbatim brief.**
+  The light ray hears "what do plants eat" and is afraid of the answer. The
+  fear is *justified* — plants eat light — so the button is both a joke and
+  episode four's first fact, planted as dread. It also hands episode four
+  Sunny's peak on a plate: plants eat light, and the light is his.
+- The **"That is not me." inversion stays banked for the volcano episode (now
+  ep 5)**, landing after the wrongness ceremony as designed.
+
 **What changed, 2026-08-01.**
 
 - **`rc_18_sunny` was "That is not me."** — the inversion of the show's oldest
-  running gag, and it is **withdrawn and banked for episode four**, where it can
-  land *after* the wrongness ceremony rather than instead of it. In its place, the
-  gag's **standard firing**, in the series wording it has had since ep 2's
-  `rc_14_sunny`: reflexive, instant, completely unearned. Three episodes of a
-  character claiming everything end with him claiming one more thing, which is the
-  honest ending for a character who has not been corrected.
+  running gag, and it is **withdrawn and banked for the volcano episode**, where
+  it can land *after* the wrongness ceremony rather than instead of it. In its
+  place, the gag's **standard firing**, in the series wording it has had since
+  ep 2's `rc_14_sunny`: reflexive, instant, completely unearned. Three episodes
+  of a character claiming everything end with him claiming one more thing, which
+  is the honest ending for a character who has not been corrected.
 - **`rc_18b_narrator` is new: "Hmm. We will find out."** — the doubt, planted
   without a verdict. **"Hmm."** is the Narrator's own established deadpan
   (`a1_27_narrator`, where she declines to argue with Ray about being plain), so a
@@ -2902,12 +2938,13 @@ Sunny still beaming. Nothing enters.
   not saying.
 - **`rc_19_ray` is unchanged.**
 
-**Pedagogy:** none, and the series continuity is now *forward*-facing rather than
-backward. The delivered cut's tease was a payoff (he declines a claim); this one
-is a **setup** (he makes one, and the show quietly disagrees). Episode four
-inherits a character who has claimed the volcano out loud, on the record, in the
-last twenty seconds of the previous episode — which is the strongest possible
-opening position for *"I did that." / "No. He really didn't."*
+**Pedagogy:** the series continuity is *forward*-facing in two directions at
+once. The volcano stir is a **setup with no deadline** (Sunny makes a claim on
+the record, the show quietly disagrees, and the volcano episode — ep 5 —
+inherits *"I did that." / "No. He really didn't."* with the claim already
+banked). The card and Ray's button are the **ep-4 hook**: the question is real
+pedagogy (the answer is light, air and water — the previous three episodes),
+and Ray's fear is the correct answer, played as comedy.
 
 ---
 
@@ -2941,9 +2978,9 @@ rule are already written down here:
   interlock) and `rc_05` (the summary). **Two lines now run *above* 1.0** for the
   first time in the series — Blue at 1.05 and Indigo at 1.1 — because being
   faster than everybody else is the character and the physics at once.
-- **Held beats of silence**, **fifty** of them at 20 frames or longer, each
+- **Held beats of silence**, **fifty-two** of them at 20 frames or longer, each
   written above with its exact frame count and its reason. They become `gaps` in
-  `Video.tsx`. **The longest silence in the episode is the 135f before the fifth
+  `Video.tsx` (or, for Scene 35's silent open, a `leadFrames`). **The longest silence in the episode is the 135f before the fifth
   "Are we there yet?"** (Mike's sign-off amendment); the world turning is 75f,
   and the two-second-plus holds carry the episode's biggest pictures: the crayon
   choice, the middle of the eight-minute journey, the seven-piece reveal, the
@@ -2973,8 +3010,9 @@ rule are already written down here:
   including `rc_18`.
 - *"That one is me as well!"* — collected in `co_08` (the paint theory),
   conceded in half at `a2_49`–`a2_55`, and fired **straight, unbroken, at
-  `rc_18`**. **The inversion is not in this episode.** It is banked for episode
-  four, where it can land after the wrongness ceremony rather than instead of it.
+  `rc_18`**. **The inversion is not in this episode.** It is banked for the volcano
+  episode (ep 5), where it can land after the wrongness ceremony rather than
+  instead of it.
 - *"Different show. Same sun / sky / rain / air."* — `a1_32` (Drip), `a2_18`
   (Puff). Both at 0.92, the same flat read as episode two's two firings.
 - *"You can't see me. But you can FEEL me."* — `a2_17`, once, on Puff's
@@ -3193,7 +3231,7 @@ npm run narration -- --audition sky-blue:a1_26_ray <dir> \
    question rather than as a brag.
 8. **`rc_18_sunny`** ("OH! That one is me as well! HA! HA!") at 1.0 — **full
    confidence, no doubt anywhere in it.** If it plays as unsure, the tease has
-   gone the wrong way and taken episode four with it. Then `rc_18b_narrator`
+   gone the wrong way and taken the volcano episode with it. Then `rc_18b_narrator`
    ("Hmm. We will find out.") flat, and definitely not arch.
 9. **The whole of Sunny, once**, now that he is back on `am_puck`: the greeting
    (`a1_03`), a brag at full volume (`co_08`, `a2_53`) and the four moments he
@@ -3289,6 +3327,18 @@ before anything is re-cut. Items 20–24 are the highest risk in the rewrite.
 30. **`a1_16d_narrator`** ("No.") at **0.8, the new deadpan floor** — unamused,
    drawn out, final; **never annoyed** (she is bored, not cross). Kokoro, free to
    re-take; if 0.8 distorts, 0.85 and let the 90f hold do the dragging.
+
+**Ear-check list — the 2026-08-04 addition (scene-35 re-tease)**:
+
+31. **`rc_21_ray`** ("Is it me??") — Ray's first `fearful`, and the episode's
+   final word. Must read as a **comic squeak, not distress** — scared the way a
+   cartoon is scared. The shipped take is FAST (0.324 s/word, near Ray's
+   fastest; MiniMax returned 1.7s raw and the trimmer removed 0.73s of
+   silence) — listen for front/back clipping. Cache-bust re-roll is cents;
+   fallback text: "Wait. Is it me??" if the read needs a runway. `rc_20_narrator`
+   ("Next time. What do plants eat?") is kokoro, free to re-take; it should
+   read as the eps-1/2 card-read grammar — bright question, no dread (the
+   dread is Ray's job).
 31. **`a1_42h_narrator`** ("Ahem.") — kokoro's read must land as a small formal
    throat-clear. If it reads as a *word*, **CUT the clip** (the beat works
    without it) — and never substitute "Hmm.", which is her established beat at

@@ -1,4 +1,10 @@
 import React from "react";
+// The one thing this episode's kit does not re-export, and Scene 35 is the only
+// scene that needs it: `<Freeze>` is how Ray's wave stops dead mid-air without
+// stopping anything else in the shot (`src/lib/kid/BigWord.tsx` uses the same
+// component for the Big Word slam). It is a context provider, not a wrapper —
+// no DOM, no extra hooks, tree shape identical whether it is active or not.
+import { Freeze } from "remotion";
 import { kidInkOutline, mixHex } from "../../../lib/kid";
 import {
   ACT_COLOR,
@@ -78,8 +84,10 @@ import {
 //        closing, a low rumble in the water. **Wondrous, not frightening** —
 //        no dark chord, no red glow, no shaking camera. Then Sunny, half under
 //        the horizon, claiming the volcano — the gag's standard firing, not the
-//        inversion the delivered cut had (that is banked for ep 4). Emotion
-//        lead 0 on `rc_18_sunny`, and a new Narrator line after him.
+//        inversion the delivered cut had (that is banked for the volcano
+//        episode, ep 5). Emotion lead 0 on `rc_18_sunny`, and a new Narrator
+//        line after him. Then the card — NEXT TIME / WHAT DO PLANTS EAT? — and
+//        Ray's button: his wave freezes and he asks whether plants eat *him*.
 //
 // See the volcano rule at the top of act3.tsx before touching s35.
 
@@ -1327,11 +1335,19 @@ const BlueMarble: React.FC<{ x: number; y: number; r: number }> = ({ x, y, r }) 
 //   - **The ring is the payoff of three episodes.** It comes out wobbling and
 //     it does not close. Nothing else about the island changes: same place,
 //     same size, same face, still asleep.
+//   - **The stir promises nothing with a number on it.** REWRITTEN 2026-08-04
+//     (Mike's series order: ep 4 = plants, ep 5 = volcano). `rc_16_narrator`
+//     ("Next time.") is cut, so the scene now CUTS IN on the ring: forty-five
+//     frames of silence with the island already stirring, and no line anywhere
+//     in the episode saying when the thing wakes up. What "Next time." points
+//     at instead is the card, at `rc_20_narrator`, and the card asks about
+//     plants.
 //   - **`rc_18_sunny` has no emotion lead, and nothing to lead.** REWRITTEN
 //     2026-08-02 (revision §6.17, wave-2 A5): the line was "That is not me."
 //     and the staging under it was a man working something out — neutral face,
 //     narrowed eyes, a stare held at the island. **That is withdrawn and
-//     banked for episode four.** The line is now the gag's standard firing
+//     banked for the volcano episode (ep 5).** The line is now the gag's
+//     standard firing
 //     ("OH! That one is me as well! HA! HA!") and the staging is its exact
 //     opposite: ONE emotion for the whole scene, `proud`, never morphed, never
 //     interrupted. He beams, at full brightness, and claims a volcano without
@@ -1352,6 +1368,15 @@ const BlueMarble: React.FC<{ x: number; y: number; r: number }> = ({ x, y, r }) 
 //          She declines to rule, so the picture declines to illustrate: no
 //          cutaway, no emphasis, no look. The volcano rumbles, Sunny beams,
 //          and the only new information in the shot is her tone.
+//   - **THE BUTTON IS RAY'S, AND IT IS THE ONLY JOKE IN THE SCENE THAT MOVES.**
+//     The Narrator reads the card ("Next time. What do plants eat?"), Ray's
+//     wave FREEZES mid-air for a full second — `<Freeze>`, so the features
+//     hold too, and the shot has one object in it that has stopped — and then
+//     he asks the only question a light ray could possibly ask about that
+//     sentence. He is right to be afraid, which is what makes it funny and what
+//     makes it episode four's first fact. **It must never read as distress**:
+//     wide eyes, hands pulled in, three syllables, and then forty frames in
+//     which nothing answers him.
 
 const S35_BUBBLES: Record<string, string> = {
   // The series wording this gag has had since ep 2's `rc_14_sunny` — literally
@@ -1361,17 +1386,23 @@ const S35_BUBBLES: Record<string, string> = {
   // six words.)
   rc_18_sunny: "That one is me as well!",
   rc_19_ray: "Bye! Look up. That's me.",
+  // Three words, and for once the bubble is the transcript: there is no shorter
+  // summary of "Is it me??" than "Is it me??".
+  rc_21_ray: "Is it me??",
 };
 
 const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const [, nextTo] = lineWindow(scene, "rc_16_narrator");
   const [wakeFrom] = lineWindow(scene, "rc_17_narrator");
   const [rumbleFrom] = heldBeat(scene, "rc_17_narrator");
   const [sunnyFrom, sunnyTo] = lineWindow(scene, "rc_18_sunny");
   const [byeFrom] = lineWindow(scene, "rc_19_ray");
+  // The 30f the wave is frozen for: it starts on the frame the Narrator stops
+  // saying "…what do plants eat?" and ends on the frame Ray starts answering.
+  const [freezeFrom] = heldBeat(scene, "rc_20_narrator");
+  const [fearFrom] = lineWindow(scene, "rc_21_ray");
 
   // Scene 26's framing, settled: same island, same place, same size, same
   // distance. Only the hour has changed.
@@ -1384,12 +1415,14 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     dx: 960 - VOLCANO_AT.x,
   };
 
-  // It starts stirring under "Next time" and is at full strength before the
-  // 45-frame beat opens, because that beat **is** the wobbling ring: a ring
-  // that is still easing into its wobble halfway through the silence is a
-  // silence about nothing. It never becomes more than stirring.
-  const stir =
-    clamp01((frame - (nextTo - 26)) / 30) * 0.55 + clamp01((frame - wakeFrom) / 40) * 0.45;
+  // **It is already stirring on frame one.** The ramp used to run under "Next
+  // time."; with that line cut (2026-08-04) there is nothing in front of the
+  // 45-frame silence to ramp under, and a ring still easing into its wobble
+  // halfway through the silence is a silence about nothing. So the shot cuts in
+  // at 0.55 — enough for the newest ring to come out open and wobbling — and
+  // the last 0.45 arrives under "Something is waking up." It never becomes more
+  // than stirring.
+  const stir = 0.55 + 0.45 * clamp01((frame - wakeFrom) / 40);
 
   // THE RUMBLE, and there are two of them.
   //
@@ -1417,7 +1450,26 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // doubt, no reaction of any kind — there is no `emotionAt` sequence here
   // because there is no sequence.
   const sunnyEmotion = useEmotion(scene, "sunny", { rc_18_sunny: "excited" }, "proud", NO_LEAD);
-  const rayEmotion = useEmotion(scene, "ray", { rc_19_ray: "excited" }, "happy", NO_LEAD);
+  // **`scared` is the rig's fear read and it is the right one**: wide eyes with
+  // *small pupils* and a wobble mouth (`EMOTIONS.scared`, rig.ts), which is
+  // alarm rather than misery — nothing in it droops. **Lead 0**, so it lands on
+  // his own first frame of speech and not inside the frozen beat: the freeze is
+  // a character with nothing on his face yet, and the whole gag is that the
+  // penny drops out loud.
+  const rayEmotion = useEmotion(
+    scene,
+    "ray",
+    { rc_19_ray: "excited", rc_21_ray: "scared" },
+    "happy",
+    NO_LEAD,
+  );
+  // The flinch under the fear: he pulls in and down a few pixels and stops
+  // trailing light. Small on purpose — this is a punchline, not peril.
+  const flinch = spring({
+    frame: frame - fearFrom,
+    fps,
+    config: { damping: 12, mass: 0.6 },
+  });
 
   // He looks at the island while he claims it and then **turns to camera,
   // inside his own line**, so the beat after it opens on a face that has
@@ -1444,8 +1496,8 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     side: "left",
   };
   const rayMark: Mark = {
-    x: 300,
-    y: hover("ray", 828, 0.72),
+    x: 300 - 14 * flinch,
+    y: hover("ray", 828, 0.72) + 16 * flinch,
     scale: 0.72,
     who: "ray",
     side: "right",
@@ -1476,14 +1528,16 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           x={VOLCANO_AT.x}
           base={horizon}
           scale={VOLCANO_AT.scale}
-          // **0.49, and it is arithmetic, not a taste.** A ring leaves the
-          // crater at local frame 90·(k − phase); at the 0.2 this shot used
-          // for one pass that put the emissions at 72 and 162, so the first
-          // twenty frames of the 45-frame "the wobbling smoke ring, alone, in
-          // silence" beat (52..97) had no ring in them at all. At 0.49 a ring
-          // leaves at 46 — six frames before the beat opens — and the extended
-          // stirring ring life keeps one on screen from there to the cut.
-          phase={0.49}
+          // **0.89, and it is arithmetic, not a taste.** A ring leaves the
+          // crater at local frame 90·(k − phase) and lives 2·(1 + 0.6·stir)
+          // seconds. The silent open moved to frames 0..45 when "Next time."
+          // was cut, so the old 0.49 (a ring at 46, i.e. after the beat) would
+          // have played the whole silence over a hole. At 0.89 the previous
+          // ring dies just before the cut and the next one leaves the crater at
+          // frame 10: the audience lands on a sleeping island, watches one ring
+          // come out wobbling, and it is still there — 80-odd frames of life —
+          // when she says "Something is waking up."
+          phase={0.89}
           rim={0.95}
           stir={stir}
         />
@@ -1531,24 +1585,43 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         />
       </div>
 
-      {/* The sign-off: episode four's card, and Ray waving out of the corner. */}
+      {/* The sign-off: next time's card, and Ray waving out of the corner. */}
       <NextTimeCard scale={Math.max(0, poster)} />
-      <Ray
-        x={rayMark.x}
-        y={rayMark.y}
-        scale={0.72}
-        brightness={RAY_LIGHT.full}
-        spectrum={RAY_SPECTRUM.afterRainbow}
-        phase={PHASE.ray}
-        emotion={rayEmotion}
-        speaking={stage.speaking("ray")}
-        look="camera"
-        pose={frame >= byeFrom ? "wave" : "rest"}
-        wave={0.85}
-        streak={0.2}
-        opacity={clamp01((frame - byeFrom) / 16)}
-        zIndex={40}
-      />
+      {/* **THE FREEZE.** For the 30 frames between the Narrator finishing the
+          question and Ray asking his, Ray is rendered at one frame: the wave
+          arm stops where it is (mid-air, and it is always up in this pose — the
+          flap is a ±17° swing on an arm that points at the sky), the breath
+          stops, the blink stops. Nothing else in the shot freezes, which is
+          what makes it read as *him* stopping rather than as a dropped frame.
+          `active` rather than a conditional wrapper, so the tree — and the hook
+          count — is identical on every frame of the episode.
+
+          It cannot cover his line as well: `emotion` morphs are resolved
+          against the rig's own clock, so a frozen Ray cannot change his face.
+          The freeze therefore ends exactly on `fearFrom`, which is also where
+          the fear is supposed to arrive. He comes out of it into `scared` and
+          into `hug` — the rig's own pose for that emotion, hands pulled in
+          under the face — and the pose snap is the take. */}
+      <Freeze frame={freezeFrom} active={frame >= freezeFrom && frame < fearFrom}>
+        <Ray
+          x={rayMark.x}
+          y={rayMark.y}
+          scale={0.72}
+          brightness={RAY_LIGHT.full}
+          spectrum={RAY_SPECTRUM.afterRainbow}
+          phase={PHASE.ray}
+          emotion={rayEmotion}
+          speaking={stage.speaking("ray")}
+          look="camera"
+          pose={frame >= fearFrom ? "hug" : frame >= byeFrom ? "wave" : "rest"}
+          wave={0.85}
+          // A frightened beam is not travelling anywhere: the motion dashes go
+          // out with the wave.
+          streak={0.2 * (1 - clamp01(flinch))}
+          opacity={clamp01((frame - byeFrom) / 16)}
+          zIndex={40}
+        />
+      </Freeze>
       {/* He is over water, not on ground: a contact shadow under a hovering
           beam is a shadow with nothing casting it. What a light leaves on water
           is a pool of light. */}
@@ -1614,6 +1687,9 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         text={S35_BUBBLES}
         at={{
           rc_19_ray: { x: 430, y: 500, tail: "left", tailAt: rayMark.x },
+          // Same corner, same tail: it is the same character in the same place,
+          // and moving the bubble for the button would read as a cut.
+          rc_21_ray: { x: 430, y: 500, tail: "left", tailAt: rayMark.x },
         }}
       />
     </AbsoluteFill>
@@ -1672,19 +1748,24 @@ const WaterRumble: React.FC<{ horizon: number; strength: number }> = ({
 };
 
 /**
- * Episode four's card.
+ * Next time's card, and next time is **plants**.
  *
- * It deliberately does **not** name the episode or ask a question. Episodes one
- * and two both put next time's question on this card ("WHY IS THE SKY BLUE?"),
- * and the honest position here is that this script does not have episode four's
- * question in it — it has three words of Sunny's and a smoke ring. Naming it
- * would be this file inventing series canon. Leave the shape of the card, put
- * the ring on it, and let whoever writes episode four fill in the line.
+ * REWRITTEN 2026-08-04. The first pass of this card deliberately refused to ask
+ * a question — episodes one and two both put next time's question here ("WHY IS
+ * THE SKY BLUE?"), but at the time nothing outside this file said what episode
+ * four was, and naming it would have been a scene file inventing series canon.
+ * That is settled now: **Mike's series order, 2026-08-04, is ep 4 = plants and
+ * ep 5 = volcano**. So the card goes back to the series grammar it should never
+ * have left — the question, in the biggest type on screen, read aloud by the
+ * Narrator (`rc_20_narrator`) exactly as in the first two episodes.
+ *
+ * **The smoke ring came off the poster with it.** A ring here advertised the
+ * volcano as next time's episode, which is now a year and an episode wrong; the
+ * volcano keeps its promise in the shot behind the card, where it has no
+ * deadline. What replaces it is nothing: the question is the poster.
  */
 const NextTimeCard: React.FC<{ scale: number }> = ({ scale }) => {
-  const frame = useCurrentFrame();
   if (scale <= 0.002) return null;
-  const t = frame / 30;
   return (
     <div
       style={{
@@ -1706,11 +1787,6 @@ const NextTimeCard: React.FC<{ scale: number }> = ({ scale }) => {
         overflow: "hidden",
       }}
     >
-      {/* The ring, still not closing, on the poster. */}
-      <svg width={560} height={460} viewBox="0 0 560 460" style={{ position: "absolute", left: 0, top: 0 }}>
-        <ellipse cx={280} cy={196} rx={104} ry={44} fill="none" stroke={kidTheme.sunLight} strokeWidth={14} strokeLinecap="round" strokeDasharray="470 130" transform={`rotate(${Math.sin(t) * 4} 280 196)`} opacity={0.85} />
-        <ellipse cx={280} cy={252} rx={72} ry={30} fill="none" stroke={kidTheme.sunLight} strokeWidth={11} strokeLinecap="round" strokeDasharray="300 100" opacity={0.5} />
-      </svg>
       <div
         style={{
           position: "absolute",
@@ -1727,23 +1803,36 @@ const NextTimeCard: React.FC<{ scale: number }> = ({ scale }) => {
       >
         NEXT TIME
       </div>
+      {/* THE QUESTION, and it is the whole poster now that the ring is off it.
+          Four words at 68 wrap to three centred lines inside the 560-wide card
+          (508 of usable width after the border and the padding, against a
+          longest line of "WHAT DO"), which is why it is centred in the space
+          under the label rather than pinned to the bottom edge: a three-line
+          block hung off `bottom` climbed into the NEXT TIME label. It stays a
+          long way above `kidType.min` — this is the largest type in the scene
+          and it is meant to be, because a six-year-old is being asked a
+          question they are supposed to answer out loud. */}
       <div
         style={{
           position: "absolute",
           left: 0,
           right: 0,
-          bottom: 44,
-          padding: "0 20px",
+          top: 108,
+          bottom: 38,
+          padding: "0 24px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           textAlign: "center",
-          fontSize: 60,
+          fontSize: 68,
           fontWeight: 900,
-          lineHeight: 1.02,
-          letterSpacing: 2,
+          lineHeight: 1.06,
+          letterSpacing: 1,
           color: kidTheme.sun,
           textShadow: kidInkOutline(3),
         }}
       >
-        EPISODE FOUR
+        WHAT DO PLANTS EAT?
       </div>
     </div>
   );

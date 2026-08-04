@@ -43,7 +43,8 @@ import { RECAP_SCENES } from "./scenes/recap";
 // Tails are the builder's, with three exceptions the script fixes (Scene 13:
 // 45, Scene 24: 45, and Scene 5's 6, which is deliberately almost nothing
 // because the fifth "Are we there yet?" is buttoned by a *cut*). Held beats
-// that are *trailing* — the last line of Scenes 4, 7, 23, 28b and 31 buys
+// that are *trailing* — the last line of Scenes 4, 7, 23, 28b, 31 and (since
+// 2026-08-04) 35 buys
 // silence that runs to the cut — mean those scenes carry a short tail rather
 // than the house 30, because the beat already is the tail.
 //
@@ -72,6 +73,17 @@ type SceneSpec = {
   lines: string[];
   /** Per-line silence *after* a line — every entry is a scripted held beat. */
   gaps?: Record<string, number>;
+  /**
+   * Silence *before* the scene's first line — a scripted held beat with no
+   * line in front of it to hang a `gap` on. `buildTimeline` lays turns out from
+   * frame 0, so this is applied in `timeline()` below by sliding the scene's
+   * turns and lengthening it by the same amount: the scene still gets exactly
+   * its audio plus its scripted silences, and nothing is hand-timed.
+   *
+   * One scene uses it (`s35_tease`, the 45f silent open) and it exists because
+   * that beat used to be bought by a line that has since been cut.
+   */
+  leadFrames?: number;
   minFrames?: number;
   tailFrames?: number;
 };
@@ -1107,15 +1119,20 @@ const SCRIPT: SceneSpec[] = [
   {
     id: "s35_tease",
     lines: [
-      "rc_16_narrator",
       "rc_17_narrator",
       "rc_18_sunny",
       "rc_18b_narrator",
       "rc_19_ray",
+      "rc_20_narrator",
+      "rc_21_ray",
     ],
+    // 45f — "SILENT OPEN. The wobbling smoke ring, alone, in silence." The
+    // beat is unchanged in length and content; what changed on 2026-08-04 is
+    // that it no longer has "Next time." in front of it (`rc_16_narrator` is
+    // cut — see narration.mjs), so it is a lead rather than a gap and the
+    // episode's last scene now opens on a picture instead of on a line.
+    leadFrames: 45,
     gaps: {
-      // 45f — "The wobbling smoke ring, alone, in silence." Unchanged.
-      rc_16_narrator: 45,
       // 60f — "The rumble, felt in the water and in the smoke, with nothing
       // said over it. **Keep this wondrous, not frightening** — no dark chord,
       // no red glow, no shaking camera." Unchanged and sacred.
@@ -1130,13 +1147,23 @@ const SCRIPT: SceneSpec[] = [
       rc_18_sunny: 45,
       // 30f — "The volcano, the rumble, Sunny still beaming. Nothing enters."
       rc_18b_narrator: 30,
+      // 30f — "Ray's wave FREEZES mid-air. The features hold. He has just done
+      // the maths." The card is up and the Narrator has just read the question
+      // off it; this is the second the joke needs before he asks his.
+      rc_20_narrator: 30,
+      // 40f, trailing — "Nothing enters, nothing answers. The card, the frozen
+      // wave, out. The episode ends on the question." The last silence in the
+      // series so far, and the tail under it is short on purpose: the beat
+      // already is the tail (see the trailing-beat note at the top of this
+      // file).
+      rc_21_ray: 40,
     },
-    tailFrames: 60,
+    tailFrames: 14,
   },
 ];
 
 export function timeline() {
-  return buildTimeline(
+  const built = buildTimeline(
     SCRIPT.map((spec) => ({
       id: spec.id,
       turns: turnsOf(spec.lines, { gaps: spec.gaps }),
@@ -1145,6 +1172,24 @@ export function timeline() {
     })),
     FPS,
   );
+  // Silent opens (`leadFrames`), applied after the fact: slide a scene's turns
+  // forward by its lead, add the same number of frames to the scene, and re-flow
+  // every scene's `from` behind it. A scene with no lead comes through
+  // byte-identical — the whole episode's timing is unchanged except where a
+  // `leadFrames` is written down.
+  let from = 0;
+  const scenes = built.scenes.map((scene, i) => {
+    const lead = SCRIPT[i].leadFrames ?? 0;
+    const shifted: TimedScene = {
+      ...scene,
+      from,
+      durationInFrames: scene.durationInFrames + lead,
+      turns: scene.turns?.map((turn) => ({ ...turn, from: turn.from + lead })),
+    };
+    from += shifted.durationInFrames;
+    return shifted;
+  });
+  return { scenes, durationInFrames: Math.max(1, from) };
 }
 
 /** Every staged scene in the episode. Unlisted ids fall back to a placeholder. */

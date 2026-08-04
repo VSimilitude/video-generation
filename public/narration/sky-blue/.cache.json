@@ -1484,11 +1484,6 @@
     "outFile": "rc_15_narrator.mp3",
     "durationSeconds": 4.375
   },
-  "rc_16_narrator": {
-    "hash": "e9c58305b2214e0f",
-    "outFile": "rc_16_narrator.mp3",
-    "durationSeconds": 1.725
-  },
   "rc_17_narrator": {
     "hash": "70405715d28ef3e2",
     "outFile": "rc_17_narrator.mp3",
@@ -1508,5 +1503,15 @@
     "hash": "196ac42555203eaa",
     "outFile": "rc_19_ray.mp3",
     "durationSeconds": 2.412
+  },
+  "rc_20_narrator": {
+    "hash": "5009969efe81a75b",
+    "outFile": "rc_20_narrator.mp3",
+    "durationSeconds": 2.675
+  },
+  "rc_21_ray": {
+    "hash": "e828099f0ffe3ef6",
+    "outFile": "rc_21_ray.mp3",
+    "durationSeconds": 0.972
   }
 }

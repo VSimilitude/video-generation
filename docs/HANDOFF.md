@@ -99,6 +99,14 @@ overridden in substance; R2 superseded.
   single-take. Trim menu −18.5s if runtime drags.
   AFTER the screening verdict: retro → LEARNINGS/STYLE + BIBLE first
   write-up (owed at this boundary per wave-2 distillation).
+  **S35 RE-TEASE IN FLIGHT (2026-08-04, direct showrunner session):** ep-3's
+  ending tease re-scoped for the new episode order (stir = long-arc, card =
+  "WHAT DO PLANTS EAT?", NEW Ray button rc_21 "Is it me??" fearful — Mike's
+  gag, verbatim). script.md scene-35 section rewritten (authoritative);
+  builder brief scratchpad/s35_retease_brief.md; opus builder running
+  (narration.mjs rc_16 cut + rc_20/rc_21 add, Video.tsx retime, recap.tsx
+  restage + card, ref sweep, full gates). Then: showrunner still review →
+  commit → clean-worktree deploy. rc_21 joins Mike's ear list.
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE

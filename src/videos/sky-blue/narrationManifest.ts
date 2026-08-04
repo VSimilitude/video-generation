@@ -302,9 +302,10 @@ export const NARRATION: Record<string, NarrationClip> = {
   "rc_13_narrator": { file: "narration/sky-blue/rc_13_narrator.mp3", durationSeconds: 3.85 },
   "rc_14_ray": { file: "narration/sky-blue/rc_14_ray.mp3", durationSeconds: 2.772 },
   "rc_15_narrator": { file: "narration/sky-blue/rc_15_narrator.mp3", durationSeconds: 4.375 },
-  "rc_16_narrator": { file: "narration/sky-blue/rc_16_narrator.mp3", durationSeconds: 1.725 },
   "rc_17_narrator": { file: "narration/sky-blue/rc_17_narrator.mp3", durationSeconds: 2.075 },
   "rc_18_sunny": { file: "narration/sky-blue/rc_18_sunny.mp3", durationSeconds: 2.475 },
   "rc_18b_narrator": { file: "narration/sky-blue/rc_18b_narrator.mp3", durationSeconds: 2.175 },
   "rc_19_ray": { file: "narration/sky-blue/rc_19_ray.mp3", durationSeconds: 2.412 },
+  "rc_20_narrator": { file: "narration/sky-blue/rc_20_narrator.mp3", durationSeconds: 2.675 },
+  "rc_21_ray": { file: "narration/sky-blue/rc_21_ray.mp3", durationSeconds: 0.972 },
 };
