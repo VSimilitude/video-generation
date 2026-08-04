@@ -84,15 +84,21 @@ overridden in substance; R2 superseded.
   showrunner still review, all pass, no fix round). Its flags: s11 lines
   keyed ~9s pre-card (→ batch 3 re-key), s21 "(mid-throw)" ruled a
   post-card boast, s18 off-edge speakers accepted (inherited grammar).
-  (3) wave-end builder IN FLIGHT (2026-08-04): s11 re-key
-  a1_45b/c/d→a1_48b/c/d + intended perches, FULL every-frame --scale=0.25
-  render of the whole episode, script.md fold (incl. volcano-rule list +
-  Yellow "she" sweep + as-built deviations). Then: showrunner verify →
-  commit → clean-worktree deploy → re-screening link to Mike.
-  STILL PENDING FROM MIKE: ear-check verdicts (9 clips sent — esp.
-  a2_32b_blue re-roll call + the two replacement takes); weekly fable %.
-  Post-deploy: retro → LEARNINGS/STYLE + BIBLE first write-up (owed at
-  this boundary per wave-2 distillation).
+  (3) wave-end DONE + committed 84f737b: s11 re-keyed to on-card perches
+  ($0 cache migration, ear-checked chain byte-identical), s21 throw ruling
+  applied, script.md FOLDED IN FULL (single source of truth again), full
+  every-frame --scale=0.25 render exit 0 (31,281f = 17:23).
+  **WAVE 3 COMPLETE — DEPLOYED 2026-08-04 (clean worktree, page + new
+  audio verified 200).** Re-screening link sent to Mike.
+  AWAITING MIKE: (a) family re-screening verdict → expect a tweak round
+  (cents); (b) ear-check verdicts (9 clips — esp. a2_32b_blue re-roll
+  call + the two replacement takes); (c) weekly fable %. Ear items
+  shipped-in-cut with unexercised fallbacks (full list in
+  wave3-end-report.md): "Ahem.", "Are we" truncation, a3_11v at 1.0,
+  faint-protest at full level, six trim-optional lines all in, a1_40f
+  single-take. Trim menu −18.5s if runtime drags.
+  AFTER the screening verdict: retro → LEARNINGS/STYLE + BIBLE first
+  write-up (owed at this boundary per wave-2 distillation).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
