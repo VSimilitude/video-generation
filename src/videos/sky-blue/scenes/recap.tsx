@@ -6,6 +6,7 @@ import {
   Bubbles,
   Camera,
   HEIGHT,
+  INDIGO_LAG,
   PHASE,
   PaintedSky,
   Puff,
@@ -103,7 +104,12 @@ const H = HEIGHT;
 //            Neither concedes, neither is wrong (scattering takes light *and*
 //            air) and **nobody adjudicates** — no verdict, no narrator ruling,
 //            no cutaway. They end the panel sharing it, both still claiming it,
-//            side by side in one lit cell.
+//            side by side in one lit cell. **And then Indigo shoves in too**
+//            (revision2): the echo engine's fourth and final firing, at maximum,
+//            with the copy claiming the mechanism itself and Blue answering with
+//            the identical protest he was born saying in Scene 9. Three
+//            claimants stand unresolved and all three of them are right, which
+//            IS scattering.
 //   SUNSET   Red walks in from the side, says "It is mostly me." underneath the
 //            man taking credit for it, and walks out of the far edge. Sunny
 //            does not hear him, does not look at him and takes his bow anyway.
@@ -132,7 +138,9 @@ const H = HEIGHT;
 //      (b)'s Scene-20 comparator-Blue ruling):
 //        - Red, still walking out — the revision itself stages him mid-exit;
 //        - Blue, still ricocheting in his small box — his law, and stopping him
-//          would be a second event;
+//          would be a second event; **and Indigo, four frames behind him**, for
+//          the same reason and by construction: he is Blue's own path, so a
+//          Blue who keeps moving is an Indigo who keeps moving;
 //        - Violet, still waving half out of the RAINBOW panel — firing four IS
 //          the continuous unnoticed wave, it has run since `rc_02`, and a
 //          freeze two panels from the deadpan would pull the eye to him at the
@@ -147,9 +155,33 @@ const S32_BUBBLES: Record<string, string> = {
   // half of the mechanism Puff's own line does not have, which is the whole
   // reason the line exists.
   rc_03b_blue: "That is ME bouncing!",
+  // G2's fourth and final firing, in the same place as `rc_03b_blue` because it
+  // is the same man making the same objection from the same cupboard.
+  rc_03d_blue: "I just said that!",
   // Clip: "It is mostly me." Four words, said flat, and the bubble is the line.
   rc_04b_red: "It is mostly me.",
 };
+
+/** The tail's own bubble. Drawn smaller than Blue's, because he is the copy. */
+const S32_ECHO_BUBBLE: Record<string, string> = {
+  rc_03c_indigo: "That is me.",
+};
+
+/**
+ * **Indigo, in the panel Blue is already in.**
+ *
+ * Panel-local, like everything drawn inside a `ChantPanel`. He runs Blue's own
+ * box four frames stale (the kit's `INDIGO_LAG`, which is the character) and
+ * sits `S32_ECHO_OFF` off it — left and under, which is the series' drawing of
+ * him — so the two of them are never one lilac blob with two faces in it.
+ *
+ * He shoves in on his own 12-frame gap rather than Blue's 4, which is the whole
+ * difference between the two of them expressed in the timeline: Blue interrupts,
+ * Indigo is late.
+ */
+const S32_ECHO_OFF = { x: -74, y: 26 } as const;
+const S32_ECHO_SCALE = 0.52;
+const S32_ECHO_SHOVE_FRAMES = 10;
 
 /**
  * **Blue's cupboard, inside Puff's panel** — panel-local, because everything
@@ -253,6 +285,8 @@ const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     sunny: lineWindow(scene, "rc_04_sunny"),
   };
   const [, puffTo] = windows.puff;
+  const [, blueTo] = lineWindow(scene, "rc_03b_blue");
+  const [echoFrom] = lineWindow(scene, "rc_03c_indigo");
   const [redFrom, redTo] = lineWindow(scene, "rc_04b_red");
   const [beatFrom, beatTo] = heldBeat(scene, "rc_04b_red");
 
@@ -280,6 +314,15 @@ const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const shunt = S32_PUFF_SHIFT * kidEase.easeOutQuad((frame - puffTo) / 10);
   const knock = settleWave((frame - puffTo - 5) / 20, 1.4, 5, -Math.PI / 2);
 
+  // --- Indigo, shoving in behind him ---------------------------------------
+  const echoShove = kidEase.easeOutQuad((frame - blueTo) / S32_ECHO_SHOVE_FRAMES);
+  const echoAt = blueRicochet(frame - INDIGO_LAG, S32_BLUE_BOX, 32);
+  const echo = {
+    x: echoAt.x + S32_ECHO_OFF.x - (1 - clamp01(echoShove)) * S32_SHOVE_PX,
+    y: echoAt.y + S32_ECHO_OFF.y,
+    angle: echoAt.angle,
+  };
+
   // --- Red, crossing the SUNSET panel --------------------------------------
   //
   // Set off so that the middle frame of his line has him at the middle of the
@@ -306,16 +349,45 @@ const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     scale: S32_RED_SCALE,
     who: "shard",
   };
+  const echoMark: Mark = {
+    x: PANEL_W + echo.x,
+    y: hover("shard", echo.y, S32_ECHO_SCALE),
+    scale: S32_ECHO_SCALE,
+    who: "shard",
+  };
 
+  // **Z-ORDER, audited.** `ChantPanel`'s root is `position:absolute` with
+  // `overflow:hidden` and nothing else — and `overflow` does NOT create a
+  // stacking context, so every z-index a panel's children carry competes in the
+  // scene's root context. That is the trap batch (c) hit (a `clipPath` wrapper
+  // around Sunny localised his z-index and made him dim with his own panel), so
+  // the two intruders below go in as a bare **Fragment**: a wrapper `<div>` here
+  // would put Blue and Indigo into a context of their own and land them either
+  // both in front of Puff or both behind the panel dressing.
+  //
+  // The ordering the frame needs, and the numbers that give it:
+  //   16  Indigo  — behind Blue, because he is the copy
+  //   18  Blue    — behind Puff, so the overlap at the end of a leg is depth
+  //   20  Puff    — the panel's owner, and he does not concede an inch
+  //   (no z-index) the dim veil, the coloured border and the word banner, which
+  //       are drawn after the cast in DOM order and are `z-index: auto`, so the
+  //       three bodies sit above the veil and below nothing.
   const inside: Record<Panel["key"], React.ReactNode> = {
     ray: <PanelViolet from={windows.ray[0] - 8} />,
     puff: (
-      <PanelBlue
-        at={blue}
-        show={frame >= puffTo}
-        speaking={stage.speaking("blue")}
-        lookAtPuff={frame >= puffTo && frame < puffTo + 46}
-      />
+      <>
+        <PanelIndigo
+          at={echo}
+          show={frame >= blueTo - 2}
+          speaking={stage.speaking("indigo")}
+        />
+        <PanelBlue
+          at={blue}
+          show={frame >= puffTo}
+          speaking={stage.speaking("blue")}
+          lookAtPuff={frame >= puffTo && frame < puffTo + 46}
+        />
+      </>
     ),
     sunny: redIn ? <PanelRed at={red} speaking={stage.speaking("red")} /> : null,
   };
@@ -395,7 +467,26 @@ const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cast={{ blue: blueMark } as Cast}
         text={S32_BUBBLES}
         maxWidth={520}
-        at={{ rc_03b_blue: { x: 958, y: 262, tail: "left", tailAt: blueMark.x } }}
+        at={{
+          rc_03b_blue: { x: 958, y: 262, tail: "left", tailAt: blueMark.x },
+          rc_03d_blue: { x: 958, y: 262, tail: "left", tailAt: blueMark.x },
+        }}
+      />
+      {/* **A third `<Bubbles>`, at a smaller size, and the size is the joke.**
+          `Bubbles` takes one `fontSize` for its whole map, so a bubble that has
+          to read as a *smaller* version of the one before it is a second element
+          with its own cast — the act-three idiom, used there for Blue's faint
+          line from the top of frame and Yellow's distant one. Here it says
+          "copy" without a word of dialogue doing it. It sits above Blue's rather
+          than in it: the two are never up at the same time, and the higher,
+          smaller one reads as the echo coming back off the ceiling. */}
+      <Bubbles
+        scene={scene}
+        cast={{ indigo: echoMark } as Cast}
+        text={S32_ECHO_BUBBLE}
+        fontSize={44}
+        maxWidth={420}
+        at={{ rc_03c_indigo: { x: 958, y: 192, tail: "left", tailAt: echoMark.x } }}
       />
       <Bubbles
         scene={scene}
@@ -455,6 +546,35 @@ const PanelBlue: React.FC<{
       // other by the end of it and neither has moved an inch.
       look={lookAtPuff ? { x: 0.75, y: 0.1 } : "camera"}
       zIndex={18}
+    />
+  );
+};
+
+/**
+ * Indigo, in the panel Blue is in, claiming the word Blue is claiming off Puff.
+ *
+ * Behind Blue (`zIndex` 16 against his 18) and never looking at anybody: he is
+ * not arguing with Puff and he is not arguing with Blue, he is saying the words
+ * again, which is the only thing he has ever done.
+ */
+const PanelIndigo: React.FC<{
+  at: { x: number; y: number; angle: number };
+  show: boolean;
+  speaking: boolean;
+}> = ({ at, show, speaking }) => {
+  if (!show) return null;
+  return (
+    <Shard
+      who="indigo"
+      x={at.x}
+      y={hover("shard", at.y, S32_ECHO_SCALE)}
+      scale={S32_ECHO_SCALE}
+      heading={at.angle}
+      emotion="excited"
+      speaking={speaking}
+      look="camera"
+      opacity={0.85}
+      zIndex={16}
     />
   );
 };

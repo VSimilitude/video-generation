@@ -102,6 +102,27 @@ import {
 /** Every held-beat scene in this act cuts the emotion lead to zero. */
 const NO_LEAD = 0;
 
+/**
+ * 0 → 1 → 0 across `[a, b)`, with `ramp` frames of ease at each end.
+ *
+ * Four of revision2's act-two additions are *visits* — a colour who is not on
+ * stage for the whole scene arrives, says a thing and leaves again — and every
+ * one of them is this shape. Written once here rather than four times inline;
+ * act one has the same function for the same reason.
+ */
+function pulse(f: number, a: number, b: number, ramp = 6): number {
+  if (f <= a || f >= b) return 0;
+  return kidEase.easeInOutSine(Math.min(1, Math.min((f - a) / ramp, (b - f) / ramp)));
+}
+
+/**
+ * **Every colour who visits a scene arrives from above and leaves upward**, and
+ * the number is shared so the four of them read as one law rather than as four
+ * entrances. It is the physics-honesty note applied to staging: a colour is
+ * never *removed* from a frame, he bounces out of the top of it.
+ */
+const VISIT_LIFT = 320;
+
 const W = 1920;
 const H = 1080;
 
@@ -289,7 +310,27 @@ const S15_RAY = { x: 470, y: 336, scale: 0.72 };
 const S15_BUBBLES: Record<string, string> = {
   // A summary, not a transcript: the clip is "So the sea is not doing it."
   a2_07_ray: "Not the sea, then.",
+  // --- Blue is IN the postcard (revision2) ----------------------------------
+  // The character who *is* the sky's blue, meeting the thing that takes his
+  // credit — and then being copied by the thing that copies him.
+  a2_04b_blue: "You're blue! Twins!",
+  a2_09b_blue: "Everybody copy me!",
+  a2_09c_indigo: "Copy me.",
 };
+
+/**
+ * **Blue's cupboard over the bay** — right of the arrows, right of the "?", and
+ * well right of the MYTH stamp, which is the only other thing that is ever in
+ * the top half of this frame.
+ *
+ * He is over the *water*, below the horizon at `HORIZON_Y`, because the joke is
+ * that he is talking to the sea. Indigo runs the same box shifted down and left
+ * — the kit's "behind and under Blue" — so the two of them are never one blob.
+ */
+const S15_BLUE_BOX: Box = { x: 1230, y: 700, w: 380, h: 210 };
+const S15_BLUE_SCALE = 0.62;
+const S15_INDIGO_OFF = { x: -170, y: 60 } as const;
+const S15_INDIGO_SCALE = 0.44;
 
 const MythSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -329,6 +370,42 @@ const MythSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     who: "ray",
     side: "right",
     offset: 300,
+  };
+
+  // --- Blue in the postcard, twice (revision2) ------------------------------
+  //
+  // **He is not on stage for the myth-bust beat.** He arrives for "Twins!",
+  // pings back out of the top of frame on his last word, and comes down again
+  // for the Copy-me pair on the grey day — so the 30f stamp hold stays as empty
+  // as it shipped, and the desert counter-example does not have a sky character
+  // hovering over it.
+  const [blueFrom, blueTo] = lineWindow(scene, "a2_04b_blue");
+  const [copyFrom] = lineWindow(scene, "a2_09b_blue");
+  const [echoFrom] = lineWindow(scene, "a2_09c_indigo");
+  const [, pleasedTo] = heldBeat(scene, "a2_09c_indigo");
+  const visit = Math.max(
+    pulse(frame, blueFrom - 18, blueTo + 4, 14),
+    pulse(frame, copyFrom - 20, pleasedTo + 10, 14),
+  );
+  const echo = pulse(frame, echoFrom - 14, pleasedTo + 10, 12);
+  const blue = blueRicochet(frame, S15_BLUE_BOX, 21.7);
+  const indigo = indigoEcho((f: number) => blueRicochet(f, S15_BLUE_BOX, 21.7), frame);
+  const blueAt = { x: blue.x, y: blue.y - (1 - visit) * VISIT_LIFT };
+  const indigoAt = {
+    x: indigo.x + S15_INDIGO_OFF.x,
+    y: indigo.y + S15_INDIGO_OFF.y - (1 - echo) * VISIT_LIFT,
+  };
+  const blueMark: Mark = {
+    x: blueAt.x,
+    y: hover("shard", blueAt.y, S15_BLUE_SCALE),
+    scale: S15_BLUE_SCALE,
+    who: "shard",
+  };
+  const indigoMark: Mark = {
+    x: indigoAt.x,
+    y: hover("shard", indigoAt.y, S15_INDIGO_SCALE),
+    scale: S15_INDIGO_SCALE,
+    who: "shard",
   };
 
   return (
@@ -388,12 +465,67 @@ const MythSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         zIndex={20}
       />
 
+      {/* Indigo under and behind Blue, arriving four frames late and leaving
+          the same way. He is smaller and fainter for the Scene 19 reason: two
+          adjacent hues at the same size are one lilac smudge with two faces. */}
+      {echo > 0.01 ? (
+        <Shard
+          who="indigo"
+          x={indigoMark.x}
+          y={indigoMark.y}
+          scale={S15_INDIGO_SCALE}
+          heading={indigo.angle}
+          emotion="happy"
+          speaking={stage.speaking("indigo")}
+          look={{ x: -0.4, y: -0.2 }}
+          opacity={echo * 0.85}
+          zIndex={21}
+        />
+      ) : null}
+      {visit > 0.01 ? (
+        <Shard
+          who="blue"
+          x={blueMark.x}
+          y={blueMark.y}
+          scale={S15_BLUE_SCALE}
+          heading={blue.angle}
+          emotion="excited"
+          speaking={stage.speaking("blue")}
+          // Down at the water for "Twins!", and round at the copy of himself for
+          // the held beat after it — "Blue looks at Indigo. Blue decides to be
+          // pleased."
+          look={frame >= echoFrom ? { x: -0.7, y: 0.25 } : { x: -0.2, y: 0.7 }}
+          opacity={visit}
+          zIndex={22}
+        />
+      ) : null}
+
       <CutFlash at={stampAt} strength={0.3} />
       {/* It leaves on the wipe. A stamp still sitting on the desert — and then
           on the grey bay — turns two counter-examples into one long caption. */}
       <MythStamp at={stampAt} until={desertFrom + 4} x={1096} y={412} />
 
-      <Bubbles scene={scene} cast={{ ray: rayMark } as Cast} text={S15_BUBBLES} />
+      <Bubbles
+        scene={scene}
+        cast={{ ray: rayMark, blue: blueMark, indigo: indigoMark } as Cast}
+        text={S15_BUBBLES}
+        at={{
+          // Both of Blue's go in the same place: he is in the same cupboard
+          // saying the same kind of thing, twenty seconds apart.
+          //
+          // **High, and that is the pedagogy rather than a preference.** At
+          // y=470 the bubble sat on the big "?" at (1108, 596) — the drawn half
+          // of the myth this scene exists to bust (`RaySkyBlue_010930`, before).
+          // The arrows and their question mark own the middle of this frame from
+          // the first frame to the last, so a visiting character's bubble goes
+          // above them or it is deleting the diagram.
+          a2_04b_blue: { x: 1300, y: 300, tail: "left", tailAt: blueAt.x },
+          a2_09b_blue: { x: 1300, y: 300, tail: "left", tailAt: blueAt.x },
+          // Indigo's is lower — under Blue's and clear of the down arrow, which
+          // runs the height of the frame at x≈940..1010.
+          a2_09c_indigo: { x: 1330, y: 560, tail: "left", tailAt: indigoAt.x },
+        }}
+      />
     </AbsoluteFill>
   );
 };
@@ -844,7 +976,40 @@ const S17_BUBBLES: Record<string, string> = {
   a2_17_puff: "But you can FEEL me!",
   a2_19_ray: "There are more of you?",
   a2_20_puff: "ZILLIONS of us!",
+  // --- the race's fuse, lit ten scenes early (revision2) ---------------------
+  a2_20b_blue: "I got here FIRST!",
+  a2_20c_indigo: "Got here first.",
 };
+
+/**
+ * **Blue comes out of the crowd, and "deep" is a scale rather than a position.**
+ *
+ * `AirCrowd` is a field of depths pushed out from the lens at (960, 540): the
+ * far blobs are small and near the middle, the near ones are big and out at the
+ * edges. So a character *inside* it is one who starts small at the middle and
+ * gets bigger on his way out, which is what these two pairs of numbers are. He
+ * has evidently been in there for some time — the crowd does not react, because
+ * as far as the crowd is concerned nothing has happened.
+ *
+ * Indigo comes from **shallower**: a bigger start, a shorter trip. He is still
+ * drawn smaller than Blue at the end of it, because he is still the faded copy
+ * and that rule outranks the depth.
+ */
+const S17_LENS = { x: 960, y: 540 } as const;
+const S17_BLUE_BOX: Box = { x: 860, y: 730, w: 420, h: 210 };
+const S17_BLUE_DEEP = 0.1;
+const S17_BLUE_SCALE = 0.72;
+/**
+ * Indigo's anchor, as an offset off Blue's own echoed path.
+ *
+ * Down and to the RIGHT, which is the one direction available: Puff owns
+ * x 540..870 / y 436..796 at 40% opacity and a first pass at (−230, −110) put
+ * Indigo in his lap (`RaySkyBlue_012955`, before). Under Blue is the canon
+ * ("drawn behind and 26px under"); which side of him is the frame's call.
+ */
+const S17_INDIGO_OFF = { x: 180, y: 90 } as const;
+const S17_INDIGO_DEEP = 0.26;
+const S17_INDIGO_SCALE = 0.5;
 
 const NotEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -860,6 +1025,54 @@ const NotEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stage = useStage(scene);
   const rayEmotion = useEmotion(scene, "ray", { a2_19_ray: "amazed" }, "happy");
   const puffEmotion = useEmotion(scene, "puff", { a2_20_puff: "excited" }, "happy");
+
+  // --- Blue's WANT, planted in the crowd he will spend the race bouncing off --
+  const [blueFrom] = lineWindow(scene, "a2_20b_blue");
+  const [echoFrom] = lineWindow(scene, "a2_20c_indigo");
+  const [sumFrom, sumTo] = heldBeat(scene, "a2_20c_indigo");
+  const blue = blueRicochet(frame, S17_BLUE_BOX, 44.3);
+  const indigo = indigoEcho((f: number) => blueRicochet(f, S17_BLUE_BOX, 44.3), frame);
+  // Out of the crowd on their own lines, and back into it under `a2_21` — the
+  // Narrator's line closes over them exactly as if nothing had happened.
+  const sinkAt = sumTo + 24;
+  const outOf = (from: number, lead: number): number =>
+    clamp01((frame - (from - lead)) / lead) * (1 - clamp01((frame - sinkAt) / 34));
+  const blueOut = outOf(blueFrom, 26);
+  const indigoOut = outOf(echoFrom, 20);
+  const surface = (
+    p: { x: number; y: number },
+    u: number,
+    off: { x: number; y: number },
+  ): { x: number; y: number } => ({
+    x: S17_LENS.x + (p.x + off.x - S17_LENS.x) * u,
+    y: S17_LENS.y + (p.y + off.y - S17_LENS.y) * u,
+  });
+  const blueAt = surface(blue, blueOut, { x: 0, y: 0 });
+  const indigoAt = surface(indigo, indigoOut, S17_INDIGO_OFF);
+  const blueScale = S17_BLUE_DEEP + (S17_BLUE_SCALE - S17_BLUE_DEEP) * blueOut;
+  const indigoScale = S17_INDIGO_DEEP + (S17_INDIGO_SCALE - S17_INDIGO_DEEP) * indigoOut;
+  // **The 16f beat: he does the arithmetic on being copied, and lets it go.**
+  // Nothing else enters it — the crowd churns because the crowd always churns.
+  const blueFace = emotionAt(
+    frame,
+    [
+      { at: sumFrom, emotion: "grumpy", frames: 6 },
+      { at: sumFrom + 11, emotion: "happy", frames: 8 },
+    ],
+    "excited",
+  );
+  const blueMark: Mark = {
+    x: blueAt.x,
+    y: hover("shard", blueAt.y, blueScale),
+    scale: blueScale,
+    who: "shard",
+  };
+  const indigoMark: Mark = {
+    x: indigoAt.x,
+    y: hover("shard", indigoAt.y, indigoScale),
+    scale: indigoScale,
+    who: "shard",
+  };
 
   const rayMark: Mark = {
     x: S17_RAY.x,
@@ -882,6 +1095,38 @@ const NotEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           is travelling into rather than a backdrop behind a growing crowd. */}
       <PaintedSky bg="sky_dome_day" phase={13.4} drift={10} zoom={1 + dive * 0.16} />
       <AirCrowd dive={dive} t={t} />
+
+      {/* In front of the crowd and behind Puff and Ray, which is what "out of
+          the crowd" means when the crowd is a depth field. */}
+      {indigoOut > 0.02 ? (
+        <Shard
+          who="indigo"
+          x={indigoMark.x}
+          y={indigoMark.y}
+          scale={indigoScale}
+          heading={indigo.angle}
+          emotion="happy"
+          speaking={stage.speaking("indigo")}
+          look={{ x: 0.4, y: -0.1 }}
+          opacity={Math.min(1, indigoOut * 1.6) * 0.85}
+          zIndex={19}
+        />
+      ) : null}
+      {blueOut > 0.02 ? (
+        <Shard
+          who="blue"
+          x={blueMark.x}
+          y={blueMark.y}
+          scale={blueScale}
+          heading={blue.angle}
+          emotion={blueFace}
+          speaking={stage.speaking("blue")}
+          // Round at the copy for the beat, and back to the crowd after it.
+          look={frame >= echoFrom && frame < sumTo ? { x: 0.75, y: 0.4 } : "camera"}
+          opacity={Math.min(1, blueOut * 1.6)}
+          zIndex={20}
+        />
+      ) : null}
 
       <Puff
         x={S17_PUFF.x}
@@ -913,13 +1158,20 @@ const NotEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Bubbles
         scene={scene}
-        cast={{ ray: rayMark, puff: puffMark } as Cast}
+        cast={{ ray: rayMark, puff: puffMark, blue: blueMark, indigo: indigoMark } as Cast}
         text={S17_BUBBLES}
         at={{
           a2_15_ray: { x: 1320, y: 190, tail: "left", tailAt: 1290 },
           a2_19_ray: { x: 1320, y: 190, tail: "left", tailAt: 1290 },
           a2_17_puff: { x: 620, y: 226, tail: "right", tailAt: 706 },
           a2_20_puff: { x: 620, y: 226, tail: "right", tailAt: 706 },
+          // Top centre: the one strip of this frame that is neither Ray's
+          // corner (his body runs y 285..628 at x 1165..1415) nor Puff's, and
+          // the tail reaches down across the crowd to wherever Blue surfaced.
+          a2_20b_blue: { x: 960, y: 230, tail: "left", tailAt: blueAt.x },
+          // Indigo's sits under Ray's corner and over his own body, which is the
+          // only strip of the right-hand side neither Ray nor Blue is using.
+          a2_20c_indigo: { x: 1330, y: 700, tail: "left", tailAt: indigoAt.x },
         }}
       />
     </AbsoluteFill>
@@ -1303,7 +1555,27 @@ const S18_PUFF = { x: 1334, y: 812, scale: 0.86 } as const;
 const S18_BUBBLES: Record<string, string> = {
   a2_23b_red: "Straight through. Always have.",
   a2_24b_red: "Lovely air.",
+  // --- the devotion engine gets its first two firings (revision2) ------------
+  a2_23c_orange: "He does. I've seen him.",
+  a2_24c_orange: "What Red said.",
+  // …and the cheer format is planted on a DEPARTURE, ninety seconds before the
+  // race fires it five times.
+  a2_24d_yellow: "Great walking, Red!",
 };
+
+/**
+ * **Yellow, at the frame edge, cheering a man who has already left.**
+ *
+ * `a2_24d_yellow` lands at local 709 and Red passes x=2392 at that frame — four
+ * hundred pixels past the right edge, with Orange another body behind him. That
+ * is not a staging problem to solve, it **is** the joke and it is the same one
+ * act three's Yellow tells three more times: all of her cheers land on somebody
+ * who has already gone. Red does not react. Obviously.
+ *
+ * She comes in from off the right edge under Orange's ladder firing and stays to
+ * the cut, half out of frame, still waving.
+ */
+const S18_YELLOW = { x: 1840, y: 560, scale: 1, from: 2110 } as const;
 
 const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -1327,6 +1599,33 @@ const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     x: red.x,
     y: hover("shard", RED_Y, S18_SHARD_SCALE),
     scale: S18_SHARD_SCALE,
+    who: "shard",
+  };
+  const orangeMark: Mark = {
+    x: orange.x,
+    y: hover("shard", orange.y, S18_SHARD_SCALE),
+    scale: S18_SHARD_SCALE,
+    who: "shard",
+  };
+
+  // Orange looks at the man he is describing for the first of his two lines and
+  // for nothing else — after that he is back to Red's own dead-ahead stare, one
+  // body behind it. (Act three's s28b has him never once looking at Red; this is
+  // the firing that earns that, so it gets the eye-line and the later ones do
+  // not.)
+  const [devoteFrom, devoteTo] = lineWindow(scene, "a2_23c_orange");
+  const [cheerFrom] = lineWindow(scene, "a2_24d_yellow");
+  const orangeLook =
+    frame >= devoteFrom - 6 && frame < devoteTo + 8
+      ? { x: 0.9, y: -0.1 }
+      : { x: 0.7, y: 0 };
+
+  // Yellow slides in from off the right edge and stays, waving.
+  const arrive = clamp01((frame - (cheerFrom - 20)) / 20);
+  const yellowMark: Mark = {
+    x: S18_YELLOW.from + (S18_YELLOW.x - S18_YELLOW.from) * kidEase.easeOutCubic(arrive),
+    y: hover("shard", S18_YELLOW.y, S18_YELLOW.scale),
+    scale: S18_YELLOW.scale,
     who: "shard",
   };
 
@@ -1377,15 +1676,33 @@ const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       <Shard
         who="orange"
         x={orange.x}
-        y={hover("shard", orange.y, S18_SHARD_SCALE)}
+        y={orangeMark.y}
         scale={S18_SHARD_SCALE}
         heading={orange.angle}
         emotion="happy"
-        look={{ x: 0.7, y: 0 }}
+        speaking={stage.speaking("orange")}
+        look={orangeLook}
         idle={0.42}
         eyeLife={0.5}
         zIndex={19}
       />
+
+      {/* Yellow, half out of the right-hand edge, waving after a Red who left
+          the frame four hundred pixels ago. `<Shard>` puts her arm up without
+          being asked — it is her whole characterisation. */}
+      {arrive > 0.01 ? (
+        <Shard
+          who="yellow"
+          x={yellowMark.x}
+          y={yellowMark.y}
+          scale={S18_YELLOW.scale}
+          emotion="excited"
+          speaking={stage.speaking("yellow")}
+          // At the gap in the air where Red used to be.
+          look={{ x: 0.9, y: -0.1 }}
+          zIndex={21}
+        />
+      ) : null}
 
       {/* **The free visual from punch-up.md §5**, and the whole of it: Puff
           reaches for Red as he goes past, misses, and shrugs. No line, no
@@ -1401,7 +1718,7 @@ const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Bubbles
         scene={scene}
-        cast={{ red: redMark } as Cast}
+        cast={{ red: redMark, orange: orangeMark, yellow: yellowMark } as Cast}
         text={S18_BUBBLES}
         at={{
           // Both of Red's bubbles travel with him at his own speed, tail
@@ -1410,6 +1727,18 @@ const RedStraightScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // finishes the sentence.
           a2_23b_red: { x: red.x - 300, y: 306, tail: "right", tailAt: red.x },
           a2_24b_red: { x: red.x - 320, y: 306, tail: "right", tailAt: red.x },
+          // Orange's travel the same way and sit **lower** than Red's — one
+          // body behind and one line under, which is the whole man. They are
+          // never up at the same time as Red's, but they are never in the same
+          // place either, so a paused frame says which of the two spoke.
+          a2_23c_orange: { x: orange.x - 300, y: 430, tail: "right", tailAt: orange.x },
+          a2_24c_orange: { x: orange.x - 300, y: 430, tail: "right", tailAt: orange.x },
+          // **Yellow's tail clamps and that is unavoidable**: she is at x≈1840
+          // and `Bubbles` will not place a bubble centre past 1520 (a bubble
+          // that far out cannot be read). It stops at its own right-hand limit
+          // pointing at her, she is the only body in the right third of the
+          // frame, and her raised arm is doing most of the attribution anyway.
+          a2_24d_yellow: { x: 1490, y: 300, tail: "left", tailAt: yellowMark.x },
         }}
       />
       {/* Nothing enters the twenty frames after "Straight through. Barely
@@ -1496,7 +1825,32 @@ const S19_BUBBLES: Record<string, string> = {
   a2_28_ray: "Where did Blue GO?",
   // The tail of Blue's line, said late, from the corner Blue has already left.
   a2_28c_indigo: "And here.",
+  // --- THE ECHO ARGUMENT (revision2) ----------------------------------------
+  // The series' first colour-on-colour conflict, and Blue loses it by playing.
+  a2_28d_blue: "I just said that!",
+  a2_28e_indigo: "Said that.",
+  a2_28f_blue: "Stop saying what I say!",
+  a2_28g_indigo: "What I say.",
 };
+
+/**
+ * **The argument, as bubble ping-pong.**
+ *
+ * Blue right, Indigo left, twice, dropping a row each exchange — so a paused
+ * frame anywhere in the four lines says which of two adjacent blue-ish blobs is
+ * talking, which is the whole gag and is not something a tail alone can carry
+ * when both speakers are ricocheting through the same corridor.
+ *
+ * Blue's positions keep ricocheting under it (his law; the bubbles do not chase
+ * him — the Scene 19 finding), and the descending rows are the argument losing
+ * altitude, which is what it is doing.
+ */
+const S19_ARGUE = {
+  blueX: 1330,
+  indigoX: 520,
+  hi: 214,
+  lo: 400,
+} as const;
 
 /**
  * **The scene's one real ask** (revision §6.7): three bubbles, one per clause,
@@ -1586,6 +1940,16 @@ const BlueEverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stage = useStage(scene);
   const rayEmotion = useEmotion(scene, "ray", { a2_28_ray: "amazed" }, "amazed", NO_LEAD);
   const puffEmotion = useEmotion(scene, "puff", { a2_26_puff: "excited" }, "happy", NO_LEAD);
+  // **His FACE gives up mid-ricochet on the 20f hold, and nothing else does.**
+  // He never stops moving — that is the law, and stopping him would be a second
+  // event inside a beat the script says is empty. What enters the beat is one
+  // expression, on a body that is already in the frame doing what it was doing.
+  const [giveUpFrom] = heldBeat(scene, "a2_28g_indigo");
+  const blueFace = emotionAt(
+    frame,
+    [{ at: giveUpFrom, emotion: "sad", frames: 14 }],
+    "excited",
+  );
 
   const puffMark: Mark = {
     x: S19_PUFF.x,
@@ -1679,7 +2043,7 @@ const BlueEverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scale={S19_BLUE_SCALE * (1 + impact * 0.14)}
         heading={blue.angle}
         trail={age > 4 ? blueTrail(age, S19_BOX, S19_SEED) : undefined}
-        emotion="excited"
+        emotion={blueFace}
         speaking={stage.speaking("blue")}
         look={{ x: 0.4, y: -0.2 }}
         opacity={alive}
@@ -1715,6 +2079,31 @@ const BlueEverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // Low and left, in the corner Blue's third bubble has just vacated —
           // he is four frames behind a joke that has already finished.
           a2_28c_indigo: { x: 470, y: 340, tail: "right", tailAt: indigo.x },
+          // The ping-pong. See `S19_ARGUE`.
+          a2_28d_blue: {
+            x: S19_ARGUE.blueX,
+            y: S19_ARGUE.hi,
+            tail: "left",
+            tailAt: blue.x,
+          },
+          a2_28e_indigo: {
+            x: S19_ARGUE.indigoX,
+            y: S19_ARGUE.hi,
+            tail: "right",
+            tailAt: indigo.x,
+          },
+          a2_28f_blue: {
+            x: S19_ARGUE.blueX,
+            y: S19_ARGUE.lo,
+            tail: "left",
+            tailAt: blue.x,
+          },
+          a2_28g_indigo: {
+            x: S19_ARGUE.indigoX,
+            y: S19_ARGUE.lo,
+            tail: "right",
+            tailAt: indigo.x,
+          },
         }}
       />
 
@@ -1795,7 +2184,70 @@ const S20_BUBBLES: Record<string, string> = {
   // so for once the bubble is a transcript rather than a summary — there is
   // nothing to summarise.
   a2_36b_ray: "Sorry, Violet.",
+  // Yellow's cheer is its own element (see `S20_YELLOW`); Blue's four "Hi!"s are
+  // one clip and four bubbles, so they are `<BlueHellos>` rather than a map
+  // entry — `Bubbles` draws one bubble per turn.
+  a2_33b_yellow: "Look at Violet go!",
 };
+
+/**
+ * **`a2_32b_blue` is ONE clip and FOUR bubbles** — Ray's roll-call bubble,
+ * returned from everywhere at once, which is the mechanism delivered as a
+ * greeting.
+ *
+ * The four fractions are measured off the delivered take rather than guessed,
+ * and they are **fractions of the clip**, so a re-roll re-times all four for
+ * free (the brief's explicit instruction — this clip may be re-rolled).
+ *
+ * Method, because this box has no ffmpeg and therefore no `silencedetect`: the
+ * mp3's own MPEG-1 Layer III side info carries a `global_gain` per granule
+ * (576 samples ≈ 18ms at this file's 32kHz), which tracks loudness closely
+ * enough to find four hard onsets in a 2.77s clip. The four "Hi!"s begin at
+ * 0.19 / 0.92 / 1.59 / 2.25 seconds — i.e. **0.069, 0.332, 0.574, 0.812** of the
+ * clip, which is very nearly even and reads as a volley.
+ *
+ * They **accumulate** rather than replacing each other, exactly like Scene 19's
+ * three corners: by the fourth all four are up at once, which is the sentence
+ * "from ALL of the sky" drawn.
+ */
+const S20_HELLO_AT = [0.069, 0.332, 0.574, 0.812] as const;
+/**
+ * Four points around the dome, clockwise, so the volley visibly goes *around*
+ * the frame rather than piling up in one place.
+ *
+ * **None of them is the bottom-right corner**, which is Ray's: his body runs
+ * y 563..809 at x 1366..1566, and a first pass put a bubble at (1470, 470) whose
+ * tail — clamped to ±60px, because "Hi!" is a 200px bubble — landed at 1410,
+ * i.e. on Ray's forehead. Four blue bubbles with a tail pointing at Ray reads as
+ * Ray saying them (`RaySkyBlue_015462`, before).
+ *
+ * Every tail points **straight down** out of its own bubble rather than at a
+ * named arrival. That is not laziness: `arrowAt`'s radius sweeps 140..900px on
+ * its own clock, so a tail aimed at arrival number N is aimed somewhere
+ * different every time this clip is re-rolled — and there are twenty-four Blues
+ * filling the frame, so straight down always has one under it.
+ */
+const S20_HELLO = [
+  { x: 760, y: 180, tail: "left" as const },
+  { x: 1430, y: 250, tail: "left" as const },
+  { x: 900, y: 770, tail: "right" as const },
+  { x: 500, y: 470, tail: "right" as const },
+] as const;
+/** Three frames of lead, so the pop finishes on the syllable. Scene 19's number. */
+const S20_POP_LEAD = 3;
+
+/**
+ * **Yellow, pointing at Violet from the bottom of the frame, to a room that does
+ * not look.**
+ *
+ * Down and left, below Violet's corner and clear of his 68px-wide smear
+ * (x 223..377) — she is half out of the bottom edge, which is where the cheer
+ * comes from. She arrives **on her own line** rather than before it, because the
+ * thirty-six frames in front of it are the dome hold and nothing enters those;
+ * and she is gone again well before the droop beat, which is protected
+ * absolutely.
+ */
+const S20_YELLOW = { x: 470, y: 1010, scale: 0.85, from: 1210 } as const;
 
 /**
  * **Violet, firing two — and he is on the kit now.**
@@ -1879,8 +2331,15 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [arrowFrom] = lineWindow(scene, "a2_30_narrator");
   const [domeFrom, domeTo] = lineWindow(scene, "a2_33_narrator");
   const [beatFrom, beatTo] = heldBeat(scene, "a2_33_narrator");
-  const [violetFrom] = lineWindow(scene, "a2_34_ray");
+  // **Violet now comes up on YELLOW's line, not on Ray's** (revision2). She
+  // points at him and says "Look at Violet go!", so he has to be in the frame
+  // for her to point at — and Ray's "Hold on. Violet bounces even more than Blue
+  // does." becomes a reaction to her rather than a discovery of his own, which
+  // is the note's whole point ("Ray is now the only one who listened to Yellow,
+  // which sharpens the pedant").
+  const [violetFrom, violetLineTo] = lineWindow(scene, "a2_33b_yellow");
   const [eyeFrom] = lineWindow(scene, "a2_35_narrator");
+  const [helloFrom, helloTo] = lineWindow(scene, "a2_32b_blue");
   const [blueEyeFrom] = lineWindow(scene, "a2_36_narrator");
   // The 20f the punch-up bought. Violet stops on its first frame and stays
   // stopped through the apology; nothing else in the scene moves either.
@@ -1945,6 +2404,23 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     who: "shard",
   };
 
+  // Yellow rises into the bottom of frame on her own line and drops back out of
+  // it under `a2_35_narrator`, so the droop beat and the button are hers to
+  // stay out of.
+  const yellowIn = pulse(frame, violetFrom, eyeFrom + 46, 16);
+  const yellowMark: Mark = {
+    x: S20_YELLOW.x,
+    y: hover(
+      "shard",
+      S20_YELLOW.from + (S20_YELLOW.y - S20_YELLOW.from) * yellowIn,
+      S20_YELLOW.scale,
+    ),
+    scale: S20_YELLOW.scale,
+    who: "shard",
+  };
+  // **He bounces HARDER when cheered.** Nobody looks, and he goes up a gear.
+  const cheered = clamp01((frame - (violetFrom + 10)) / 18) * (1 - droop);
+
   return (
     <AbsoluteFill style={{ background: kidTheme.skyLow }}>
       {/* Kid-height, on an ordinary street, because this is happening over the
@@ -1968,8 +2444,26 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         t={t}
         droopFrom={droopFrom}
         droop={droop}
+        cheered={cheered}
         emotion={violetEmotion}
       />
+
+      {/* Yellow, from the bottom corner, pointing at him. `lookAt` off his own
+          mark rather than a guessed direction, because that is what `markCentre`
+          is for and because the one thing this cheer has to do is be visibly
+          aimed at somebody nobody else is looking at. */}
+      {yellowIn > 0.01 ? (
+        <Shard
+          who="yellow"
+          x={yellowMark.x}
+          y={yellowMark.y}
+          scale={S20_YELLOW.scale}
+          emotion="excited"
+          speaking={stage.speaking("yellow")}
+          look={lookAt(markCentre(yellowMark), markCentre(violetMark))}
+          zIndex={22}
+        />
+      ) : null}
       <WatchingEye
         u={Math.max(0, Math.min(1, eye))}
         blue={Math.max(0, Math.min(1, blueEye))}
@@ -2011,7 +2505,7 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
       <Bubbles
         scene={scene}
-        cast={{ ray: rayMark } as Cast}
+        cast={{ ray: rayMark, yellow: yellowMark } as Cast}
         text={S20_BUBBLES}
         at={{
           a2_32_ray: { x: 1330, y: 264, tail: "right", tailAt: S20_RAY.x },
@@ -2020,11 +2514,54 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // caption on the dome, it is one character talking across the frame
           // to another, and it wants to be on the same line of sight.
           a2_36b_ray: { x: 1206, y: 470, tail: "right", tailAt: S20_RAY.x },
+          // Above Yellow and to the right of Violet's smear, which reaches
+          // x≈377. She is at the bottom edge, so the tail clamps sixty pixels
+          // short of her — pointing down-left, at the only body down there.
+          a2_33b_yellow: { x: 700, y: 800, tail: "right", tailAt: S20_YELLOW.x },
         }}
       />
+
+      <BlueHellos from={helloFrom} until={helloTo} length={helloTo - helloFrom} />
     </AbsoluteFill>
   );
 };
+
+/**
+ * Blue's one clip, said four times, from four directions. See `S20_HELLO_AT` for
+ * where the four fractions came from and `S20_HELLO` for why they are compass
+ * points rather than corners.
+ *
+ * Each tail is aimed at the arriving Blue coming from that direction, **frozen
+ * at the frame the bubble pops**: the arrivals are travelling at a couple of
+ * hundred pixels a second and a tail that tracked one would swing across the
+ * frame while a six-year-old was still reading the word.
+ */
+const BlueHellos: React.FC<{ from: number; until: number; length: number }> = ({
+  from,
+  until,
+  length,
+}) => (
+  <>
+    {S20_HELLO.map((corner, i) => {
+      const say = from + Math.round(S20_HELLO_AT[i] * length);
+      return (
+        <SpeechBubble
+          key={`${corner.x}-${corner.y}`}
+          x={corner.x}
+          y={corner.y}
+          text="Hi!"
+          tail={corner.tail}
+          tailAt={corner.x}
+          from={say - S20_POP_LEAD}
+          until={until}
+          background={mixHex(kidTheme.paper, SPECTRUM[4].light, 0.12)}
+          outline={SPECTRUM[4].deep}
+          zIndex={44}
+        />
+      );
+    })}
+  </>
+);
 
 /**
  * Dozens of Blues, all of them arriving at you.
@@ -2280,8 +2817,10 @@ const VioletCase: React.FC<{
   t: number;
   droopFrom: number;
   droop: number;
+  /** 0..1 — how much harder he is going because somebody cheered. */
+  cheered: number;
   emotion: EmotionInput;
-}> = ({ u, frame, t, droopFrom, droop, emotion }) => {
+}> = ({ u, frame, t, droopFrom, droop, cheered, emotion }) => {
   if (u <= 0.01) return null;
   const V = S20_VIOLET;
   // The wave, and it is a body wag rather than an arm flap — see the note on
@@ -2312,9 +2851,10 @@ const VioletCase: React.FC<{
         x={V.x + wag}
         y={hover("shard", V.y + droop * 30, V.scale * (1 - droop * 0.06))}
         scale={V.scale * (1 - droop * 0.06)}
-        // Zero on the beat: the fastest body in the episode stops dead, which is
-        // the only thing that enters those twenty frames.
-        vibrate={1 - droop}
+        // **Harder when cheered**, and zero on the beat: the fastest body in the
+        // episode goes up a gear because one person noticed, and then stops
+        // dead, which is the only thing that enters those twenty frames.
+        vibrate={(1 - droop) * (1 + 0.45 * cheered)}
         emotion={emotion}
         // Both arms out, at the lens, for as long as anybody might look — and
         // then down.
@@ -2397,6 +2937,10 @@ const S21_RAY = { x: 386, y: 838, scale: 0.72 };
 
 const S21_BUBBLES: Record<string, string> = {
   a2_41_ray: "The air scatters me!",
+  // --- the letter-throwing gag stops being silent (revision2) ---------------
+  a2_41b_blue: "That was me!",
+  a2_41c_indigo: "That was me.",
+  a2_41d_ray: "It was mostly Blue.",
 };
 
 /**
@@ -2464,6 +3008,22 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const blue = throwerAt(frame);
   const indigo = indigoEcho(throwerAt, frame);
 
+  // **"(mid-throw)" — CRAMPED, and this is the half of it that could be built.**
+  //
+  // The shipped throws all land with the card, seventeen seconds before Blue's
+  // claim: `ScatterThrows` is keyed to `slamAt` and the script layer puts
+  // `a2_41b_blue` at the very end of the scene, so by the time he says "I threw
+  // those letters!" the letters have been sitting on the card for half a minute.
+  // Timing is the script's. What is added instead is **one more throw, on the
+  // line** — a victory hurl at a word that is already finished — with Indigo's
+  // late miss landing on the first frame of Indigo's own line, fourteen frames
+  // behind it, which is the arithmetic `ScatterThrows` already does.
+  //
+  // Flagged for the showrunner: to make "mid-throw" literally true the claim
+  // wants to move to right after `a2_37_narrator`.
+  const [, blueLineTo] = lineWindow(scene, "a2_41b_blue");
+  const claimAt = blueLineTo - 2;
+
   return (
     <AbsoluteFill style={{ background: "#eaf6ff" }}>
       <BigWordBeat
@@ -2481,6 +3041,9 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             not stop for the vocabulary. */}
         <BlueDrift t={frame / fps} />
         <ScatterThrows from={slamAt} letters={7} at={throwerAt} />
+        {/* The claim, thrown. One more letter at a finished word, and Indigo's
+            one four frames later, missing, on his own line. */}
+        <ScatterThrows from={claimAt} letters={1} at={throwerAt} />
         <Shard
           who="indigo"
           x={indigo.x}
@@ -2489,6 +3052,7 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           heading={indigo.angle}
           trail={blueTrail(Math.max(0, frame - INDIGO_LAG), S21_BLUE_BOX, S21_SEED)}
           emotion="happy"
+          speaking={stage.speaking("indigo")}
           look="camera"
           opacity={0.82}
           zIndex={40}
@@ -2501,6 +3065,7 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           heading={blue.angle}
           trail={blueTrail(frame, S21_BLUE_BOX, S21_SEED)}
           emotion="excited"
+          speaking={stage.speaking("blue")}
           look="camera"
           zIndex={42}
         />
@@ -2520,9 +3085,29 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       </BigWordBeat>
       <Bubbles
         scene={scene}
-        cast={{ ray: rayMark } as Cast}
+        cast={
+          {
+            ray: rayMark,
+            blue: { x: blue.x, y: hover("shard", blue.y, 0.68), scale: 0.68, who: "shard" },
+            indigo: {
+              x: indigo.x,
+              y: hover("shard", indigo.y, 0.5),
+              scale: 0.5,
+              who: "shard",
+            },
+          } as Cast
+        }
         text={S21_BUBBLES}
-        at={{ a2_41_ray: { x: 760, y: 690, tail: "left", tailAt: 470 } }}
+        at={{
+          a2_41_ray: { x: 760, y: 690, tail: "left", tailAt: 470 },
+          // The pedant's correction goes in the pedant's own spot.
+          a2_41d_ray: { x: 760, y: 690, tail: "left", tailAt: 470 },
+          // The two claimants sit in the band between the card (which owns
+          // y 190..410 and z-index 50, so a bubble up there is a bubble behind
+          // a block) and the ricochet box (y 616 down).
+          a2_41b_blue: { x: 1300, y: 480, tail: "left", tailAt: blue.x },
+          a2_41c_indigo: { x: 760, y: 480, tail: "right", tailAt: indigo.x },
+        }}
       />
     </AbsoluteFill>
   );
@@ -2638,7 +3223,17 @@ const S22_PUFF = { x: 700, y: 690, scale: 1.4 } as const;
 
 const S22_BUBBLES: Record<string, string> = {
   a2_44_puff: "I TOLD you!",
+  // The cheapest possible bridge into Scene 23 — and the plant for the recap's
+  // SCATTER squabble, where he claims the whole mechanism off Puff again.
+  a2_44b_blue: "I do the bouncing part!",
 };
+
+/**
+ * Blue's cupboard for the tag, inside the dome and clear of Puff — who is at
+ * 1.4 here, the biggest he is drawn all episode, and owns x 470..930.
+ */
+const S22_BLUE_BOX: Box = { x: 1180, y: 470, w: 340, h: 220 };
+const S22_BLUE_SCALE = 0.6;
 
 /**
  * Scene 22 — the series interlock, and the only place in the episode Puff is at
@@ -2672,6 +3267,21 @@ const InterlockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     who: "puff",
     side: "right",
     offset: 420,
+  };
+
+  // **Blue arrives on his own 4f gap, and not one frame earlier.** The 45-frame
+  // interlock hold in front of it is the series' one-per-episode sentence and
+  // nothing enters it, so his blend starts on `a2_44_puff`'s tail rather than
+  // under the silence — the act-three drain-hold finding, applied here.
+  const [blueFrom] = lineWindow(scene, "a2_44b_blue");
+  const arrive = pulse(frame, blueFrom - 10, scene.durationInFrames + 40, 12);
+  const blue = blueRicochet(frame, S22_BLUE_BOX, 63.1);
+  const blueAt = { x: blue.x, y: blue.y - (1 - arrive) * VISIT_LIFT };
+  const blueMark: Mark = {
+    x: blueAt.x,
+    y: hover("shard", blueAt.y, S22_BLUE_SCALE),
+    scale: S22_BLUE_SCALE,
+    who: "shard",
   };
 
   return (
@@ -2724,7 +3334,35 @@ const InterlockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         zIndex={30}
       />
 
-      <Bubbles scene={scene} cast={{ puff: puffMark } as Cast} text={S22_BUBBLES} />
+      {arrive > 0.01 ? (
+        <Shard
+          who="blue"
+          x={blueMark.x}
+          y={blueMark.y}
+          scale={S22_BLUE_SCALE}
+          heading={blue.angle}
+          trail={blueTrail(frame, S22_BLUE_BOX, 63.1)}
+          emotion="excited"
+          speaking={stage.speaking("blue")}
+          // Across at Puff, who has just claimed the whole thing.
+          look={{ x: -0.85, y: 0.15 }}
+          opacity={arrive}
+          zIndex={32}
+        />
+      ) : null}
+
+      <Bubbles
+        scene={scene}
+        cast={{ puff: puffMark, blue: blueMark } as Cast}
+        text={S22_BUBBLES}
+        // **x=1240, not 1420, and the reason is `SpeechBubble`'s own layout.**
+        // It is an absolutely-positioned shrink-to-fit box, so the width it is
+        // *allowed* is the frame minus its own `left`: at 1420 this five-word
+        // bubble could only be 500px wide, wrapped to three lines, and its
+        // bottom edge landed on Blue's crown (`RaySkyBlue_017390`, before). The
+        // same trap the recap hit with Red's four words.
+        at={{ a2_44b_blue: { x: 1240, y: 250, tail: "left", tailAt: blueAt.x } }}
+      />
     </AbsoluteFill>
   );
 };
