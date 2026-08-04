@@ -80,12 +80,19 @@ overridden in substance; R2 superseded.
   a3_11u off-frame bubble approved; volcano in s28b2 approved (update the
   volcano rule's scene list at the wave-end fold); Ray in finish shot
   approved; s28c cut-to-empty-39f approved (deadpan).
-  (2b) acts 1–2 + recap + s5 staging builder: NEXT WINDOW (window resets
-  2026-08-04T01:00Z) — s9/s10/s11/s13 (act1.tsx incl. s5 bubbles +
-  s10 Ray-unamused-look + Ahem beat), s15/s17/s18/s19/s20/s21/s22
-  (act2.tsx), s32 (recap.tsx).
-  (3) showrunner sampled still review + any re-timing + FULL every-frame
-  --scale=0.25 render + wave-end script.md fold + clean-worktree deploy.
+  (2b) acts 1–2 + recap staging DONE + committed e3d4a06 (builder +
+  showrunner still review, all pass, no fix round). Its flags: s11 lines
+  keyed ~9s pre-card (→ batch 3 re-key), s21 "(mid-throw)" ruled a
+  post-card boast, s18 off-edge speakers accepted (inherited grammar).
+  (3) wave-end builder IN FLIGHT (2026-08-04): s11 re-key
+  a1_45b/c/d→a1_48b/c/d + intended perches, FULL every-frame --scale=0.25
+  render of the whole episode, script.md fold (incl. volcano-rule list +
+  Yellow "she" sweep + as-built deviations). Then: showrunner verify →
+  commit → clean-worktree deploy → re-screening link to Mike.
+  STILL PENDING FROM MIKE: ear-check verdicts (9 clips sent — esp.
+  a2_32b_blue re-roll call + the two replacement takes); weekly fable %.
+  Post-deploy: retro → LEARNINGS/STYLE + BIBLE first write-up (owed at
+  this boundary per wave-2 distillation).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
