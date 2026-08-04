@@ -269,10 +269,17 @@ full gates + clean-worktree deploy.
   ep-3 wave-3 boundary (after ep-3 canon is final). When it lands: add
   bible to showrunner boot order, bible-check to auditor checklist, and
   character excerpts to story-writer briefs.
-- Ep 4: the volcano wakes — Claire's lava-drop / rock-cycle episode. Brief
-  seeds in memory/kids-series.md + ORCHESTRATION.md (Sunny finally wrong;
-  hero arc ≠ wrong-about-self; volcano voice = Elegant_Man pitch −6).
-  Ep-3's ending tease points at it.
+- **Episode order DECIDED (Mike, direct showrunner session 2026-08-04):
+  ep 4 = PLANTS/photosynthesis, ep 5 = volcano wakes.** Full arc rationale
+  + guardrails recorded in docs/roles/audience.md "Series arc canon"
+  (seed-hero ingredients quest, Sunny fully-vindicated peak, soil bridge,
+  volcano sleep-gag extra rep, ep-2 Rock cast in ep 5, outgassing tie-in
+  ruled OUT of ep 5 scope — scope is lava → rock formation → inside the
+  Earth → volcano/island formation). Runtime rule: 10–30 min ok, hit
+  beats, never target a duration. NO ep-4 work yet: weekly fable at 86%
+  AND family travels ~2 weeks from 2026-08-04. On return/reset, order of
+  operations: ep-3 re-screening verdict + tweak round → retro + BIBLE
+  first write-up → ep-4 brief + treatments.
 - Ep-1 catch-up round eventually (roll-call gag retrofit? cameo voices?
   distinct-voice rule postdates it) — only after its family verdict.
 - CYOA: phases 1–2 shipped; phase 3 (full branching episode) awaits Mike;

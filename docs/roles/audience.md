@@ -29,8 +29,18 @@ Repetition/deadpan gags need room: slow the line, hold punchlines in silence.
 
 Sunny claims everything and is always (annoyingly, at-least-half) right; his
 first true wrongness is RESERVED for the volcano episode ("I did that." /
-"No. He really didn't."). The volcano sleeps in the background (ep2
-unmentioned → ep3 one-eye in the sunset race → ep4 wakes = Claire's
-commissioned lava/rock-cycle episode; ep4's hero must NOT reuse the
-wrong-about-self arc — impatience vs the slow rock cycle). Elegant_Man @
-pitch −6 is reserved as the volcano's voice.
+"No. He really didn't."). Episode order DECIDED by Mike 2026-08-04:
+**ep 4 = PLANTS/photosynthesis** (capstone of light+water+air; Sunny's peak —
+his one fully-legitimate claim, maximum ego before the fall), **ep 5 =
+volcano wakes** (Claire's commissioned lava/rock-cycle episode). The volcano
+sleep ladder gains a rep: ep2 unmentioned → ep3 one-eye in the sunset race →
+ep4 small stir/escalation → ep5 wakes. The volcano-ep hero must NOT reuse
+the wrong-about-self arc — impatience vs the slow rock cycle; the plant-ep
+seed hero therefore gets an ingredients-quest arc, NOT a waiting arc
+(waiting comedy is reserved for the volcano ep). Soil = the bridge: plant ep
+uses it as an unexplained given; volcano ep pays off its origin (crumbled
+rock + old leaves) and closes the loop with the first seed on the new
+island. Ep-2's Rock gets a role in the volcano ep (origin payoff: he was
+lava once). Elegant_Man @ pitch −6 is reserved as the volcano's voice.
+Runtime rule (Mike 2026-08-04): 10–30 min is all fine — hit the right
+beats, never target a duration.
