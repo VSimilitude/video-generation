@@ -109,6 +109,19 @@ overridden in substance; R2 superseded.
   s/word — listen for clipping; re-roll = cents) + rc_20 (kokoro, free).
   Cleanup note for a future kit pass: re-export Freeze from
   scenes/common.tsx (recap.tsx imports it straight from remotion).
+  **TWEAK ROUND OPEN 2026-08-04 (re-screening notes arriving from Mike;
+  showrunner tweak session).** Worklist + binding designs:
+  `src/videos/sky-blue/tweak1-worklist.md`. T1 = Scene 5 restructure
+  (Mike note 1, verbatim in the worklist): five answered firings counting
+  1–5 minutes (answers still sum to eight), gaps 45/75/105/135/165,
+  unanswered-fifth beat removed, interruption becomes "No, Ray, not yet."
+  (kokoro 0.8), then a 210f hold with a silent almost-ask (empty bubble
+  winds up and withdraws, no face change), same hard cut to arrival.
+  $0 synthesis (kokoro-only changes; MiniMax clips must stay cache hits).
+  Full every-frame render deferred to tweak-round close; scene-range
+  render per batch. T1 designed, NOT yet built — awaiting quota
+  green-light for the builder. More notes expected (T2+ append to the
+  worklist).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
