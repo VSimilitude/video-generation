@@ -706,26 +706,6 @@ export default {
       text: "Seven colours, side by side, bending out of the rain.",
       ...NARRATOR,
     },
-    // **CHAIN SOURCE** for "This is a nice spot." — three firings, byte
-    // identical: here (landing seated on the "n" of RAINBOW), s25 on the rock
-    // (`a3_03b_green`) and s28b on the becalmed sailboat (`a3_14f_green`, which
-    // used to be the recording and is now the alias — see the note there).
-    // Planted BEFORE the race on purpose: the s28b firing has to read as
-    // deadpan repetition, which it cannot do cold.
-    a1_45b_green: { text: "This is a nice spot.", ...GREEN, emotion: "calm" },
-    // Mid-second-ricochet off Drip on the B. The funniest visual in the act
-    // stops being silent.
-    a1_45c_blue: {
-      text: "Hi! Sorry! Are you a letter?",
-      ...BLUE,
-      emotion: "happy",
-    },
-    // The rainbow is hers and she knows it.
-    a1_45d_drip: {
-      text: "I'm the RAIN! I made this whole word!",
-      ...DRIP,
-      emotion: "happy",
-    },
     a1_46_narrator: {
       text: "You already know its name. It is a rainbow.",
       ...NARRATOR,
@@ -742,6 +722,34 @@ export default {
       text: "Rain and light. That is all a rainbow is.",
       ...NARRATOR,
       speed: 0.95,
+    },
+    // The three letter-perch lines were RE-KEYED from `a1_45b/c/d` to
+    // `a1_48b/c/d` at the wave-3 fold: at their old position they played ~9s
+    // before the RAINBOW card exists (`slamAt` is keyed to `a1_46_narrator`),
+    // so "landing seated on the n" and "mid-ricochet off Drip on the B" could
+    // not be literal. Here the blocks exist and are being sat on. Text, voices
+    // and engine fields are byte-identical to the old keys — the clips were
+    // renamed on disk, not re-bought.
+    //
+    // **CHAIN SOURCE** for "This is a nice spot." — three firings, byte
+    // identical: here (landing seated on the "n" of RAINBOW), s25 on the rock
+    // (`a3_03b_green`) and s28b on the becalmed sailboat (`a3_14f_green`, which
+    // used to be the recording and is now the alias — see the note there).
+    // Planted BEFORE the race on purpose: the s28b firing has to read as
+    // deadpan repetition, which it cannot do cold.
+    a1_48b_green: { text: "This is a nice spot.", ...GREEN, emotion: "calm" },
+    // Mid-second-ricochet off Drip on the B. The funniest visual in the act
+    // stops being silent.
+    a1_48c_blue: {
+      text: "Hi! Sorry! Are you a letter?",
+      ...BLUE,
+      emotion: "happy",
+    },
+    // The rainbow is hers and she knows it.
+    a1_48d_drip: {
+      text: "I'm the RAIN! I made this whole word!",
+      ...DRIP,
+      emotion: "happy",
     },
     a1_49_drip: {
       text: "Rain and light! That is you and me!",
@@ -1276,10 +1284,10 @@ export default {
       ...NARRATOR,
     },
     // CHAIN FIRING #2 of "This is a nice spot." — the same recording as
-    // `a1_45b_green`. He is already on the rock Ray's shadow falls off, as if
+    // `a1_48b_green`. He is already on the rock Ray's shadow falls off, as if
     // this were the plan, and the narrator never explains it (the same
     // convention that puts Red on Sunny's diagram in s23).
-    a3_03b_green: { sameAs: "a1_45b_green" },
+    a3_03b_green: { sameAs: "a1_48b_green" },
     a3_03c_ray: {
       text: "Green? How long have you been down here?",
       ...RAY,
@@ -1611,9 +1619,9 @@ export default {
     // key used to be the recording, but the generator resolves `sameAs`
     // strictly backwards through the file (see specProblems in
     // scripts/generate-narration.mjs), and the chain's first firing is now
-    // Scene 11's. So the source is `a1_45b_green` and this is the alias —
+    // Scene 11's. So the source is `a1_48b_green` and this is the alias —
     // byte-identical either way, which is the whole ruling.
-    a3_14f_green: { sameAs: "a1_45b_green" },
+    a3_14f_green: { sameAs: "a1_48b_green" },
     // The start-line promise, kept. Settling, eyes closing.
     a3_14fb_green: { text: "I found one.", ...GREEN, emotion: "calm" },
     // Cheer #4 — waving, walking, winning, echoing, now sitting.

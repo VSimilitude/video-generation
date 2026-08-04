@@ -324,25 +324,30 @@ const SCRIPT: SceneSpec[] = [
     id: "s11_bigword_rainbow",
     lines: [
       "a1_45_narrator",
-      // The letters get sound as they are taken: Green lands seated on the "n"
-      // (chain firing #1), and Blue ricochets off Drip on the B.
-      "a1_45b_green",
-      "a1_45c_blue",
-      "a1_45d_drip",
       "a1_46_narrator",
       "a1_47_ray",
       "a1_48_narrator",
+      // The letters get sound as they are taken: Green lands seated on the "n"
+      // (chain firing #1), and Blue ricochets off Drip on the B. RE-KEYED from
+      // `a1_45b/c/d` and MOVED here at the wave-3 fold — at the old position
+      // they played ~9s before the card exists (`slamAt` is keyed to
+      // `a1_46_narrator`), so neither perch could be literal. Here the syllable
+      // blocks exist and are being sat on.
+      "a1_48b_green",
+      "a1_48c_blue",
+      "a1_48d_drip",
       "a1_49_drip",
       "a1_49b_drip",
     ],
     gaps: {
-      // 4f — Blue's house gap, mid-second-ricochet.
-      a1_45b_green: 4,
       // 12f + 12f — "The house Big Word rhythm, unchanged since episode one.
       // Short, but they are what make the card feel like a prompt to join in
       // rather than a slide."
       a1_46_narrator: 12,
       a1_47_ray: 12,
+      // 4f — Blue's house gap, mid-second-ricochet. Carried with the three
+      // re-keyed lines from their old position.
+      a1_48b_green: 4,
     },
     tailFrames: 36,
   },

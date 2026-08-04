@@ -2745,51 +2745,59 @@ const PERCH = 0.36;
 const S11_BUBBLES: Record<string, string> = {
   a1_49_drip: "That is you and me!",
   // --- the letters get sound as they are taken (revision2) -------------------
-  a1_45b_green: "This is a nice spot.",
-  a1_45c_blue: "Are you a letter?",
-  a1_45d_drip: "I made this word!",
+  a1_48b_green: "This is a nice spot.",
+  a1_48c_blue: "Are you a letter?",
+  a1_48d_drip: "I made this word!",
   a1_49b_drip: "He is very you.",
 };
 
 /**
- * **CRAMPED — flagged to the showrunner, not fixed here.**
+ * **THE PERCHES ARE LITERAL AGAIN (wave-3 fold, 2026-08-03).**
  *
  * revision2 stages Green's chain firing *"(landing seated on the 'n')"* and
- * Blue's *"(mid-second-ricochet off Drip on the B)"*. The script layer puts both
- * lines **before** `a1_46_narrator`, and `a1_46_narrator` is what the card's
- * slam is keyed to — so at `a1_45b`/`a1_45c` there is no card, no syllable
- * block and no letter to land on: the seven are still standing on the arc, nine
- * seconds early. Timing is the script's and is not the builder's to move.
+ * Blue's *"(mid-second-ricochet off Drip on the B)"*. The first build could not
+ * draw either: the three lines were keyed `a1_45b`/`c`/`d`, i.e. **before**
+ * `a1_46_narrator`, and `a1_46_narrator` is what `slamAt` is keyed to — so
+ * there was no card, no syllable block and no letter to land on, nine seconds
+ * early. The showrunner took the ask: the clips were re-keyed to
+ * `a1_48b`/`c`/`d` and moved to between the chant and `a1_49_drip`, where the
+ * blocks exist and are being sat on.
  *
- * What is staged instead, and it keeps both jokes:
+ * So both beats now happen where the revision puts them:
  *
- *   Green  says it **sat on the arc**, where he has been sitting since Scene 10
- *          (which also fixes a continuity seam: this scene used to open with him
- *          standing, one frame after Scene 10 ended with him sat). He is then
- *          hauled off it to the "n" and sits down again the instant he lands,
- *          which is the shipped choreography untouched.
- *   Blue   leaves the arc early, flies at Drip and **bounces off her twice** on
- *          his own line — so the exchange happens with the two of them in the
- *          air where the B is going to be. The shipped R8 double-bounce at the
- *          general take-off is untouched and still fires, so he hits her four
- *          times in the scene, which is more Blue rather than less.
+ *   Green  is **sat on the "n"** — he has been since he landed on it — and says
+ *          it from there. Chain firing #1, delivered from the perch its two
+ *          later firings are repetitions of.
+ *   Blue   leaves the seat he settled into after the R8 bounce, **goes back at
+ *          Drip on the B and bounces off her twice on his own line**, ricochets
+ *          in a cupboard below her through her reply, and is home before
+ *          `a1_49_drip`. With the shipped R8 pair that is four contacts in the
+ *          scene, all of them on the B, all of them audible.
  *
- * Ask, if it is worth clips: move `a1_45b`/`a1_45c`/`a1_45d` to after the chant
- * (between `a1_48` and `a1_49`), where the blocks exist and the letters are
- * genuinely being sat on.
+ * Perches are `syllableBlock()` letters throughout — never `WordCard` capitals,
+ * which stop being where the letters are the moment the word splits.
  */
-const S11_EARLY_BOX = { dx: -340, dy: -60, w: 300, h: 200 } as const;
-/** Frames of the early trip: he is on her eight frames before he speaks. */
-const S11_EARLY_LEAD = 12;
-const S11_EARLY_HIT_LEAD = 8;
-const S11_EARLY_BACK = 60;
 /**
- * How big he is up there. Not `SHARD_PERCH` (the card is not on screen yet and
- * there is nothing to be perched on) and not the arc's 0.9 (at which he is a
- * fifth of the frame wide and swallows Drip whole). 0.42 puts him at Drip's own
- * drawn size, which is what makes the two of them read as a two-shot.
+ * The cupboard he ricochets in once the two bounces are spent, as an offset from
+ * the contact point. **Deliberately tiny and deliberately touching her**: it
+ * runs from just left of Drip to the right-hand end of "Rain" and hangs below
+ * the letter row, so for the whole of her reply he is still in the two-shot,
+ * still moving, and still nearer to her than to anything else. (The first pass
+ * parked him three hundred pixels down-left in the hedge; a still had him
+ * reading as a character who had wandered off mid-conversation.) Its top edge
+ * clears Green's seat on the "n" and its right edge stops short of Drip.
  */
-const S11_EARLY_SCALE = 0.42;
+const S11_VISIT_BOX = { dx: -157, dy: 36, w: 160, h: 130 } as const;
+/**
+ * Frames of the trip back at her, and where the two bounces sit inside his line.
+ *
+ * He arrives four frames BEFORE "Hi! Sorry! Are you a letter?" — the apology is
+ * for the contact the audience has just watched — and the second bounce runs
+ * under the middle of the line, which is the revision's "mid-second-ricochet".
+ */
+const S11_VISIT_LEAD = 20;
+const S11_VISIT_HIT_LEAD = 4;
+const S11_VISIT_BACK = 60;
 
 // --- the seven, on the word (punch-up C1) ----------------------------------
 //
@@ -2929,29 +2937,28 @@ function bounceOff(f: number): { x: number; y: number } {
 }
 
 /**
- * **Blue's early trip at Drip** — the un-muting of the funniest visual in the
- * act, staged nine seconds before the card exists (see `S11_EARLY_BOX`).
+ * **Blue's trip back at Drip on the B** — the un-muting of the funniest visual
+ * in the act, on the letter the revision names (see `S11_VISIT_BOX`).
  *
- * Off the arc, at her, two bounces (the same `bounceOff` shape the shipped R8
- * pair uses, so the two firings are literally the same move), a spell
- * ricocheting in a cupboard beside her, and home to his slot in time for the
- * general take-off to find him exactly where it expects him. Returns the slot
+ * Off the seat he took after the R8 bounce, back at her, two bounces (the same
+ * `bounceOff` shape the shipped R8 pair uses, so all four contacts in the scene
+ * are literally the same move), a spell ricocheting in a cupboard below her
+ * while she answers, and home to his seat before `a1_49_drip`. Returns the seat
  * itself outside its own window, so a caller can use it unconditionally.
  */
-function earlyBlue(
+function blueVisit(
   f: number,
-  slot: { x: number; y: number },
+  seat: { x: number; y: number },
   contact: { x: number; y: number },
   at: { leave: number; hit: number; home: number },
 ): { x: number; y: number } {
-  if (f <= at.leave) return slot;
+  if (f <= at.leave) return seat;
   if (f < at.hit) {
     // **The bow is positive, and the sign is the whole note.** `moveAlong` bows
-    // to the LEFT of the direction of travel; the trip is up-and-left, so a
-    // negative arc bowed him up-and-right — straight through Ray, who is parked
-    // on the W at (1272, 258) (`RaySkyBlue_008165`, before). Positive bows him
-    // down-and-left instead, through empty lawn.
-    const p = moveAlong(slot, contact, (f - at.leave) / Math.max(1, at.hit - at.leave), {
+    // to the LEFT of the direction of travel; the trip is up-and-right, so a
+    // positive arc bows him down-and-right — under the gap between the blocks —
+    // instead of up through the bottom edge of "Rain".
+    const p = moveAlong(seat, contact, (f - at.leave) / Math.max(1, at.hit - at.leave), {
       arc: 0.34,
       ease: kidEase.easeInQuad,
     });
@@ -2962,14 +2969,13 @@ function earlyBlue(
   let p = { x: contact.x + off.x, y: contact.y + off.y };
   const spent = BOUNCE_LEG * 4;
   if (bf > spent) {
-    // Into the cupboard beside her. The box is centred on where he is when the
-    // second bounce is spent plus the offset below, and the fourteen-frame lean
-    // across is what stops the ricochet starting with a jump.
+    // Into the cupboard beside her (see `S11_VISIT_BOX`). The fourteen-frame
+    // lean across is what stops the ricochet starting with a jump.
     const box: Box = {
-      x: contact.x + S11_EARLY_BOX.dx,
-      y: contact.y + S11_EARLY_BOX.dy,
-      w: S11_EARLY_BOX.w,
-      h: S11_EARLY_BOX.h,
+      x: contact.x + S11_VISIT_BOX.dx,
+      y: contact.y + S11_VISIT_BOX.dy,
+      w: S11_VISIT_BOX.w,
+      h: S11_VISIT_BOX.h,
     };
     const d = Math.max(0, Math.min(1, (bf - spent) / 14));
     const r = blueRicochet(Math.max(0, bf - spent - 14), box, 6.2);
@@ -2977,9 +2983,9 @@ function earlyBlue(
   }
   if (f > at.home) {
     const d = kidEase.easeInOutSine(
-      Math.max(0, Math.min(1, (f - at.home) / S11_EARLY_BACK)),
+      Math.max(0, Math.min(1, (f - at.home) / S11_VISIT_BACK)),
     );
-    return { x: p.x + (slot.x - p.x) * d, y: p.y + (slot.y - p.y) * d };
+    return { x: p.x + (seat.x - p.x) * d, y: p.y + (seat.y - p.y) * d };
   }
   return p;
 }
@@ -3011,6 +3017,11 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const blocks = BLOCK_X.map((_, j) =>
     syllableBlock(j, frame, fps, splitAt, chantFrom, chantLen),
   );
+
+  // Green's seat on the "n" — the perch the revision names, and now the perch
+  // he actually speaks from. Read off the live block, not off a composition
+  // coordinate, for the same reason Ray's and Drip's are.
+  const nSeat = onBlock(blocks[0], LETTER_AT[3].dx, PERCH_DY);
 
   // He rides the letters apart: a hop from the W's crossbar on the card to the
   // **w of "Bow"**, which is the same letter after the word splits — Ray staying
@@ -3046,23 +3057,21 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const riseAt = slamAt - 22;
   const hitAt = riseAt + 4 * RISE_STAGGER + FLIGHT;
 
-  // **And twice more, nine seconds earlier, with the exchange on them**
-  // (revision2 — see `S11_EARLY_BOX` for why they are here rather than on the
-  // B). Every window comes off a line key.
-  const [greenFrom] = lineWindow(scene, "a1_45b_green");
-  const [blueLineFrom] = lineWindow(scene, "a1_45c_blue");
-  const [, dripLineTo] = lineWindow(scene, "a1_45d_drip");
+  // **And twice more, after the chant, with the exchange on them** (revision2 —
+  // see `S11_VISIT_BOX`). Every window comes off a line key.
+  const [blueLineFrom] = lineWindow(scene, "a1_48c_blue");
+  const [, dripLineTo] = lineWindow(scene, "a1_48d_drip");
   const [aloneFrom] = lineWindow(scene, "a1_49b_drip");
-  const earlyAt = {
-    leave: greenFrom - S11_EARLY_LEAD,
-    hit: blueLineFrom - S11_EARLY_HIT_LEAD,
+  const visitAt = {
+    leave: blueLineFrom - S11_VISIT_LEAD,
+    hit: blueLineFrom - S11_VISIT_HIT_LEAD,
     home: dripLineTo - 20,
   };
   const knock =
     settleWave((frame - hitAt) / 22, 1.6, 5, -Math.PI / 2) +
     settleWave((frame - hitAt - BOUNCE_LEG * 2) / 22, 1.6, 5, -Math.PI / 2) * 0.7 +
-    settleWave((frame - earlyAt.hit) / 22, 1.6, 5, -Math.PI / 2) +
-    settleWave((frame - earlyAt.hit - BOUNCE_LEG * 2) / 22, 1.6, 5, -Math.PI / 2) * 0.7;
+    settleWave((frame - visitAt.hit) / 22, 1.6, 5, -Math.PI / 2) +
+    settleWave((frame - visitAt.hit - BOUNCE_LEG * 2) / 22, 1.6, 5, -Math.PI / 2) * 0.7;
 
   const dripMark: Mark = {
     x: dripCentre.x,
@@ -3094,8 +3103,8 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           riseAt={riseAt}
           blocks={blocks}
           dripAt={dripCentre}
-          earlyAt={earlyAt}
-          exchange={frame >= earlyAt.hit - 6 && frame < dripLineTo + 10}
+          visitAt={visitAt}
+          exchange={frame >= visitAt.hit - 6 && frame < dripLineTo + 10}
           speaking={(i) =>
             i === 3
               ? stage.speaking("green")
@@ -3126,7 +3135,7 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           emotion={useEmotion(
             scene,
             "drip",
-            { a1_45d_drip: "proud", a1_49_drip: "excited", a1_49b_drip: "neutral" },
+            { a1_48d_drip: "proud", a1_49_drip: "excited", a1_49b_drip: "neutral" },
             "happy",
             NO_LEAD,
           )}
@@ -3172,11 +3181,11 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cast={
           {
             drip: dripMark,
-            green: { ...shardPoint(3), scale: 0.9, who: "shard" },
+            green: { x: nSeat.x, y: nSeat.y, scale: SHARD_PERCH, who: "shard" },
             blue: {
-              x: earlyContact(dripCentre).x,
-              y: earlyContact(dripCentre).y,
-              scale: 0.9,
+              x: dripContact(dripCentre).x,
+              y: dripContact(dripCentre).y,
+              scale: SHARD_PERCH,
               who: "shard",
             },
           } as Cast
@@ -3188,18 +3197,23 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // Same place as her other line under the card, same reason: she is the
           // same character in the same seat saying the second half of a joke.
           a1_49b_drip: { x: 980, y: 470, tail: "right", tailAt: dripCentre.x },
-          // Green is sat on the arc; his bubble goes over the empty lawn to his
-          // left, low enough to clear Drip's mark and high enough to clear him.
-          a1_45b_green: { x: 760, y: 430, tail: "right", tailAt: shardPoint(3).x },
-          // **Blue is at the top of the frame, so this tail clamps** — there is
-          // no room above him for a bubble (the y-clamp is 170 and his own body
-          // reaches 186) and the kit's tail only leaves the bottom edge. It is
-          // parked in the clear air to his left, pointing right at him as far
-          // as the clamp will travel, which is the act-3 precedent for a speaker
-          // out at the edge of the tail's reach.
-          a1_45c_blue: { x: 600, y: 196, tail: "right", tailAt: earlyContact(dripCentre).x },
-          // Drip answers from the other side of the same air.
-          a1_45d_drip: { x: 1180, y: 450, tail: "left", tailAt: dripCentre.x },
+          // **Everything on this card speaks from ABOVE its bubble**, because
+          // there is nowhere else: the seven straddle the blocks' top edge at
+          // y≈140..250, the card owns zIndex 50 and eats anything drawn into it,
+          // and `SpeechBubble`'s tail leaves the BOTTOM edge and nothing else
+          // (kit gap, reported; D-a1_49 is the same call). So each of the three
+          // goes into the clear garden under the card with its tail at its own
+          // speaker's x, which is the treatment `a1_49_drip` already has, and
+          // the coloured dressing does the rest of the attribution.
+          //
+          // Green is sat on the "n"; his bubble is directly under it, low enough
+          // to clear the seat Blue is still in while he says it.
+          a1_48b_green: { x: 760, y: 560, tail: "right", tailAt: nSeat.x },
+          // Blue and Drip are a two-shot on the B, so their two bubbles go on
+          // opposite sides of it — his left, hers right — and neither ever
+          // shares a frame position with the other.
+          a1_48c_blue: { x: 500, y: 470, tail: "right", tailAt: dripContact(dripCentre).x },
+          a1_48d_drip: { x: 1300, y: 470, tail: "left", tailAt: dripCentre.x },
         }}
       />
     </AbsoluteFill>
@@ -3207,17 +3221,15 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /**
- * Where Blue hits Drip on the **early** trip, and it is a hundred pixels off her
- * rather than the forty-two the R8 landing uses.
- *
- * The two contacts differ because the two Blues do: at the card he is
- * `SHARD_PERCH` (0.36) and forty-two pixels is a touch; nine seconds earlier he
- * is `S11_EARLY_SCALE` and forty-two pixels drew him standing *inside* her
- * (`RaySkyBlue_008195`, before). A hundred is one drawn half-body each, i.e.
- * exactly touching, which is what a bounce is.
+ * **Where Blue hits Drip**, and it is the same point for all four contacts in
+ * the scene now that the exchange happens on the B rather than nine seconds
+ * early: he is `SHARD_PERCH` (0.36) for the R8 pair *and* for the return trip,
+ * and at that scale forty-two pixels is one drawn touch — half a body each,
+ * which is what a bounce is. (The old early trip drew him at 0.42 and needed a
+ * hundred; both numbers are gone with it.)
  */
-function earlyContact(dripAt: { x: number; y: number }): { x: number; y: number } {
-  return { x: dripAt.x - 100, y: dripAt.y + 8 };
+function dripContact(dripAt: { x: number; y: number }): { x: number; y: number } {
+  return { x: dripAt.x - 42, y: dripAt.y - 8 };
 }
 
 /**
@@ -3288,12 +3300,12 @@ const SevenOnTheWord: React.FC<{
   blocks: ReadonlyArray<{ cx: number; cy: number; scale: number; rot: number }>;
   /** Drip's live centre on the B — the thing Blue keeps hitting. */
   dripAt: { x: number; y: number };
-  /** Blue's early trip at Drip, nine seconds before the card. */
-  earlyAt: { leave: number; hit: number; home: number };
+  /** Blue's trip back at Drip, after the chant, for the exchange. */
+  visitAt: { leave: number; hit: number; home: number };
   /** True while Blue and Drip are talking to each other. */
   exchange: boolean;
   speaking?: (i: number) => boolean;
-}> = ({ riseAt, blocks, dripAt, earlyAt, exchange, speaking }) => {
+}> = ({ riseAt, blocks, dripAt, visitAt, exchange, speaking }) => {
   const frame = useCurrentFrame();
   // Violet finds the W taken eight frames after he lands on it, and is squeezed
   // off the end over the next sixteen.
@@ -3302,8 +3314,7 @@ const SevenOnTheWord: React.FC<{
   );
   // Blue aims at Drip's shoulder, because Drip is on the letter he wants.
   const hitAt = riseAt + 4 * RISE_STAGGER + FLIGHT;
-  const contact = { x: dripAt.x - 42, y: dripAt.y - 8 };
-  const earlyHit = earlyContact(dripAt);
+  const contact = dripContact(dripAt);
 
   return (
     <>
@@ -3365,25 +3376,17 @@ const SevenOnTheWord: React.FC<{
 
         const landed = frame >= leaveAt + span;
         const path = i === 4 ? bluePath : i === 5 ? indigoPath : null;
-        // Blue's early trip owns him until the general take-off comes for him;
-        // `earlyBlue` returns his slot outside its own window, so the two never
-        // fight over a frame.
-        const early =
-          i === 4 && frame < leaveAt ? earlyBlue(frame, from, earlyHit, earlyAt) : null;
-        const here = early ?? (path && landed ? path(frame - hitAt) : { x: p.x, y: p.y });
-        // He shrinks on the way up and grows on the way back, so the whole trip
-        // reads as *going up there* rather than as the arc's Blue sliding
-        // sideways. Same envelope as the position, so the two cannot disagree.
-        const earlyUp =
-          i !== 4
-            ? 0
-            : frame <= earlyAt.leave
-              ? 0
-              : frame < earlyAt.hit
-                ? Math.max(0, Math.min(1, (frame - earlyAt.leave) / (earlyAt.hit - earlyAt.leave)))
-                : frame <= earlyAt.home
-                  ? 1
-                  : 1 - Math.max(0, Math.min(1, (frame - earlyAt.home) / S11_EARLY_BACK));
+        const settled = path && landed ? path(frame - hitAt) : { x: p.x, y: p.y };
+        // Blue's return trip at Drip owns him from the frame he leaves the seat
+        // he took after the R8 bounce; `blueVisit` returns that seat itself
+        // outside its own window, so the two never fight over a frame. He is at
+        // `SHARD_PERCH` throughout — the whole trip is on the card now, so
+        // there is no size change anywhere in it.
+        const visit =
+          i === 4 && frame > visitAt.leave
+            ? blueVisit(frame, settled, target, visitAt)
+            : null;
+        const here = visit ?? settled;
 
         // Settles onto the letter, then sits still: a blob that keeps bobbing
         // on a Big Word card is competing with the letters for the eye. Green
@@ -3417,10 +3420,7 @@ const SevenOnTheWord: React.FC<{
             i={i}
             x={here.x}
             y={here.y - settle * 9}
-            scale={
-              (0.9 + (SHARD_PERCH - 0.9) * u + (S11_EARLY_SCALE - 0.9) * earlyUp) *
-              (1 + settle * 0.08)
-            }
+            scale={(0.9 + (SHARD_PERCH - 0.9) * u) * (1 + settle * 0.08)}
             sit={sit}
             // Yellow waves at the audience from the "i" the whole time he is on
             // it, which for him is not a reaction — it is the resting state.
@@ -3431,8 +3431,8 @@ const SevenOnTheWord: React.FC<{
             calm={u >= 1 ? 0.45 : 1}
             speaking={speaking ? speaking(i) : undefined}
             heading={
-              early
-                ? headingOf((f) => earlyBlue(f, from, earlyHit, earlyAt), frame)
+              visit
+                ? headingOf((f) => blueVisit(f, settled, target, visitAt), frame)
                 : path && landed
                   ? headingOf(path, frame - hitAt)
                   : from.angle * (1 - off) + p.angle * off
@@ -3441,9 +3441,9 @@ const SevenOnTheWord: React.FC<{
             // A trail behind a body that has stopped collapses to a point and
             // draws as a bead.
             trail={
-              early && frame > earlyAt.leave + 4 && frame < earlyAt.home + S11_EARLY_BACK
+              visit && frame > visitAt.leave + 4 && frame < visitAt.home + S11_VISIT_BACK
                 ? sampleTrail(
-                    (f) => earlyBlue(f, from, earlyHit, earlyAt),
+                    (f) => blueVisit(f, settled, target, visitAt),
                     frame,
                     BOUNCE_LEG * 2,
                   )

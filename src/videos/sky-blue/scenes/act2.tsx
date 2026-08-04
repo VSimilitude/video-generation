@@ -3008,21 +3008,19 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const blue = throwerAt(frame);
   const indigo = indigoEcho(throwerAt, frame);
 
-  // **"(mid-throw)" — CRAMPED, and this is the half of it that could be built.**
+  // **"(mid-throw)" is RULED a post-card boast (showrunner, wave-3 fold) — do
+  // not add a throw here.**
   //
-  // The shipped throws all land with the card, seventeen seconds before Blue's
-  // claim: `ScatterThrows` is keyed to `slamAt` and the script layer puts
-  // `a2_41b_blue` at the very end of the scene, so by the time he says "I threw
-  // those letters!" the letters have been sitting on the card for half a minute.
-  // Timing is the script's. What is added instead is **one more throw, on the
-  // line** — a victory hurl at a word that is already finished — with Indigo's
-  // late miss landing on the first frame of Indigo's own line, fourteen frames
-  // behind it, which is the arithmetic `ScatterThrows` already does.
+  // The shipped throws all land with the card, seventeen seconds before
+  // `a2_41b_blue`: `ScatterThrows` is keyed to `slamAt` and the claim sits at
+  // the very end of the scene. The first build answered that with one extra
+  // letter hurled on the line; the ruling reverses it. The line plays as
+  // **retrospective credit-claiming** — Blue taking the credit for a word that
+  // has been finished for half a minute, which is the same joke as "I got here
+  // FIRST!" and is funnier than a man throwing a letter at a completed word.
+  // Ray's "It was mostly Blue." then adjudicates a dispute about the past.
   //
-  // Flagged for the showrunner: to make "mid-throw" literally true the claim
-  // wants to move to right after `a2_37_narrator`.
-  const [, blueLineTo] = lineWindow(scene, "a2_41b_blue");
-  const claimAt = blueLineTo - 2;
+  // So the picture on the claim is Blue ricocheting and nothing else changing.
 
   return (
     <AbsoluteFill style={{ background: "#eaf6ff" }}>
@@ -3041,9 +3039,6 @@ const BigWordScatterScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             not stop for the vocabulary. */}
         <BlueDrift t={frame / fps} />
         <ScatterThrows from={slamAt} letters={7} at={throwerAt} />
-        {/* The claim, thrown. One more letter at a finished word, and Indigo's
-            one four frames later, missing, on his own line. */}
-        <ScatterThrows from={claimAt} letters={1} at={throwerAt} />
         <Shard
           who="indigo"
           x={indigo.x}
