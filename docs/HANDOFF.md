@@ -99,14 +99,16 @@ overridden in substance; R2 superseded.
   single-take. Trim menu −18.5s if runtime drags.
   AFTER the screening verdict: retro → LEARNINGS/STYLE + BIBLE first
   write-up (owed at this boundary per wave-2 distillation).
-  **S35 RE-TEASE IN FLIGHT (2026-08-04, direct showrunner session):** ep-3's
-  ending tease re-scoped for the new episode order (stir = long-arc, card =
-  "WHAT DO PLANTS EAT?", NEW Ray button rc_21 "Is it me??" fearful — Mike's
-  gag, verbatim). script.md scene-35 section rewritten (authoritative);
-  builder brief scratchpad/s35_retease_brief.md; opus builder running
-  (narration.mjs rc_16 cut + rc_20/rc_21 add, Video.tsx retime, recap.tsx
-  restage + card, ref sweep, full gates). Then: showrunner still review →
-  commit → clean-worktree deploy. rc_21 joins Mike's ear list.
+  **S35 RE-TEASE DONE + DEPLOYED 2026-08-04** (committed 2523cac; clean
+  worktree deploy; page + both new clips verified 200): stir untethered
+  (rc_16 cut, 45f silent open), card = "NEXT TIME / WHAT DO PLANTS EAT?",
+  NEW rc_21_ray "Is it me??" fearful button (wave freeze via <Freeze> +
+  hug flinch; showrunner still review passed), ep4-volcano comment refs
+  swept to ep5, script.md counts + ear list updated (item 31). New total
+  31,372f = 17:25.7. EAR ITEMS added for Mike: rc_21 (fast take, 0.324
+  s/word — listen for clipping; re-roll = cents) + rc_20 (kokoro, free).
+  Cleanup note for a future kit pass: re-export Freeze from
+  scenes/common.tsx (recap.tsx imports it straight from remotion).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
