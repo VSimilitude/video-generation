@@ -4328,6 +4328,15 @@ const Hand: React.FC<{
 // silence with nothing in it but a planet turning**. script.md: "If any line
 // lands inside these seventy-five frames, the episode does not have an ending."
 //
+// **The line the seventy-five frames button changed on 2026-08-04 (T8).** It
+// used to be the greeting; it is now the catch-phrase that has followed the
+// greeting in both previous episodes — "I invented mornings! You're welcome!
+// HA! HA!" — which Mike's note restores. The beat is the same length, in the
+// same place relative to the last line, and nothing else in the scene moves for
+// it: Sunny is already up on the far limb by the time he says it, and he does
+// not leave, because something leaving inside the payoff is something happening
+// inside it.
+//
 // So the payoff is built out of things that are *already on screen and already
 // moving* — the terminator keeps sliding, and a blue rim comes up on the far
 // limb as the new morning arrives. Nothing enters, nothing pops, nothing lands.
@@ -4343,6 +4352,12 @@ const S31_BUBBLES: Record<string, string> = {
   // minutes later and a world away. The sameness is the joke *and* the comfort;
   // it is staged small and far rather than processed.
   a3_31_sunny: "GOOD MORNING, EVERYBODY!",
+  // **THE CATCH-PHRASE, RESTORED** (T8, Mike's note 8, 2026-08-04). The clip is
+  // the series-canon "I invented mornings! You're welcome! HA! HA!", word for
+  // word what he says in both previous episodes; the bubble is the first half,
+  // because six words is the ceiling and the brag is the half with the claim in
+  // it. Two episodes of viewers get the rest from the read.
+  a3_31b_sunny: "I invented mornings!",
 };
 
 const RoundTheOtherSideScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
@@ -4353,7 +4368,13 @@ const RoundTheOtherSideScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [pullFrom] = lineWindow(scene, "a3_28_narrator");
   const [morningFrom] = lineWindow(scene, "a3_30_narrator");
   const [sunnyFrom, sunnyTo] = lineWindow(scene, "a3_31_sunny");
-  const [payoffFrom] = heldBeat(scene, "a3_31_sunny");
+  // **The last line of the episode is `a3_31b_sunny` since T8**, so the payoff —
+  // the 75-frame silence the whole ending rests on — is keyed to *it*, not to
+  // the greeting. `a3_31_sunny` now buys an 18-frame beat between the two
+  // halves of one thought, and everything that used to hang on "the silence
+  // after the greeting" hangs here instead.
+  const [, bragTo] = lineWindow(scene, "a3_31b_sunny");
+  const [payoffFrom] = heldBeat(scene, "a3_31b_sunny");
 
   const horizon = plateY(SEA_SUNSET_FRAC, { drift: SEA_DRIFT });
 
@@ -4541,12 +4562,15 @@ const RoundTheOtherSideScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           identical, so the whole of "from over the far horizon" has to be
           carried by the picture. */}
       {/* …and it is **gone before the payoff opens**. `SpeechBubble` springs
-          back out over the frames *after* its `until`, and `until` here is the
-          last frame of Sunny's line — which is the first frame of the
-          seventy-five. A still at 19495 caught a shrinking bubble sitting
-          inside the ending. The wrapper takes it out over the last eight frames
-          of his own line instead, so the beat opens on a clean frame. */}
-      <div style={{ position: "absolute", inset: 0, opacity: 1 - clamp01((frame - (sunnyTo - 8)) / 8) }}>
+          back out over the frames *after* its `until`, and the last line's
+          `until` is the first frame of the seventy-five. A still at 19495
+          caught a shrinking bubble sitting inside the ending. The wrapper takes
+          it out over the last eight frames of the line instead, so the beat
+          opens on a clean frame. **Keyed to `bragTo` since T8** — the last line
+          is now the catch-phrase, and keying this to the greeting would have
+          wiped the brag's bubble off the screen eighteen frames before he said
+          it. */}
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - clamp01((frame - (bragTo - 8)) / 8) }}>
         <Bubbles
           scene={scene}
           cast={{ sunny: sunnyMark } as Cast}
@@ -4555,6 +4579,16 @@ const RoundTheOtherSideScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           maxWidth={380}
           at={{
             a3_31_sunny: {
+              x: Math.max(400, sunnyMark.x - 300),
+              y: sunnyAt.y - 190,
+              tail: "right",
+              tailAt: sunnyMark.x,
+            },
+            // Same mark, same size, same tail: it is the same character in the
+            // same place saying the second half of one thought, and moving the
+            // bubble between them would read as a cut. (The same call Scene 11
+            // makes for Drip's two lines and Scene 10 for Orange's.)
+            a3_31b_sunny: {
               x: Math.max(400, sunnyMark.x - 300),
               y: sunnyAt.y - 190,
               tail: "right",

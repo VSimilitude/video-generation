@@ -51,9 +51,22 @@ import { RECAP_SCENES } from "./scenes/recap";
 // REVISION 2 IS WIRED IN (2026-08-03, script layer). Ninety-five new line keys,
 // two new scenes (`s27b_start_line`, `s28b2_two_walkers`) that play their real
 // dialogue over `ScenePlaceholder` until they are staged, one retired key
-// (`a3_12b_narrator`), and Scene 5's silences re-specced to 45/75/105/135 with
-// an interrupted sixth firing. `revision2.md` is the contract; where it and
-// `script.md` disagree it wins, pending the wave-end fold.
+// (`a3_12b_narrator`), and Scene 5's silences re-specced with an interrupted
+// sixth firing. `revision2.md` is the contract; where it and `script.md`
+// disagree it wins, pending the wave-end fold.
+//
+// THE TWEAK ROUND (2026-08-04, Mike's notes 1–10 after the family
+// re-screening) moves four numbers in this file and retires four keys:
+//
+//   T1  Scene 5 counts straight to five and the escalation gains a step:
+//       45/75/105/135/**165**, then the interruption, then a **210f** hold
+//       with a silent almost-ask inside it. `a1_16b2_narrator` is new.
+//   T2a Scene 10's "Ahem." (`a1_42h_narrator`) is CUT and the beat it bought
+//       becomes a 40f silence on `a1_42g_orange` with nothing in it.
+//   T8  Scene 31 gains `a3_31b_sunny` — Sunny's two-episode morning brag —
+//       and the ending's 75f silence moves onto it.
+//   T10 Scene 35's volcano tease (`rc_17`, `rc_18`, `rc_18b`) is CUT and its
+//       silent open drops 45f -> 20f.
 //
 // A THIRD KIND OF NUMBER LIVES HERE SINCE 2026-08-01: the two cast colours'
 // approach gaps. Red takes **16f** before every line he says (a2_23_narrator,
@@ -80,7 +93,7 @@ type SceneSpec = {
    * turns and lengthening it by the same amount: the scene still gets exactly
    * its audio plus its scripted silences, and nothing is hand-timed.
    *
-   * One scene uses it (`s35_tease`, the 45f silent open) and it exists because
+   * One scene uses it (`s35_tease`, the 20f silent open) and it exists because
    * that beat used to be bought by a line that has since been cut.
    */
   leadFrames?: number;
@@ -166,15 +179,23 @@ const SCRIPT: SceneSpec[] = [
       "a1_15e_ray",
       "a1_16_narrator",
       "a1_16b_ray",
+      "a1_16b2_narrator",
       "a1_16c_ray",
       "a1_16d_narrator",
     ],
     gaps: {
-      // THE ESCALATION — 45 / 75 / 105 / 135 since revision2 (Mike's sign-off
-      // amendment, 2026-08-03; was 30 / 45 / 60 / 75), and it is the whole
-      // architecture of the gag. Five identical firings of one recording, four
-      // flat almanac answers, and a silence that grows by a second every time.
-      // "Drag out the pauses… more spacing between are we there yets."
+      // THE ESCALATION — 45 / 75 / 105 / 135 / 165 since the tweak round (T1,
+      // Mike's note 1, 2026-08-04; was 45 / 75 / 105 / 135 with the fifth
+      // firing left hanging in a 90f dead hold, and 30 / 45 / 60 / 75 before
+      // that). It is the whole architecture of the gag: five identical firings
+      // of one recording, **five** flat almanac answers, and a silence that
+      // grows by exactly a second every time. "A slightly increasing delay
+      // between each are we there yet."
+      //
+      // Every gap below sits between an ANSWER and the NEXT FIRING — the
+      // escalation is the wait Ray endures, not the wait the Narrator takes.
+      // The five-firings-one-recording law is untouched: the clips do not vary
+      // at all, and the growth is entirely here.
       //
       // 45f — the first is still the short one: the pattern has to be
       // established before it can stretch.
@@ -184,29 +205,35 @@ const SCRIPT: SceneSpec[] = [
       // 105f — the third. "Six minutes of story time pass inside two seconds"
       // is now three and a half.
       a1_15d_narrator: 105,
-      // 135f — "**the longest silence in the episode now lives here, where the
-      // pattern is at its peak and a six-year-old is saying the line with
-      // him.**" Nothing enters it — no bubble, no gesture, no emotion change,
-      // and above all no sign that anything is about to happen. It is now
-      // longer than the ending hold, on Mike's explicit note.
+      // 135f — the fourth.
       a1_16_narrator: 135,
-      // 90f — **the fifth firing goes unanswered.** No answer comes; same star
-      // field, same speed, same dot. The Narrator has simply stopped, and the
-      // audience gets three seconds to understand that. (Was a 6f tail straight
-      // into the cut; the cut is now inherited by the sixth firing's answer.)
-      a1_16b_ray: 90,
+      // **The fifth firing is ANSWERED**, at the house gap, exactly like the
+      // other four — no override here on purpose (T1). The unanswered-firing
+      // beat that used to live on this key is gone; its job (the Narrator has
+      // stopped, and Ray notices) moved to the silent almost-ask inside the
+      // closing hold, where it is played rather than stated.
+      //
+      // 165f — **the longest pre-firing silence in the episode**, right where
+      // the pattern peaks and a six-year-old is saying the line along with
+      // him. Nothing enters it — no bubble, no gesture, no emotion change, and
+      // above all no sign that anything is about to happen.
+      a1_16b2_narrator: 165,
       // 0f — **THE INTERRUPTION.** The Narrator does not wait for the end of
       // the word. This is the only zero in the file and it is the joke: the one
-      // thing repetition cannot absorb.
+      // thing repetition cannot absorb — and the Narrator's only deviation from
+      // her own metronome in the whole scene.
       a1_16c_ray: 0,
-      // 90f — "A bit more traveling, per the amendment: same shot, nothing
-      // changes, nobody speaks." Then the hard cut to Scene 6, which is still
-      // the real answer and now also answers the "No."
-      a1_16d_narrator: 90,
+      // 210f — "an extra long wait", and the longest hold in the episode. Its
+      // content is a **silent almost-ask**: Ray winds up to fire a seventh
+      // time, an empty bubble grows out of him and goes back in, and he says
+      // nothing (act1.tsx, `S5_ALMOST`). It is fully gone by two thirds of the
+      // way through, so the last seventy frames are unchanged travel and the
+      // hard cut into Scene 6 stays unannounced.
+      a1_16d_narrator: 210,
     },
     // 6f — "**Scene tail: 6f.** *(Deliberately almost nothing.)*" The gag's
-    // button is still a cut; it now buttons the sixth firing rather than the
-    // fifth.
+    // button is still a cut; it now buttons "No, Ray, not yet." and the
+    // almost-ask rather than a firing.
     tailFrames: 6,
   },
   {
@@ -311,7 +338,9 @@ const SCRIPT: SceneSpec[] = [
       "a1_42e_orange",
       "a1_42f_narrator",
       "a1_42g_orange",
-      "a1_42h_narrator",
+      // `a1_42h_narrator` ("Ahem.") IS CUT (T2a, 2026-08-04). Its ear-check
+      // said cut it if it read as a word; it did. What the beat is now is the
+      // 40f of nothing below.
       "a1_43_narrator",
       "a1_44_ray",
     ],
@@ -325,6 +354,13 @@ const SCRIPT: SceneSpec[] = [
       // 16f — Red's house gap, spent on a NON-REPLY: Ray looks at Red, Red does
       // nothing, and the silence is on screen and marked. Orange answers it.
       a1_42d_blue: 16,
+      // 40f — **LET IT SIT** (T2a, Mike's note 2: "let's let it sit with no
+      // reaction"). Was the house 8f into "Ahem."; the throat-clear is cut and
+      // the frames it cost come back here as a held deadpan beat where nothing
+      // at all happens. Ray holds his sceptical camera look through it and
+      // breaks back as `a1_43` opens. Nothing else enters — no bubble, no
+      // gesture, no emotion change, and above all no second joke.
+      a1_42g_orange: 40,
       // 24f — "**Nothing enters this.** No wave, no bubble, no entrance, no
       // emotion change… Deadpan is stillness, and the laugh lives in the
       // silence rather than in the read." Unchanged.
@@ -1045,14 +1081,24 @@ const SCRIPT: SceneSpec[] = [
       "a3_29_ray",
       "a3_30_narrator",
       "a3_31_sunny",
+      // NEW (T8, Mike's note 8, 2026-08-04). The greeting has fired without
+      // its tag for a whole episode; the tag is series canon, word for word in
+      // both priors, and it goes back on. It is now the episode's LAST LINE.
+      "a3_31b_sunny",
     ],
     gaps: {
       // 30f — "The terminator keeps sliding. Nothing else."
       a3_30_narrator: 30,
+      // 18f — a beat between the greeting and the brag, and nothing more: they
+      // are one thought said twice, not two events. (This key carried the 75f
+      // ending silence until T8 moved it down one line.)
+      a3_31_sunny: 18,
       // 75f, trailing — "**The longest silence in the episode and the end of
       // the story.** … If any line lands inside these seventy-five frames, the
-      // episode does not have an ending."
-      a3_31_sunny: 75,
+      // episode does not have an ending." **The rule travels with the last
+      // line, and its length is preserved exactly**: what the seventy-five
+      // frames now button is the brag rather than the greeting.
+      a3_31b_sunny: 75,
     },
     tailFrames: 18,
   },
@@ -1119,34 +1165,23 @@ const SCRIPT: SceneSpec[] = [
   {
     id: "s35_tease",
     lines: [
-      "rc_17_narrator",
-      "rc_18_sunny",
-      "rc_18b_narrator",
+      // THE VOLCANO TEASE IS CUT (T10, Mike's note 10, 2026-08-04):
+      // `rc_17_narrator`, `rc_18_sunny` and `rc_18b_narrator` are gone with
+      // it, and so is every wake tell in the picture. Ep 4 is plants; a tease
+      // pointing at a volcano no longer points at next time. What is left is
+      // the goodbye, the card, and Ray's button.
       "rc_19_ray",
       "rc_20_narrator",
       "rc_21_ray",
     ],
-    // 45f — "SILENT OPEN. The wobbling smoke ring, alone, in silence." The
-    // beat is unchanged in length and content; what changed on 2026-08-04 is
-    // that it no longer has "Next time." in front of it (`rc_16_narrator` is
-    // cut — see narration.mjs), so it is a lead rather than a gap and the
-    // episode's last scene now opens on a picture instead of on a line.
-    leadFrames: 45,
+    // 20f — a calm dusk establish, straight off the s34 moon cut. **45f -> 20f
+    // (T10)**: forty-five frames were bought when the silence had a stirring
+    // volcano in it to watch. With the island fully asleep there is nothing in
+    // the frame to spend them on, and a long hold on scenery before the
+    // goodbye reads as a missing line. Twenty is enough to register the place
+    // and the hour and no more.
+    leadFrames: 20,
     gaps: {
-      // 60f — "The rumble, felt in the water and in the smoke, with nothing
-      // said over it. **Keep this wondrous, not frightening** — no dark chord,
-      // no red glow, no shaking camera." Unchanged and sacred.
-      rc_17_narrator: 60,
-      // 45f — **Same length, opposite content from the delivered cut.** Sunny
-      // is not unsure and he is not squinting: he is BEAMING, at full
-      // brightness, arms out, having claimed a volcano without a second's
-      // hesitation. The volcano rumbles again behind him and he does not
-      // notice. **Nothing enters this beat** and **emotion lead cut to 0** — no
-      // dawning, no doubt, no reaction of any kind. The joke is entirely that
-      // he is wrong and does not know it, and the audience does.
-      rc_18_sunny: 45,
-      // 30f — "The volcano, the rumble, Sunny still beaming. Nothing enters."
-      rc_18b_narrator: 30,
       // 30f — "Ray's wave FREEZES mid-air. The features hold. He has just done
       // the maths." The card is up and the Narrator has just read the question
       // off it; this is the second the joke needs before he asks his.

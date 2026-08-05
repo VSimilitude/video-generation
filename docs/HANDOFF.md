@@ -132,6 +132,34 @@ overridden in substance; R2 superseded.
   sweep of every line). $0 synthesis total. T1+T2 batch into ONE
   builder — NOT yet spawned, awaiting quota green-light. More notes
   expected (T3+ append to the worklist).
+  **NOTES 3–10 RECEIVED 2026-08-04 — TWEAK LIST COMPLETE. T1–T10 all
+  designed in tweak1-worklist.md** (T3 s16 tray cut; T4 Blue roll-call
+  line REPLACES a2_32b incl. its old ear item — BLOCKED on Mike text
+  pick; T5 a2_52 "AIR"→"air" MiniMax caps fix + caps-sweep report; T6
+  s23 visual re-shoot, speech untouched — BLOCKED on Mike concept nod;
+  T7 a3_22b_red re-roll; T8 a3_31b_sunny "I invented mornings! You're
+  welcome! HA! HA!" exact ep1/ep2 mirror, catch-phrase ceiling 7→8 by
+  Mike's direction; T9 rc_11b bubble up to Sunny; T10 s35 wake-tease
+  cut — rc_17/rc_18/rc_18b out, rc_19/rc_20/rc_21 stay, volcano fully
+  asleep, ep-5 tease seed implication recorded for BIBLE). Builder
+  RUN 1 = T1,T2,T3,T5,T7,T8,T9,T10 GREEN-LIT (quota 126k/450k) and
+  SPAWNED. RUN 2 = T4+T6 after Mike's picks + fresh quota gate. Then
+  round close: full every-frame render, deploy handoff, retro + BIBLE.
+  **RUN 1 LANDED + SHOWRUNNER-REVIEWED 2026-08-04, PASSED (no fix
+  round) — READY TO COMMIT.** Gates: typecheck 0, lint:hooks 0, regen
+  6 clips then 0 (paid: a2_52 + a3_22b only, ≈$0.005), six scene-range
+  every-frame renders exit 0. New total 31,375f = 17:25.8. Builder DONE
+  sections + showrunner rulings (8 flags incl. builder-added s09→s10
+  camera/emotion continuity scope, T5b rc_14_ray caps fix queued for
+  RUN 2, plate-shift → kit backlog) in tweak1-worklist.md. Ear packet
+  list in the worklist's RUN 1 review section (7 clips + skeptical
+  hero still) — SEND TO MIKE with the T4 text pick + T6 concept nod
+  asks. Changed paths for commit: narration.mjs, Video.tsx, script.md,
+  scenes/{act1,act2,act3,recap}.tsx, ../../lib/kid/rig.ts,
+  narrationManifest.ts, public/narration/sky-blue/ (2 new, 4 changed,
+  4 deleted, .cache.json), tweak1-worklist.md, tweak1-retro-notes.md,
+  docs/HANDOFF.md. NO deploy yet (full render owed at round close
+  after RUN 2).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE

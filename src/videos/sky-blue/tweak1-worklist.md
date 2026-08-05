@@ -310,10 +310,694 @@ in the DONE section with before/after coords.
 
 ---
 
+## T3 — s16_myth_paint: remove the tray (Mike note 3)
+
+**Mike, verbatim:** "the "Sunny show us the paint" line seems weird that
+it shows us the paint and then he says he keeps it somewhere else -
+let's just get rid of the paint box from that scene (it's fine at the
+beginning though)"
+
+As-built: MythPaintScene (act2.tsx:751-821) — after "Sunny. Show us the
+paint." (a2_11_narrator), 45f of Sunny tipping the never-used PaintTray
+(act2.tsx:843-936, with the dry PaintRoller inside at :933) at the
+lens, then "I keep the paint somewhere else." (a2_12_sunny).
+
+Design: DELETE the PaintTray (and the roller inside it — it only exists
+in-tray here) from Scene 16 entirely, incl. S16_TRAY constants and the
+tip/back eases. The 45f held beat STAYS but is now carried by Sunny's
+face alone: grin freezes on the request, a small look-away-and-back
+(look prop, ~12f out ~12f back inside the beat), then the existing
+excited→neutral→proud morph rides into the line. The dodge becomes
+pure face + words — "I keep the paint somewhere else." now plays as an
+unsupported claim, which is the joke Mike is asking for. NO other
+timing/lines change. Untouched elsewhere (Mike: "fine at the
+beginning"): cold-open wet roller (coldOpen.tsx:434), s23's dry roller
+(that one is T6's call, see below). script.md Scene 16 section folds
+the change. Cost $0.
+
+## T4 — s20 Blue roll call replaces "Hi! Hi! Hi! Hi!" (Mike note 4) — NEEDS MIKE TEXT SIGN-OFF
+
+**Mike, verbatim:** "I think the "roll call" with the colors intro
+isn't a true roll call, let's do one instead when blue says "Hi Hi Hi",
+and change that to "Hi bluington, Hi <other blues>, etc""
+
+As-built: a2_32b_blue "Hi! Hi! Hi! Hi!" (MiniMax Decent_Boy happy) in
+s20_every_direction — one clip, four "Hi!" bubbles popping from four
+compass points at measured clip fractions (S20_HELLO_AT
+0.069/0.332/0.574/0.812) while 24 Blue copies arrive at the lens.
+Supersedes the a2_32b ear item (suspected slow take) — the clip is
+being replaced outright.
+
+Canon check: NO blue names exist anywhere in the repo ("Bluington" is
+new, spelling as Mike typed). Structure kept: ONE new MiniMax clip,
+FOUR bubbles, same four compass positions; each bubble now shows its
+own greeting; fractions RE-MEASURED on the new clip (same gain/
+silencedetect method). The gag: Blue holding a roll call of his own
+identical copies — mirrors Ray's s10 roll call, and the fourth greeting
+lands the point that they are all him.
+
+Proposed line text (route to Mike, pick or amend):
+- **Option A (preferred):** "Hi, Bluington! Hi, Blueberry! Hi, Bluella!
+  Hi... me!"
+- Option B: "Hi, Bluington! Hi, Bluesworth! Hi, Bluey! Hi... me!"
+Fields unchanged (BLUE, emotion happy); small <#0.3#> pauses between
+greetings if the natural read crowds the bubble pops (builder's call on
+the measured take). Cost ~$0.01. NEW EAR ITEM (replaces the old a2_32b
+one). Bubbles: four texts "Hi, Bluington!" etc. at the S20_HELLO marks
+— builder verifies corner fit at stills (names are longer than "Hi!").
+script.md s20 section + cast-note fold; if a name sticks it becomes
+BIBLE material at retro.
+
+BLOCKED until Mike picks the text; builder run 2.
+
+## T5 — a2_52_ray caps fix: "the AIR" reads as "the A" (Mike note 5)
+
+**Mike, verbatim:** "Ray says "But the air did the painting" but it
+sounds like "but the A did the painting""
+
+Diagnosis: narration.mjs:1239 text is "But the AIR did the painting."
+— all-caps emphasis on a MiniMax line. Caps/letter-stretch is
+kokoro-only grammar (STYLE rule: sound-word spellings are PER-ENGINE);
+MiniMax is reading "AIR" letter-wise/clipped. Fix: text → "But the air
+did the painting." (lowercase), same fields, re-synth Young_Knight
+(~$0.01). NEW EAR ITEM. The s23 BUBBLE text ("The AIR did the
+painting.") may keep its visual caps — bubbles are print, not
+pronunciation. RETRO NOTE for STYLE.md: sweep rule — no all-caps
+emphasis words on MiniMax lines, ever; caps survive only in bubble
+text. Builder: grep all minimax lines for other all-caps emphasis words
+and REPORT (don't change) any found — showrunner triages.
+
+## T6 — s23_sunny_wrong visual re-shoot (Mike note 6) — NEEDS MIKE CONCEPT NOD
+
+**Mike, verbatim:** "That same scene (around 10:00 to 10:20) is still
+very awkward visually - I think the speech is fine, but I don't think a
+kid will be able to understand the visual, let's re-shoot that whole
+scene with some different visuals"
+
+Scope: s23_sunny_wrong (17473–18636, 9:42–10:21). ALL ELEVEN CLIPS AND
+EVERY GAP UNCHANGED — speech and timing are approved; this is a
+picture-only re-shoot. The abstract WrongDiagram (sun→beam→sky→cloud
+schematic + camera push + air-band rebuild) goes — that is the thing a
+kid can't parse.
+
+Proposed concept (route to Mike for a nod): **"Sunny poses, the air
+paints."** Replace the diagram with the episode's own concrete
+mechanism grammar, already proven parseable in s19/s20:
+- Sunny right (existing S23_SUNNY mark), beaming ONE warm beam across
+  the frame — unmistakably HIS light, from his body.
+- The beam hits a small band of air puffs mid-frame (the AIR_BAND
+  characters); Blue copies bounce OUT of the puffs in all directions
+  and fill the sky band above with blue as they go — a pocket version
+  of s20's every-direction dome, i.e. the painting happening ON SCREEN,
+  done by air, out of Sunny's light.
+- Sunny never does any painting: he holds the dry roller UP like a
+  trophy and poses (the roller's seven-scene running gag gets its
+  payoff shot). Grin still GROWS through the "He has a point." beat
+  (standing ruling preserved). "LOADS of points" keeps the RayFan pun —
+  it fires behind him exactly as now.
+- Line-keyed beats: a2_51 "The light is his." → the beam pulses/warms
+  from Sunny outward. a2_52 "But the air did the painting." → the puffs
+  visibly do a painter's stroke: a wave of fresh blue sweeps the sky
+  band, clearly starting AT the puffs, not at Sunny. a2_53 (MY LIGHT!)
+  → Sunny poses harder while the air keeps painting behind him,
+  ignoring him. a2_54 "his light... not his painting" → beam pulse,
+  then sky-sweep pulse — the sentence drawn twice. a2_55 + 45f button
+  beat: everything settles, nobody helps him.
+- Ray stays bottom-left at his mark; his 30f "It lands on him" beat
+  unchanged.
+Kept from current build: marks, bubbles (texts/positions), emotion
+tracks, held-beat structure, RedAcross stays OFF (R9 ruling). Deleted:
+WrongDiagram, the 2.5x camera push (no camera moves — the mechanism
+must stay whole-frame for the kid), rebuild choreography.
+Cost $0 (visuals only). BLOCKED on Mike's concept nod; builder run 2.
+Builder brief must include: read s19/s20 components first and reuse
+their scatter/arrival idioms, not reinvent.
+
+## T7 — a3_22b_red "Nice drama." re-roll (Mike note 7)
+
+**Mike, verbatim:** "When someone says "Nice Drama" it has a weird
+accent "Nice-eh Drama" which doesn't sound like any character (not sure
+if it's supposed to be orange or red)"
+
+It's Red (a3_22b_red, Patient_Man calm 0.9, narration.mjs:1790) —
+MiniMax inserted an epenthetic vowel ("Nice-eh"). Same failure class as
+the a2_28b_blue bad draw. Fix: cache-bust re-roll, SAME text/fields, up
+to 3 draws, keep the take with clean "Nice" onset and s/word in Red's
+healthy band; manifest retimes automatically. If all draws are
+epenthetic, fallback text "Good drama." (flag as deviation). ~$0.01.
+NEW EAR ITEM.
+
+## T8 — Sunny's morning catch-phrase at the ending (Mike note 8)
+
+**Mike, verbatim:** "When Sunny says "Good morning everybody" toward
+the end, I think it's a good opportunity to do his "I made the
+mornings, you're welcome haha" catch-phrase" + amendment: "for the
+exact wording, it should mirror his same line in previous episodes"
+
+Canon (verified in both priors): ep1 water-cycle:116 AND ep2 wind a2_05
+pair "GOOD MORNING, EVERYBODY!" with **"I invented mornings! You're
+welcome! HA! HA!"** — exact same text both episodes. Ep-3's a3_31_sunny
+(the sameAs of a1_03, in s31_round_the_other_side at ~15:37) fires the
+greeting WITHOUT the tag — this note restores a two-episode pattern.
+
+Design:
+- NEW `a3_31b_sunny`: text "I invented mornings! You're welcome! HA!
+  HA!" — SUNNY (kokoro am_puck), $0. Exact canon spelling above, no
+  variation.
+- Video.tsx s31: insert after a3_31_sunny. a3_31_sunny's trailing gap
+  75f → **18f** (a beat between greeting and brag); a3_31b_sunny takes
+  the **75f** ending silence (the "longest silence / the episode does
+  not have an ending without it" rule moves with the last line, length
+  preserved — update the Video.tsx comment).
+- act3.tsx s31: stage the line at Sunny's existing mark; bubble "I
+  invented mornings!" (cap rule); emotion excited on the line. Nothing
+  else moves; the 75f after it stays empty.
+- RULING UPDATE (Mike's direction overrides): script.md:3008's "seven
+  firings is the ceiling" becomes EIGHT with a3_31b listed, noting the
+  8th was Mike's explicit call (note 8, 2026-08-04). rc_18 still does
+  not use it.
+- Runtime +~93f (clip ~2.5s + net gap change).
+
+## T9 — rc_11b_sunny bubble placement (Mike note 9)
+
+**Mike, verbatim:** "When Sunny says "I am right here" the word bubble
+is in the wrong place"
+
+As-built (recap.tsx:1163): bubble at (1250, 640) tail right, tailAt
+1616 — but Sunny blazes at (1706, ~214) scale 1.22 in the s34 moon
+shot. The bubble floats ~430px BELOW him over the moon world; the tail
+aims at nobody at that height. Fix: move it up beside him — start at
+(1290, 300), tail "right", tailAt S34_SUNNY.x − 90 (unchanged), and
+verify by still that it clears the LunarBlaze rays and does not crowd
+BlueMarble (286,196) or the astronaut sightline. Builder adjusts ±40px
+on stills. $0.
+
+## T10 — cut the "waking up" tease from s35 (Mike note 10)
+
+**Mike, verbatim:** "I think we need to cut the "someone is waking up
+bit" it doesn't make sense with the switch to plants in s4 [ep-4], just
+cut straight from the moon to the next time what do plants eat"
+
+As-built s35_tease: 45f silent stir open → rc_17_narrator "Something is
+waking up." → rc_18_sunny "OH! That one is me as well! HA! HA!" →
+rc_18b_narrator "Hmm. We will find out." → rc_19_ray "Bye! Look up.
+That's me." (NextTimeCard pops at byeFrom) → rc_20_narrator "Next time.
+What do plants eat?" → 30f wave-freeze → rc_21_ray "Is it me??" fear
+flinch.
+
+The "waking up bit" = the volcano-wake material: rc_17 + rc_18 +
+rc_18b + the stir/rumble choreography. NOT rc_20 (the card line Mike
+names as the keep) and NOT rc_21 ("Is it me??" is a PLANTS joke — Ray
+fearing he's what plants eat — and stays as the button).
+
+Design:
+- CUT from narration.mjs + Video.tsx s35 lines: rc_17_narrator,
+  rc_18_sunny, rc_18b_narrator (all kokoro, $0; their ear items die
+  with them). rc_19, rc_20, rc_21 KEEP (rc_20/rc_21 stay on Mike's ear
+  list).
+- recap.tsx TeaseScene: remove the stir ramp, both rumbles, Sunny's
+  claim/turn-to-camera choreography. The set may remain the sea-dusk
+  shot but the volcano is FULLY ASLEEP (stir at its dormant baseline,
+  zero wake tells — it is scenery again, the series' sleeping constant).
+  Sunny may stay in frame passive for the goodbye; no beat touches him.
+- New shape: leadFrames 45 → 20 (calm dusk establish, straight off the
+  s34 moon cut) → rc_19 "Bye!" + card/banner pop (unchanged mechanics)
+  → rc_20 over the card → 30f freeze → rc_21 flinch → 40f + tail 14.
+  Freeze/fear windows re-key cleanly (their anchors rc_20/rc_21
+  survive).
+- Runtime ≈ −340f (−11.3s).
+- **CONTINUITY (for BIBLE at retro):** ep-5 = volcano wakes, and this
+  cut removes the ep-3 end-tease seed. Remaining in-episode seeds: s25
+  Yellow's rest attempt + narrator warn-off, s28b2 the eye-open beat.
+  The banked material — Sunny claiming the wake ("that one is me as
+  well") and the "That is not me."-inversion (script.md:3011-3015) —
+  is now UNFIRED and available to ep-5's cold open or ep-4's own tease.
+  Record in BIBLE's open-teases ledger when it's written.
+- script.md s35 section rewrite + ear list renumber + counts.
+
+---
+
+## Builder batching (green-lit 2026-08-04, quota 126k/450k)
+
+- **RUN 1 (green-lit, spawn now):** T1, T2, T3, T5, T7, T8, T9, T10.
+  Gates: typecheck 0, lint:hooks 0, narration regen (expected synth:
+  T1 kokoro lines, T8 new kokoro line, T5 one minimax line ~$0.01, T7
+  re-roll draws ~$0.01-0.03; REPLICATE token needed), scene-range
+  every-frame renders (s04–s06, s09–s13, s16, s23 untouched in run 1,
+  s31, s34–s35), boundary/bubble/face stills per T-item, and the T5
+  caps-on-minimax report.
+- **RUN 2 (after Mike's T4 text pick + T6 concept nod + fresh quota
+  gate):** T4, T6. Then tweak-round close: FULL every-frame
+  --scale=0.25 render exit 0, script.md counts, HANDOFF, deploy
+  handoff.
+
+## T5b — rc_14_ray caps fix (builder-found, showrunner-approved for RUN 2)
+
+RUN 1's caps sweep found `rc_14_ray` carries the identical defect Mike
+heard in note 5: "the AIR does" on a MiniMax line, in the recap. Fix in
+RUN 2 exactly like T5: lowercase "air", same fields, re-synth
+(~$0.01), ear item. The other 29 all-caps MiniMax lines in the
+builder's DONE list are NOT changed this round — they go to the retro
+as a STYLE watch-list (new rule: no all-caps emphasis on MiniMax lines;
+caps live in bubble text only). Mike flagged none of them by ear across
+two screenings; speculative re-rolls are not worth cents yet.
+
+## RUN 1 showrunner review (2026-08-04) — PASSED, no fix round
+
+Sampled 13 stills (skeptical face hero+in-scene, T1 almost-ask
+hang/deflate/wide, T2b cut pair, T2c cut frame + swoop + Drip land, T10
+open + button, T3 look-away, T9 crop, T2d s13 a1_60). All accepted.
+Rulings on the builder's flags:
+1. Worklist handoff constants were wrong/stale (S9_END_INDIGO 18px
+   lift; both S10_END_* invalidated by T2a's own -24f) — builder's
+   probe-derived values ACCEPTED; code over design doc.
+2. Builder-added scope ACCEPTED (verified in the boundary pair): s09→
+   s10 camera-zoom continuity (the 4% everyone-pop was the rest of
+   Mike's "they all jump") and the seven's emotion handoff across the
+   cut.
+3. T2d extra finds ACCEPTED (a1_55/a1_56 off Sunny's eye, a1_60 off
+   Sunny's own eye — all four s13 bubbles now overridden).
+4. rc_14_ray → T5b above.
+5. T9 y-deviation to (1330,196) ACCEPTED (brief's y sliced Ray's head).
+6. T7 acceptance judged on onset shape (Red's corpus band was wider
+   than the brief's) — sound reasoning; Mike's ear decides, in packet.
+7. skeptical uses the achievable brow side (browAsym is camera-right
+   only) — face reads correctly; ACCEPTED. Kit note: browAsym is
+   single-sided, record in STYLE at retro.
+8. PaintedSky 10–15px plate shift at every hard cut: KIT BACKLOG (with
+   the Freeze re-export item), not this round — series-wide design
+   call, invisible next to the character jumps that are now fixed.
+
+EAR PACKET for Mike (public/narration/sky-blue/): a2_52_ray.mp3 (air
+fix), a3_22b_red.mp3 (re-roll), a1_16d_narrator.mp3 ("No, Ray, not
+yet." at 0.8), a1_16b2_narrator.mp3 + a1_15d_narrator.mp3 +
+a1_16_narrator.mp3 (count rewords), a3_31b_sunny.mp3 (catch-phrase).
+Plus still: scratchpad tweak1_run1/T2a_SKEPTICAL_FACE_FOR_MIKE_hero.png.
+
 ## Round status
+
+- Mike's notes 1–10 all received 2026-08-04 — THE TWEAK LIST IS
+  COMPLETE. T1–T10 designed above.
+- Builder RUN 1 (T1,T2,T3,T5,T7,T8,T9,T10) green-lit and in flight.
+- T4 blocked on Mike's line-text pick (options in T4); T6 blocked on
+  Mike's concept nod — both go in RUN 2 with a fresh quota gate.
+- After RUN 2: full every-frame gate render → deploy handoff → retro +
+  BIBLE first write-up (owed at this boundary).
 
 - T1 designed (committed 7a84e82), awaiting quota green-light to spawn
   builder.
 - T2 designed (Ahem cut + skeptical emotion + s09/s10/s11 continuity +
   bubble sweep); batches with T1 into ONE builder run.
 - Further Mike notes: pending — append as T3, T4, … above this section.
+
+---
+---
+
+# BUILDER RUN 1 — DONE (scene-builder, 2026-08-04)
+
+Items implemented: **T1, T2, T3, T5, T7, T8, T9, T10**. T4 and T6 untouched.
+All gates green. **New total: 31,375 frames = 17:25.8** (baseline 31,372 =
+17:25.7; net **+3 frames** — T1 +285, T8 +101, T2a −24, T10 −359, plus small
+clip-length deltas from the two re-synthesized MiniMax lines).
+
+## Gate results
+
+| Gate | Result |
+|---|---|
+| `npm run narration -- --video sky-blue` | **6 clips synthesized**, everything else cache. Second run: 0. |
+| `npm run typecheck` | 0 errors |
+| `npm run lint:hooks` | 0 findings |
+| Scene-range every-frame renders (`--scale=0.25`) | **all exit 0** — see table below |
+| Full every-frame render | **NOT RUN** — deferred to round close after RUN 2, per the brief |
+
+**Exact synthesis list and cost.** Six clips, and no others:
+
+| key | engine | why |
+|---|---|---|
+| `a1_15d_narrator` | kokoro | T1 text → "Three minutes down. Five to go." |
+| `a1_16_narrator` | kokoro | T1 text → "Four minutes down. Four to go." |
+| `a1_16b2_narrator` | kokoro | T1 NEW — "Five minutes down. Three to go." |
+| `a1_16d_narrator` | kokoro | T1 text → "No, Ray, not yet." |
+| `a3_31b_sunny` | kokoro | T8 NEW — "I invented mornings! You're welcome! HA! HA!" |
+| `a2_52_ray` | **minimax** | T5 caps fix, 29 chars ≈ **$0.003** |
+| `a3_22b_red` | **minimax** | T7 cache-bust re-roll ×2 draws, 11 chars each ≈ **$0.002** |
+
+**Total spend ≈ $0.005.** `a1_13_ray` + its four `sameAs` aliases and
+`a1_16c_ray` were cache hits and are byte-identical; no other paid clip was
+touched. Retired (files deleted, cache entries dropped): `a1_42h_narrator`,
+`rc_17_narrator`, `rc_18_sunny`, `rc_18b_narrator`.
+
+**Scene-range renders, on the NEW timeline:**
+
+| range | frames | exit |
+|---|---|---|
+| s04 → s06 | 2140–4729 | 0 |
+| s09 → s13 | 6145–10653 | 0 |
+| s16 | 12001–12377 | 0 |
+| s31 | 27951–28618 | 0 |
+| s34 → s35 | 29850–31374 | 0 |
+| **s23** (extra) | 17752–18894 | 0 |
+
+s23 was not on the render list, but T5's re-synthesis of `a2_52_ray` cut that
+clip from **2.304s to 1.656s** (−19 frames — the old take really was spelling
+"A-I-R"), which retimes the whole scene. Rendered as insurance; exit 0.
+
+**Stills:** ~75 rendered and read, in
+`/tmp/claude-1000/-home-mike-projects-video-generation/6d0bf85a-ed8c-47e4-95bd-f064f9bc68c7/scratchpad/tweak1_run1/`.
+The two to look at first are `T2a_SKEPTICAL_FACE_FOR_MIKE_hero.png` (the new
+face at 3× detail) and `T2a_skeptical_in_scene_0p78.png`.
+
+## T1 — Scene 5 restructure — DONE
+
+- `narration.mjs`: `a1_15d` → "Three minutes down. Five to go.",
+  `a1_16` → "Four minutes down. Four to go.", NEW `a1_16b2_narrator`
+  ("Five minutes down. Three to go.", NARRATOR 0.92), `a1_16d` → "No, Ray, not
+  yet." at 0.8. All five answers sum to eight. Surrounding comments rewritten:
+  the five-firings-one-recording law restated, the skipped-arithmetic note
+  replaced with the metronome note, the "goes unanswered" note gone.
+- `Video.tsx`: `a1_16b2_narrator` inserted between `a1_16b_ray` and
+  `a1_16c_ray`. Gaps now 45 / 75 / 105 / 135 / **165**, the 90f override on
+  `a1_16b_ray` removed (fifth firing answered at the house gap), `a1_16d` 90 →
+  **210**. Tail 6f unchanged.
+- `act1.tsx`: **the silent almost-ask**, `S5_ALMOST` (from 60, up 18, hang 50,
+  down 15, peak 0.35) inside the 210f hold, keyed off
+  `heldBeat(scene, "a1_16d_narrator")`. It is **the real `SpeechBubble`
+  primitive** — same component, same `S5_BUBBLE_AT` x/y/tail/`tailAt`, the same
+  text laid out in `color="transparent"` so the box is the identical shape —
+  wrapped in a layer scaled about `S5_ALMOST_ROOT` (730, 415), the tail's own
+  tip, measured off a still of a real firing. The inner bubble is pinned fully
+  on (`from={0}`, no `until`) so its pop spring cannot fight the wind-up, and it
+  is rendered every frame at `scale(0)` outside the window so the hook count
+  never changes. **Nothing on the rig is touched**: no emotion, no look, no
+  speaking mouth.
+- Stills: `t1_2600 / 2780 / 2983 / 3217 / 3478` (the five answered firings —
+  identical drawing, identical place, confirmed), `t1_3670` (the 165f silence,
+  empty), `t1_3770` (sixth firing), `t1_3927 / 3961 / 3993 / 4008` +
+  `crop_almost_hang / _deflate / _gone` (the 4-frame almost-ask strip:
+  inflate-mid, full hang, mid-deflate, gone — face unchanged throughout).
+- Comments updated: `Video.tsx` header + s05 gaps block, `narration.mjs` Scene-5
+  block, `act1.tsx` `S5_BUBBLES` doc and the JourneyScene doc, script.md Scene 5
+  (full REVISED 2026-08-04 fold with Mike's note verbatim).
+
+## T2a — "Ahem." cut + `skeptical` — DONE
+
+- `a1_42h_narrator` removed from `narration.mjs` and from s10's clip list; its
+  mp3 and cache entry are gone. The never-substitute-"Hmm." ruling is restated
+  where the clip used to be.
+- `a1_42g_orange` gap 8 → **40** ("let it sit"). Net timing −24f, as designed.
+- `src/lib/kid/rig.ts`: NEW `skeptical` in the `Emotion` union and the
+  `EMOTIONS` table. **Tuned on stills over four passes**; shipped values
+  `browRaise −8, browAngle −2, browAsym −16, eyeScaleX 0.99, eyeScaleY 0.94,
+  lidBase 0.12, mouthWidth 48, mouthCurve 2, blush 0, tilt 4`.
+- **DEVIATION (necessary, please note).** The brief says "pick the sign that
+  raises the camera-left brow". `browAsym` is applied only when `side === -1`,
+  which renders on the **camera RIGHT** (the character's own left) — there is no
+  sign that moves the camera-left brow, so the choice was which *rotation* reads
+  as raised. Negative lifts that brow's OUTER end (the arched-eyebrow read);
+  positive lifts the inner end, which is *worried*. Negative it is.
+- Two values went outside the brief's starting range and both were forced by
+  stills: `browRaise −8` (at −3 the tilted brow's inner end sat on the eye and
+  the side read as a squint) and `browAsym −16` (at −13 the asymmetry did not
+  survive 0.78 scale). Everything else is the brief's number.
+- `RollCallScene`: `emotionAt` map `neutral` → `skeptical`, same `camFrom`.
+  `camTo` re-keyed from the dead `a1_42h_narrator` to `a1_43_narrator`, so Ray
+  holds the sceptical camera look through the whole 40f. The eye-line
+  break-back is now a **duration** (`S10_BREAK_BACK = 24`) rather than a window
+  keyed to a clip that no longer exists.
+- Ladder position: **B1 (skeptical across the whole exchange window)**. It reads
+  as "one eyebrow up, unimpressed" at hero scale and at 0.78 in scene; not
+  grumpy, not smug (no `mouthTilt`, lids no narrower than `proud`'s), not
+  smiling (`mouthCurve: 2` is the first near-flat mouth in the table). No need
+  to step down the ladder, but the hero still is saved for review.
+- script.md: Scene 10 fold with Mike's note verbatim; the 40f beat written up as
+  a held beat; ear item 31 ("Ahem.") **RESOLVED — cut executed** and struck from
+  the list; the Ahem references in the line-length and grown-up-smirk ledgers
+  updated.
+
+## T2b — the 3:49 jump (s09 → s10) — DONE, and it was carrying FOUR faults
+
+The fact report named two. Probe overlays rendered into frames 7205/7206 found
+four. **All the constants below were re-derived on the new timeline** by
+rendering `x`/`y`/`heading` into the frame from inside the components and
+reading them off stills — I did not take the worklist's numbers on trust, and
+one of them was wrong.
+
+| what | s09 last frame | s10 frame 0 | worklist said |
+|---|---|---|---|
+| Blue | (1157.03, 429.06, −90) | (1233.51, 701.34, −25.38) | **matches** |
+| Indigo | (1320.90, **667.96**, −90) | (1333.54, 818.78, 0.00) | y **685.97** — **WRONG by exactly 18px**, the indignant pose's lift, which the measurement had missed |
+
+1. **Blue/Indigo settle.** `S9_END_BLUE` / `S9_END_INDIGO` baked with a loud
+   re-derive-me comment, blended into the live pose over `S10_SETTLE = 30`
+   frames (Indigo `+INDIGO_LAG`, so for four frames he is still standing exactly
+   where Scene 9 left him while Blue has started drifting back).
+2. **Ray enters instead of popping.** `S10_RAY_ENTER = 14` frames of opacity
+   plus `S10_RAY_DROP = 20`px of drift down onto his own track. No streak, no
+   flash; it sits under `a1_41_narrator`.
+3. **NEW FINDING — the lens.** Scene 9 ends on its pull-back at **zoom 0.96**
+   about (960, 700) and Scene 10 had no camera at all, so **all seven** popped
+   4% bigger and up to 30px sideways on the cut. That is Mike's "they ALL jump a
+   bit" and it is not in the fact report. Fixed: s10 now opens inside a `Camera`
+   at `S9_END_ZOOM` easing to 1× over the same 30 frames. Bubbles stay outside
+   and are projected through it (identity by the time the first one exists at
+   local ~100).
+4. **NEW FINDING — the faces.** Scene 9 hands its arc Ray's `amazed` and gives
+   Blue/Indigo their own `grumpy`; Scene 10 drew the kit's default `happy` from
+   frame one, so **seven mouths changed shape on the cut**. Fixed: each shard
+   morphs out of its Scene-9 face over `S10_FACE_SETTLE = 14`.
+
+Gate stills: `t2b_pre_7205/7206` (before), `t2b_7205/7206/7221/7236` (after).
+The boundary pair is now near-identical — Blue, Indigo, the five others and the
+lens all match; the only residual is the plate (see FLAGS).
+
+## T2c — the 4:28 jump (s10 → s11) — DONE
+
+**The worklist's `S10_END_*` numbers were measured on the deployed cut and were
+stale**, because T2a shortened Scene 10 by 24 frames and those values are that
+scene's ricochet evaluated at its own final frame. Re-derived by probe:
+
+| what | worklist | **re-derived (new timeline)** |
+|---|---|---|
+| `S10_END_BLUE` | (1156.58, 665.24, 84.96) | **(1289.59, 739.90, 128.96)** |
+| `S10_END_INDIGO` | (1221.47, 817.28, −54.68) | **(1448.75, 784.20, 128.96)** |
+| s11 u=0 Blue / Indigo | (1233.5, 641.3) / (1463.5, 758.8) | **matches** |
+| Ray s10 end | arcPointLifted(0.78) = (1453.30, 565.43) | **matches** |
+
+- **Pre-slam continuity.** Ray is drawn at `S10_END_RAY` at scale 0.78 with the
+  face he ended Scene 10 with, from frame 0 to `slamAt` (local 208). Drip is
+  **not on stage** — she starts `S11_DRIP_DROP = 560`px above her mark, off the
+  top of the frame, so no opacity trick is needed.
+- **The card brings them.** At `slamAt` Ray swoops to the W-bar over
+  `S11_SWOOP = 22` frames on a bowed path with the scale easing 0.78 → `PERCH`.
+  Drip drops `S11_DRIP_LEAD = 10` frames after the slam over `S11_DRIP_FALL =
+  18` under `kidEase.gravity`, with a landing squash folded into the existing
+  `knock` (same shape as a bounce off Blue — from her point of view it is the
+  same event). She lands at local 236; Blue's first contact is at 240, so the
+  four-frame margin holds.
+- **Formation settle.** Blue/Indigo eased off their Scene-10 end pose over
+  `S11_SETTLE = 30` (Indigo `+INDIGO_LAG`), done long before the take-off at
+  ~186.
+- **Two more discontinuities found on the boundary pair and fixed:**
+  Ray's **arms** popped up on the cut (`Ray` derives `cheer` from `excited`,
+  and Scene 10 passes an explicit `rest`) — now `pose="rest"` until the slam;
+  and **Violet's arms** dropped on the cut — now held until his own take-off.
+- Ray's emotion in s11 was `useEmotion` resting `amazed` against Scene 10's
+  `excited`; it is now `emotionAt` resting **`excited`**, → `amazed` at the slam
+  (the card lands on him) → `excited` at the chant. Continuous *and* better
+  staging.
+- zIndex left as shipped (55/55): the stills show no wrong overlap during the
+  swoop.
+- Gate stills: `t2c_8292/8293` (boundary pair, near-identical),
+  `t2c_8323` (mid pre-slam), `t2c_8504` (card in), `t2c_8512/8523` (swoop
+  mid/end), `t2c_8520/8529` + `crop_drip_mid/_land` (drop mid/land),
+  `t2c_8541` + `crop_8541`.
+
+## T2d — bubble sweep, card slam → s13 — DONE
+
+Every spoken line from `a1_47_ray` through s13 end was rendered at its midpoint
+and looked at. Eleven bubbles; **four changed**, and two of the four are not on
+the worklist's list.
+
+| line | before | after | why |
+|---|---|---|---|
+| `a1_53_ray` (s12) | `tailAt: 430` | `tailAt: S12_RAY.x` (**360**) | 70px right of a character who is static at x=360 all scene. Keyed so it cannot drift again. |
+| `a1_48c_blue` (s11) | `tailAt: dripContact(dripCentre).x` (static) | `tailAt: blueTailX` (live) | `blueAfterHit` split out of `blueVisit` so the bubble asks the renderer's own question. **In practice the tail is clamp-pinned at the bubble's right edge at the current bubble x, so this is correct-in-principle rather than visible** — it matters the moment the bubble moves. |
+| `a1_55_ray`, `a1_56_ray` (s13) | *(no override — default placement)* | `{x: 760, y: 250, tail: "right", tailAt: projectMark(cam, rayMark).x}` | **NEW FINDING.** The default put both boxes across **Sunny's left eye**. |
+| `a1_58_sunny` (s13) | *(no override)* | `{x: 760, y: 210, tail: "right", tailAt: projectMark(cam, S13_SUNNY).x}` | grazed his face |
+| `a1_60_sunny` (s13) | *(no override)* | `{x: 700, y: 210, …}` | **NEW FINDING, and the worst of them: Sunny's own button covered Sunny's own eye** — the frame's only reaction shot, hidden by the thing reacting. |
+
+Unchanged and verified good: `a1_48b_green`, `a1_48d_drip`, `a1_49_drip`,
+`a1_49b_drip`, `a1_54b_green`. The four card bubbles all point at their
+speaker's x and are attributed by the coloured dressing; their tails point
+*down* because every speaker on the card is above their own bubble, which is the
+documented kit gap (`SpeechBubble`'s tail leaves the bottom edge and nothing
+else) and the reason the existing comments give for the placement.
+
+## T3 — s16 tray removed — DONE
+
+- `PaintTray` (component), `S16_TRAY`, the tip/back eases and the in-tray
+  `PaintRoller` are deleted; the component had no other call site and is
+  replaced in the file by a five-line note saying where the roller still lives.
+- The 45f held beat is unchanged in length and position and is now carried by
+  Sunny's face alone: grin freezes on the request, `S16_LOOK_AWAY` (14 in, 12
+  out, 12 back — zero at both ends) drives a small look off to the side and
+  back, and the existing excited → neutral → proud morph rides into the line.
+  `eyeLife` no longer drops in the beat, because a dead eye cannot perform a
+  deliberate look away.
+- Untouched: the cold open's wet roller, Scene 23's dry roller (that one is T6).
+- Stills `t3_12080 … 12290` + `t3_look_a/b`.
+
+## T5 — `a2_52_ray` caps fix — DONE, **and there are 29 more**
+
+Text → "But the air did the painting.", same fields, re-synthesized. The s23
+bubble keeps its caps.
+
+**REPORTED, NOT CHANGED — every MiniMax line still carrying an ALL-CAPS word.**
+29 of them. The one that should be triaged first is **`rc_14_ray`, which
+contains the *identical* word that just failed**:
+
+```
+rc_14_ray    RAY     AIR         "So the blue sky is a thing the AIR does."   <-- SAME BUG, LIVE
+a2_03_ray    RAY     IS          "That is a good question. Why IS it only blue?"
+a2_28_ray    RAY     GO          "Whoa. Where did Blue GO?"
+a3_13b_blue  BLUE    UP          "Sorry! Sorry! I am going UP now! Bye!"
+rc_03b_blue  BLUE    ME, ME      "SCATTER! That is ME bouncing! That is ME!"
+a3_11t_blue  BLUE    YES         "YES!"
+a1_53_ray    RAY     INTO, OUT   "Because I go INTO the rain and come back OUT again."
+a1_56_ray    RAY     ALL         "I am not white. I am ALL of them. At the same time."
+a2_32_ray    RAY     ALL         "So the blue is coming from ALL of the sky."
+a1_12_ray    RAY     WHOOSH, EARTH
+a1_18_ray    RAY     HERE, DOG
+a1_39_ray    RAY     SEVEN
+a1_47_ray    RAY     RAINBOW
+a1_42b_yellow YELLOW GREAT
+a1_48d_drip  DRIP    RAIN
+a1_54b_green GREEN   JUST
+a2_17_puff   PUFF    FEEL
+a2_20_puff   PUFF    ZILLIONS
+a2_20b_blue  BLUE    FIRST
+a2_28b_blue  BLUE    HERE
+a2_33b_yellow YELLOW LOOK
+a2_39_ray    RAY     SCATTER
+a2_44_puff   PUFF    TOLD
+a3_05b_blue  BLUE    FIRST
+a3_11f_blue  BLUE    RACE
+a3_13bb_blue BLUE    UPWARDS
+a3_20_ray    RAY     SUNSET
+rc_02_ray    RAY     RAINBOW
+rc_03_puff   PUFF    SCATTER, EVERYWHERE
+```
+
+The short ones are the dangerous ones (a two- or three-letter capitalised word
+is what MiniMax reads as an initialism): **AIR, IS, GO, UP, ME, YES, ALL, OUT**.
+The long ones (RAINBOW, SCATTER, ZILLIONS, WHOOSH) have never been reported as
+mis-read and are probably safe. Showrunner triage; each fix is a lowercase edit
+plus one cheap re-synthesis.
+
+## T7 — `a3_22b_red` re-roll — DONE, 2 draws
+
+Cache-busted by deleting the key from `public/narration/sky-blue/.cache.json`
+and removing the mp3 (there is no `--force` flag on the narration generator);
+text and fields **unchanged**.
+
+| draw | manifest duration | source duration | speech run (thr 130) | onset |
+|---|---|---|---|---|
+| shipped (bad) | 1.512s | — | 0.180–0.252 **+** 0.270–1.404 | **detached 72ms blip, then a dip, then the word** — the epenthesis signature |
+| draw 1 | 1.48s | 1.6s | 0.198–1.314 (single run) | clean |
+| **draw 2 (KEPT)** | **1.48s** | **1.4s** | **0.234–1.278 (single run)** | **clean, and the tightest read** |
+
+Stopped at two because both were clean; the tighter one is in. Measured with a
+scratch MPEG-1 side-info `global_gain` probe (no ffmpeg on this box), the same
+method the `S10_VIOLET_AT` note describes.
+
+**DEVIATION / FLAG on the acceptance band.** The brief's "s/word in Red's
+healthy band ~0.3–0.45" does not match this corpus: Red's ten lines run 0.42 to
+1.04 s/word, and every one of his two-word lines is 0.65–0.76. I used
+**onset-shape** as the acceptance test instead, because that is the actual
+diagnostic for the reported defect, and total speech time as the tiebreak.
+Please have Mike confirm by ear.
+
+## T8 — Sunny's catch-phrase at the ending — DONE
+
+- NEW `a3_31b_sunny`, kokoro `am_puck`, text byte-for-byte the canon:
+  **"I invented mornings! You're welcome! HA! HA!"**
+- `Video.tsx` s31: inserted after `a3_31_sunny`; that key's trailing gap 75 →
+  **18**; `a3_31b_sunny` takes the **75f** ending silence, length preserved. The
+  "the episode does not have an ending" comment moved with it.
+- `act3.tsx`: bubble `"I invented mornings!"` at the *same* mark, size and tail
+  as the greeting's; `payoffFrom` (which drives the dawn ramp) re-keyed to
+  `a3_31b_sunny`; the bubble-out wrapper re-keyed to `bragTo` — keyed to the
+  greeting it would have wiped the brag's bubble 18 frames before he said it.
+- script.md: Scene 31 fold; **the "seven firings is the ceiling" ruling is now
+  EIGHT**, with `a3_31b` listed and Mike's call noted as the reason, plus a
+  "nothing may add a ninth" line.
+- Stills `t8_28390/28480/28540/28600` — bubble in place, ending silence clean.
+
+## T9 — `rc_11b_sunny` bubble — DONE
+
+Moved from (1250, 640) to **(1330, 196)**, tail "right", `tailAt` unchanged at
+`S34_SUNNY.x − 90`.
+
+**DEVIATION on the y.** The brief starts it at (1290, 300) with ±40px of
+latitude. At 300 the bubble's bottom edge **sliced the top off Ray's head** (he
+is at (1210, 372) at 0.6) — one wrong bubble traded for one hidden character —
+and 260 was still ~35px into him. 196 clears his crown with room. It does ride
+across **Sunny's own rays**, which is the trade the original low placement was
+avoiding; a bubble on its own speaker's rays is the acceptable half of that
+trade and a bubble across another character's face is not. Verified clear of
+`BlueMarble` (286, 196) and of the astronaut's sightline. `rc_09b_sunny` keeps
+the low mark, correctly — that line is about the astronaut. Still `t9c_30490`.
+
+## T10 — s35 tease cut — DONE
+
+- `narration.mjs`: `rc_17_narrator`, `rc_18_sunny`, `rc_18b_narrator` cut, with
+  a block noting what is **banked and unfired** for ep 5. The Sunny "four
+  moments he stops" count in the file header corrected to three.
+- `Video.tsx` s35: those three keys out of the clip list, their gaps gone,
+  `leadFrames` 45 → **20**. `rc_20_narrator` 30f freeze and `rc_21_ray` 40f
+  trailing beat and the 14f tail are unchanged and re-key cleanly.
+- `recap.tsx` `TeaseScene`: stir ramp, both rumbles, Sunny's claim/turn-to-camera
+  choreography, his bloom, his emotion morph and his bubble all removed. **The
+  volcano is fully asleep — `stir` is not passed at all**, not a small number,
+  and the comment says why. `WaterRumble` deleted (no other call site). Sunny
+  stays in frame at resting `proud` looking out to sea; no beat touches him.
+- script.md: Scene 35 rewritten (retitled **Sign-off**), with a CONTINUITY block
+  for the BIBLE's open-teases ledger. Ear item 8 (`rc_18_sunny`/`rc_18b`) marked
+  DEAD; the running-gag ledger's "That one is me as well!" entry now records
+  that **the gag does not fire in this episode at all**.
+- Stills `t10_31079` (first-frame calm dusk, ring closed, no rumble),
+  `t10_31090/31130/31200/31245/31270/31300/31310/31350` (card in, banner,
+  freeze, flinch).
+
+## FLAGS for the showrunner
+
+1. **The plate jumps at every hard cut, and it always has.** With everything
+   above fixed, the residual difference across s09→s10 and s10→s11 is the
+   *painted plate* moving 10–15px: each scene passes its own `phase` to
+   `PaintedSky` and its clock restarts at 0, so the drift is at a different
+   point in its cycle either side of a cut. This is **documented series design**
+   (`common.tsx`: "Pass a different `phase` per scene… two consecutive scenes
+   drifting in lockstep read as one long shot with a jump-cut in it"), so I did
+   not touch it — but it is now the most visible thing left in Mike's "they all
+   jump a bit", and it is a kit-level call, not a scene-level one.
+2. **`rc_14_ray` has the same bug T5 just fixed** — "the AIR does" on a MiniMax
+   line, in the recap, one of the most-repeated sentences in the episode. Worth
+   fixing in RUN 2 for ~$0.003. Full list of 29 above.
+3. **Two baked-constant families are now timing-fragile.** `S9_END_*` goes stale
+   if Scene 9's clips or gaps change; `S10_END_*` goes stale if Scene 10's do —
+   and T2a already invalidated the latter once. Both carry a loud comment with
+   the re-derivation method (probe overlay + still), but a future retime will
+   not notice on its own. If this pattern spreads, the kit wants a real
+   scene-handoff mechanism.
+4. **The `a1_48c_blue` tail is clamp-pinned.** The live `tailAt` is correct but
+   invisible at the current bubble position; the underlying problem is that
+   `SpeechBubble` can only grow a tail from its bottom edge, which forces every
+   speaker on a Big Word card to sit *above* their own bubble. That kit gap is
+   already reported in two places in `act1.tsx`; it is now reported a third
+   time.
+5. **T7's acceptance band** did not match Red's measured corpus — see the T7
+   deviation note. The take needs a human ear.
+6. **`skeptical` is a kit addition and no other scene uses it.** If it reads
+   wrong at showrunner review the ladder is still available (B2, then A), but I
+   would spend a still or two first: it is a subtle face by design and it does
+   not photograph as strongly as it plays.

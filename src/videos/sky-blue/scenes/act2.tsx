@@ -700,35 +700,44 @@ const MythStamp: React.FC<{ at: number; until: number; x: number; y: number }> =
 // ---------------------------------------------------------------------------
 
 /**
- * **One prop, one idea** (revision §6.5).
+ * **NO PROPS AT ALL** (T3, Mike's tweak-round note 3, 2026-08-04).
  *
- * The delivered cut asked for a ladder, a dust sheet, a roller, a tray, a patch
- * of already-blue sky being painted, and a reveal that two separate objects were
- * dry — five props and two ideas, which is why the note on it was "visually very
- * messy". All of it is deleted. What is left is a man in an empty sky holding a
- * paint tray, and then tipping it toward us.
+ * Mike: "the 'Sunny show us the paint' line seems weird that it shows us the
+ * paint and then he says he keeps it somewhere else — let's just get rid of the
+ * paint box from that scene (it's fine at the beginning though)."
  *
- * The roller survives only as **the thing lying in the tray**. A dry roller is a
- * fact a grown-up infers; an empty tray is a fact a six-year-old reads in one
- * frame, and the frame is the joke.
+ * He is exactly right and the note is a structural one, not a dressing one:
+ * **a man who shows you the tray has answered the question.** The scene then
+ * spends its next line having him refuse to answer it, and a six-year-old has
+ * no way to reconcile the two. Taking the tray out turns "I keep the paint
+ * somewhere else." into what it was always written as — an unsupported claim,
+ * a dodge, the joke — and there is nothing on screen arguing with it.
+ *
+ * So the scene is now **one character and one silence**. The 45f held beat is
+ * unchanged in length and position; what carries it is his face (see
+ * `MythPaintScene`). Deleted with the tray: `S16_TRAY`, the tip and back eases,
+ * and the `PaintTray` component itself, which had no other call site. The
+ * roller it contained went with it and is untouched everywhere else — the cold
+ * open's wet one (coldOpen.tsx) and Scene 23's dry one both stand, which is
+ * Mike's "it's fine at the beginning though".
+ *
+ * The previous version of this note is worth keeping in one line, because it is
+ * still the rule: the revision cut this scene from five props and two ideas
+ * down to one prop and one idea. T3 takes it to nought and one.
  */
 const S16_SUNNY: Mark = { x: 1452, y: hover("sunny", 402, 0.92), scale: 0.92, who: "sunny", side: "left" };
 
 /**
- * Where the tray is before the beat, and where it ends up in it.
+ * The look away, inside the beat.
  *
- * `rest` is beside him, tilted **toward himself** so the audience cannot see
- * into it — he has turned up holding the evidence and is extremely pleased with
- * it, which only works if the evidence has not been read yet. `show` is dead
- * centre and 1.85×, which is a shade under a third of the frame: he tips it
- * toward the lens by holding it *out*, so the tray grows because it is coming
- * at us rather than because a camera moved. Nothing else in the scene moves,
- * including the camera — there is no `Camera` in this scene any more.
+ * With the tray gone the 45 frames have exactly one thing in them, and it has
+ * to be small enough not to become a second joke: twelve frames off to the
+ * side, twelve frames back, ending well before `a2_12_sunny` so that the
+ * excited -> neutral -> proud morph the scene already ran still does the
+ * landing. It is the oldest tell there is — a man asked for evidence looks
+ * somewhere else — and it costs one prop and no frames.
  */
-const S16_TRAY = {
-  rest: { x: 1268, y: 646, scale: 1 },
-  show: { x: 960, y: 596, scale: 1.85 },
-} as const;
+const S16_LOOK_AWAY = { at: 14, out: 12, back: 12 } as const;
 
 const S16_BUBBLES: Record<string, string> = {
   // A summary of "It was PAINT! Blue paint! I painted the whole sky!" — the
@@ -738,15 +747,16 @@ const S16_BUBBLES: Record<string, string> = {
 };
 
 /**
- * Scene 16 — an empty sky, one tray, and nothing in it.
+ * Scene 16 — an empty sky, one Sun, and nothing else at all.
  *
- * The beat is the whole scene: forty-five frames of Sunny holding an empty tray
- * toward camera while nobody says anything. Two things are staged for it and
- * nothing else exists to move — the tray **tips over** into the middle of the
- * frame across the first twenty frames of the silence and then holds absolutely
- * still, and his face does not begin to fall until ten frames *into* it, which
- * is the emotion-lead rule made literal: a reaction that starts under the
- * Narrator's question is the joke being answered before it is asked.
+ * The beat is the whole scene: forty-five frames of a man who has been asked to
+ * produce the paint, and does not. **Since T3 there is no tray** (see
+ * `S16_SUNNY`), so the only thing staged inside the silence is his face — the
+ * grin freezing on the request, a small look away and back, and then the
+ * existing excited -> neutral -> proud morph riding into the line. His face does
+ * not begin to fall until ten frames *into* the beat, which is the emotion-lead
+ * rule made literal: a reaction that starts under the Narrator's question is the
+ * joke being answered before it is asked.
  */
 const MythPaintScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -754,16 +764,20 @@ const MythPaintScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [beatFrom, beatTo] = heldBeat(scene, "a2_11_narrator");
   const [recoverFrom] = lineWindow(scene, "a2_12_sunny");
 
-  // The tip. It lands inside the first half of the beat and then the shot is
-  // *stopped* rather than slowing down — a move that is still easing out reads
-  // as unfinished, and this silence has to read as held.
-  const tip = clamp01(kidEase.easeInOutSine((frame - beatFrom) / 20));
-  // Afterwards he keeps holding it out, still empty, while he explains where
-  // the paint is. It only comes back far enough to clear his face.
-  const back = clamp01(kidEase.easeInOutSine((frame - recoverFrom) / 18)) * 0.34;
-  const tx = S16_TRAY.rest.x + (S16_TRAY.show.x - S16_TRAY.rest.x) * (tip - back * tip);
-  const ty = S16_TRAY.rest.y + (S16_TRAY.show.y - S16_TRAY.rest.y) * (tip - back * tip);
-  const ts = S16_TRAY.rest.scale + (S16_TRAY.show.scale - S16_TRAY.rest.scale) * (tip - back * tip);
+  // The look away, and back. 0 at both ends of it, so the beat opens and closes
+  // on the same eye-line and nothing is left hanging. See `S16_LOOK_AWAY`.
+  const awayFrom = beatFrom + S16_LOOK_AWAY.at;
+  const away =
+    frame < awayFrom
+      ? 0
+      : frame < awayFrom + S16_LOOK_AWAY.out
+        ? kidEase.easeInOutSine((frame - awayFrom) / S16_LOOK_AWAY.out)
+        : 1 -
+          clamp01(
+            kidEase.easeInOutSine(
+              (frame - (awayFrom + S16_LOOK_AWAY.out)) / S16_LOOK_AWAY.back,
+            ),
+          );
 
   // His face goes in the silence, so there is no line to hang it on.
   const sunnyEmotion = emotionAt(
@@ -782,11 +796,6 @@ const MythPaintScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     <AbsoluteFill>
       <PaintedSky bg="sky_dome_day" phase={12.3} drift={9} />
 
-      {/* The one prop. It is in front of Sunny because he is holding it out:
-          he has no arms (he is a disc with rays), so "held" is contact, and
-          "held out" is the tray being nearer the lens than he is. */}
-      <PaintTray x={tx} y={ty} scale={ts} tip={tip} zIndex={26} />
-
       <Sunny
         x={S16_SUNNY.x}
         y={S16_SUNNY.y}
@@ -794,14 +803,16 @@ const MythPaintScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         phase={PHASE.sunny}
         emotion={sunnyEmotion}
         speaking={stage.speaking("sunny")}
-        // Down and to the left at the tray for the whole scene: it is the only
-        // other thing in the frame and he is proud of it right up until he is
-        // not.
-        look={frame >= beatFrom ? { x: -0.85, y: 0.4 } : { x: -0.55, y: 0.25 }}
-        // Nothing moves in the beat. His breath drops to almost nothing and
-        // his eyes stop wandering: deadpan is stillness.
+        // Down the lens for the claim, and then **off to the side and back**
+        // inside the beat: with the tray gone there is nothing in the frame for
+        // him to look at, and a man looking at nothing while he is asked for
+        // evidence is the whole picture. He is back on the lens before he
+        // answers, which is what makes the answer brazen rather than shifty.
+        look={{ x: -0.55 - 0.4 * away, y: 0.25 + 0.15 * away }}
+        // Nothing else moves in the beat. His breath drops to almost nothing:
+        // deadpan is stillness. `eyeLife` stays up, because the look away is
+        // deliberate and a dead eye cannot perform it.
         idle={frame >= beatFrom && frame < beatTo ? 0.35 : 1}
-        eyeLife={frame >= beatFrom && frame < beatTo ? 0.35 : 1}
         raySpeed={frame >= beatFrom && frame < beatTo ? 0.04 : 0.16}
         enter={{ at: 0, kind: "slideRight" }}
         zIndex={18}
@@ -825,115 +836,11 @@ function clamp01(v: number): number {
   return Math.max(0, Math.min(1, v));
 }
 
-/**
- * **The paint tray, and the only object in Scene 16.**
- *
- * `tip` is the whole prop: at 0 the far rim is barely above the near one and we
- * are looking at the *outside* of a tray tilted away from us, so there is
- * nothing to read; at 1 the well is wide open at the lens and it is clean,
- * white, unribbed by a single stroke and plainly never used. It is drawn as one
- * continuous opening rather than as two states that cross-fade, because a tray
- * that dissolves into a different tray is a cut and this has to be a man tipping
- * something over.
- *
- * Not merely dry: **unused**. The well is white rather than the sleeve-grey the
- * old prop used, and the ramp ribs are unbroken — a tray that has had paint in
- * it has a tide mark, and the joke is that this one never has.
- */
-const PaintTray: React.FC<{
-  x: number;
-  y: number;
-  scale: number;
-  tip: number;
-  zIndex?: number;
-}> = ({ x, y, scale, tip, zIndex }) => {
-  const open = clamp01(tip);
-  const nearY = 78;
-  const farY = -4 - 104 * open;
-  const nearHalf = 168;
-  const farHalf = 126 + 26 * open;
-  const shell = `M ${-farHalf} ${farY} L ${farHalf} ${farY} L ${nearHalf} ${nearY} L ${-nearHalf} ${nearY} Z`;
-  // The interior, inset by the rim's own thickness. It is what gives the tray a
-  // *wall*: the first pass drew one flat quad and a still of it read as a sheet
-  // of ruled paper, which is a very funny thing for the sky's paint tray to be
-  // and not the joke this scene is telling.
-  const inNear = nearY - 15;
-  const inFar = farY + 15;
-  const inNearHalf = nearHalf - 21;
-  const inFarHalf = farHalf - 17;
-  const lerpHalf = (k: number): number => inFarHalf + (inNearHalf - inFarHalf) * k;
-  const lerpY = (k: number): number => inFar + (inNear - inFar) * k;
-  const inner = `M ${-inFarHalf} ${inFar} L ${inFarHalf} ${inFar} L ${inNearHalf} ${inNear} L ${-inNearHalf} ${inNear} Z`;
-  // The well is the near third — the bit a roller is loaded out of, and the bit
-  // that has to be visibly *empty*.
-  const wellTop = 0.62;
-  const well = `M ${-lerpHalf(wellTop)} ${lerpY(wellTop)} L ${lerpHalf(wellTop)} ${lerpY(wellTop)} L ${inNearHalf} ${inNear} L ${-inNearHalf} ${inNear} Z`;
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        transform: `translate(-50%, -50%) scale(${scale}) rotate(${-5 + open * 3}deg)`,
-        zIndex,
-        pointerEvents: "none",
-      }}
-    >
-      <svg width={380} height={300} viewBox="-190 -150 380 300" overflow="visible">
-        {/* The near lip, which is the only part of the tray that is the same
-            shape at both ends of the tip — it is what the whole thing pivots
-            about. */}
-        <path
-          d={`M ${-nearHalf} ${nearY} L ${nearHalf} ${nearY} L ${nearHalf - 8} ${nearY + 26} L ${-nearHalf + 8} ${nearY + 26} Z`}
-          fill="#cfc8b8"
-          stroke={kidTheme.ink}
-          strokeWidth={9}
-          strokeLinejoin="round"
-        />
-        {/* The rim: the tray's own grey outside, which is all there is to see
-            while it is tipped away from us. */}
-        <path d={shell} fill="#ded7c8" stroke={kidTheme.ink} strokeWidth={9} strokeLinejoin="round" />
-        {/* The inside, arriving as the well swings toward the lens. Ramp first,
-            then the deeper well at the near end, then the ribs — three tones so
-            the thing has a floor and a step rather than being one white shape. */}
-        <g opacity={open}>
-          <path d={inner} fill="#fbf8ef" stroke="#c9c2b1" strokeWidth={5} strokeLinejoin="round" />
-          <path d={well} fill="#eae5d7" stroke="#c9c2b1" strokeWidth={5} strokeLinejoin="round" />
-          {/* The ramp ribs. Short, on the ramp only, and every one unbroken: a
-              tray that has had paint in it has a tide mark across these, and the
-              whole joke is that this one never has. */}
-          {[0.16, 0.31, 0.46].map((k) => (
-            <path
-              key={k}
-              d={`M ${-lerpHalf(k) + 26} ${lerpY(k)} L ${lerpHalf(k) - 26} ${lerpY(k)}`}
-              stroke="#ded7c6"
-              strokeWidth={9}
-              strokeLinecap="round"
-            />
-          ))}
-        </g>
-        {/* Far rim highlight — the edge that tells the eye which way up it is. */}
-        <path
-          d={`M ${-farHalf + 12} ${farY + 3} L ${farHalf - 12} ${farY + 3}`}
-          stroke="#ffffff"
-          strokeWidth={7}
-          strokeLinecap="round"
-          opacity={0.75}
-        />
-      </svg>
-      {/* The roller, lying in it, and dry for the seventh scene running. `wet`
-          is 1 exactly once in the episode and that was the cold open.
-
-          Placed in the tray's *own* pixels: the svg above is 380×300 with a
-          centred viewBox, so local (0,0) is (190,150) here, and the wrapper's
-          `scale` already applies to everything inside — multiplying by it again
-          is the double-count that put the roller through the far rim. −110° is
-          the angle that lands the sleeve in the well with the handle sticking
-          up out of the mouth, which is what "resting in it" looks like. */}
-      <PaintRoller x={109} y={187} scale={0.85} rot={-162 + open * 7} wet={0} />
-    </div>
-  );
-};
+// `PaintTray` IS DELETED (T3, 2026-08-04). It lived here and was drawn in
+// Scene 16 and nowhere else; Mike's note took the prop out of that scene, so
+// the component went with it rather than sitting in the file as an unreferenced
+// three hundred lines. The roller it used to hold is `PaintRoller`, which is
+// alive and well: the cold open loads it wet and Scene 23 still holds it dry.
 
 // ---------------------------------------------------------------------------
 // Scene 17 — The sky is not empty

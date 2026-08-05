@@ -92,8 +92,9 @@
 // two `sad` in Act One (the sulk, and nowhere else), `surprised` on the eight
 // lines where a fact lands on him, `happy` from the rainbow onward, and one
 // `calm` at the sunset. Drip and Puff are `happy` throughout, which is all they
-// are. SUNNY HAS NONE — he is on kokoro, and the four moments he stops
-// (`a2_12`, `a2_45`, `a2_50`, `rc_18`) are carried by the words, by a slower
+// are. SUNNY HAS NONE — he is on kokoro, and the three moments he stops
+// (`a2_12`, `a2_45`, `a2_50`; `rc_18` was the fourth until T10 cut it) are
+// carried by the words, by a slower
 // `speed`, and by the face, which is where Scene 23 was staging them anyway.
 //
 // PAUSE MARKERS (`<#0.3#>`) are seconds of silence *inside* a MiniMax line and
@@ -433,12 +434,19 @@ export default {
       ...RAY,
       emotion: "happy",
     },
-    // Scene 5, the eight minutes. FIVE FIRINGS OF ONE QUESTION, with a flat
-    // almanac answer after four of them and nothing at all after the fifth —
-    // and, since revision2 (Mike's sign-off amendment, 2026-08-03), a SIXTH
-    // firing that is deliberately different: Ray is cut off mid-word and the
-    // Narrator answers "No." The interruption is the only thing in the scene
-    // that is not a repetition, which is what tells the ear the gag is over.
+    // Scene 5, the eight minutes. FIVE FIRINGS OF ONE QUESTION, each one
+    // answered by a flat almanac line — and then a SIXTH firing that is
+    // deliberately different: Ray is cut off mid-word and the Narrator answers
+    // "No, Ray, not yet." The interruption is the only thing in the scene that
+    // is not a repetition, which is what tells the ear the gag is over.
+    //
+    // RESTRUCTURED 2026-08-04 (Mike's tweak-round note 1, T1). Was four
+    // answers at one/two/four/seven minutes with the FIFTH firing left hanging
+    // in a 90f dead hold. It is now **five answers counting straight up** —
+    // one, two, three, four, five — and the unanswered-firing beat is gone:
+    // that job moved to the silent almost-ask inside the closing hold
+    // (act1.tsx). Every answer still sums to eight, so the arithmetic stays
+    // honest for a six-year-old adding along.
     //
     // THE FIVE FIRINGS ARE ONE RECORDING. a1_13_ray is the only synthesis; the
     // other four are aliases of it. Not four takes — MiniMax returned episode
@@ -449,9 +457,9 @@ export default {
     // as flat as the sound. The text lives on a1_13; changing it there
     // re-copies all four, and there is nothing to keep in step by hand.
     //
-    // The escalation lives in `Video.tsx` (45 / 75 / 105 / 135 since the
-    // amendment, was 30 / 45 / 60 / 75), not here. The clips must not vary at
-    // all: it is the gaps that grow.
+    // The escalation lives in `Video.tsx` (45 / 75 / 105 / 135 / 165 since T1,
+    // was 45 / 75 / 105 / 135 with a 90f dead hold), not here. The clips must
+    // not vary at all: it is the gaps that grow.
     a1_13_ray: { text: "Are we there yet?", ...RAY },
     a1_14_narrator: {
       text: "One minute down. Seven to go.",
@@ -465,23 +473,33 @@ export default {
       speed: 0.92,
     },
     a1_15c_ray: { sameAs: "a1_13_ray" },
-    // THE ARITHMETIC SKIPS HERE — two to four — and that is the grown-up smirk
-    // and the thing that stops four answers being a recitation. Same shape,
-    // same speed, same complete lack of interest as the other three.
+    // THE COUNT IS STRAIGHT, and that is the point of it (T1, 2026-08-04; this
+    // line used to skip two-to-four for a grown-up smirk). **The Narrator is a
+    // metronome** — same shape, same speed, same complete lack of interest,
+    // five times, one number apart — so that the ONE time she deviates, at the
+    // interruption, the ear hears it instantly.
     a1_15d_narrator: {
-      text: "Four minutes down. Four to go.",
+      text: "Three minutes down. Five to go.",
       ...NARRATOR,
       speed: 0.92,
     },
     a1_15e_ray: { sameAs: "a1_13_ray" },
     a1_16_narrator: {
-      text: "Seven minutes down. One to go.",
+      text: "Four minutes down. Four to go.",
       ...NARRATOR,
       speed: 0.92,
     },
-    // FIRING FIVE, AND IT GOES UNANSWERED — the Narrator has simply stopped.
-    // 90f of nothing after it (Video.tsx), then the sixth firing.
+    // FIRING FIVE, and since T1 it is answered at exactly the rhythm of the
+    // other four. The 165f silence that follows the answer (Video.tsx) is the
+    // longest pre-firing gap in the scene, and it is where the pattern peaks.
     a1_16b_ray: { sameAs: "a1_13_ray" },
+    // THE FIFTH ANSWER (NEW, T1 2026-08-04). Same fields as the other four; the
+    // count finishes at five and the sum is still eight.
+    a1_16b2_narrator: {
+      text: "Five minutes down. Three to go.",
+      ...NARRATOR,
+      speed: 0.92,
+    },
     // FIRING SIX, AND IT IS A DIFFERENT RECORDING ON PURPOSE (amendment,
     // 2026-08-03). Deliberately truncated text — Ray is cut off mid-word by the
     // Narrator, on a 0f gap. Bubble reads "Are we—"; the truncation is in the
@@ -490,11 +508,16 @@ export default {
     // utterance (MiniMax may append falling intonation). Fallback text: "Are we
     // there" — still truncated. Audition two takes.
     a1_16c_ray: { text: "Are we", ...RAY },
-    // THE NEW DEADPAN FLOOR, 0.8 (a2_49_narrator's 0.85 was the old one).
-    // Unamused, drawn out, final: the almanac voice with the almanac removed.
-    // She is bored, not cross — the tone guardrail. Kokoro, so free to re-take;
-    // if 0.8 distorts, 0.85 and let the 90f hold after it do the dragging.
-    a1_16d_narrator: { text: "No.", ...NARRATOR, speed: 0.8 },
+    // THE DEADPAN FLOOR, 0.8 (a2_49_narrator's 0.85 was the old one), and the
+    // Narrator's ONLY deviation from the metronome in the whole scene.
+    // TEXT CHANGED 2026-08-04 (T1; was "No."): Mike's note asks for "No, Ray,
+    // not yet.", which keeps the interruption but makes it patient rather than
+    // curt — she is bored, not cross, and that is the tone guardrail. Unamused,
+    // drawn out, final: the almanac voice with the almanac removed. Kokoro, so
+    // free to re-take.
+    // EAR-CHECK: 0.8 across a four-word sentence is a lot of drag. If it
+    // audibly distorts, 0.85 and let the 210f hold after it do the dragging.
+    a1_16d_narrator: { text: "No, Ray, not yet.", ...NARRATOR, speed: 0.8 },
     a1_17_narrator: {
       text: "And then Ray arrived, all at once, the way light always does.",
       ...NARRATOR,
@@ -685,12 +708,15 @@ export default {
     // **SOURCE RECORDING** — fires again byte-identical as `a3_14o_orange` in
     // Scene 28b2. Two firings, per the ruling.
     a1_42g_orange: { text: "He meant to.", ...ORANGE, emotion: "calm" },
-    // A small formal throat-clear, moving the meeting along (amendment,
-    // 2026-08-03). EAR-CHECK: kokoro's read must land as a throat-clear; if it
-    // reads as a WORD, CUT the clip — the beat works without it. Never
-    // substitute "Hmm.", which is her established beat at a1_27/rc_18b and must
-    // not be diluted.
-    a1_42h_narrator: { text: "Ahem.", ...NARRATOR, speed: 0.92 },
+    // `a1_42h_narrator` ("Ahem.") IS CUT, 2026-08-04 (Mike's tweak-round note
+    // 2, T2a). The ear-check on it said "if it reads as a WORD, CUT the clip —
+    // the beat works without it", and the verdict came back at the family
+    // re-screening: it read as a word, and a throat-clear over Orange's "He
+    // meant to." made the show comment on a joke it should have let sit. The
+    // beat is now a 40f silence on `a1_42g_orange`'s gap with nothing in it.
+    // The standing ruling survives the cut: **never substitute "Hmm."** — that
+    // is the Narrator's established beat at a1_27/rc_18b and it must not be
+    // diluted by a second use.
     // The straight line. Flat, slow, and the 24f held beat after it does the
     // work. Narrator, so it stays on kokoro and re-times for free.
     a1_43_narrator: {
@@ -1236,7 +1262,13 @@ export default {
     // named as his one genuinely funny characterisation and which fires twice
     // elsewhere (a2_34, a2_36b). Same generosity, opposite direction — he hands
     // Sunny his half in a2_46 and takes the other half back here.
-    a2_52_ray: { text: "But the AIR did the painting.", ...RAY },
+    // **NO ALL-CAPS EMPHASIS ON A MINIMAX LINE.** TEXT CHANGED 2026-08-04 (T5,
+    // Mike's note 5: "it sounds like 'but the A did the painting'"). The word
+    // was "AIR" in capitals, which is kokoro grammar — the Narrator's voice
+    // reads capitals as stress, MiniMax reads them as an initialism and said
+    // the letter A. Lowercase, same fields, re-synthesized. The BUBBLE in s23
+    // keeps its capitals: a bubble is print, not pronunciation.
+    a2_52_ray: { text: "But the air did the painting.", ...RAY },
     // And he is off again, at full volume, inside one second.
     a2_53_sunny: {
       text: "MY LIGHT! THE SKY IS MADE OF MY LIGHT! YOU'RE WELCOME! HA! HA!",
@@ -1787,6 +1819,14 @@ export default {
     // Passing behind the card, not stopping, not looking: the "Lovely air."
     // shape, and the actual sunset reviewing the show about him. Feeds
     // rc_04b_red, which is why this one is not "It is mostly Red."
+    //
+    // **RE-ROLLED 2026-08-04 (T7, Mike's note 7).** The delivered take inserted
+    // an epenthetic vowel — "Nice-eh drama" — the same failure class as the
+    // a2_28b_blue bad draw, and it did not sound like any character in the
+    // show. Text and fields are UNCHANGED; the clip was cache-busted (delete
+    // the key's entry in `public/narration/sky-blue/.cache.json` and its mp3,
+    // then re-run) and re-drawn until the "Nice" onset came back clean. If it
+    // ever comes back epenthetic again, the fallback text is "Good drama."
     a3_22b_red: { text: "Nice drama.", ...RED, emotion: "calm" },
     a3_23_narrator: {
       text: "A sunset is not different light. It is the same light, taking the long way.",
@@ -1840,6 +1880,24 @@ export default {
     // can later reword one of the two greetings and quietly break the gag.
     // Do not reword a1_03.
     a3_31_sunny: { sameAs: "a1_03_sunny" },
+    // NEW 2026-08-04 (T8, Mike's note 8 + his amendment "it should mirror his
+    // same line in previous episodes"). **SERIES CANON, VERBATIM**: episode one
+    // (water-cycle) and episode two (wind) both pair "GOOD MORNING, EVERYBODY!"
+    // with exactly this sentence, word for word and exclamation mark for
+    // exclamation mark. Ep 3 fired the greeting without the tag; this restores
+    // the pair. Do not reword it — the joke is that it is the identical brag,
+    // three episodes running, from a character who has never been corrected.
+    //
+    // Not a `sameAs`: it has never been said in THIS episode, so there is no
+    // earlier clip of it to copy. Kokoro (am_puck), so it costs nothing and
+    // re-times for free. It takes the episode's closing 75f silence — see
+    // Video.tsx s31, where the "the episode does not have an ending" rule moved
+    // with it — and it is the EIGHTH firing of the "You're welcome" ladder,
+    // which is one past what script.md used to call the ceiling. Mike's call.
+    a3_31b_sunny: {
+      text: "I invented mornings! You're welcome! HA! HA!",
+      ...SUNNY,
+    },
 
     // ---------------------------------------------------------------
     // RECAP — the chant, the mind-blower, the tease
@@ -1961,36 +2019,32 @@ export default {
       ...NARRATOR,
       speed: 0.92,
     },
-    // `rc_16_narrator` ("Next time.") IS CUT, 2026-08-04, with Mike's
-    // series-order decision (ep 4 = plants, ep 5 = volcano). It used to tether
-    // the volcano stir to the *next* episode, which the schedule no longer
-    // supports. The stir beats now open in silence and promise nothing with a
-    // number on it; "Next time." comes back at `rc_20_narrator`, where it
-    // belongs — over the card that says what next time actually is.
-    // Scene 35: a wobbling smoke ring and a rumble under it. Kept wondrous, not
-    // frightening — see the tone guardrail in script.md.
-    rc_17_narrator: {
-      text: "Something is waking up.",
-      ...NARRATOR,
-      speed: 0.9,
-    },
-    // TEXT CHANGED 2026-08-01 (was "That is not me."). THE INVERSION IS
-    // WITHDRAWN AND BANKED FOR THE VOLCANO EPISODE (ep 5), where it can land *after* the
-    // wrongness ceremony instead of instead of it. What fires here is the gag's
-    // STANDARD firing, in the wording it has had since ep 2's rc_14_sunny:
-    // reflexive, instant, completely unearned. Three episodes of a character
-    // claiming everything end with him claiming one more thing, which is the
-    // honest ending for a character who has not been corrected.
-    // EAR-CHECK at 1.0: full confidence, no doubt anywhere in it. If it plays
-    // as unsure the tease has gone the wrong way and taken the volcano episode
-    // with it.
-    rc_18_sunny: { text: "OH! That one is me as well! HA! HA!", ...SUNNY },
-    // NEW. The doubt, planted without a verdict. "Hmm." is the Narrator's own
-    // established deadpan (a1_27_narrator, where she declines to argue with Ray
-    // about being plain), so a returning viewer already knows exactly what it
-    // means when she says it and exactly how much she is not saying. Flat and
-    // slow. Nothing enters the 30f after it.
-    rc_18b_narrator: { text: "Hmm. We will find out.", ...NARRATOR, speed: 0.9 },
+    // --- SCENE 35: THE WHOLE VOLCANO TEASE IS CUT (2026-08-04, T10) ----------
+    //
+    // FOUR keys died here, in two passes, and all four for the same reason:
+    // the end tease pointed at an episode that is no longer next.
+    //
+    //   `rc_16_narrator` ("Next time.")        cut 2026-08-04, series order
+    //   `rc_17_narrator` ("Something is waking up.")
+    //   `rc_18_sunny`    ("OH! That one is me as well! HA! HA!")
+    //   `rc_18b_narrator`("Hmm. We will find out.")
+    //
+    // The last three are Mike's note 10, verbatim: "I think we need to cut the
+    // 'someone is waking up bit' — it doesn't make sense with the switch to
+    // plants in [ep 4], just cut straight from the moon to the next time what
+    // do plants eat". So the volcano goes back to being scenery — the series'
+    // sleeping constant, fully asleep, with zero wake tells — and Scene 35 is
+    // now twenty frames of calm dusk, the goodbye, the card, and Ray's button.
+    //
+    // **BANKED, NOT SPENT** (for the BIBLE's open-teases ledger): Sunny
+    // claiming the wake ("That one is me as well") and the "That is not me."
+    // inversion it replaced are both now UNFIRED and available to ep 5's cold
+    // open. The in-episode volcano seeds that survive are s25 (Yellow's rest
+    // attempt and the narrator warning her off) and s28b2 (the eye-open beat).
+    //
+    // What survives in this scene: `rc_19_ray`, `rc_20_narrator` — where "Next
+    // time." now lives, over the card that says what next time actually is —
+    // and `rc_21_ray`.
     // Third and last firing of the catchphrase, waving from the corner of the
     // next-time card.
     rc_19_ray: {

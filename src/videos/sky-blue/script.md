@@ -4,11 +4,14 @@
 **Topic:** why the sky is blue — and why a sunset is not
 **Audience:** six-year-olds — and the grown-up in the room
 **Target:** was ~10.5–12 minutes; the comedy rewrite bought the ensemble the
-room the mandate asked for and the delivered cut is **17:23** (31,281 frames at
-30 fps).
-**Shape:** cold open, three acts, recap. Thirty-eight scenes, three hundred and
-two spoken lines (revision 2, 2026-08-03; was thirty-six and two hundred and
-eight).
+room the mandate asked for and the cut after tweak-round RUN 1 is **17:25.8**
+(31,375 frames at 30 fps). *(The 2026-08-03 delivered cut was 17:23 / 31,281;
+the s35 re-tease took it to 17:25.7 / 31,372; the tweak round is net +3 frames
+— T1 and T8 add, T2a and T10 subtract.)*
+**Shape:** cold open, three acts, recap. Thirty-eight scenes, three hundred
+spoken lines (revision 2 brought it to three hundred and two; the tweak round
+adds `a1_16b2_narrator` and `a3_31b_sunny` and cuts `a1_42h_narrator`,
+`rc_17_narrator`, `rc_18_sunny` and `rc_18b_narrator`).
 
 > **REVISION 2 APPLIED IN FULL, 2026-08-03.** `revision2.md` is wired in *and*
 > staged, and this file is the single source of truth again. Where the two now
@@ -396,17 +399,32 @@ for it.
 field, tiny, with Earth a blue dot that does not appear to get any closer. **The
 shot never cuts, and nothing in it ever changes** — not the star field, not the
 speed, not the size of the dot. That is the whole set and it must stay that
-boring for twenty-five seconds.
-**Lines:** `a1_13_ray`, `a1_14_narrator`, `a1_15_ray`, **`a1_15b_narrator`**,
-**`a1_15c_ray`**, **`a1_15d_narrator`**, **`a1_15e_ray`**, `a1_16_narrator`,
-**`a1_16b_ray`**, **`a1_16c_ray`**, **`a1_16d_narrator`**
+boring for half a minute.
+**Lines:** `a1_13_ray`, `a1_14_narrator`, `a1_15_ray`, `a1_15b_narrator`,
+`a1_15c_ray`, `a1_15d_narrator`, `a1_15e_ray`, `a1_16_narrator`,
+`a1_16b_ray`, **`a1_16b2_narrator`**, `a1_16c_ray`, `a1_16d_narrator`
 
-**REVISED 2026-08-03** (revision2, Mike's sign-off amendment: *"drag out the
-pauses… more spacing between are we there yets,"* plus an interrupted sixth
-firing *"as the last one with a bit more traveling after and then hop to the
-arrival scene"*). The silences stretch, the fifth firing goes unanswered into a
-long dead hold, and the gag gains a **sixth, different** firing. Firings 1–5 are
-still ONE recording (`a1_13_ray` + its four aliases), untouched.
+**REVISED 2026-08-04** (tweak round T1, after the family re-screening).
+
+> **Mike, verbatim:** "Start with the are we there yet scene. I think a slightly
+> increasing delay between each are we there yet would be good. And let's redo
+> the narrator lines a bit, I think we have 1min, 2,4,7, nothing, interruption.
+> Let's switch to 1,2,3,4,5, interruption. For the interruption, let's switch
+> narrator to 'No, Ray, not yet', then an extra long wait with Ray looking a
+> little like he's going to ask again but doesn't say anything and then
+> arrives"
+
+Five answered firings counting **straight up**, a fifth escalation step, a new
+interruption line, and a silent almost-ask inside the closing hold. The
+unanswered-fifth-firing beat is REMOVED — that job moves to the almost-ask,
+where it is played instead of stated. The skipped-arithmetic gag is deliberately
+gone; Mike's call. Firings 1–5 are still ONE recording (`a1_13_ray` + its four
+aliases), untouched, and the two paid MiniMax clips in the scene (`a1_13_ray`,
+`a1_16c_ray`) were not re-synthesized.
+
+*(The previous revision, 2026-08-03, is what this replaces: four answers at
+1/2/4/7 minutes, gaps 45/75/105/135, a fifth firing left hanging in a 90f dead
+hold, and "No." at 0.8.)*
 
 **HELD BEAT — 45f (1.5s) before `a1_13_ray`** (i.e. on `a1_12_ray`'s
 `gapFrames`, in Scene 4). Unchanged.
@@ -414,52 +432,70 @@ still ONE recording (`a1_13_ray` + its four aliases), untouched.
 > **RAY:** Are we there yet?
 > **NARRATOR:** One minute down. Seven to go.
 
-**HELD BEAT — 45f (1.5s) after `a1_14_narrator`.** *(was 30f)*
+**HELD BEAT — 45f (1.5s) after `a1_14_narrator`.**
 
 > **RAY:** Are we there yet?
 > **NARRATOR:** Two minutes down. Six to go.
 
-**HELD BEAT — 75f (2.5s) after `a1_15b_narrator`.** *(was 45f)*
+**HELD BEAT — 75f (2.5s) after `a1_15b_narrator`.**
 
 > **RAY:** Are we there yet?
-> **NARRATOR:** Four minutes down. Four to go.
+> **NARRATOR:** Three minutes down. Five to go. *(text changed, T1)*
 
-**HELD BEAT — 105f (3.5s) after `a1_15d_narrator`.** *(was 60f)*
+**HELD BEAT — 105f (3.5s) after `a1_15d_narrator`.**
 
 > **RAY:** Are we there yet?
-> **NARRATOR:** Seven minutes down. One to go.
+> **NARRATOR:** Four minutes down. Four to go. *(text changed, T1)*
 
-**HELD BEAT — 135f (4.5s) after `a1_16_narrator`.** *(was 75f)* **The longest
-silence in the episode now lives here**, where the pattern is at its peak and a
-six-year-old is saying the line with him. Same star field, same speed, same
-distance to go. Nothing enters it — no bubble, no gesture, no emotion change,
-and above all no sign that anything is about to happen.
+**HELD BEAT — 135f (4.5s) after `a1_16_narrator`.**
 
-> **RAY:** Are we there yet? *(`a1_16b_ray`, fifth firing, unchanged)*
+> **RAY:** Are we there yet? *(`a1_16b_ray`, fifth firing — and since T1 it is
+> ANSWERED, at the same house gap as the other four.)*
+> **NARRATOR:** Five minutes down. Three to go. *(`a1_16b2_narrator`, NEW —
+> kokoro, NARRATOR, 0.92, the same fields as the other four answers.)*
 
-**HELD BEAT — 90f (3.0s) after `a1_16b_ray`.** *(Was a 6f tail straight into the
-cut.)* **No answer comes.** Same star field, same speed, same dot. The Narrator
-has simply stopped answering, and the audience gets three seconds to understand
-that.
+**HELD BEAT — 165f (5.5s) after `a1_16b2_narrator`.** **The longest pre-firing
+silence in the episode**, where the pattern is at its peak and a six-year-old is
+saying the line with him. Same star field, same speed, same distance to go.
+Nothing enters it — no bubble, no gesture, no emotion change, and above all no
+sign that anything is about to happen.
 
-> **RAY:** Are we— *(`a1_16c_ray` — NEW recording, text deliberately truncated
-> to "Are we"; bubble reads `"Are we—"`)*
+> **RAY:** Are we— *(`a1_16c_ray` — separate recording, text deliberately
+> truncated to "Are we"; bubble reads `"Are we—"`)*
 
 **GAP — 0f.** The interruption. The Narrator does not wait for the end of the
 word.
 
-> **NARRATOR** *(unamused, drawn out)*: No. *(`a1_16d_narrator` — kokoro at
-> **0.8, the new deadpan floor**; flat, bored, final — the almanac voice with
-> the almanac removed. She is bored, not cross.)*
+> **NARRATOR** *(unamused, drawn out)*: No, Ray, not yet. *(`a1_16d_narrator` —
+> TEXT CHANGED 2026-08-04, was "No."; kokoro at **0.8, the deadpan floor**;
+> flat, bored, final — the almanac voice with the almanac removed. She is bored,
+> not cross, and the extra three words make her patient rather than curt.)*
 
-**HELD BEAT — 90f (3.0s) after `a1_16d_narrator`.** A bit more traveling: same
-shot, nothing changes, nobody speaks.
+**HELD BEAT — 210f (7.0s) after `a1_16d_narrator`.** *(was 90f)* "An extra long
+wait", and the longest hold in the episode. **THE SILENT ALMOST-ASK lives
+inside it**, and it is the only new thing in a scene whose whole discipline is
+that nothing new happens:
+
+- ~f60 of the hold: an **empty speech bubble** starts to inflate out of Ray. It
+  is the real bubble — the same component, the same `x`/`y`/tail/`tailAt` as
+  the six firings, drawn in transparent ink so the box is the identical shape —
+  scaled about the tip of its own tail so it visibly grows *from him*. It
+  reaches ~35% of a firing bubble over ~18f.
+- It hangs at 35% for ~50f, then deflates back into him over ~15f and is gone
+  by ~f145.
+- ~f145–210: pure unchanged travel.
+
+**Nothing on the rig changes.** No emotion, no look, and **no speaking mouth** —
+a moving mouth with no audio breaks the rig grammar, and at 0.62 scale the
+bubble IS his voice in this scene. The no-telegraph law holds: the wind-up is
+fully gone with sixty-seven frames of the silence still to run, so the cut stays
+unannounced.
 
 **Scene tail: 6f.** *(Deliberately almost nothing.)* Scene 6 cuts hard to a
 garden at full brightness on the frame after it, and `a1_17_narrator` — *"And
 then Ray arrived, all at once, the way light always does"* — is still the real
-answer, and it now also answers the "No." The joke's button is still a cut; it
-buttons the sixth firing instead of the fifth.
+answer. The joke's button is still a cut; it now buttons "No, Ray, not yet." and
+the almost-ask.
 
 **The escalation, and why it is built this way.** Four tools are used and they
 do different jobs:
@@ -469,24 +505,30 @@ do different jobs:
   episode two's one repeated sentence at 2.20s and then 2.84s, and this gag is
   *only* the sameness. Five identical clips also mean five identical mouth shapes
   and five identical bubbles, which is what makes the picture as flat as the
-  sound.
-- **The gaps escalate: 45 / 75 / 105 / 135.** The escalation is the *rhythm*,
-  not an attempt to bore anybody, and the effect being bought is a child
-  recognising a pattern and starting to say the line *with* Ray — which is
-  exactly what the longer silences buy more of. This is now the only place in
-  the episode that runs past the 75f ending hold, on Mike's explicit note.
-- **The answers stay flat and the arithmetic skips.** One/seven, two/six,
-  **four/four**, seven/one. The skip from two to four is the grown-up smirk and
-  it stops the four answers being a recitation. All four are the same shape, the
-  same speed (0.92) and the same complete lack of interest.
-- **The sixth is interrupted**, and it is the only thing in the scene that is
-  not a repetition. The fifth firing inherits the old button (a cut) as a dead
-  hold instead; the sixth being audibly DIFFERENT is what tells the ear the gag
-  is over.
+  sound. **This law is sacred: the escalation lives in the gaps and nowhere
+  else.**
+- **The gaps escalate: 45 / 75 / 105 / 135 / 165**, one second per step, five
+  steps since T1. The escalation is the *rhythm*, not an attempt to bore
+  anybody, and the effect being bought is a child recognising a pattern and
+  starting to say the line *with* Ray — which is exactly what the longer
+  silences buy more of. The 210f closing hold is now the longest silence in the
+  episode and it is the only place that runs past the 75f ending hold.
+- **The answers are a metronome, and the count is straight.** One/seven,
+  two/six, three/five, four/four, five/three — every one of them sums to eight,
+  so the arithmetic stays honest for a child adding along, and all five are the
+  same shape, the same speed (0.92) and the same complete lack of interest.
+  **The straight count is the point**: the Narrator never varies, so the ONE
+  time she deviates — the interruption — the ear hears it instantly. *(This
+  replaces the old skipped-arithmetic gag, two-to-four, which was a grown-up
+  smirk bought at the cost of the pattern being exactly regular. Mike's call,
+  2026-08-04.)*
+- **The sixth firing is interrupted**, and it is the only thing in the scene
+  that is not a repetition. Being audibly DIFFERENT is what tells the ear the
+  gag is over.
 
 **Pedagogy:** none, still, and it now buys more of what it always bought — eight
 minutes for ninety three million miles, stated as a travel time a child can be
-bored by. The one substantive gain: the count to eight is audible four times
+bored by. The one substantive gain: the count to eight is audible **five** times
 instead of twice, so "eight minutes" arrives as an arithmetic fact rather than as
 a number Sunny shouted once.
 
@@ -696,8 +738,28 @@ in character, and Red does not respond at all.** His bubble is
 **"Hi! Hi! Hi! Hi!"**, a summary and not a transcript.
 **Lines:** `a1_41_narrator`, `a1_42_ray`, **`a1_42b_yellow`**,
 **`a1_42c_green`**, **`a1_42d_blue`**, **`a1_42e_orange`**,
-**`a1_42f_narrator`**, **`a1_42g_orange`**, **`a1_42h_narrator`**,
-`a1_43_narrator`, `a1_44_ray`
+**`a1_42f_narrator`**, **`a1_42g_orange`**, `a1_43_narrator`, `a1_44_ray`
+
+**REVISED 2026-08-04** (tweak round T2a, after the family re-screening).
+
+> **Mike, verbatim:** "for the first ensemble scene, the narrator 'Ahem' and
+> Ray's look doesn't really fit Orange 'He meant to' line - let's let it sit
+> with no reaction, unless we can easily switch Ray's reaction to more of an
+> eyebrow raise type reaction (currently it's more a happy face)"
+
+**`a1_42h_narrator` ("Ahem.") IS CUT.** Its ear-check said "if it reads as a
+WORD, CUT the clip — the beat works without it", and at the re-screening it read
+as a word. The forty-eight frames it cost come back as a **40f held beat on
+`a1_42g_orange`** with nothing in it at all. The standing ruling survives the
+cut: **never substitute "Hmm."** — that is the Narrator's established beat at
+`a1_27`/`rc_18b` and a second use dilutes it.
+
+**Ray's reaction is now `skeptical`, not `neutral`.** Mike's conditional is
+satisfied: the rig gained a shared `skeptical` face (`src/lib/kid/rig.ts`) built
+out of `browAsym`, the one-brow tilt the kit already drew and no scene had ever
+used. One brow up, half lids, a near-flat mouth, no blush and no smug lopsided
+grin. **The camera look is unchanged** — the take-to-camera was never the
+failure. See Scene 10's block below.
 
 **The sacred shape survives exactly, and the replies land inside it.**
 `a1_42_ray` stays at 0.88 and stays the slowest character line in the episode;
@@ -778,17 +840,24 @@ NOTHING**. The devotion engine's thesis, stated before the engine is explained.)
 *(`a1_42g_orange` — SOURCE recording; fires again byte-identical in Scene 28b2.)*
 
 **Across the whole Orange exchange, Ray looks into the camera, confused and
-unamused** — the audience's face, worn by the hero. His face goes **neutral, not
-grumpy**: this show's deadpan is stillness, and an annoyed Ray would be the show
-taking a side against Orange, who is not being funny on purpose. Dropping the
-smile in front of a straight lens is the whole reaction. The eye-line breaks
-back to the seven on "Ahem.", before `a1_43`.
+unamused** — the audience's face, worn by the hero. Since T2a his face goes
+**`skeptical`**, not `neutral` and never `grumpy`: one eyebrow up, unimpressed.
+`neutral` was the right instinct and the wrong result — at 0.78 scale a straight
+face reads as "nothing is happening", which was exactly Mike's note — and
+`grumpy` would be the show taking a side against Orange, who is not being funny
+on purpose. Dropping the smile in front of a straight lens, with one brow up, is
+the whole reaction.
 
-> **NARRATOR** *(a small, formal throat-clear, moving the meeting along)*: Ahem.
+**HELD BEAT — 40f (1.3s) after `a1_42g_orange`.** *(NEW, T2a; was the house 8f
+into "Ahem.")* **Let it sit.** Nothing at all happens: nobody moves, no line
+lands, no gesture, no second joke. Ray holds the sceptical camera look across
+the whole of it and breaks back to the line — one glance, 24f — as `a1_43`
+opens. It is the same joke as the 24f beat below it, one exchange earlier, and
+it is why the scene now has two silences in it instead of a silence and a noise.
 
-**"Ahem." and "Red did not say anything." get no bubbles**, and neither does any
-Narrator line: off-stage voice is what makes them the room's commentary rather
-than a character's.
+**"Red did not say anything." gets no bubble**, and neither does any Narrator
+line: off-stage voice is what makes them the room's commentary rather than a
+character's.
 
 > **NARRATOR:** Every single one of them was also Ray.
 
@@ -1096,15 +1165,28 @@ it is the one a grown-up will repeat.
 
 ### Scene 16 — Myth-bust two: show us the paint
 **On stage:** Narrator, Sunny
-**Visual:** Open sky, empty. Nothing in the frame but blue. Sunny slides in
-holding **one paint tray**, tilted toward himself so we cannot see into it, and a
-roller resting in it. **No ladder. No dust sheet. No painting.** He is not caught
-mid-job; he has simply turned up holding the evidence, extremely pleased with it.
-On `a2_11_narrator` he stops. Then, slowly, he **tips the tray toward camera.**
-It is empty. It is not merely dry — it is clean, white and unused, and it has
-plainly never had paint in it. Hold on the tray, dead centre, filling a third of
-the frame.
+**Visual:** Open sky, empty. **Nothing in the frame but blue and Sunny.** He
+slides in, extremely pleased with himself, makes his claim, and on
+`a2_11_narrator` he stops. Then he produces nothing at all: the grin freezes, he
+looks away and back, and the face falls. **No tray. No roller. No ladder. No
+dust sheet. No painting.**
 **Lines:** `a2_10_sunny`, `a2_11_narrator`, `a2_12_sunny`, `a2_13_narrator`
+
+**REVISED 2026-08-04** (tweak round T3, after the family re-screening).
+
+> **Mike, verbatim:** "the 'Sunny show us the paint' line seems weird that it
+> shows us the paint and then he says he keeps it somewhere else - let's just
+> get rid of the paint box from that scene (it's fine at the beginning though)"
+
+**THE PAINT TRAY IS CUT**, and the note is structural rather than dressing: **a
+man who shows you the tray has answered the question.** The scene then spent its
+next line having him refuse to answer it, and a six-year-old has no way to
+reconcile the two. With the tray gone, *"I keep the paint somewhere else."* plays
+as what it was always written as — an unsupported claim, a dodge, the joke — and
+nothing on screen argues with it. Deleted with it: the tip and back eases, and
+the `PaintTray` component itself (it had no other call site). **Untouched, per
+"it's fine at the beginning":** the cold open's wet roller and Scene 23's dry
+one, which is where the roller's running gag lives.
 
 > **SUNNY:** It was PAINT! Blue paint! I painted the whole sky!
 
@@ -1112,11 +1194,14 @@ the frame.
 
 > **NARRATOR:** Sunny. Show us the paint.
 
-**HELD BEAT — 45f (1.5s) after `a2_11_narrator`.** Unchanged, and it is now the
-whole scene: Sunny tips the tray, the tray is empty, and nobody says anything for
-a second and a half. **Emotion lead cut to 0** — his face must not start to fall
-before the Narrator has finished the question. **Nothing else moves in the frame,
-and there is nothing else in the frame to move.**
+**HELD BEAT — 45f (1.5s) after `a2_11_narrator`.** Unchanged in length and
+position, and since T3 it is carried by **his face alone**: the grin freezes on
+the request, he does a small **look away and back** (12f out, 12f back, both
+ends at rest so the beat opens and closes on the same eye-line), and the
+existing excited → neutral → proud morph rides into the line. **Emotion lead cut
+to 0** — his face must not start to fall before the Narrator has finished the
+question. **Nothing else moves in the frame, and there is nothing else in the
+frame to move.**
 
 > **SUNNY:** I keep the paint somewhere else.
 > **NARRATOR:** So we went looking for the paint.
@@ -1126,8 +1211,10 @@ narration is kind of unclear"*, and both had the same cause: five props and two
 ideas. The rewrite has **one prop and one idea.**
 
 - **One prop.** An empty tray is a thing a six-year-old reads in a single frame;
-  a dry roller is a thing a grown-up infers. The roller stays only as the thing
-  lying in the tray.
+  a dry roller is a thing a grown-up infers. The roller stayed only as the thing
+  lying in the tray. *(T3, 2026-08-04, went one further: nought props. See the
+  revision at the head of this scene — the tray answered the question the next
+  line refuses to answer.)*
 - **No painting.** Sunny painting an already-blue sky asked the audience to
   notice that the sky *was already that colour* — a two-step inference on a
   moving background. Cut entirely.
@@ -1471,6 +1558,17 @@ the first half only, clear of it.
 
 > **BLUE:** Hi! Hi! Hi! Hi!
 
+> **PENDING — TWEAK ROUND T4 (Mike's note 4, 2026-08-04), BLOCKED on his line
+> pick.** Mike: *"I think the 'roll call' with the colors intro isn't a true
+> roll call, let's do one instead when blue says 'Hi Hi Hi', and change that to
+> 'Hi bluington, Hi <other blues>, etc'"*. This clip is being **replaced
+> outright** by one new MiniMax line in which Blue holds a roll call of his own
+> identical copies, and its four bubbles become four named greetings at the same
+> four compass marks. **Any ear item on the shipped `a2_32b_blue` take (the
+> suspected slow read at 0.68 s/word) is SUPERSEDED** — do not re-roll it, it is
+> going. The structure below survives the swap: one clip, four bubbles, the same
+> four positions, fractions re-measured on the new take.
+
 **ONE clip, FOUR bubbles**, popping in sequence from four points around the
 frame at measured fractions of the delivered clip (**0.069 / 0.332 / 0.574 /
 0.812** — read off the recording, and kept as fractions so a re-roll re-times
@@ -1673,7 +1771,7 @@ five words. **Ear-check**: if the pun does not land in the read, the line is fre
 to reword on kokoro; the fallback is `"Of course I do. I always do."`)*
 
 > **NARRATOR:** The light is his. Every single bit of it.
-> **RAY:** But the AIR did the painting.
+> **RAY:** But the air did the painting.
 
 **HELD BEAT — 30f (1.0s) after `a2_52_ray`.** **Unchanged.** It lands on him.
 Nobody helps.
@@ -1701,12 +1799,21 @@ says what he thinks it says. Unseasoned button, no gesture, nothing enters.
 
 **And one reworded Ray line.** `a2_52_ray` was *"But Sunny. Every bit of that blue
 is your light."* — which the Narrator now says one line earlier, so it would be a
-repeat. It becomes **"But the AIR did the painting."** His register changes with
+repeat. It becomes **"But the air did the painting."** His register changes with
 it and improves: he is no longer consoling a defeated Sun, he is being a
 **pedant**, which the 2026-07-28 audit identified as his one genuinely funny
 characterisation and which fires twice elsewhere (`a2_34`, `a2_36b`). Same
 generosity, opposite direction — he hands Sunny his half in `a2_46` and takes the
 other half back here.
+
+**CAPS FIX 2026-08-04** (tweak round T5). Mike: *"Ray says 'But the air did the
+painting' but it sounds like 'but the A did the painting'"*. The word was
+**AIR** in capitals, which is **kokoro grammar**: the Narrator's engine reads
+capitals as stress, MiniMax reads them as an initialism and said the letter A.
+Lowercased, same fields, re-synthesized (~$0.003). **The s23 BUBBLE keeps its
+caps** — a bubble is print, not pronunciation. **STYLE.md sweep rule for the
+retro: no all-caps emphasis words on a MiniMax line, ever; caps survive only in
+bubble text and on kokoro.** **NEW EAR ITEM.**
 
 **Pedagogy:** The mechanism said back by the character who is the first link, and
 then corrected — sun to *air*, not sun to sky. What has gone is a verdict the
@@ -2585,6 +2692,15 @@ of the "Sun" block and above the waterline, with its tail reaching back at the
 piece of him showing between the two syllables; the card owns z-index 50 and ate
 it at the first placement.)*
 
+**RE-ROLLED 2026-08-04** (tweak round T7). Mike: *"When someone says 'Nice
+Drama' it has a weird accent 'Nice-eh Drama' which doesn't sound like any
+character (not sure if it's supposed to be orange or red)"*. It is Red, and
+MiniMax had inserted an epenthetic vowel — the same failure class as the
+`a2_28b_blue` bad draw. Cache-bust re-roll, **same text and same fields**, two
+draws taken, both with a clean single-run onset; the tighter of the two is in.
+Fallback if it ever comes back epenthetic: text → "Good drama." **NEW EAR
+ITEM.**
+
 > **NARRATOR:** A sunset is not different light. It is the same light, taking the long way.
 
 **Pedagogy:** Big Word Three — plain twice (`a3_19`, `a3_23`) plus the chant,
@@ -2632,7 +2748,20 @@ pulling back, off the coast, off the country, until the whole planet is in frame
 turning slowly, with the line between day and night sliding across it. Ray is a
 single glint on the retreating edge.
 **Lines:** `a3_27_ray`, `a3_28_narrator`, `a3_29_ray`, `a3_30_narrator`,
-`a3_31_sunny`
+`a3_31_sunny`, **`a3_31b_sunny`**
+
+**REVISED 2026-08-04** (tweak round T8, after the family re-screening).
+
+> **Mike, verbatim:** "When Sunny says 'Good morning everybody' toward the end,
+> I think it's a good opportunity to do his 'I made the mornings, you're welcome
+> haha' catch-phrase" + amendment: "for the exact wording, it should mirror his
+> same line in previous episodes"
+
+**Canon, verified in both priors:** ep 1 (water cycle) and ep 2 (wind, `a2_05`)
+both pair "GOOD MORNING, EVERYBODY!" with **"I invented mornings! You're
+welcome! HA! HA!"** — the identical sentence, word for word, in both. Ep 3 fired
+the greeting without the tag; `a3_31b_sunny` (NEW, kokoro `am_puck`, $0) puts it
+back and restores a two-episode pattern. **Do not reword it.**
 
 > **RAY:** Look up. That's still me.
 > **NARRATOR:** The last of the light slid off the sea, and went round the world.
@@ -2644,11 +2773,24 @@ Nothing else.
 
 > **SUNNY:** *(distant, from over the far horizon)* GOOD MORNING, EVERYBODY!
 
-**HELD BEAT — 75f (2.5s) after `a3_31_sunny`.** **The longest silence in the
+**GAP — 18f (0.6s) after `a3_31_sunny`.** *(NEW, T8; this key used to carry the
+75f ending silence.)* A beat between the greeting and the brag, and nothing
+more: they are one thought said twice, not two events.
+
+> **SUNNY:** I invented mornings! You're welcome! HA! HA!
+
+**HELD BEAT — 75f (2.5s) after `a3_31b_sunny`.** **The longest silence in the
 episode and the end of the story.** The planet turns, the daylight edge moves on
 across an ocean, and a new blue sky comes up on the far side. No narration, no
 dialogue, no music sting. If any line lands inside these seventy-five frames,
-the episode does not have an ending.
+the episode does not have an ending. **The rule travels with the last line and
+its length is preserved exactly** — what it buttons is now the brag rather than
+the greeting.
+
+Both bubbles sit at the same mark, in the same small type, out in the star field
+beside a sun the size of a pea: it is the same character in the same place
+saying the second half of one thought, and moving the bubble between them would
+read as a cut.
 
 **Pedagogy:** The sunset is not the light stopping, it is the light *moving on*
 — which is the same "it never stops" beat episode one closed its cycle with, and
@@ -2656,6 +2798,9 @@ the one thing that keeps an ending about fading daylight from reading as sad.
 `a3_31_sunny` is **the same recording as `a1_03_sunny`**, shared through
 `sameAs`: the joke and the comfort both depend on it being audibly the identical
 take of the identical greeting, eight minutes later and a world away.
+`a3_31b_sunny` is deliberately NOT a `sameAs` — it has never been said in this
+episode, so there is no earlier clip of it to copy; it is the identical *words*
+as both priors, which is what the pattern is made of.
 
 ---
 
@@ -2818,6 +2963,15 @@ all in this scene: nothing shimmers where there is no air.
 
 > **RAY:** Black? In the daytime? Why?
 > **SUNNY:** So where is the sky? I am RIGHT HERE.
+
+**BUBBLE FIX 2026-08-04** (tweak round T9). Mike: *"When Sunny says 'I am right
+here' the word bubble is in the wrong place"*. It was sharing `rc_09b_sunny`'s
+mark, four hundred pixels below a character who blazes at the top of the frame,
+with the tail aiming at open ground — **the one bubble in the episode whose
+whole content is the speaker's own position was the one pointing away from
+him.** It now sits at his shoulder with a short tail across into his face.
+`rc_09b_sunny` keeps the low mark, and correctly: that line is about the
+astronaut, so its bubble hangs over the thing he is claiming.
 > **NARRATOR:** Because the Moon has no air. And no air means nothing to bounce blue off.
 > **NARRATOR:** The light is still there. There is nothing for it to scatter on.
 > **RAY:** So the blue sky is a thing the AIR does.
@@ -2848,51 +3002,48 @@ firing).
 
 ---
 
-### Scene 35 — Tease and sign-off
+### Scene 35 — Sign-off
 **On stage:** Narrator, Sunny, Ray
-**Visual:** Back to the sea horizon at dusk. The volcano, asleep, exactly where it
-has been in every sea shot this act and with nothing having drawn attention to it
-since it closed its eye in Scene 28b. Then one smoke ring comes out **wobbling**,
-and does not close. A low rumble moves the water. Sunny, half under the horizon,
-stops mid-pose and looks at it. Then the next-time title card (the plants
-question — see below), with Ray waving from the corner.
-**Lines:** `rc_17_narrator`, `rc_18_sunny`, **`rc_18b_narrator`**, `rc_19_ray`,
-**`rc_20_narrator`**, **`rc_21_ray`**
+**Visual:** Back to the sea horizon at dusk. The volcano, **asleep**, exactly
+where it has been in every sea shot this act and with nothing having drawn
+attention to it since it closed its eye in Scene 28b: breathing, one closed
+smoke ring, no sway, no rumble in the water. Sunny is half under the horizon,
+passive, looking out to sea. Then the next-time title card (the plants
+question), with Ray waving from the corner.
+**Lines:** `rc_19_ray`, **`rc_20_narrator`**, **`rc_21_ray`**
 
-**SILENT OPEN — 45f (1.5s) before `rc_17_narrator`.** The wobbling smoke ring,
-alone, in silence. (This replaces the cut "Next time." — see *What changed,
-2026-08-04* below. The stir is now a long-arc promise with no episode number
-attached to it.)
+**REWRITTEN 2026-08-04** (tweak round T10, after the family re-screening).
 
-> **NARRATOR:** Something is waking up.
+> **Mike, verbatim:** "I think we need to cut the 'someone is waking up bit' it
+> doesn't make sense with the switch to plants in s4 [ep-4], just cut straight
+> from the moon to the next time what do plants eat"
 
-**HELD BEAT — 60f (2.0s) after `rc_17_narrator`.** The rumble, felt in the water
-and in the smoke, with nothing said over it. **Keep this wondrous, not
-frightening** — no dark chord, no red glow, no shaking camera. Something large
-is stirring in a friendly world.
+**THE WHOLE VOLCANO TEASE IS CUT.** `rc_17_narrator` ("Something is waking
+up."), `rc_18_sunny` ("OH! That one is me as well! HA! HA!") and
+`rc_18b_narrator` ("Hmm. We will find out.") are gone, and so is every wake tell
+in the picture: the stir ramp, both rumbles, the wobbling open-ended ring,
+Sunny's claim, his turn to camera, his bloom and his bubble. The volcano is back
+to being scenery — the series' sleeping constant — and it promises nothing.
 
-> **SUNNY:** OH! That one is me as well! HA! HA!
+**KEPT:** `rc_19_ray`, `rc_20_narrator` (the card read — this is the "next time
+what do plants eat" Mike names as the keep) and `rc_21_ray` ("Is it me??", which
+is a PLANTS joke, not a volcano one, and is still the button). The card, the
+banner, the freeze and the flinch are unchanged mechanism, re-keyed to the lines
+that survive.
 
-**HELD BEAT — 45f (1.5s) after `rc_18_sunny`.** **Same length, opposite content
-from the delivered cut.** Sunny is not unsure and he is not squinting — he is
-**beaming**, at full brightness, with his arms out, having claimed a volcano
-without a second's hesitation. The volcano rumbles again behind him and he does
-not notice. **Nothing enters this beat** and **emotion lead cut to 0**: no
-dawning, no doubt, no reaction of any kind. The joke is entirely that he is wrong
-and does not know it, and the audience does.
-
-> **NARRATOR:** Hmm. We will find out.
-
-**HELD BEAT — 30f (1.0s) after `rc_18b_narrator`.** The volcano, the rumble,
-Sunny still beaming. Nothing enters.
+**SILENT OPEN — 20f (0.7s) before `rc_19_ray`.** *(was 45f)* Calm dusk, straight
+off the Scene 34 moon cut: the place and the hour, and nothing else. Forty-five
+frames were bought when the silence had a stirring island to watch; with nothing
+moving in it, a long hold on scenery before the goodbye reads as a missing line.
 
 > **RAY:** Bye! Look up. That's me.
 
-**CARD POP after `rc_19_ray`.** The next-time card swings up (same entrance as
-the delivered cut), **with the smoke ring removed from the poster** — the card
-no longer advertises the volcano. It reads **NEXT TIME / WHAT DO PLANTS EAT?**,
-restoring the series grammar of episodes one and two (next time's *question* on
-the card — "WHY IS THE SKY BLUE?"). Ray keeps waving from the corner.
+**CARD POP after `rc_19_ray`.** The next-time card swings up, **with no smoke
+ring on the poster** — the card does not advertise a volcano. It reads **NEXT
+TIME / WHAT DO PLANTS EAT?**, restoring the series grammar of episodes one and
+two (next time's *question* on the card — "WHY IS THE SKY BLUE?"). The "LITTLE
+BIG WORLD · SEE YOU NEXT TIME" banner follows eight frames later so the two do
+not pop as one object. Ray keeps waving from the corner.
 
 > **NARRATOR:** Next time. What do plants eat?
 
@@ -2902,49 +3053,39 @@ mid-air**. The features hold. He has just done the maths.
 > **RAY (fearful):** Is it me??
 
 **HELD BEAT — 40f (1.3s) after `rc_21_ray`.** Nothing enters, nothing answers.
-The card, the frozen wave, out. The episode ends on the question.
+The card, the frozen wave, out. The episode ends on the question. **Scene tail:
+14f** — the beat already is the tail.
 
-**What changed, 2026-08-04** (Mike's series-order decision: ep 4 = plants,
-ep 5 = volcano — see `docs/roles/audience.md`):
+**Sunny is in frame and no beat is his.** He stays half under the horizon at his
+resting `proud`, looking out at the sea, at his ordinary brightness. He does not
+speak, does not turn to camera, does not react to the card and does not react to
+Ray. A look is a reaction, and there is nothing in this scene for him to react
+to.
 
-- **`rc_16_narrator` "Next time." is CUT.** The stir beats (ring, rumble,
-  Sunny's claim, "Hmm. We will find out.") are untethered from any episode
-  number and become a long-arc promise; the scene now opens on the ring in
-  silence. All stir clips are cache hits, $0.
-- **The card returns to question grammar** and points at the *actual* next
-  episode: **WHAT DO PLANTS EAT?** New narrator read `rc_20_narrator` (kokoro,
-  free).
-- **`rc_21_ray` "Is it me??" (fearful) is NEW — Mike's gag, verbatim brief.**
-  The light ray hears "what do plants eat" and is afraid of the answer. The
-  fear is *justified* — plants eat light — so the button is both a joke and
-  episode four's first fact, planted as dread. It also hands episode four
-  Sunny's peak on a plate: plants eat light, and the light is his.
-- The **"That is not me." inversion stays banked for the volcano episode (now
-  ep 5)**, landing after the wrongness ceremony as designed.
+**CONTINUITY — for the BIBLE's open-teases ledger.** Ep 5 is the volcano
+episode and this cut removes the ep-3 end-tease seed, so the ledger has to
+carry it:
 
-**What changed, 2026-08-01.**
+- **UNFIRED and available:** Sunny claiming the wake ("That one is me as
+  well") — banked once already when the inversion was withdrawn, and now banked
+  again — and the *"That is not me."* inversion itself. Either can open ep 5 or
+  ride ep 4's own tease.
+- **Still fired in this episode:** Scene 25's Yellow-tries-to-rest beat with the
+  Narrator warning her off, and Scene 28b2's eye-open beat. Those two are the
+  whole of the volcano's presence in ep 3 now, and they are both jokes that do
+  not need a sequel to work.
 
-- **`rc_18_sunny` was "That is not me."** — the inversion of the show's oldest
-  running gag, and it is **withdrawn and banked for the volcano episode**, where
-  it can land *after* the wrongness ceremony rather than instead of it. In its
-  place, the gag's **standard firing**, in the series wording it has had since
-  ep 2's `rc_14_sunny`: reflexive, instant, completely unearned. Three episodes
-  of a character claiming everything end with him claiming one more thing, which
-  is the honest ending for a character who has not been corrected.
-- **`rc_18b_narrator` is new: "Hmm. We will find out."** — the doubt, planted
-  without a verdict. **"Hmm."** is the Narrator's own established deadpan
-  (`a1_27_narrator`, where she declines to argue with Ray about being plain), so a
-  returning viewer already knows exactly what it means and exactly how much she is
-  not saying.
-- **`rc_19_ray` is unchanged.**
+**What changed, 2026-08-04 (earlier the same day, and now superseded in part).**
+`rc_16_narrator` ("Next time.") was cut with Mike's series-order decision (ep 4
+= plants, ep 5 = volcano), which untethered the stir from any episode number and
+moved "Next time." onto `rc_20_narrator` over the card. T10 then cut the stir
+itself. `rc_20_narrator` and `rc_21_ray` — both new that day — survive intact.
 
-**Pedagogy:** the series continuity is *forward*-facing in two directions at
-once. The volcano stir is a **setup with no deadline** (Sunny makes a claim on
-the record, the show quietly disagrees, and the volcano episode — ep 5 —
-inherits *"I did that." / "No. He really didn't."* with the claim already
-banked). The card and Ray's button are the **ep-4 hook**: the question is real
-pedagogy (the answer is light, air and water — the previous three episodes),
-and Ray's fear is the correct answer, played as comedy.
+**Pedagogy:** the card and Ray's button are the **ep-4 hook**: the question is
+real pedagogy (the answer is light, air and water — the previous three
+episodes), and Ray's fear is the correct answer, played as comedy. Plants eat
+light, and the light is his — which also hands episode four Sunny's peak on a
+plate.
 
 ---
 
@@ -2952,8 +3093,9 @@ and Ray's fear is the correct answer, played as comedy.
 
 **Tone guardrails.** Unchanged from episodes one and two. No sarcasm a
 six-year-old cannot parse — the Narrator's deadpans are always *about* obvious
-behaviour (Sunny bragging, Sunny tipping an empty paint tray at the camera), never an ironic
-reversal. No scary peril: the volcano tease is stirring, not threatening, and
+behaviour (Sunny bragging, Sunny asked to show us the paint and producing
+nothing at all), never an ironic
+reversal. No scary peril: the volcano is asleep and stays asleep, and
 the sunset must never read as the light dying — Scene 31 exists to make it a
 journey. No potty humour. Nobody is unkind: Ray corrects Sunny by *giving* him
 the half he actually owns, and Sunny's wrongness is played as a man
@@ -2962,7 +3104,7 @@ enthusiastically rebuilding his own diagram rather than as a comeuppance.
 **Line length.** Every line sits between two and fifteen words. Since
 `a3_06_narrator` was cut there is **no line in the episode over fifteen words**.
 The short end is all deliberate deadpan buttons — "Lovely air.", "Peace and
-quiet.", "What Red said.", "Sorry, Violet.", "No.", "Won what.", "Ahem." — and
+quiet.", "What Red said.", "Sorry, Violet.", "Won what.", "Is it me??" — and
 every one of them is bought by a held beat rather than by length. **Revision 2
 holds the ceiling:** the longest of its ninety-five new lines is ten words, and
 the longest line in the whole episode is still `co_02_narrator` at fifteen.
@@ -2972,20 +3114,22 @@ rule are already written down here:
 
 - **Slower per-line speeds** for every list, roll call, sound word and repeated
   straight-line, set in `narration.mjs` with a comment saying why.
-  The deadpan floor is **`a1_16d_narrator` ("No.") at 0.8** since the sign-off
-  amendment; before it, `a2_49_narrator` ("He has a point.") at 0.85; the slowest character line is the seven-name roll call at 0.88, tied
+  The deadpan floor is **`a1_16d_narrator` ("No, Ray, not yet.") at 0.8** since
+  the sign-off amendment; before it, `a2_49_narrator` ("He has a point.") at 0.85; the slowest character line is the seven-name roll call at 0.88, tied
   with `a3_13` ("Bounce. Bounce. Bounce."), `a2_43` (the
   interlock) and `rc_05` (the summary). **Two lines now run *above* 1.0** for the
   first time in the series — Blue at 1.05 and Indigo at 1.1 — because being
   faster than everybody else is the character and the physics at once.
 - **Held beats of silence**, **fifty-two** of them at 20 frames or longer, each
   written above with its exact frame count and its reason. They become `gaps` in
-  `Video.tsx` (or, for Scene 35's silent open, a `leadFrames`). **The longest silence in the episode is the 135f before the fifth
-  "Are we there yet?"** (Mike's sign-off amendment); the world turning is 75f,
-  and the two-second-plus holds carry the episode's biggest pictures: the crayon
+  `Video.tsx` (or, for Scene 35's silent open, a `leadFrames`). **The longest
+  silence in the episode is the 210f closing hold of Scene 5** (T1,
+  2026-08-04), which contains the silent almost-ask; the longest *empty* one is
+  the 165f before the sixth "Are we there yet?"; the world turning is 75f, and
+  the two-second-plus holds carry the episode's biggest pictures: the crayon
   choice, the middle of the eight-minute journey, the seven-piece reveal, the
-  unanswered fifth firing, the pinball drain, the volcano's eye, the two walkers
-  breathing, the black lunar sky and the rumble under the tease.
+  pinball drain, the volcano's eye, the two walkers breathing, the black lunar
+  sky, and Ray's frozen wave under the next-time card.
 - **The approach gaps are the third kind of number**, and there are **sixty-six**
   of them under 20 frames. Red 16f, Blue 4f, Indigo 12f, Orange 8f, before every
   line each of them says — the character encoded in the timeline rather than in
@@ -3002,17 +3146,24 @@ rule are already written down here:
   child can obey it and be right. Its negative version, *"I'm the plain one"*,
   fires at `a1_24`/`a1_26` and is answered at `a1_55`/`a2_56`.
 - *"Are we there yet?"* — **five firings**, identical text, **one recording**
-  (`a1_13_ray`, aliased at `a1_15`, `a1_15c`, `a1_15e`, `a1_16b`). The flat
-  almanac answers and the escalating silences (30/45/60/75) are the joke, and
-  the fifth is **unanswered** — its button is a cut.
+  (`a1_13_ray`, aliased at `a1_15`, `a1_15c`, `a1_15e`, `a1_16b`), plus a sixth,
+  different, truncated one (`a1_16c_ray`). The five flat almanac answers and the
+  escalating silences (**45/75/105/135/165** since T1) are the joke; the sixth
+  firing is interrupted, and its button is a cut.
 - *"You're welcome!" / "HA! HA!"* — `co_08`, `a1_11`, `a1_58`, `a1_60`, `a2_53`,
-  `a3_22`, `rc_04`. **Seven firings is the ceiling** and no new line uses it,
-  including `rc_18`.
-- *"That one is me as well!"* — collected in `co_08` (the paint theory),
-  conceded in half at `a2_49`–`a2_55`, and fired **straight, unbroken, at
-  `rc_18`**. **The inversion is not in this episode.** It is banked for the volcano
-  episode (ep 5), where it can land after the wrongness ceremony rather than
-  instead of it.
+  `a3_22`, `rc_04`, **`a3_31b`**. **EIGHT firings, and the eighth was Mike's
+  explicit call** (tweak-round note 8, 2026-08-04): the ladder used to be capped
+  at seven, and restoring Sunny's two-episode morning catch-phrase at the end of
+  Scene 31 is worth the extra rung, because it is the *same* brag the previous
+  two episodes ended his greeting with rather than a new one. Nothing else may
+  add a ninth. `rc_18` did not use it and is now cut anyway (T10).
+- *"That one is me as well!"* — collected in `co_08` (the paint theory) and
+  conceded in half at `a2_49`–`a2_55`. **It does not fire in this episode at
+  all.** It was to have fired straight and unbroken at `rc_18`, and T10
+  (2026-08-04) cut that line with the whole volcano tease. **Both the straight
+  firing and the inversion are now banked for the volcano episode (ep 5)**,
+  where the inversion can land after the wrongness ceremony rather than instead
+  of it.
 - *"Different show. Same sun / sky / rain / air."* — `a1_32` (Drip), `a2_18`
   (Puff). Both at 0.92, the same flat read as episode two's two firings.
 - *"You can't see me. But you can FEEL me."* — `a2_17`, once, on Puff's
@@ -3229,10 +3380,10 @@ npm run narration -- --audition sky-blue:a1_26_ray <dir> \
    they have to separate or they are one noise. Sunny's two (`rc_09b`, `rc_11b`)
    are free to reword on kokoro; listen for `rc_11b` reading as a genuine
    question rather than as a brag.
-8. **`rc_18_sunny`** ("OH! That one is me as well! HA! HA!") at 1.0 — **full
-   confidence, no doubt anywhere in it.** If it plays as unsure, the tease has
-   gone the wrong way and taken the volcano episode with it. Then `rc_18b_narrator`
-   ("Hmm. We will find out.") flat, and definitely not arch.
+8. ~~**`rc_18_sunny`** / **`rc_18b_narrator`**~~ — **DEAD, T10 (2026-08-04).**
+   Both clips are cut with the volcano tease; there is nothing left to listen
+   to. The direction they carried (full confidence, no doubt anywhere in it) is
+   banked with the material for ep 5.
 9. **The whole of Sunny, once**, now that he is back on `am_puck`: the greeting
    (`a1_03`), a brag at full volume (`co_08`, `a2_53`) and the four moments he
    stops. Episodes one and two are the reference — he should sound like the same
@@ -3274,9 +3425,11 @@ and every one of them is unheard in context:
 17. **`a3_18e_orange`** ("What Red said.") at pitch +2, straight after
    `a3_18d_red`. The joke only works if he is audibly *adjacent* to Red — a
    smaller Red, not a second authority.
-18. **The five "Are we there yet?" firings as a run**, with the four answers, to
-   check the rhythm reads as a pattern rather than as a fault — and that the
-   skipped arithmetic (two → four) is heard.
+18. **The five "Are we there yet?" firings as a run**, with the **five** answers,
+   to check the rhythm reads as a pattern rather than as a fault — and, since
+   T1, that the straight count (1/2/3/4/5) reads as a *metronome* so that the
+   interruption is audibly the Narrator's only deviation. *(This item used to
+   ask whether the skipped arithmetic, two → four, was heard; that gag is gone.)*
 19. **The race as a run** (`a3_12` → `a3_18f`), which is ninety seconds and six
    voices. Listen for whether the exits read as *departures* or as *casualties*;
    if anybody sounds sad about leaving, that is the one failure mode Act Three
@@ -3324,46 +3477,64 @@ before anything is re-cut. Items 20–24 are the highest risk in the rewrite.
    not a complete utterance**; the 0f gap into the Narrator does half the work.
    Fallback text: "Are we there" (still truncated). MiniMax may append falling
    intonation — audition two takes.
-30. **`a1_16d_narrator`** ("No.") at **0.8, the new deadpan floor** — unamused,
-   drawn out, final; **never annoyed** (she is bored, not cross). Kokoro, free to
-   re-take; if 0.8 distorts, 0.85 and let the 90f hold do the dragging.
+30. **`a1_16d_narrator`** ("No, Ray, not yet.") at **0.8, the deadpan floor** —
+   unamused, drawn out, final; **never annoyed** (she is bored, not cross).
+   **RE-TAKEN 2026-08-04 (T1)**, text changed from "No."; kokoro, free to
+   re-take again. Four words at 0.8 is a lot of drag: listen for distortion, and
+   if it is there, 0.85 and let the 210f hold after it do the dragging.
 
-**Ear-check list — the 2026-08-04 addition (scene-35 re-tease)**:
+**Ear-check list — the 2026-08-04 additions (tweak round)**:
 
 31. **`rc_21_ray`** ("Is it me??") — Ray's first `fearful`, and the episode's
    final word. Must read as a **comic squeak, not distress** — scared the way a
    cartoon is scared. The shipped take is FAST (0.324 s/word, near Ray's
    fastest; MiniMax returned 1.7s raw and the trimmer removed 0.73s of
    silence) — listen for front/back clipping. Cache-bust re-roll is cents;
-   fallback text: "Wait. Is it me??" if the read needs a runway. `rc_20_narrator`
-   ("Next time. What do plants eat?") is kokoro, free to re-take; it should
-   read as the eps-1/2 card-read grammar — bright question, no dread (the
-   dread is Ray's job).
-31. **`a1_42h_narrator`** ("Ahem.") — kokoro's read must land as a small formal
-   throat-clear. If it reads as a *word*, **CUT the clip** (the beat works
-   without it) — and never substitute "Hmm.", which is her established beat at
-   `a1_27`/`rc_18b` and must not be diluted.
-32. **The race as a run, end to end** (`a3_11c` → `a3_18f`), which is now four
+   fallback text: "Wait. Is it me??" if the read needs a runway.
+32. **`rc_20_narrator`** ("Next time. What do plants eat?") — kokoro, free to
+   re-take; it should read as the eps-1/2 card-read grammar — bright question,
+   no dread (the dread is Ray's job).
+33. **`a1_16b2_narrator`** ("Five minutes down. Three to go.") — NEW with T1;
+   kokoro at 0.92, and it has to be **indistinguishable in shape and interest**
+   from the other four almanac answers. If it lands with any more emphasis than
+   `a1_14`, the metronome is broken and the interruption stops being the only
+   deviation. Free to re-take. `a1_15d` and `a1_16` were re-synthesized with it
+   (text changed to the straight count) — check all five as a run.
+34. **`a2_52_ray`** ("But the air did the painting.") — RE-SYNTHESIZED with T5
+   after Mike heard "the A did the painting". Confirm the word is now *air* and
+   not a letter, and that the pedant register survived the re-roll.
+35. **`a3_22b_red`** ("Nice drama.") — RE-ROLLED with T7 after the epenthetic
+   "Nice-eh drama". Two draws were taken, both with a clean single-run onset
+   (the shipped bad take had a detached 72ms blip at the front); the tighter one
+   is in, at 1.48s against the old 1.51s. **Confirm the schwa is gone.** If not,
+   fallback text: "Good drama."
+36. **`a3_31b_sunny`** ("I invented mornings! You're welcome! HA! HA!") — NEW
+   with T8, kokoro `am_puck`, and it must sound like the *same brag* as episodes
+   one and two, because that is the whole of the gag. It is also the episode's
+   last line and it buys the 75f ending silence; if the read runs long the beat
+   still holds, but check the tail is clean.
+37. **The race as a run, end to end** (`a3_11c` → `a3_18f`), which is now four
    minutes across five legs and seven voices. Listen for whether the exits read
    as *departures* or as *casualties*, and whether Yellow's five cheers land as
    generosity rather than as a catchphrase being worked.
 
 **Grown-up smirks.** `co_04` ("Every kid on this whole planet picks blue"),
-the almanac answers around "Are we there yet?" and especially `a1_15d` (the
-**skipped arithmetic**, two to four — new), `a1_59` ("Technically, that one is
+the almanac answers around "Are we there yet?" (the **skipped arithmetic** at
+`a1_15d`, two to four, is gone as of T1 — the straight count is now the point;
+see Scene 5), `a1_59` ("Technically, that one is
 mostly Drip"), `a2_12` ("I keep the paint somewhere else"), `a2_24b` (Red
 complimenting the air that failed to bounce him — new), `a2_35` ("Our eyes are
 just not very good at violet"), `a2_55` ("He will only remember one of those"),
 `a3_14e` ("And then there were four" — new), `a3_14i` ("That is not a rest stop."
 over a volcano nobody names — new), `a3_18e` ("What Red said." — new), `a3_26`
 ("Some days you need a different crayon"), `rc_04b` ("It is mostly me." — new)
-and `rc_18b` ("Hmm." — new).
+and `rc_18b` ("Hmm." — **CUT with T10**; the whole volcano tease went with it).
 
 **Revision 2 adds ten more**, and every one of them is a line a child laughs at
-for a different reason than the adult does: `a1_16d` ("No." — the Narrator has
-stopped answering, and finally says so), `a1_42f`/`a1_42g` ("Red did not say
-anything." / "He meant to." — devotion as a closed loop), `a1_42h` ("Ahem." —
-the Narrator chairing a meeting), `a2_41d` ("It was mostly Blue." — the pedant
+for a different reason than the adult does: `a1_16d` ("No, Ray, not yet." — the
+Narrator's only deviation from her own metronome), `a1_42f`/`a1_42g` ("Red did not say
+anything." / "He meant to." — devotion as a closed loop; `a1_42h`, "Ahem.", was
+the third of these and is **CUT with T2a**), `a2_41d` ("It was mostly Blue." — the pedant
 inherits the credit-allocation joke), `a3_08c` ("He was the only one there."),
 `a3_11k` ("Start of what." — the favourite's rival has not noticed the race),
 `a3_11q`/`a3_11r` ("Six racers." / "Make that seven."), `a3_13bd` ("He does win

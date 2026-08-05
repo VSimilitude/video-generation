@@ -101,7 +101,8 @@ export type Emotion =
   | "proud"
   | "grumpy"
   | "amazed"
-  | "sad";
+  | "sad"
+  | "skeptical";
 
 export type LookDirection =
   | "camera"
@@ -249,6 +250,62 @@ export const EMOTIONS: Record<Emotion, EmotionSpec> = {
     mouthOpen: 0,
     blush: 0.12,
     tilt: 3,
+  },
+  // Added for episode three (2026-08-04): the show's deadpan needed a face.
+  //
+  // The gap it fills is exact. This series' comedy is *stillness* — a character
+  // says something daft and the reaction is that nobody reacts — and the rig
+  // had nothing between `happy` (which sells the joke) and `grumpy` (which
+  // takes a side against whoever said it). Ep 3's roll call shipped with
+  // `neutral` there and the family screening called it: a straight face reads
+  // as "nothing is happening", not as "I am not buying this".
+  //
+  // **The whole expression is the asymmetry.** `browAsym` tilts ONE brow and
+  // nothing else — `Character.tsx`'s `side === -1`, which is the character's
+  // own left and therefore the CAMERA RIGHT. It is the only per-brow knob the
+  // face has, and one brow doing something different from
+  // the other is the entire cartoon shorthand for scepticism — it is why the
+  // eye reads it in a frame, at 0.78 scale, from across a room.
+  //
+  // Three numbers were tuned on stills and each one is doing a job:
+  //
+  //   `browAsym: -16`  negative rotates that brow anticlockwise, which lifts
+  //                    its OUTER end — the arched-eyebrow read. Positive
+  //                    lifts the inner end instead, which is *worried*, not
+  //                    unconvinced. (The knob cannot raise a brow bodily; it
+  //                    only rotates about the brow's own centre, so the sign
+  //                    is the whole of the expression.)
+  //   `browRaise: -8`  both brows up off the eyes. At the first pass (-3) the
+  //                    tilted brow's inner end sat on the eye and the side
+  //                    read as a squint; clear of the eye it reads as a brow.
+  //   `tilt: 4`        the head cocked, very slightly, the way a person's does
+  //                    when they are waiting for the rest of a sentence.
+  //
+  // Everything else is deliberately small: half-lids and slightly squashed
+  // eyes so the stare is level rather than wide, and a mouth that is
+  // **neither a smile nor a frown**. `mouthCurve: 2` is the first near-flat
+  // mouth in this table and it is the guardrail: at 10 (BASE) he is amused,
+  // below 0 he is cross, and both of those are the show taking a side.
+  //
+  // NOT smug: no `mouthTilt` and no lid narrower than `proud`'s. Sunny's smug
+  // is a *lopsided grin* (`browAsym: -14` with `mouthTilt: 5`, Sunny.tsx) and
+  // the two must not converge — this face is the audience's, worn by the hero,
+  // and the audience is not enjoying itself at anybody's expense.
+  //
+  // No blush, and that is load-bearing too: every warm face in the table
+  // carries one, so dropping it to zero is most of what makes this one cool.
+  skeptical: {
+    ...BASE,
+    browRaise: -8,
+    browAngle: -2,
+    browAsym: -16,
+    eyeScaleX: 0.99,
+    eyeScaleY: 0.94,
+    lidBase: 0.12,
+    mouthWidth: 48,
+    mouthCurve: 2,
+    blush: 0,
+    tilt: 4,
   },
   amazed: {
     ...BASE,

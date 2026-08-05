@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  SpeechBubble,
   emotionAt,
   kidEase,
   kidTheme,
@@ -603,11 +604,12 @@ const FarEarth: React.FC<{ x: number; y: number; r: number; halo?: boolean }> = 
  * this firing is different, because the ear finds that out a fifth of a second
  * later and that is the joke's timing.
  *
- * **The Narrator's "No." never gets a bubble, here or anywhere.** She is
- * off-stage: no body, no mark, so `Bubbles` could not draw one even if a key
- * were added — and the note is here because the next reader will wonder whether
- * the interruption should be visible. It must not be. The silence after it is a
- * shot in which nothing at all changes, exactly like the four before it.
+ * **The Narrator's "No, Ray, not yet." never gets a bubble, here or anywhere.**
+ * She is off-stage: no body, no mark, so `Bubbles` could not draw one even if a
+ * key were added — and the note is here because the next reader will wonder
+ * whether the interruption should be visible. It must not be. The silence after
+ * it is a shot in which nothing at all changes — except once, and silently: see
+ * `S5_ALMOST` below.
  */
 const S5_BUBBLE = "Are we there yet?";
 const S5_BUBBLES: Record<string, string> = {
@@ -634,18 +636,79 @@ const S5_BUBBLES: Record<string, string> = {
 const S5_BUBBLE_AT = { x: 980, y: 268, tail: "left" as const, tailAt: 782 };
 
 /**
- * Scene 5 — twenty-five and a half seconds, and the whole scene is one staging
- * decision.
+ * **THE SILENT ALMOST-ASK** (T1c, Mike's note 1, 2026-08-04): "an extra long
+ * wait with Ray looking a little like he's going to ask again but doesn't say
+ * anything and then arrives".
+ *
+ * It lives inside the 210-frame hold after `a1_16d_narrator` ("No, Ray, not
+ * yet.") and it is the *only* new thing in a scene whose whole discipline is
+ * that nothing new happens. Frames below are relative to the start of that
+ * hold: sixty frames of the Narrator's answer sitting there unanswered, then an
+ * EMPTY bubble inflates out of him over eighteen, hangs for fifty, and goes
+ * back in over fifteen — gone by f143, with sixty-seven frames of unchanged
+ * travel between it and the cut.
+ *
+ * Four rules, and they are the whole design:
+ *
+ *   1. **It is the bubble, and only the bubble.** At 0.62 scale the bubble IS
+ *      Ray's voice in this scene — it is the thing the eye has learned to read
+ *      six times already — so the wind-up is a bubble that starts to arrive and
+ *      changes its mind. Nothing on the rig moves: no emotion, no look, no
+ *      speaking mouth. **A moving mouth with no audio breaks the rig grammar**,
+ *      and the deliberately-not-driven prop list below still applies in full.
+ *   2. **No text, ever.** He does not say anything. The bubble is drawn with
+ *      the firing bubble's own text so the BOX is the identical shape, and the
+ *      ink is transparent — see `S5_ALMOST_ROOT`.
+ *   3. **Thirty-five percent.** Big enough to read as a bubble, far too small
+ *      to read as a line: an intention, not an utterance.
+ *   4. **It must be gone well before the cut.** The no-telegraph law is the
+ *      scene's spine and it is not suspended for this: `S5_ALMOST.from + up +
+ *      hang + down` = 143, and the hold is 210, so the last third of the
+ *      silence is exactly the picture it has been for twenty-five seconds.
+ */
+const S5_ALMOST = { from: 60, up: 18, hang: 50, down: 15, peak: 0.35 } as const;
+
+/**
+ * The point the wind-up bubble grows out of: **the tip of its own tail**,
+ * measured off a still of a real firing at 1920×1080 (the tail leaves the
+ * bubble's bottom-left and lands here, and `S5_BUBBLE_AT.tailAt` aims it).
+ *
+ * Scaling the whole bubble about this point is what makes it grow *from him*
+ * rather than fade up in the sky: Ray's crawl puts him at x≈739 by the time the
+ * hold opens, i.e. directly underneath it, so the bubble comes up out of his
+ * head and goes back down into it. Scaling about the bubble's own centre — the
+ * obvious first try — reads as a bubble arriving from nowhere, which is a
+ * different (and much worse) joke.
+ *
+ * Re-derive it from a still if `S5_BUBBLE_AT`, the bubble text or the type
+ * scale ever change; it is a measurement, not a preference.
+ */
+const S5_ALMOST_ROOT = { x: 730, y: 415 } as const;
+
+/** The wind-up's scale at `f` frames into the 210f hold. 0 outside it. */
+function almostAsk(f: number): number {
+  const up = S5_ALMOST.from + S5_ALMOST.up;
+  const hangTo = up + S5_ALMOST.hang;
+  const gone = hangTo + S5_ALMOST.down;
+  if (f <= S5_ALMOST.from || f >= gone) return 0;
+  if (f < up) {
+    return S5_ALMOST.peak * kidEase.easeOutQuad((f - S5_ALMOST.from) / S5_ALMOST.up);
+  }
+  if (f < hangTo) return S5_ALMOST.peak;
+  return S5_ALMOST.peak * (1 - kidEase.easeInQuad((f - hangTo) / S5_ALMOST.down));
+}
+
+/**
+ * Scene 5 — half a minute, and the whole scene is one staging decision.
  *
  * The shot never cuts, and **nothing in it changes**: Ray travels left to right
  * and gets nowhere, so the star field slides past him at a constant rate and
  * the blue dot on the right stays exactly the size it was. Five identical
- * firings of "Are we there yet?", four flat almanac answers, and silences that
- * grow 45 / 75 / 105 / 135 (revision2 re-spec) — the escalation is in the
- * *gaps*, which live in `Video.tsx`, and this file's entire job is to make sure
- * the picture adds nothing to them. Then the fifth firing goes unanswered into
- * ninety frames of nothing, and a sixth, different, truncated one is cut off by
- * the Narrator at a zero-frame gap.
+ * firings of "Are we there yet?", five flat almanac answers counting straight
+ * up, and silences that grow 45 / 75 / 105 / 135 / 165 (T1 re-spec) — the
+ * escalation is in the *gaps*, which live in `Video.tsx`, and this file's
+ * entire job is to make sure the picture adds nothing to them. Then a sixth,
+ * different, truncated firing is cut off by the Narrator at a zero-frame gap.
  *
  * The one thing that does move is Ray's own x, by two hundred pixels across the
  * entire scene. It is far too slow to see and it is the reason the shot does
@@ -653,18 +716,19 @@ const S5_BUBBLE_AT = { x: 980, y: 268, tail: "left" as const, tailAt: 782 };
  *
  * **Nothing may telegraph the cut.** The scene has a 6-frame tail and Scene 6
  * hard-cuts to a garden at full brightness on the frame after it, and that cut
- * is still the joke's button — it now buttons the sixth firing's answer rather
- * than the fifth firing. So there is no brightening, no lean into it, no
- * emotion change, no acceleration and no change in the star drift anywhere in
- * the last silence — the last ninety
- * frames are drawn by exactly the same expressions as the first thirty. The
- * things that do move (the constant star drift, the slow ±2.5° roll, his
- * two-hundred-pixel crawl) have all been doing it since frame one at a constant
- * rate, which is why none of them is a signal.
+ * is still the joke's button — it now buttons "No, Ray, not yet." and the
+ * silent almost-ask that follows it. So there is no brightening, no lean into
+ * it, no emotion change, no acceleration and no change in the star drift
+ * anywhere in the last silence — the last sixty-seven frames are drawn by
+ * exactly the same expressions as the first thirty. The things that do move
+ * (the constant star drift, the slow ±2.5° roll, his two-hundred-pixel crawl)
+ * have all been doing it since frame one at a constant rate, which is why none
+ * of them is a signal.
  *
  * The list of props deliberately *not* driven by anything in this scene:
- * `brightness`, `emotion`, `look`, `streak`, `scale`. A single mapped emotion or
- * a bright-up in the last beat would spend the button before the cut lands.
+ * `brightness`, `emotion`, `look`, `streak`, `scale`. **The almost-ask does not
+ * touch one of them** (`S5_ALMOST`) — a single mapped emotion or a bright-up in
+ * the last beat would spend the button before the cut lands.
  */
 const JourneyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -674,6 +738,10 @@ const JourneyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const x = 560 + (frame / Math.max(1, scene.durationInFrames)) * 200;
   const y = 528;
   const stage = useStage(scene);
+  // The 210f hold the almost-ask lives inside. Keyed off the line, so a
+  // re-synthesized "No, Ray, not yet." carries the beat with it.
+  const [almostFrom] = heldBeat(scene, "a1_16d_narrator");
+  const almost = almostAsk(frame - almostFrom);
 
   return (
     <AbsoluteFill>
@@ -718,6 +786,42 @@ const JourneyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           a1_16c_ray: S5_BUBBLE_AT,
         }}
       />
+      {/* **THE ALMOST-ASK** — see `S5_ALMOST`. It is the real bubble primitive,
+          not a redrawn one: same component, same `x`/`y`/`tail`/`tailAt`, and
+          the same text laid out in transparent ink so the box comes out the
+          identical shape the other six have. A hand-drawn "small bubble" would
+          differ in a stroke width or a corner radius and read as an error.
+
+          The animation is entirely this wrapper: it scales the whole bubble
+          about the tail's tip (`S5_ALMOST_ROOT`), so the thing grows up out of
+          Ray and sinks back into him. The `SpeechBubble` inside is therefore
+          pinned fully "on" — `from={0}` and no `until` — because its own pop
+          spring would fight the wind-up and put a bounce on an intention.
+
+          Rendered on every frame at `scale(0)` outside the window rather than
+          mounted conditionally: a bubble that comes and goes from the tree is a
+          hook count that comes and goes with it. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${almost})`,
+          transformOrigin: `${S5_ALMOST_ROOT.x}px ${S5_ALMOST_ROOT.y}px`,
+          pointerEvents: "none",
+        }}
+      >
+        <SpeechBubble
+          x={S5_BUBBLE_AT.x}
+          y={S5_BUBBLE_AT.y}
+          text={S5_BUBBLE}
+          tail={S5_BUBBLE_AT.tail}
+          tailAt={S5_BUBBLE_AT.tailAt}
+          from={0}
+          // He does not say anything. The words are here to size the box and
+          // for no other reason.
+          color="transparent"
+        />
+      </div>
     </AbsoluteFill>
   );
 };
@@ -2138,9 +2242,10 @@ const S10_BUBBLES: Record<string, string> = {
   a1_42_ray: "Hi! Hi! Hi! Hi!",
   a1_44_ray: "Never met me before.",
   // --- THE VOLLEY (revision2) ----------------------------------------------
-  // Four speakers, all summaries, and **no bubble anywhere for the two Narrator
-  // lines**: "Red did not say anything." and "Ahem." are off-stage voice, which
-  // is what makes them the room's own commentary rather than a character's.
+  // Four speakers, all summaries, and **no bubble anywhere for the Narrator**:
+  // "Red did not say anything." is off-stage voice, which is what makes it the
+  // room's own commentary rather than a character's. (There were two of hers
+  // here until T2a cut "Ahem."; the rule is the same for one as for two.)
   a1_42b_yellow: "GREAT waving, Violet!",
   a1_42c_green: "Sitting down now.",
   a1_42d_blue: "Are you new?",
@@ -2191,6 +2296,99 @@ const S10_BLUE_SQUEEZE = 0.55;
 const S10_VIOLET_AT = 0.365;
 
 /**
+ * How long Ray's glance back at the line lasts once he comes off the lens.
+ *
+ * It used to be a window rather than a length — [`a1_42h_narrator` start,
+ * `a1_43_narrator` start), i.e. exactly as long as "Ahem." — and T2a cut that
+ * clip. Twenty-four frames is the same beat by the clock, now stated as a
+ * duration so nothing can key it to a line that no longer exists. It runs
+ * INSIDE `a1_43_narrator` (a line, never a held beat), and he is back on the
+ * lens well before the sacred 24f silence that follows it, so nothing enters
+ * that beat.
+ */
+const S10_BREAK_BACK = 24;
+
+// --- THE 3:49 HANDOFF (T2a/T2b, Mike's note 2, 2026-08-04) -----------------
+//
+// Mike: "this scene jumps around a few times, it looks good until 3:49, then
+// they all jump a bit when white Ray returns, which feels awkward". 3:49 is
+// this scene's own first frame, and the cut into it was carrying **four**
+// separate discontinuities. All four are measured, not guessed — the numbers
+// below were read off probe overlays rendered into frames 7205 and 7206 of the
+// new timeline:
+//
+//   1. **Blue** was at (1157.03, 429.06) leaning −90° at the end of Scene 9
+//      (up off formation, mid-grievance) and at (1233.51, 701.34) at −25° on
+//      the next frame. Two hundred and eighty pixels and sixty-five degrees,
+//      on a cut. Cause: Scene 9 ricochets him in `DRIFT_BOX` seed 4 and this
+//      scene ricochets him in `S10_BLUE_BOX` seed 9, with nothing handing one
+//      to the other.
+//   2. **Indigo** the same, one lag behind: (1320.90, 667.96, −90) to
+//      (1333.54, 818.78, 0).
+//   3. **The lens.** Scene 9 ends on a slow pull-back at zoom 0.96 about
+//      (960, 700) and this scene had no camera at all, so every one of the
+//      seven popped 4% bigger and up to thirty pixels sideways on the cut —
+//      which is exactly the "they ALL jump a bit" in the note, and it is not
+//      in the fact report the design was written from.
+//   4. **The faces.** Scene 9 hands its whole arc Ray's `amazed`, and Blue and
+//      Indigo their own `grumpy`; this scene drew the kit's default `happy`
+//      from frame one. Seven mouths change shape on the cut.
+//
+// Plus Ray, who did not jump so much as *appear* — see `S10_RAY_ENTER`.
+//
+// The fix for all four is one idea: **Scene 10 opens wearing Scene 9's last
+// frame and eases out of it.** Nothing is re-staged; the scene simply spends
+// its first second arriving at the marks it always had. Blue reads as
+// settling grudgingly back toward the line, which is in character and free.
+
+/** How long the whole handoff takes. One second: long enough to be a settle
+ *  rather than a slew, short enough to be finished long before `a1_42_ray`
+ *  (local frame 100) puts the first bubble on screen. */
+const S10_SETTLE = 30;
+
+/**
+ * **Scene 9's last frame, baked.** Deterministic values of `SevenBorn`'s Blue
+ * and Indigo at s09 local frame 1060, including the indignant pose's 18px lift.
+ *
+ * They are a bake because there is no way to ask the previous scene: `Series`
+ * gives a scene its own clock and nothing else. **Re-derive them if Scene 9's
+ * clip list or gaps ever change** — the scene's last frame is its own duration,
+ * so a single re-synthesized clip in Scene 9 moves both of these. The method is
+ * a probe overlay: render `x`/`y`/`heading` into the frame from inside
+ * `SevenBorn`'s map and read the numbers off a still of s09's last frame.
+ */
+const S9_END_BLUE = { x: 1157.03, y: 429.06, heading: -90 } as const;
+const S9_END_INDIGO = { x: 1320.9, y: 667.96, heading: -90 } as const;
+
+/** Scene 9's camera at its own last frame: the far end of its pull-back. */
+const S9_END_ZOOM = 0.96;
+
+/**
+ * Ray's entrance, in frames.
+ *
+ * He is at opacity 0 from Scene 9's local frame 180 — he *became* the seven —
+ * and the shipped cut had him at full strength on Scene 10's frame zero, on
+ * the arc, mid-walk. That is not a return, it is a paste.
+ *
+ * Fourteen frames of opacity and twenty pixels of drift down onto his own
+ * track is enough to read as arriving and too little to read as an entrance
+ * with a flourish. **No streak and no flash**: this scene's first clip is a
+ * narrator line (`a1_41_narrator`, from local 0), so the arrival sits under
+ * narration rather than announcing itself.
+ */
+const S10_RAY_ENTER = 14;
+const S10_RAY_DROP = 20;
+
+/**
+ * How long the seven's faces take to come off Scene 9's.
+ *
+ * Shorter than `S10_SETTLE`: a mouth is read faster than a position, and a
+ * face still morphing a second into a new scene reads as a character reacting
+ * to something. Half a second is a settle.
+ */
+const S10_FACE_SETTLE = 14;
+
+/**
  * Scene 10 — the kids'-series signature, third episode running, and it costs
  * **no new staging idea**: the seven are standing there anyway, so the whole
  * gag is seven eye-lines and a wave.
@@ -2202,6 +2400,14 @@ const S10_VIOLET_AT = 0.365;
  * read." So inside the 24-frame beat his pose drops to rest, his wave has
  * already died, his idle drops, and **no emotion is mapped to a1_44 at all** —
  * the face he ends the roll call with is the face he says the button on.
+ *
+ * **THE SECOND BEAT (T2a, 2026-08-04): forty frames after "He meant to." with
+ * nothing in them at all.** It replaces a Narrator throat-clear that has been
+ * cut, and the whole design of it is that the scene declines to comment on
+ * Orange twice. Ray holds one sceptical look down the lens across it; nobody
+ * moves; nothing enters. It is the same joke as the 24f beat below it, one
+ * exchange earlier, and it is the reason the scene now has two silences in it
+ * instead of a silence and a noise.
  */
 const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -2264,10 +2470,13 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // is deliberately nothing here but an eye-line.
   const [redGapFrom] = heldBeat(scene, "a1_42d_blue");
   const [camFrom] = lineWindow(scene, "a1_42e_orange");
-  // The eye-line breaks back to the seven on "Ahem." — before `a1_43`, which is
-  // the shape's own line and is untouched.
-  const [camTo] = lineWindow(scene, "a1_42h_narrator");
-  const [closeFrom] = lineWindow(scene, "a1_43_narrator");
+  // **RE-KEYED (T2a, 2026-08-04).** This used to be `a1_42h_narrator`'s start —
+  // "Ahem." — and that clip is cut. Both the eye-line break-back and the
+  // emotion restore now hang on `a1_43_narrator`, so Ray holds the sceptical
+  // camera look through the whole 40f of nothing after "He meant to." and
+  // breaks back as the flat line opens. That is a longer hold than the shipped
+  // one and it is the point of the note: "let's let it sit with no reaction".
+  const [camTo] = lineWindow(scene, "a1_43_narrator");
 
   // Ray's aim during the volley. He looks at Blue's **slot** rather than at
   // Blue, exactly as he did while greeting it: the answer comes back from the
@@ -2286,21 +2495,34 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   // **Ray looks into the camera across the whole Orange exchange, confused and
   // unamused** (Mike's note at sign-off) — the audience's face, worn by the
-  // hero. The face is `neutral` rather than `grumpy` on purpose: this show's
-  // deadpan is *stillness*, and an annoyed Ray would be the show taking a side
-  // against Orange, who is not being funny on purpose. Dropping the smile in
-  // front of a straight lens is the whole reaction.
+  // hero.
+  //
+  // **THE FACE IS `skeptical` SINCE T2a (2026-08-04), NOT `neutral`.** Mike's
+  // note on the shipped cut: the Narrator's "Ahem." and Ray's reaction "doesn't
+  // really fit Orange's 'He meant to.' line — let's let it sit with no
+  // reaction, unless we can easily switch Ray's reaction to more of an eyebrow
+  // raise type reaction (currently it's more a happy face)". Both halves are
+  // done: the throat-clear is cut, and the rig gained a `skeptical` face
+  // (rig.ts) built out of `browAsym`, the one-brow tilt the kit already drew
+  // and nobody had ever used.
+  //
+  // `neutral` was the right *instinct* and the wrong *result*: at 0.78 scale a
+  // straight face reads as "nothing is happening", which is precisely the note.
+  // One brow up reads as "I am not buying this" in a single frame, and it is
+  // still not a side — no frown, no scowl, mouth almost flat. **The camera look
+  // is unchanged**: the take-to-camera is the right grammar and was never the
+  // failure.
   //
   // `emotionAt` rather than `useEmotion` because the change hangs on somebody
   // ELSE's line, and `useEmotion` only sees Ray's own turns. Outside the camera
-  // window this reproduces the shipped map exactly — `happy`, then `excited`
-  // from `a1_42_ray`, and nothing mapped to `a1_44`, so the face he ends the
-  // roll call with is still the face he says the button on.
+  // window this is the shipped map — `happy`, then `excited` from `a1_42_ray`,
+  // and nothing mapped to `a1_44`, so the face he ends the roll call with is
+  // still the face he says the button on.
   const emotion = emotionAt(
     frame,
     [
       { at: greetFrom, emotion: "excited" },
-      { at: camFrom, emotion: "neutral" },
+      { at: camFrom, emotion: "skeptical" },
       { at: camTo, emotion: "excited" },
     ],
     "happy",
@@ -2309,9 +2531,26 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     4,
   );
 
+  // --- THE HANDOFF FROM SCENE 9 (T2b) --------------------------------------
+  // The lens arrives where Scene 9 left it and eases out to 1× — see
+  // `S10_SETTLE`. Everything in the world goes inside it; the plate and the
+  // bubbles stay outside, exactly as Scene 9 does it.
+  const handoff = kidEase.easeInOutSine(frame / S10_SETTLE);
+  const cam: Cam = { x: 960, y: 700, zoom: S9_END_ZOOM + (1 - S9_END_ZOOM) * handoff };
+  // Ray does not pop in. Opacity over fourteen frames and twenty pixels of
+  // drift down onto his own track.
+  const enter = kidEase.easeOutQuad(frame / S10_RAY_ENTER);
+  const rayMark: Mark = {
+    x: track.x,
+    y: hover("ray", track.y, 0.78) - (1 - enter) * S10_RAY_DROP,
+    scale: 0.78,
+    who: "ray",
+  };
+
   return (
     <AbsoluteFill>
       <PaintedSky bg="garden_day" phase={6.8} vignette={0.2} />
+      <Camera cam={cam}>
       <SevenGreeted
         scene={scene}
         greetFrom={greetFrom}
@@ -2332,8 +2571,9 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           the greeting and the joke is that they are all him. At 0.62 he read as
           an eighth blob a row behind them. */}
       <Ray
-        x={track.x}
-        y={hover("ray", track.y, 0.78)}
+        x={rayMark.x}
+        y={rayMark.y}
+        opacity={enter}
         scale={0.78}
         brightness={RAY_LIGHT.actOne}
         spectrum={RAY_SPECTRUM.none}
@@ -2346,10 +2586,12 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             : inVolley
               ? volleyAim
               : atCamera
-                ? // Straight down the lens for the whole Orange exchange.
+                ? // Straight down the lens for the whole Orange exchange **and
+                  // the 40f of nothing after it** — see `camTo`.
                   "camera"
-                : frame >= camTo && frame < closeFrom
-                  ? // …and back to the seven on "Ahem.", before `a1_43`.
+                : frame >= camTo && frame < camTo + S10_BREAK_BACK
+                  ? // …and one glance back at the line as `a1_43` opens, which
+                    // is what he is about to have never met.
                     aimAt(track, shardPoint(3))
                   : "camera"
         }
@@ -2360,20 +2602,28 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         streak={0.4}
         zIndex={30}
       />
+      </Camera>
+      {/* Bubbles live outside the camera, as they do everywhere in this
+          episode, so every mark below is projected through it. In practice the
+          projection is the identity: `S10_SETTLE` is thirty frames and the
+          first bubble belongs to `a1_42_ray` at local ~100, so the lens has
+          been at 1× for two seconds by the time anything is drawn here. It is
+          written out anyway, because a bubble whose tail is one handoff away
+          from its speaker is precisely the bug this scene is fixing. */}
       <Bubbles
         scene={scene}
         cast={
           {
-            ray: { x: track.x, y: hover("ray", track.y, 0.78), scale: 0.78, who: "ray" },
-            orange: { ...ORANGE_MARKS.home, scale: ARC_SCALE, who: "shard" },
-            yellow: { ...shardPoint(2), scale: ARC_SCALE, who: "shard" },
-            green: { ...shardPoint(3), scale: ARC_SCALE, who: "shard" },
-            blue: {
+            ray: projectMark(cam, rayMark),
+            orange: projectMark(cam, { ...ORANGE_MARKS.home, scale: ARC_SCALE, who: "shard" }),
+            yellow: projectMark(cam, { ...shardPoint(2), scale: ARC_SCALE, who: "shard" }),
+            green: projectMark(cam, { ...shardPoint(3), scale: ARC_SCALE, who: "shard" }),
+            blue: projectMark(cam, {
               x: shardPoint(4).x + S10_BLUE_AWAY.dx,
               y: shardPoint(4).y + S10_BLUE_AWAY.dy,
               scale: ARC_SCALE,
               who: "shard",
-            },
+            }),
           } as Cast
         }
         text={S10_BUBBLES}
@@ -2563,6 +2813,24 @@ const SevenGreeted: React.FC<{
   const indigoWave = pulse(since(4) - INDIGO_LAG, BLUE_LATE, BLUE_LATE + 22, 4);
   const blueSorry = pulse(since(4), BLUE_LATE + 18, BLUE_LATE + 34, 6);
 
+  // --- THE HANDOFF FROM SCENE 9 (T2b) --------------------------------------
+  //
+  // `back` is how much of Scene 9's last frame is still showing: 1 on this
+  // scene's frame zero, 0 by `S10_SETTLE`. It is applied to Blue and Indigo
+  // only, because they are the only two the two scenes disagree about — and to
+  // every one of the seven's FACES, because Scene 9 hands its arc `amazed`
+  // (and those two `grumpy`) and this scene had been drawing the kit's default
+  // from frame one.
+  //
+  // **Indigo is `INDIGO_LAG` late to it, like everything else he does.** For
+  // the first four frames he is still standing exactly where Scene 9 left him
+  // while Blue has already started drifting back, which is the character and
+  // costs nothing.
+  const backTo9 = (lag: number): number =>
+    1 - kidEase.easeInOutSine((frame - lag) / S10_SETTLE);
+  const blueBack = backTo9(0);
+  const indigoBack = backTo9(INDIGO_LAG);
+
   return (
     <>
       {SPECTRUM.map((c, i) => {
@@ -2657,6 +2925,20 @@ const SevenGreeted: React.FC<{
           arms = f >= -4;
         }
 
+        // --- the handoff, applied (T2b) --------------------------------------
+        // Blue and Indigo are drawn at Scene 9's last pose on frame zero and
+        // eased into the pose this scene computed for them. Nothing above is
+        // touched: the whole scene still runs on its own clock and its own box,
+        // and this is a blend laid over the top of it that is gone by
+        // `S10_SETTLE`.
+        const from9 = i === 4 ? S9_END_BLUE : i === 5 ? S9_END_INDIGO : null;
+        const back = i === 4 ? blueBack : i === 5 ? indigoBack : 0;
+        if (from9 && back > 0) {
+          x += (from9.x - x) * back;
+          y += (from9.y - y) * back;
+          heading += (from9.heading - heading) * back;
+        }
+
         return (
           <ArcShard
             key={c.name}
@@ -2670,6 +2952,18 @@ const SevenGreeted: React.FC<{
             vibrate={vibrate}
             arms={arms}
             heading={heading}
+            // **The face Scene 9 left on him, morphing into this scene's.**
+            // Scene 9's arc wears Ray's `amazed` to its last frame and Blue and
+            // Indigo wear their own `grumpy`; without this the cut changed
+            // seven mouths at once. `emotionAt` at `at: 0` returns a cue whose
+            // mix is 0 on frame zero, so the first frame here is literally the
+            // last frame there.
+            emotion={emotionAt(
+              frame,
+              [{ at: 0, emotion: "happy" }],
+              i === 4 || i === 5 ? "grumpy" : "amazed",
+              S10_FACE_SETTLE,
+            )}
             // **No drawn trail here either — and this one was rendered three
             // ways before it was dropped.** `blueTrail`'s two-leg window is as
             // long as the legs it is made of, and any box small enough to keep
@@ -2741,6 +3035,50 @@ const CARD_Y = 300;
 const W_BAR = { x: 1272, y: 258 };
 const B_TOP = { x: 990, y: 274 };
 const PERCH = 0.36;
+
+// --- THE 4:28 HANDOFF (T2c, Mike's note 2, 2026-08-04) ---------------------
+//
+// Mike: "then it jumps again at 4:28 after 'I have never met me before' when
+// Ray jumps to the back with Drip, which again feels cheap/awkward."
+//
+// What was actually happening is worse than a jump, and it is a property of
+// `BigWordBeat`: it renders its `children` **ungated from frame zero**
+// (BigWord.tsx), and the children of this scene are Ray and Drip. So on the
+// cut Ray snapped from his Scene 10 pose (1453.30, 565.43) at 0.78 straight
+// onto the W-bar at (1272, 258) at 0.36, and **Drip — who is not on stage at
+// all in Scene 10 — simply materialised** at (990, 274). The two of them then
+// floated over an empty frozen garden for about three hundred frames waiting
+// for a card that had not slammed yet. Plus the usual formation snap on Blue
+// and Indigo.
+//
+// The fix is the one the beat wanted all along: **the card brings them.**
+// Before the slam, Ray is exactly where Scene 10 left him and Drip is not in
+// the picture. On the slam he swoops up to his letter and she drops onto hers.
+// It costs no frames — the whole thing happens inside the card's own arrival —
+// and it turns a paste into the reason the card exists.
+
+/** Ray's pose on Scene 10's last frame: `arcPointLifted(0.78)`, measured. */
+const S10_END_RAY = { x: 1453.3, y: 565.43 } as const;
+/**
+ * **Scene 10's last frame for Blue and Indigo, baked** — same method, same
+ * warning as `S9_END_BLUE`: probe overlay, read off a still, and **re-derive
+ * both if Scene 10's clip list or gaps change**, because the values are that
+ * scene's ricochet evaluated at its own final frame. They already moved once:
+ * T2a's cut of "Ahem." shortened Scene 10 by 24 frames and every one of these
+ * numbers changed with it.
+ */
+const S10_END_BLUE = { x: 1289.59, y: 739.9, heading: 128.96 } as const;
+const S10_END_INDIGO = { x: 1448.75, y: 784.2, heading: 128.96 } as const;
+
+/** How long the formation takes to arrive at `SevenOnTheWord`'s u=0 marks. */
+const S11_SETTLE = 30;
+/** Ray's travel from his Scene 10 pose to the W-bar, starting on the slam. */
+const S11_SWOOP = 22;
+/** Drip drops in after the card lands, not with it: she is a separate arrival. */
+const S11_DRIP_LEAD = 10;
+const S11_DRIP_FALL = 18;
+/** How far above her mark she starts. Clears the top of the frame at 0.3. */
+const S11_DRIP_DROP = 560;
 
 const S11_BUBBLES: Record<string, string> = {
   a1_49_drip: "That is you and me!",
@@ -2946,6 +3284,38 @@ function bounceOff(f: number): { x: number; y: number } {
  * while she answers, and home to his seat before `a1_49_drip`. Returns the seat
  * itself outside its own window, so a caller can use it unconditionally.
  */
+/**
+ * Where Blue is `bf` frames after he hits Drip: two bounces off her, then the
+ * cupboard beside her.
+ *
+ * **Split out of `blueVisit` (T2d) so the bubble can ask the same question the
+ * renderer does.** His `tailAt` was pinned to the static contact point while
+ * this function swung his drawn x by +100/−65 across the exact frames of his
+ * own line, so the tail pointed at where he had been. A tail that points at
+ * nobody reads as narration; a tail that points a hundred pixels off a moving
+ * speaker reads as a bug.
+ */
+function blueAfterHit(
+  bf: number,
+  contact: { x: number; y: number },
+): { x: number; y: number } {
+  const off = bounceOff(bf);
+  const p = { x: contact.x + off.x, y: contact.y + off.y };
+  const spent = BOUNCE_LEG * 4;
+  if (bf <= spent) return p;
+  // Into the cupboard beside her (see `S11_VISIT_BOX`). The fourteen-frame
+  // lean across is what stops the ricochet starting with a jump.
+  const box: Box = {
+    x: contact.x + S11_VISIT_BOX.dx,
+    y: contact.y + S11_VISIT_BOX.dy,
+    w: S11_VISIT_BOX.w,
+    h: S11_VISIT_BOX.h,
+  };
+  const d = Math.max(0, Math.min(1, (bf - spent) / 14));
+  const r = blueRicochet(Math.max(0, bf - spent - 14), box, 6.2);
+  return { x: p.x + (r.x - p.x) * d, y: p.y + (r.y - p.y) * d };
+}
+
 function blueVisit(
   f: number,
   seat: { x: number; y: number },
@@ -2964,23 +3334,7 @@ function blueVisit(
     });
     return { x: p.x, y: p.y };
   }
-  const bf = f - at.hit;
-  const off = bounceOff(bf);
-  let p = { x: contact.x + off.x, y: contact.y + off.y };
-  const spent = BOUNCE_LEG * 4;
-  if (bf > spent) {
-    // Into the cupboard beside her (see `S11_VISIT_BOX`). The fourteen-frame
-    // lean across is what stops the ricochet starting with a jump.
-    const box: Box = {
-      x: contact.x + S11_VISIT_BOX.dx,
-      y: contact.y + S11_VISIT_BOX.dy,
-      w: S11_VISIT_BOX.w,
-      h: S11_VISIT_BOX.h,
-    };
-    const d = Math.max(0, Math.min(1, (bf - spent) / 14));
-    const r = blueRicochet(Math.max(0, bf - spent - 14), box, 6.2);
-    p = { x: p.x + (r.x - p.x) * d, y: p.y + (r.y - p.y) * d };
-  }
+  let p = blueAfterHit(f - at.hit, contact);
   if (f > at.home) {
     const d = kidEase.easeInOutSine(
       Math.max(0, Math.min(1, (f - at.home) / S11_VISIT_BACK)),
@@ -3041,13 +3395,42 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   };
 
   const stage = useStage(scene);
-  const emotion = useEmotion(
-    scene,
-    "ray",
-    { a1_47_ray: "excited" },
-    "amazed",
-    // Two 12-frame held beats in this scene.
-    NO_LEAD,
+  // **The face he ends Scene 10 with is the face he starts this one with**
+  // (T2c). This was `useEmotion` with a resting `amazed`, which changed his
+  // mouth on the cut — Scene 10 leaves him on `excited`. It is now a sequence
+  // and it is better staging as well as continuous: he keeps Scene 10's face
+  // until the card lands **on** him, goes `amazed` at it, and is `excited`
+  // again by the time he chants it. `emotionAt` rather than `useEmotion`
+  // because the first change hangs on the slam, which is not a line.
+  const emotion = emotionAt(
+    frame,
+    [
+      { at: slamAt, emotion: "amazed" },
+      { at: chantFrom, emotion: "excited" },
+    ],
+    "excited",
+    // Matching `useEmotion` at NO_LEAD, which morphs over 4.
+    4,
+  );
+
+  // --- THE HANDOFF FROM SCENE 10 (T2c) --------------------------------------
+  //
+  // Before the slam Ray is at his Scene 10 pose at Scene 10's scale, and the
+  // frame is the frozen garden and nothing else. On the slam he travels: a
+  // bowed swoop up to the W-bar over `S11_SWOOP` frames with the scale easing
+  // 0.78 -> `PERCH`, arriving just after the card has landed. Motion is the
+  // explanation — the card takes him.
+  const swoop = kidEase.easeInOutSine((frame - slamAt) / S11_SWOOP);
+  // `perch` is already W_BAR before the split and the hopped `wSeat` after it,
+  // so blending into it works on both sides of the hop with one expression.
+  const rayScale = 0.78 + (PERCH * (1 + land * 0.1) - 0.78) * swoop;
+  const rayAt = moveAlong(
+    S10_END_RAY,
+    { x: perch.x, y: perch.y + land * 8 },
+    swoop,
+    // Bowed up and over rather than a straight diagonal: he is light, and the
+    // straight line read as a slide.
+    { arc: -0.22, ease: (v) => v },
   );
 
   // **She gets hit. Twice.** (R8.) Blue reaches her `FLIGHT` frames after his
@@ -3067,19 +3450,36 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     hit: blueLineFrom - S11_VISIT_HIT_LEAD,
     home: dripLineTo - 20,
   };
+  // **Drip's arrival** (T2c). She is not on stage in Scene 10 at all, so she
+  // may not be on stage on Scene 11's first frame either: she starts
+  // `S11_DRIP_DROP` above her mark, which at 0.3 is comfortably off the top of
+  // the frame, and falls onto the B ten frames after the card lands. Dropping
+  // in is her grammar — she is a raindrop, and she arrived in Scene 8 the same
+  // way. `gravity` on the way down and a landing squash out of `knock`.
+  const dripLandAt = slamAt + S11_DRIP_LEAD + S11_DRIP_FALL;
+  const dripIn = kidEase.gravity((frame - (slamAt + S11_DRIP_LEAD)) / S11_DRIP_FALL);
   const knock =
     settleWave((frame - hitAt) / 22, 1.6, 5, -Math.PI / 2) +
     settleWave((frame - hitAt - BOUNCE_LEG * 2) / 22, 1.6, 5, -Math.PI / 2) * 0.7 +
     settleWave((frame - visitAt.hit) / 22, 1.6, 5, -Math.PI / 2) +
-    settleWave((frame - visitAt.hit - BOUNCE_LEG * 2) / 22, 1.6, 5, -Math.PI / 2) * 0.7;
+    settleWave((frame - visitAt.hit - BOUNCE_LEG * 2) / 22, 1.6, 5, -Math.PI / 2) * 0.7 +
+    // The landing. Same shape as a bounce off Blue, because it is the same
+    // event from her point of view: something hit her.
+    settleWave((frame - dripLandAt) / 20, 1.4, 5.2, -Math.PI / 2) * 1.2;
 
   const dripMark: Mark = {
     x: dripCentre.x,
-    y: hover("drip", dripCentre.y + knock * 7, 0.3),
+    y: hover("drip", dripCentre.y + knock * 7 - (1 - dripIn) * S11_DRIP_DROP, 0.3),
     scale: 0.3,
     who: "drip",
     side: "left",
   };
+
+  // Blue's drawn x on this frame, for his bubble's tail — see `blueAfterHit`.
+  const blueTailX =
+    frame >= visitAt.hit
+      ? blueAfterHit(frame - visitAt.hit, dripContact(dripCentre)).x
+      : dripContact(dripCentre).x;
 
   return (
     <AbsoluteFill>
@@ -3113,16 +3513,24 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
                 : false
           }
         />
+        {/* Pre-slam he is exactly where Scene 10 left him, at Scene 10's
+            scale; the swoop is what puts him on the card. See `S10_END_RAY`. */}
         <Ray
-          x={perch.x}
-          y={hover("ray", perch.y + land * 8, PERCH)}
-          scale={PERCH * (1 + land * 0.1)}
+          x={rayAt.x}
+          y={hover("ray", rayAt.y, rayScale)}
+          scale={rayScale}
           brightness={RAY_LIGHT.actOne}
           spectrum={RAY_SPECTRUM.none}
           phase={PHASE.ray}
           emotion={emotion}
           speaking={stage.speaking("ray")}
           look="camera"
+          // `Ray` derives its pose from the emotion — `excited` means `cheer`,
+          // arms up — and Scene 10 ends on `excited` with an explicit `rest`.
+          // Without this the arms popped up on the cut. From the slam on the
+          // derived pose is right: he is amazed at the card, then cheering the
+          // chant.
+          pose={frame < slamAt ? "rest" : undefined}
           streak={0.3}
           idle={0.6}
           zIndex={55}
@@ -3212,7 +3620,13 @@ const BigWordRainbowScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // Blue and Drip are a two-shot on the B, so their two bubbles go on
           // opposite sides of it — his left, hers right — and neither ever
           // shares a frame position with the other.
-          a1_48c_blue: { x: 500, y: 470, tail: "right", tailAt: dripContact(dripCentre).x },
+          // **A LIVE TAIL** (T2d): `dripContact(...)` is where he *arrives*, and
+          // he bounces off her twice and then ricochets in a cupboard for the
+          // whole of this line — `blueAfterHit` is exactly what the renderer
+          // draws him at, so the tail now follows him instead of pointing at
+          // the spot he left. (Overrides are computed per frame; `dripContact`
+          // already does this, it was just being asked the wrong question.)
+          a1_48c_blue: { x: 500, y: 470, tail: "right", tailAt: blueTailX },
           a1_48d_drip: { x: 1300, y: 470, tail: "left", tailAt: dripCentre.x },
         }}
       />
@@ -3316,6 +3730,15 @@ const SevenOnTheWord: React.FC<{
   const hitAt = riseAt + 4 * RISE_STAGGER + FLIGHT;
   const contact = dripContact(dripAt);
 
+  // --- THE HANDOFF FROM SCENE 10 (T2c) --------------------------------------
+  // Same treatment as Scene 10 gives Scene 9: Blue and Indigo open on the pose
+  // the previous scene left them in and ease onto their u=0 marks over
+  // `S11_SETTLE`, Indigo `INDIGO_LAG` late as always. Everybody else is on
+  // their arc mark in both scenes and needs nothing. It is over long before
+  // the take-off at `riseAt` (~186), so the flight is untouched.
+  const backTo10 = (lag: number): number =>
+    1 - kidEase.easeInOutSine((frame - lag) / S11_SETTLE);
+
   return (
     <>
       {SPECTRUM.map((c, i) => {
@@ -3386,7 +3809,17 @@ const SevenOnTheWord: React.FC<{
           i === 4 && frame > visitAt.leave
             ? blueVisit(frame, settled, target, visitAt)
             : null;
-        const here = visit ?? settled;
+        const arrived = visit ?? settled;
+        // …and the handoff, laid over the top of it. See `backTo10`.
+        const from10 = i === 4 ? S10_END_BLUE : i === 5 ? S10_END_INDIGO : null;
+        const back = i === 4 ? backTo10(0) : i === 5 ? backTo10(INDIGO_LAG) : 0;
+        const here =
+          from10 && back > 0
+            ? {
+                x: arrived.x + (from10.x - arrived.x) * back,
+                y: arrived.y + (from10.y - arrived.y) * back,
+              }
+            : arrived;
 
         // Settles onto the letter, then sits still: a blob that keeps bobbing
         // on a Big Word card is competing with the letters for the eye. Green
@@ -3431,11 +3864,13 @@ const SevenOnTheWord: React.FC<{
             calm={u >= 1 ? 0.45 : 1}
             speaking={speaking ? speaking(i) : undefined}
             heading={
-              visit
+              (visit
                 ? headingOf((f) => blueVisit(f, settled, target, visitAt), frame)
                 : path && landed
                   ? headingOf(path, frame - hitAt)
-                  : from.angle * (1 - off) + p.angle * off
+                  : from.angle * (1 - off) + p.angle * off) *
+                (1 - back) +
+              (from10 ? from10.heading * back : 0)
             }
             // The blur is only there while there is a direction change in it.
             // A trail behind a body that has stopped collapses to a point and
@@ -3463,7 +3898,12 @@ const SevenOnTheWord: React.FC<{
             }
             // Violet holds on to the end of the block with both of them. Six
             // seated blobs with arms is six pairs of arms on a word card.
-            arms={i === 6 ? squeeze > 0.2 : undefined}
+            //
+            // `frame < leaveAt` is the Scene 10 handoff (T2c): he has both arms
+            // out on the arc there and had been dropping them on the cut. He
+            // keeps them until his own take-off, tucks them for the flight, and
+            // puts them back out to hold on.
+            arms={i === 6 ? frame < leaveAt || squeeze > 0.2 : undefined}
             zIndex={53}
           />
         );
@@ -3592,7 +4032,12 @@ const HomeworkScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         // Up in the empty sky rather than above his crown: he is a foreground
         // element in the bottom corner now, and a bubble stacked on him would
         // sit across the middle of the diagram he is standing in front of.
-        at={{ a1_53_ray: { x: 700, y: 250, tail: "left", tailAt: 430 } }}
+        //
+        // **`tailAt` is keyed to his mark since T2d.** It was the literal 430,
+        // seventy pixels to the right of a character who is static at x=360 for
+        // the whole scene — a leftover from a staging pass that moved him and
+        // did not move the tail. Keyed, it cannot drift again.
+        at={{ a1_53_ray: { x: 700, y: 250, tail: "left", tailAt: S12_RAY.x } }}
       />
     </AbsoluteFill>
   );
@@ -3908,6 +4353,35 @@ const NotPlainScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             y: 360,
             tail: "right",
             tailAt: projectMark(cam, greenMark).x,
+          },
+          // --- THE SWEEP (T2d, 2026-08-04) ------------------------------------
+          // All four of these ran on the default placement, which puts a bubble
+          // 330px to the speaker's own side — and in a two-hander where one of
+          // the two is an enormous Sun at frame right, that walks the box
+          // straight across his face. Stills of the shipped cut had Ray's two
+          // lines covering Sunny's left eye and **Sunny's own button covering
+          // his own eye**, which is the worst of the three: the frame's only
+          // reaction shot, hidden by the thing reacting.
+          //
+          // All four now sit over the empty lawn left of centre with their
+          // tails keyed to their speaker's projected mark. Ray's two point down
+          // at him; Sunny's two point right at him, and the tail is the whole of
+          // the attribution because neither of them shares a bubble dress.
+          a1_55_ray: { x: 760, y: 250, tail: "right", tailAt: projectMark(cam, rayMark).x },
+          a1_56_ray: { x: 760, y: 250, tail: "right", tailAt: projectMark(cam, rayMark).x },
+          a1_58_sunny: {
+            x: 760,
+            y: 210,
+            tail: "right",
+            tailAt: projectMark(cam, S13_SUNNY).x,
+          },
+          // Further left again: the camera has pushed in 1.22× by his button and
+          // Sunny is both bigger and further into frame than he was on a1_58.
+          a1_60_sunny: {
+            x: 700,
+            y: 210,
+            tail: "right",
+            tailAt: projectMark(cam, S13_SUNNY).x,
           },
         }}
       />

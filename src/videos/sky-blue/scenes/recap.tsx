@@ -79,15 +79,13 @@ import {
 //        top half is genuinely black — that is the whole fact. The astronaut,
 //        their shadow and the blue-marble Earth are SVG over it. Keep it
 //        wondrous: the astronaut waves, and nothing in the shot is frightening.
-//   s35  the tease. Scene 26's exact framing at dusk (plate: sea_dusk), the
-//        volcano still asleep, one smoke ring coming out **wobbling** and not
-//        closing, a low rumble in the water. **Wondrous, not frightening** —
-//        no dark chord, no red glow, no shaking camera. Then Sunny, half under
-//        the horizon, claiming the volcano — the gag's standard firing, not the
-//        inversion the delivered cut had (that is banked for the volcano
-//        episode, ep 5). Emotion lead 0 on `rc_18_sunny`, and a new Narrator
-//        line after him. Then the card — NEXT TIME / WHAT DO PLANTS EAT? — and
+//   s35  the sign-off. Scene 26's exact framing at dusk (plate: sea_dusk) and
+//        the volcano **fully asleep** — REWRITTEN 2026-08-04 (T10): the whole
+//        waking-up tease is cut with Mike's series order, so there is no stir,
+//        no rumble, no wobbling ring and no claim. Twenty frames of calm, then
+//        Ray's goodbye, then the card — NEXT TIME / WHAT DO PLANTS EAT? — and
 //        Ray's button: his wave freezes and he asks whether plants eat *him*.
+//        Sunny is in frame, passive, and no beat is his.
 //
 // See the volcano rule at the top of act3.tsx before touching s35.
 
@@ -1160,7 +1158,32 @@ const MindBlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // Under him rather than above: his crown is off the top of the frame,
           // and a bubble clamped to y=170 would sit across his own rays.
           rc_09b_sunny: { x: 1250, y: 640, tail: "right", tailAt: S34_SUNNY.x - 90 },
-          rc_11b_sunny: { x: 1250, y: 640, tail: "right", tailAt: S34_SUNNY.x - 90 },
+          // **BESIDE HIM, NOT UNDER THE MOON** (T9, Mike's note 9: "when Sunny
+          // says 'I am right here' the word bubble is in the wrong place").
+          //
+          // The two Sunny lines had shared a mark, and for the first one that
+          // is right — "That is ME!" is about the astronaut, and a bubble
+          // hanging over the lunar world points at the thing he is claiming.
+          // The second one is about **him**: "So where is the sky? I am RIGHT
+          // HERE." At (1250, 640) it floated four hundred pixels below a
+          // character who blazes at y≈214, with a tail that at that distance
+          // aimed at open ground. The one bubble in the episode whose whole
+          // content is *the speaker's own position* was the one pointing away
+          // from him.
+          //
+          // It now sits at his shoulder, with the tail a short hop across into
+          // his face.
+          //
+          // **The height is the part that took stills.** The design started it
+          // at y=300, which is level with Ray at (1210, 372) — and at 300 the
+          // bubble's bottom edge sliced the top off Ray's head, trading one
+          // wrong bubble for one hidden character. It is up at 196 instead: the
+          // box clears Ray's crown with room, it rides across Sunny's OWN rays
+          // (which is the one thing a bubble may sit on, and is why the line
+          // below it does not do this), and it stops well short of
+          // `BlueMarble` at (286, 196) and of the astronaut's sightline at
+          // x≈660.
+          rc_11b_sunny: { x: 1330, y: 196, tail: "right", tailAt: S34_SUNNY.x - 90 },
         }}
       />
     </AbsoluteFill>
@@ -1316,75 +1339,56 @@ const BlueMarble: React.FC<{ x: number; y: number; r: number }> = ({ x, y, r }) 
 };
 
 // ---------------------------------------------------------------------------
-// Scene 35 — Tease and sign-off
+// Scene 35 — Sign-off
 // ---------------------------------------------------------------------------
 //
-// **Scene 26's exact framing, at dusk**, which is why the camera arithmetic
-// below is Scene 26's with `settle` pinned at 1: the audience has seen this
-// shot before, ten minutes ago, and the whole tease is that it is the same shot
-// and something in it is different.
+// **THE VOLCANO TEASE IS CUT** (T10, Mike's tweak-round note 10, 2026-08-04):
+// "I think we need to cut the 'someone is waking up bit' — it doesn't make
+// sense with the switch to plants in [ep 4], just cut straight from the moon to
+// the next time what do plants eat."
 //
-// Three rules, and all three are about restraint:
+// So this scene is no longer a tease of anything. It is a goodbye. What went
+// with the note: `rc_17_narrator` ("Something is waking up."), `rc_18_sunny`
+// ("OH! That one is me as well!"), `rc_18b_narrator` ("Hmm. We will find out."),
+// the stir ramp, **both** rumbles, Sunny's claim-and-turn-to-camera
+// choreography, his bloom, his bubble, and the `WaterRumble` component, which
+// had no other call site.
 //
-//   - **Wondrous, not frightening.** No dark chord, no red glow, no shaking
-//     camera. The rumble is in the water and in the smoke; the lens does not
-//     move a pixel. `sea_dusk` is a very dark plate, so the island carries a
-//     warm rim light (`rim`) — a black shape on a near-black sea reads as a
-//     hole in the picture, and a hole in the picture is the one thing that
-//     would make this scary.
-//   - **The ring is the payoff of three episodes.** It comes out wobbling and
-//     it does not close. Nothing else about the island changes: same place,
-//     same size, same face, still asleep.
-//   - **The stir promises nothing with a number on it.** REWRITTEN 2026-08-04
-//     (Mike's series order: ep 4 = plants, ep 5 = volcano). `rc_16_narrator`
-//     ("Next time.") is cut, so the scene now CUTS IN on the ring: forty-five
-//     frames of silence with the island already stirring, and no line anywhere
-//     in the episode saying when the thing wakes up. What "Next time." points
-//     at instead is the card, at `rc_20_narrator`, and the card asks about
-//     plants.
-//   - **`rc_18_sunny` has no emotion lead, and nothing to lead.** REWRITTEN
-//     2026-08-02 (revision §6.17, wave-2 A5): the line was "That is not me."
-//     and the staging under it was a man working something out — neutral face,
-//     narrowed eyes, a stare held at the island. **That is withdrawn and
-//     banked for the volcano episode (ep 5).** The line is now the gag's
-//     standard firing
-//     ("OH! That one is me as well! HA! HA!") and the staging is its exact
-//     opposite: ONE emotion for the whole scene, `proud`, never morphed, never
-//     interrupted. He beams, at full brightness, and claims a volcano without
-//     a second's hesitation.
+// **The volcano is fully asleep and is scenery again.** `stir` is not passed at
+// all — not a small number, none — so there is no sway, no deepened breath, no
+// wobbling open-ended ring, and nothing in the frame that a returning viewer
+// could read as a promise. It is the series' sleeping constant, exactly as it
+// is in Scenes 25, 28b (bar one eyelid), 29 and 31. The material that was
+// banked when the note landed — Sunny claiming the wake, and the "That is not
+// me." inversion it had replaced — is now UNFIRED and belongs to ep 5.
 //
-//     Three things follow from that and all three are restrictions:
+// What is left, and all of it is unchanged mechanism:
 //
-//       1. **He turns to CAMERA on his own line**, not on the beat after it,
-//          so that when the 45f silence opens he is already grinning down the
-//          lens and *nothing changes for forty-five frames*. A turn on the
-//          beat's first frame would be a reaction, and the beat is the one
-//          place in the scene that is not allowed to contain one.
-//       2. **The second rumble happens behind him.** He is facing us; he does
-//          not look round, does not blink at it, does not dim. The joke is
-//          entirely that he is wrong and does not know it, and the audience
-//          does.
-//       3. **`rc_18b_narrator` ("Hmm. We will find out.") stages as nothing.**
-//          She declines to rule, so the picture declines to illustrate: no
-//          cutaway, no emphasis, no look. The volcano rumbles, Sunny beams,
-//          and the only new information in the shot is her tone.
+//   - **Scene 26's exact framing, at dusk.** The camera arithmetic below is
+//     Scene 26's with `settle` pinned at 1: the audience has seen this shot
+//     before, ten minutes ago. `sea_dusk` is a very dark plate, so the island
+//     still carries its warm rim light (`rim`) — a black shape on a near-black
+//     sea reads as a hole in the picture, which is the one thing that would
+//     make a bedtime sign-off feel wrong.
+//   - **Twenty frames of calm dusk** (`leadFrames` in Video.tsx, was 45). The
+//     forty-five were bought when the silence had a stirring island to watch;
+//     with nothing moving in it, a long hold on scenery before the goodbye
+//     reads as a missing line. Twenty registers the place and the hour.
+//   - **Sunny is in frame and passive.** He is half under the horizon on his
+//     way down, at his resting `proud`, looking out at the sea. **No beat
+//     touches him**: no line, no emotion change, no brightness change, no turn
+//     to camera, and no bubble anywhere in the scene that is his.
 //   - **THE BUTTON IS RAY'S, AND IT IS THE ONLY JOKE IN THE SCENE THAT MOVES.**
-//     The Narrator reads the card ("Next time. What do plants eat?"), Ray's
-//     wave FREEZES mid-air for a full second — `<Freeze>`, so the features
-//     hold too, and the shot has one object in it that has stopped — and then
-//     he asks the only question a light ray could possibly ask about that
-//     sentence. He is right to be afraid, which is what makes it funny and what
-//     makes it episode four's first fact. **It must never read as distress**:
-//     wide eyes, hands pulled in, three syllables, and then forty frames in
-//     which nothing answers him.
+//     He waves the catch-phrase, the card pops with it, the Narrator reads the
+//     card ("Next time. What do plants eat?"), Ray's wave FREEZES mid-air for a
+//     full second — `<Freeze>`, so the features hold too, and the shot has one
+//     object in it that has stopped — and then he asks the only question a
+//     light ray could possibly ask about that sentence. He is right to be
+//     afraid, which is what makes it funny and what makes it episode four's
+//     first fact. **It must never read as distress**: wide eyes, hands pulled
+//     in, three syllables, and then forty frames in which nothing answers him.
 
 const S35_BUBBLES: Record<string, string> = {
-  // The series wording this gag has had since ep 2's `rc_14_sunny` — literally
-  // the same five words in `wind/scenes/recap.tsx`, because a returning viewer
-  // recognising the *sentence* is most of the joke. (The clip is the fuller
-  // "OH! That one is me as well! HA! HA!"; a bubble is a summary, house rule
-  // six words.)
-  rc_18_sunny: "That one is me as well!",
   rc_19_ray: "Bye! Look up. That's me.",
   // Three words, and for once the bubble is the transcript: there is no shorter
   // summary of "Is it me??" than "Is it me??".
@@ -1395,9 +1399,6 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const [wakeFrom] = lineWindow(scene, "rc_17_narrator");
-  const [rumbleFrom] = heldBeat(scene, "rc_17_narrator");
-  const [sunnyFrom, sunnyTo] = lineWindow(scene, "rc_18_sunny");
   const [byeFrom] = lineWindow(scene, "rc_19_ray");
   // The 30f the wave is frozen for: it starts on the frame the Narrator stops
   // saying "…what do plants eat?" and ends on the frame Ray starts answering.
@@ -1415,41 +1416,7 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     dx: 960 - VOLCANO_AT.x,
   };
 
-  // **It is already stirring on frame one.** The ramp used to run under "Next
-  // time."; with that line cut (2026-08-04) there is nothing in front of the
-  // 45-frame silence to ramp under, and a ring still easing into its wobble
-  // halfway through the silence is a silence about nothing. So the shot cuts in
-  // at 0.55 — enough for the newest ring to come out open and wobbling — and
-  // the last 0.45 arrives under "Something is waking up." It never becomes more
-  // than stirring.
-  const stir = 0.55 + 0.45 * clamp01((frame - wakeFrom) / 40);
-
-  // THE RUMBLE, and there are two of them.
-  //
-  // The first is the 60f beat's whole content — felt in the water and in the
-  // smoke, never in the lens. The second lands under `rc_18_sunny`'s 45f beat
-  // and is the thing Sunny does not notice; it is a *swell*, not a bigger
-  // event, because the escalation this episode is allowed is one eyelid and
-  // one ring that will not close. Between them the water settles part of the
-  // way back, so the second one is something happening rather than something
-  // continuing.
-  const rumbleOne =
-    clamp01((frame - rumbleFrom + 10) / 34) *
-    (1 - 0.42 * clamp01((frame - (rumbleFrom + 74)) / 56));
-  const rumbleTwo = 0.62 * clamp01((frame - (sunnyTo - 10)) / 30);
-  const rumble = clamp01(rumbleOne + rumbleTwo);
-
   const stage = useStage(scene);
-  // **Two faces, one change, and the change is ON the line.** `proud` (his
-  // resting face, all three episodes) until he claims it, `excited` from his
-  // own first frame of speech — the series' own claiming face, the one
-  // `a1_03`, `a1_09` and `co_08` all use, with the eyes wide open rather than
-  // the smug half-lid. **Lead 0**: nothing arrives early, the morph is over
-  // four frames after he starts talking, and by the time the 45f silence opens
-  // the face has finished moving and does not move again. No dawning, no
-  // doubt, no reaction of any kind — there is no `emotionAt` sequence here
-  // because there is no sequence.
-  const sunnyEmotion = useEmotion(scene, "sunny", { rc_18_sunny: "excited" }, "proud", NO_LEAD);
   // **`scared` is the rig's fear read and it is the right one**: wide eyes with
   // *small pupils* and a wobble mouth (`EMOTIONS.scared`, rig.ts), which is
   // alarm rather than misery — nothing in it droops. **Lead 0**, so it lands on
@@ -1471,25 +1438,11 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     config: { damping: 12, mass: 0.6 },
   });
 
-  // He looks at the island while he claims it and then **turns to camera,
-  // inside his own line**, so the beat after it opens on a face that has
-  // already finished changing. 45% through: after "OH! That one is me as
-  // well!" and before the laugh.
-  const toCamera = sunnyFrom + Math.round((sunnyTo - sunnyFrom) * 0.45);
-  const sunnyLook: { x: number; y: number } =
-    frame >= toCamera
-      ? { x: 0, y: 0 }
-      : frame >= wakeFrom
-        ? { x: -0.85, y: 0.1 }
-        : { x: -0.3, y: 0 };
-  // Full brightness, arriving with the claim and then held flat: a bloom that
-  // was still growing inside the 45f beat would be something entering it.
-  const beam = clamp01((frame - sunnyFrom) / 26);
-
   const sunnyMark: Mark = {
     x: 1560,
     // Further under than Scene 29 — it is later, and he is going. His face
-    // still has to be above the line, because he has the last word but one.
+    // still has to be above the line, because he is the last familiar thing in
+    // the shot that is not saying goodbye.
     y: hover("sunny", horizon - 44, 0.86),
     scale: 0.86,
     who: "sunny",
@@ -1505,12 +1458,11 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   // **The sign-off starts ON Ray's line and not one frame before it.** The
   // leads here were +16 and +26, which put the poster spring and the whole
-  // "LITTLE BIG WORLD" banner *inside the 30-frame held beat* after
-  // `rc_18b_narrator` — a beat whose entire content is "the volcano, the
-  // rumble, Sunny still beaming. Nothing enters." A still of it had the banner
-  // fully on screen with twenty frames of the silence still to run. The card
-  // now lands with "Bye!", which is also where the script puts it, and the
-  // banner follows it eight frames later so the two do not pop as one object.
+  // "LITTLE BIG WORLD" banner inside a held beat whose entire content was
+  // "nothing enters". A still of it had the banner fully on screen with twenty
+  // frames of the silence still to run. The card lands with "Bye!", which is
+  // also where the script puts it, and the banner follows it eight frames later
+  // so the two do not pop as one object.
   const poster = spring({ frame: frame - byeFrom, fps, config: { damping: 14, mass: 0.9 } });
   const button = spring({ frame: frame - byeFrom - 8, fps, config: { damping: 13, mass: 0.8 } });
 
@@ -1518,32 +1470,26 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     <AbsoluteFill style={{ background: "#0d1830", overflow: "hidden" }}>
       <PaintedSky bg="sea_dusk" phase={8.6} drift={SEA_DRIFT} zoom={zoom} />
 
-      {/* The rumble, felt in the water. Rings on the surface and nothing else —
-          the camera does not move, because a shaking camera is fear and this is
-          wonder. */}
-      <WaterRumble horizon={horizon} strength={rumble} />
-
       <Camera cam={cam}>
         <SleepingVolcano
           x={VOLCANO_AT.x}
           base={horizon}
           scale={VOLCANO_AT.scale}
-          // **0.89, and it is arithmetic, not a taste.** A ring leaves the
-          // crater at local frame 90·(k − phase) and lives 2·(1 + 0.6·stir)
-          // seconds. The silent open moved to frames 0..45 when "Next time."
-          // was cut, so the old 0.49 (a ring at 46, i.e. after the beat) would
-          // have played the whole silence over a hole. At 0.89 the previous
-          // ring dies just before the cut and the next one leaves the crater at
-          // frame 10: the audience lands on a sleeping island, watches one ring
-          // come out wobbling, and it is still there — 80-odd frames of life —
-          // when she says "Something is waking up."
-          phase={0.89}
+          // **No `stir`, and that is the note.** The prop exists for exactly one
+          // beat in the series and that beat is cut; passing even a small value
+          // would put a wobble back in the smoke and re-promise the thing Mike
+          // took out. `0.3` is the same sleeping phase Scene 31 uses, so the
+          // island is breathing the way it has breathed for three episodes and
+          // there is a ring in the air on the cut rather than a dead crater.
+          phase={0.3}
           rim={0.95}
-          stir={stir}
         />
       </Camera>
 
-      {/* Sunny, half under the horizon, claiming a volcano. */}
+      {/* Sunny, half under the horizon, on his way down and saying nothing.
+          Since T10 there is no bloom, no claim and no turn to camera — he is a
+          familiar face at the edge of a calm frame and no beat in the scene is
+          his. */}
       <div
         style={{
           position: "absolute",
@@ -1552,34 +1498,19 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         }}
       >
         <SoftShade x={sunnyMark.x} y={horizon - 90} rx={420} ry={300} strength={0.3} color="10,18,44" />
-        {/* FULL BRIGHTNESS, and it is the only lighting change in the shot.
-            `Sunny` has no brightness knob and no arms — his arms are his rays —
-            so "beaming, at full brightness, with his arms out" is a warm bloom
-            behind him plus `idle` up, which flares the rays (they ride the
-            breath's trail, `Sunny.tsx`). It arrives with the claim and is flat
-            by the time the 45f beat opens. It is warm, not red, and it is on
-            *him*: the island gets no glow of any kind. */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: `radial-gradient(circle 420px at ${sunnyMark.x}px ${horizon - 70}px, rgba(255,226,150,${0.3 * beam}) 0%, rgba(255,196,90,${0.15 * beam}) 40%, rgba(255,180,60,0) 74%)`,
-            pointerEvents: "none",
-          }}
-        />
         <Sunny
           x={sunnyMark.x}
           y={sunnyMark.y}
           scale={0.86}
           phase={PHASE.sunny}
-          emotion={sunnyEmotion}
+          emotion="proud"
           speaking={stage.speaking("sunny")}
-          look={sunnyLook}
-          // Nothing held, nothing narrowed: the eyes stay alive all the way
-          // through the beat he is wrong in.
+          // Out at the sea, the way somebody watches the last of a day. Not at
+          // Ray, not at the card, not at us: a look is a reaction and nothing
+          // in this scene is his to react to.
+          look={{ x: -0.3, y: 0 }}
           eyeLife={1}
-          // Bouncier from the claim on, which is what puts the rays out.
-          idle={1 + 0.3 * beam}
+          idle={1}
           raySpeed={0.16}
           zIndex={20}
         />
@@ -1666,21 +1597,6 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         </span>
       </div>
 
-      {/* Sunny's three words have to be **off screen before their beat opens**:
-          `SpeechBubble` springs out over the frames after its `until`, and his
-          `until` is the first frame of the 45-frame silence the script says
-          nothing enters. Taken out over the last eight frames of the line
-          instead. (Ray's sign-off runs to the cut, so it is unaffected.) */}
-      <div style={{ position: "absolute", inset: 0, opacity: 1 - clamp01((frame - (sunnyTo - 8)) / 8) }}>
-        <Bubbles
-          scene={scene}
-          cast={{ sunny: sunnyMark } as Cast}
-          text={S35_BUBBLES}
-          at={{
-            rc_18_sunny: { x: 1470, y: 252, tail: "right", tailAt: sunnyMark.x },
-          }}
-        />
-      </div>
       <Bubbles
         scene={scene}
         cast={{ ray: rayMark } as Cast}
@@ -1693,57 +1609,6 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         }}
       />
     </AbsoluteFill>
-  );
-};
-
-/**
- * The rumble, in the water. Rings spreading from under the island, and a slow
- * swell in the near water — felt, never heard, and never in the lens.
- */
-const WaterRumble: React.FC<{ horizon: number; strength: number }> = ({
-  horizon,
-  strength,
-}) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const t = frame / fps;
-  if (strength <= 0.01) return null;
-  return (
-    <WideLayer zIndex={6}>
-      {[0, 1, 2, 3].map((i) => {
-        const u = ((t * 0.34 + i * 0.25) % 1 + 1) % 1;
-        const rx = 180 + u * 1500;
-        return (
-          <ellipse
-            key={i}
-            cx={960}
-            cy={horizon + 60 + u * 300}
-            rx={rx}
-            ry={rx * 0.12}
-            fill="none"
-            stroke={kidTheme.skyMid}
-            strokeWidth={7 * (1 - u * 0.6)}
-            opacity={strength * 0.34 * Math.min(1, u * 5) * (1 - u)}
-          />
-        );
-      })}
-      {/* A slow swell in the near water: the surface itself moving, drawn as
-          three long soft crests rather than a filter on the plate. */}
-      {[0, 1, 2].map((i) => (
-        <path
-          key={`s${i}`}
-          d={
-            `M -400 ${horizon + 220 + i * 150 + Math.sin(t * 1.3 + i) * 6 * strength}` +
-            ` q 600 ${-26 * strength} 1160 0 q 560 ${26 * strength} 1160 0`
-          }
-          stroke={kidTheme.skyMid}
-          strokeWidth={9}
-          fill="none"
-          strokeLinecap="round"
-          opacity={strength * 0.18}
-        />
-      ))}
-    </WideLayer>
   );
 };
 
