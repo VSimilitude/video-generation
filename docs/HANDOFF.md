@@ -160,6 +160,16 @@ overridden in substance; R2 superseded.
   4 deleted, .cache.json), tweak1-worklist.md, tweak1-retro-notes.md,
   docs/HANDOFF.md. NO deploy yet (full render owed at round close
   after RUN 2).
+- **ORCHESTRATOR QUEUE (pending relay to showrunner at quota reset
+  ~2026-08-05T04:00Z — RUN 1 committed aa4478e, gate hit PAUSE):**
+  (1) RUN 2 GREEN-LIT by Mike: T4 = Option B ("Hi, Bluington! Hi,
+  Bluesworth! Hi, Bluey! Hi... me!"), T6 concept APPROVED ("Sunny
+  poses, the air paints"). (2) Mike ear verdict on the RUN 1 packet,
+  verbatim: "22b red is still weird. Something about that phrase and
+  voice doesn't work. Maybe rewrite that one line. The rest of the
+  voice clips are good" → a3_22b_red "Nice drama." = REWRITE THE LINE
+  (text change, showrunner's pen), all other 6 clips approved. rc_20/
+  rc_21 ear verdicts still open.
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
