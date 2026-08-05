@@ -168,8 +168,9 @@ overridden in substance; R2 superseded.
   verbatim: "22b red is still weird. Something about that phrase and
   voice doesn't work. Maybe rewrite that one line. The rest of the
   voice clips are good" → a3_22b_red "Nice drama." = REWRITE THE LINE
-  (text change, showrunner's pen), all other 6 clips approved. rc_20/
-  rc_21 ear verdicts still open.
+  (text change, showrunner's pen), all other 6 clips approved. (3) Mike
+  2026-08-05: "rc20/21 are fine" — re-tease clips APPROVED; ear list
+  fully clear except the a3_22b rewrite.
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
