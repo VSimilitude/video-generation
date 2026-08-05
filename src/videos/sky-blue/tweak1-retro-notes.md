@@ -55,6 +55,42 @@ Distilled:
 - New rig vocabulary from this round (if T2a lands): `skeptical` — the
   series' first one-brow/flat-mouth deadpan face; note in STYLE with
   its intended register (unimpressed, never grumpy/smug).
-- Possible new name canon from T4 (pending Mike's pick): first blue-
-  copy names ("Bluington" + siblings). If it lands, record spelling in
-  the BIBLE name table.
+- NEW NAME CANON (T4 landed, Mike's pick Option B): the blue copies —
+  **Bluington, Bluesworth, Bluey** (and the fourth greeting is
+  "Hi... me!"). Record spellings in the BIBLE name table; these are
+  prime cameo fodder for the Blue-anti-Sunny arc above.
+
+## STYLE/LEARNINGS candidates from the tweak-round builds
+
+- **No all-caps emphasis words on MiniMax lines, ever** — caps read
+  letter-wise ("AIR" → "the A"); caps live in bubble text (print)
+  only. Two shipped defects (a2_52, rc_14) had identical signature.
+  The builder's sweep list of remaining all-caps MiniMax lines is in
+  tweak1-worklist.md RUN 1 DONE — none flagged by ear in two
+  screenings; treat as watch-list, not rework.
+- **Phrase/voice fit is a real failure mode distinct from bad draws**
+  (a3_22b "Nice drama." broke identically across draws; rewording to
+  "Very dramatic." fixed it — rewrite the line when a re-roll repeats
+  the same artifact).
+- **Paint the value, not the hue**: on a blue-sky plate, blue paint is
+  invisible — a payoff that adds color must change VALUE (pale primer
+  → saturated). Found in the T6 re-shoot.
+- **Scene-boundary continuity checklist** (the "everything jumps" bug
+  class, three found in one cut): position/heading handoff for
+  per-scene ricochet boxes, camera zoom continuity, emotion handoff,
+  and no pop-in entrances — verify with boundary-frame still pairs.
+- **Repetition-gag delays**: Mike asked for "slightly increasing
+  delay" — +30f per firing landed; the count-answers-that-sum gag
+  (1/7, 2/6 … 5/3) held up. Comedy-pacing rule re-confirmed.
+
+## Kit backlog (accumulated this round, for a future kit pass)
+
+- Re-export Freeze from scenes/common.tsx (recap.tsx imports straight
+  from remotion) — pre-existing item.
+- PaintedSky 10–15px plate shift at every hard cut (per-scene phase +
+  clock restart) — series-wide; decide once at kit level.
+- Bubbles bx clamp [400, W−400] / by clamp [170, H−280] is
+  undocumented where scene authors look — two independent builders hit
+  it (RUN 1 T9, RUN 2 T7b). Document at the Bubbles/common.tsx API.
+- browAsym is single-sided (camera-right brow only) — document in the
+  rig notes; `skeptical` uses the achievable side.

@@ -17,7 +17,6 @@ import {
   BLUE_LEG,
   BigWordBeat,
   Bubbles,
-  Camera,
   CutFlash,
   Face,
   INDIGO_LAG,
@@ -45,15 +44,14 @@ import {
   markCentre,
   orangeFollow,
   plateY,
-  projectMark,
   redWalk,
+  spring,
   useCurrentFrame,
   useEmotion,
   useRig,
   useStage,
   useVideoConfig,
   type Box,
-  type Cam,
   type Cast,
   type EmotionInput,
   type Mark,
@@ -2091,16 +2089,22 @@ const S20_BUBBLES: Record<string, string> = {
   // so for once the bubble is a transcript rather than a summary — there is
   // nothing to summarise.
   a2_36b_ray: "Sorry, Violet.",
-  // Yellow's cheer is its own element (see `S20_YELLOW`); Blue's four "Hi!"s are
-  // one clip and four bubbles, so they are `<BlueHellos>` rather than a map
+  // Yellow's cheer is its own element (see `S20_YELLOW`); Blue's four greetings
+  // are one clip and four bubbles, so they are `<BlueHellos>` rather than a map
   // entry — `Bubbles` draws one bubble per turn.
   a2_33b_yellow: "Look at Violet go!",
 };
 
 /**
- * **`a2_32b_blue` is ONE clip and FOUR bubbles** — Ray's roll-call bubble,
- * returned from everywhere at once, which is the mechanism delivered as a
- * greeting.
+ * **`a2_32b_blue` is ONE clip and FOUR bubbles** — and as of the tweak round it
+ * is THE ROLL CALL (T4, Mike's note 4): *"the 'roll call' with the colors intro
+ * isn't a true roll call, let's do one instead when blue says 'Hi Hi Hi', and
+ * change that to 'Hi bluington, Hi <other blues>, etc'"*.
+ *
+ * The clip was "Hi! Hi! Hi! Hi!" and is now "Hi, Bluington! Hi, Bluesworth!
+ * Hi, Bluey! Hi... me!" — Mike's own text and his own spelling. Blue holds a
+ * roll call of his own identical copies, which mirrors Ray's in Scene 10, and
+ * the fourth greeting is the joke: there is nobody else here.
  *
  * The four fractions are measured off the delivered take rather than guessed,
  * and they are **fractions of the clip**, so a re-roll re-times all four for
@@ -2109,17 +2113,27 @@ const S20_BUBBLES: Record<string, string> = {
  * Method, because this box has no ffmpeg and therefore no `silencedetect`: the
  * mp3's own MPEG-1 Layer III side info carries a `global_gain` per granule
  * (576 samples ≈ 18ms at this file's 32kHz), which tracks loudness closely
- * enough to find four hard onsets in a 2.77s clip. The four "Hi!"s begin at
- * 0.19 / 0.92 / 1.59 / 2.25 seconds — i.e. **0.069, 0.332, 0.574, 0.812** of the
- * clip, which is very nearly even and reads as a volley.
+ * enough to find hard onsets. **Re-measured on the new take (4.212s):** the
+ * four greetings begin at 0.198 / 1.242 / 2.304 / 3.204 seconds, i.e.
+ * **0.047, 0.295, 0.547, 0.761** of the clip — about a second apart, which is a
+ * roll call rather than a volley and gives each name time to be read. (The
+ * retired "Hi!" take's numbers were 0.069 / 0.332 / 0.574 / 0.812; do not
+ * measure against a memory of them.)
+ *
+ * **No pause markers.** MiniMax takes `<#0.3#>`, and the brief allowed them if
+ * the natural read crowded the pops. It does not: the delivered take leaves
+ * 144–162ms of silence between greetings on its own and reads the ellipsis in
+ * "Hi... me!" as a real 162ms beat, so the four pops are ~31 frames apart with
+ * nothing to fix.
  *
  * They **accumulate** rather than replacing each other, exactly like Scene 19's
  * three corners: by the fourth all four are up at once, which is the sentence
- * "from ALL of the sky" drawn.
+ * "from ALL of the sky" drawn — and now also a roster of four Blues with one
+ * body between them.
  */
-const S20_HELLO_AT = [0.069, 0.332, 0.574, 0.812] as const;
+const S20_HELLO_AT = [0.047, 0.295, 0.547, 0.761] as const;
 /**
- * Four points around the dome, clockwise, so the volley visibly goes *around*
+ * Four points around the dome, clockwise, so the roll call visibly goes *around*
  * the frame rather than piling up in one place.
  *
  * **None of them is the bottom-right corner**, which is Ray's: his body runs
@@ -2133,12 +2147,26 @@ const S20_HELLO_AT = [0.069, 0.332, 0.574, 0.812] as const;
  * its own clock, so a tail aimed at arrival number N is aimed somewhere
  * different every time this clip is re-rolled — and there are twenty-four Blues
  * filling the frame, so straight down always has one under it.
+ *
+ * **The four marks are unchanged by T4, and they were re-checked at stills
+ * because the bubbles are now two to three times wider.** The greetings are
+ * 9–15 characters against "Hi!"'s three, and `x`/`y` is the box's **centre**
+ * (`SpeechBubble` is `translate(-50%, -50%)`), so each one grew symmetrically
+ * about its mark rather than off to one side. Read off a still with all four up
+ * (`t4_15792`), they occupy roughly x 482..1035 / 1185..1680 / 672..1122 /
+ * 312..690, and no box touches another, the frame edge, Ray, or Violet. Nothing
+ * needed the ≤60px inward nudge the brief allowed. **"Hi, Bluesworth!" wraps to
+ * two lines** at the house `maxWidth` of 660 and is left to: unwrapping it means
+ * a ~720px box whose left edge comes within 60px of the first bubble, and a
+ * two-line bubble is a shape this episode already uses three times. **The text lives on the mark** rather than in
+ * a parallel array, so a fifth greeting cannot be added without giving it a
+ * place to stand.
  */
 const S20_HELLO = [
-  { x: 760, y: 180, tail: "left" as const },
-  { x: 1430, y: 250, tail: "left" as const },
-  { x: 900, y: 770, tail: "right" as const },
-  { x: 500, y: 470, tail: "right" as const },
+  { x: 760, y: 180, tail: "left" as const, text: "Hi, Bluington!" },
+  { x: 1430, y: 250, tail: "left" as const, text: "Hi, Bluesworth!" },
+  { x: 900, y: 770, tail: "right" as const, text: "Hi, Bluey!" },
+  { x: 500, y: 470, tail: "right" as const, text: "Hi... me!" },
 ] as const;
 /** Three frames of lead, so the pop finishes on the syllable. Scene 19's number. */
 const S20_POP_LEAD = 3;
@@ -2434,14 +2462,19 @@ const EveryDirectionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /**
- * Blue's one clip, said four times, from four directions. See `S20_HELLO_AT` for
- * where the four fractions came from and `S20_HELLO` for why they are compass
- * points rather than corners.
+ * **Blue's roll call**: one clip, four greetings, from four directions. See
+ * `S20_HELLO_AT` for where the four fractions came from and `S20_HELLO` for why
+ * they are compass points rather than corners.
+ *
+ * The four bubbles carry the four greetings **in clip order** — Bluington,
+ * Bluesworth, Bluey, then "Hi... me!" — so the last one, in the far corner from
+ * where he started, is him greeting himself. Nothing in the picture changes to
+ * mark it; the joke is that it is the same bubble as the other three.
  *
  * Each tail is aimed at the arriving Blue coming from that direction, **frozen
  * at the frame the bubble pops**: the arrivals are travelling at a couple of
  * hundred pixels a second and a tail that tracked one would swing across the
- * frame while a six-year-old was still reading the word.
+ * frame while a six-year-old was still reading the name.
  */
 const BlueHellos: React.FC<{ from: number; until: number; length: number }> = ({
   from,
@@ -2456,7 +2489,7 @@ const BlueHellos: React.FC<{ from: number; until: number; length: number }> = ({
           key={`${corner.x}-${corner.y}`}
           x={corner.x}
           y={corner.y}
-          text="Hi!"
+          text={corner.text}
           tail={corner.tail}
           tailAt={corner.x}
           from={say - S20_POP_LEAD}
@@ -3275,15 +3308,183 @@ const InterlockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
 const S23_SUNNY: Mark = { x: 1466, y: hover("sunny", 396, 1), scale: 1, who: "sunny", side: "left" };
 /**
- * Bottom left, and **under** the diagram rather than in it.
+ * Bottom left, and **under** the mechanism rather than in it.
  *
- * The diagram runs sun (300) → beam → air (760) → sky (1010–1300) and stops
- * there; Sunny owns everything right of 1300. Ray was at the same height as the
- * diagram's sun in the first pass, which put a small white beam with a face on
- * it directly under a big yellow disc with a face on it — three suns in one
- * frame, one of them the hero.
+ * The frame reads right-to-left along one beam: Sunny at 1466 → the air band at
+ * 476..980 → the painted sky above it. Ray sits below the far end of that beam,
+ * out of its way. He was at the same height as Sunny in the first pass, which
+ * put a small white beam with a face on it level with a big yellow disc with a
+ * face on it — two suns in one frame, one of them the hero.
+ *
+ * **He is on stage for the whole scene now (T6).** The 2.5× camera push used to
+ * take him out of frame for two beats and `rayVisible` faded him for it; there
+ * is no camera any more, so "It lands on him. Nobody helps." plays with the
+ * person it lands on actually visible.
  */
 const S23_RAY = { x: 306, y: 892, scale: 0.62 };
+
+/**
+ * **THE PICTURE, RE-SHOT 2026-08-05 (T6, Mike's note 6).** Mike: *"That same
+ * scene (around 10:00 to 10:20) is still very awkward visually - I think the
+ * speech is fine, but I don't think a kid will be able to understand the
+ * visual, let's re-shoot that whole scene with some different visuals"*.
+ *
+ * What went: `WrongDiagram` — an abstract sun→beam→sky→cloud schematic that
+ * assembled, rebuilt and re-scaled itself behind him — and the 2.5× camera push
+ * that hid half of it. Both are deleted outright. A diagram is a thing you read;
+ * this scene needs a thing you watch.
+ *
+ * What replaced it is the episode's own concrete grammar, the same one Scenes 19
+ * and 20 already proved a six-year-old can parse: **Sunny poses, the air
+ * paints.** One warm beam leaves his body and lands on a band of air; Blues
+ * bounce out of that air in every direction and paint the sky above it. Nothing
+ * is symbolic and nothing is a chart — the acceptance test is that a child can
+ * say "Sunny makes the light, the air spreads the blue" from the picture with
+ * the sound off.
+ *
+ * **Speech and timing are frozen.** All eleven clips, every gap and the tail are
+ * byte-identical in `Video.tsx`; this changed the picture and nothing else.
+ */
+const S23_BEAM = { from: { x: 1466, y: 430 }, to: { x: 372, y: 671 } } as const;
+
+/**
+ * **The air, and it sits ON the beam.** Four puffs, their centres exactly on the
+ * line from `S23_BEAM.from` to `.to` (y = 430 − 0.2203·(x − 1466)), so the light
+ * visibly *arrives at them* rather than passing near them. Sized biggest in the
+ * middle so the band reads as a drift of air rather than as four buttons.
+ *
+ * This is the `AIR_BAND` idiom out of the deleted diagram, promoted to
+ * whole-frame staging: same job, same look, twenty times the size.
+ */
+const S23_AIR = [
+  { x: 980, y: 537, r: 62, seed: 0.4 },
+  { x: 812, y: 574, r: 78, seed: 2.2 },
+  { x: 644, y: 611, r: 70, seed: 3.9 },
+  { x: 476, y: 648, r: 56, seed: 5.5 },
+] as const;
+
+/** The middle of the air band: everything the air does starts here. */
+const S23_AIR_MID = { x: 728, y: 592 } as const;
+
+/**
+ * **The sky the air paints.** Upper LEFT, ending at x=1100 — Sunny's disc plus
+ * his ray-fan owns x≥1122, so the painted sky and the man claiming it never
+ * overlap and the frame can be read as two halves: his light on the right, the
+ * sky that came out of it on the left.
+ */
+const S23_SKY = { x: 70, y: 96, w: 1030, h: 350 } as const;
+
+/**
+ * **The painter's stroke, drawn as strokes.** Nine bars across `S23_SKY`,
+ * ordered from the bottom up — i.e. **away from the air** — each one growing out
+ * of its own middle when the wavefront reaches it. Bottom-first is the whole
+ * sentence: the paint climbs out of the puffs, it does not rain down from
+ * somewhere off-screen.
+ *
+ * They are strokes rather than one rectangle because a rectangle of blue on a
+ * blue plate is a rectangle, and because Sunny is holding a roller: the audience
+ * has been looking at the tool for seven scenes and this is the one shot where
+ * they see the marks it would leave — made by somebody else.
+ *
+ * Ends are jittered by up to 70px so the patch has a hand-painted edge; widths
+ * (42–56px) slightly exceed the 38.9px row pitch, so a finished band is solid
+ * with a rippled outline rather than nine visible stripes.
+ */
+const S23_STROKE_N = 9;
+const S23_STROKES = Array.from({ length: S23_STROKE_N }, (_, i) => {
+  const k = i * 53 + 17;
+  const y = S23_SKY.y + S23_SKY.h - (i + 0.5) * (S23_SKY.h / S23_STROKE_N);
+  // Shorter the further from the air, and off-centre by up to 90px, so the nine
+  // of them do not tile a rectangle. A rectangle of blue on a blue sky is a
+  // panel; nine uneven strokes are a wall someone is rolling.
+  const span = S23_SKY.w * (1 - 0.05 * i) - ((k * 11) % 90);
+  const mid = S23_SKY.x + S23_SKY.w / 2 + (((k * 7) % 180) - 90) * 0.5;
+  const x0 = mid - span / 2;
+  const x1 = mid + span / 2;
+  return {
+    y,
+    x0,
+    x1,
+    tilt: (((k * 5) % 9) - 4) * 0.34,
+    w: 40 + ((k * 13) % 14),
+    // The wavefront is radial about `S23_AIR_MID`, whose x is inside every
+    // stroke, so the nearest point of a stroke is always straight above the air
+    // and its trigger distance is just the vertical one.
+    dist: Math.abs(y - S23_AIR_MID.y),
+  };
+});
+/** Wavefront speed, px/frame, and how long one stroke takes to be laid down. */
+const S23_SWEEP_PX = 11;
+const S23_STROKE_F = 16;
+
+/**
+ * **Twenty Blues, leaving the air in twenty directions and staying up.**
+ *
+ * The pocket version of Scene 20's arrival grammar, run backwards: there the
+ * copies converge on the lens, here they leave the puffs and fill the sky. Same
+ * bodies, same streak, same reason — "the air spreads the blue" is a sentence
+ * about *where things go*, so it has to be said with things going somewhere.
+ *
+ * Each one is born at one of the four puffs (round robin, so all four visibly
+ * work), flies a bowed path to a jittered slot in a 5×4 grid over `S23_SKY`, and
+ * then stays there bobbing. `at` is its launch point as a fraction of the
+ * painting window, raised to 1.5 so nine of them go in the first quarter — the
+ * burst that lands on "But the air did the painting." — and the remaining
+ * eleven trickle out behind Sunny while he takes the credit.
+ */
+const S23_COPY_N = 20;
+const S23_FLIGHT = 26;
+const S23_COPIES = Array.from({ length: S23_COPY_N }, (_, i) => {
+  const k = i * 37 + 11;
+  const puff = S23_AIR[i % S23_AIR.length];
+  const col = i % 5;
+  const row = Math.floor(i / 5);
+  return {
+    from: { x: puff.x, y: puff.y },
+    to: {
+      x: S23_SKY.x + (col + 0.5) * (S23_SKY.w / 5) + ((k * 13) % 72) - 36,
+      y: S23_SKY.y + (row + 0.5) * (S23_SKY.h / 4) + ((k * 7) % 58) - 29,
+    },
+    scale: 0.3 + ((k * 11) % 12) / 100,
+    bow: ((k * 17) % 2 === 0 ? 1 : -1) * (46 + ((k * 19) % 92)),
+    at: (i / (S23_COPY_N - 1)) ** 1.5,
+  };
+});
+
+/**
+ * One travelling pulse: 0..1 across `len` frames from `at`, and `null` at every
+ * other frame, so a caller can draw it only while it is actually travelling.
+ */
+function s23Travel(frame: number, at: number, len: number): number | null {
+  const u = (frame - at) / len;
+  return u >= 0 && u <= 1 ? u : null;
+}
+
+/** Where copy `c` is, how big, and which way it is leaning, at flight `u`. */
+function s23Flight(
+  c: (typeof S23_COPIES)[number],
+  u: number,
+): { x: number; y: number; scale: number; angle: number } {
+  const at = (e: number): { x: number; y: number } => {
+    const dx = c.to.x - c.from.x;
+    const dy = c.to.y - c.from.y;
+    const len = Math.max(1, Math.hypot(dx, dy));
+    const bow = Math.sin(Math.PI * e) * c.bow;
+    return {
+      x: c.from.x + dx * e + (-dy / len) * bow,
+      y: c.from.y + dy * e + (dx / len) * bow,
+    };
+  };
+  const e = kidEase.easeOutCubic(clamp01(u));
+  const p = at(e);
+  const q = at(Math.min(1, e + 0.03));
+  return {
+    x: p.x,
+    y: p.y,
+    scale: 0.12 + (c.scale - 0.12) * clamp01(u * 1.6),
+    angle: (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI,
+  };
+}
 
 const S23_BUBBLES: Record<string, string> = {
   a2_45_sunny: "Whose light is that?",
@@ -3295,17 +3496,23 @@ const S23_BUBBLES: Record<string, string> = {
   // one replaced: the revision turned his moment of doubt into his moment of
   // triumph and the bubble had not followed.)
   a2_50_sunny: "I have LOADS of points!",
-  // Likewise: `a2_52_ray` is now "But the AIR did the painting." — the old
-  // bubble was the sentence the Narrator says one line *earlier*.
+  // Likewise: `a2_52_ray` is now "But the air did the painting." — the old
+  // bubble was the sentence the Narrator says one line *earlier*. **The clip is
+  // lowercase and this bubble is not** (T5, 2026-08-04): MiniMax read the
+  // capitals as an initialism and said the letter A, so the narration text was
+  // lowercased and the bubble kept its emphasis. A bubble is print, not
+  // pronunciation.
   a2_52_ray: "The AIR did the painting.",
   a2_53_sunny: "THE SKY IS MY LIGHT!",
 };
 
 /**
- * **R9 — Red walks across the finished diagram.** The revision offers this as a
- * free, droppable visual on `a2_51_narrator`, never inside a held beat; the
- * showrunner ruled it IN unless the builder's own stills showed it crowding the
- * frame.
+ * **R9 — Red walks across the scene.** The revision offers this as a free,
+ * droppable visual on `a2_51_narrator`, never inside a held beat; the showrunner
+ * ruled it IN unless the builder's own stills showed it crowding the frame. (It
+ * was written as "across the finished diagram"; T6 deleted the diagram and the
+ * arithmetic below is untouched by that, because it is about `RED_SPEED` and the
+ * width of the frame.)
  *
  * **It is OUT, and the reason is arithmetic before it is taste.** `a2_51` is 93
  * frames and the beat after `a2_52_ray` opens 78 frames later, so Red has 171
@@ -3316,9 +3523,10 @@ const S23_BUBBLES: Record<string, string> = {
  * still walking, in shot, through "It lands on him. Nobody helps.", which is a
  * thirty-frame silence whose entire content is that nobody moves.
  *
- * The stills confirmed the second half of it independently: at the only place
- * he fits — the band under the rebuilt diagram — he arrives on top of Ray, who
- * is staged at (306, 892) and who is *speaking* through that stretch.
+ * The stills confirmed the second half of it independently: at the only height
+ * he fits — the band under the air, which is now where the beam lands — he
+ * arrives on top of Ray, who is staged at (306, 892) and who is *speaking*
+ * through that stretch.
  *
  * Kept as a constant with its own argument rather than deleted, because "should
  * Red walk through here?" is a question this scene will be asked again.
@@ -3335,28 +3543,41 @@ const S23_RED_WALK = false;
  * a concession ("He has a point."), so every piece of staging that used to
  * perform *being wrong* has gone with it.
  *
- *   **The diagram never stops.** The delivered cut halted it on "He is wrong"
- *   and let the beams holding it up droop. That ceremony is deleted — not
- *   softened, deleted. It assembles from his first brag straight through to the
- *   rebuild without a single frame of hesitation, which is what makes the
- *   correction feel like *more* rather than like a collapse.
+ *   **The air never stops.** The delivered cut halted its diagram on "He is
+ *   wrong" and let the beams holding it up droop. That ceremony is deleted — not
+ *   softened, deleted. Nothing in this scene hesitates: the beam is on from his
+ *   entrance and the air paints straight through his loudest line, which is what
+ *   makes the correction feel like *more* rather than like a collapse.
  *
  *   **The grin GROWS.** Same 36-frame beat, opposite content: it does not come
- *   apart, it swells slowly across the whole silence while the diagram keeps
- *   assembling behind him. `emotionAt` morphs proud → excited over exactly the
- *   beat's own length, so the change is spread across it rather than landing in
- *   it; there is no line to hang it on and a `useEmotion` lead would put it
- *   under the Narrator's three words.
+ *   apart, it swells slowly across the whole silence. `emotionAt` morphs proud →
+ *   excited over exactly the beat's own length, so the change is spread across
+ *   it rather than landing in it; there is no line to hang it on and a
+ *   `useEmotion` lead would put it under the Narrator's three words.
  *
  *   **He is not dimmed and never was wrong.** The old staging desaturated him
  *   while the verdict landed. He now runs at full brightness for the entire
  *   scene, which is what "undefeated" looks like.
  *
- * The camera pushes in for "I checked" so that the 45-frame beat is a man alone
- * in frame with an enormous smug grin, and pulls back out **on `a2_49`** — on
- * the line, not in the beat — so that the 36 frames after it have the diagram
- * visibly still building behind him, which is what the revision asks for and
- * what the close-up would otherwise have hidden.
+ * **NO CAMERA MOVES (T6).** The scene used to push to 2.5× on "I checked" and
+ * pull back on `a2_49`. Both are gone with the diagram they were framing: the
+ * mechanism has to stay whole-frame for the kid, so the 45-frame smug beat is
+ * bought with stillness (`idle`/`eyeLife` held) rather than with a lens, and
+ * everything below is staged in composition coordinates with no projection.
+ *
+ * **The beat map, all of it keyed to lines and never to absolute frames:**
+ *
+ *   `a2_47` brag       Sunny poses; the roller comes UP like a trophy. Beam and
+ *                      air are already there and the sky is still unpainted.
+ *   `a2_50` "points"   the ray fan, unchanged, at 0.62 of the clip.
+ *   `a2_51` his light  a warm pulse travels the beam, Sunny → air.
+ *   `a2_52` the air    **the painter's stroke** — the sky fills, out of the
+ *                      puffs, in nine strokes and nine Blues.
+ *   `a2_53` MY LIGHT!  he poses harder; the air keeps painting behind him and
+ *                      does not look at him once.
+ *   `a2_54` twice      beam pulse, then sky-sweep pulse: the sentence has two
+ *                      halves and the picture draws both.
+ *   `a2_55` + 45f      everything settles. Nothing enters.
  */
 const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -3364,51 +3585,41 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [bragFrom] = lineWindow(scene, "a2_47_sunny");
   const [checkFrom] = lineWindow(scene, "a2_48_narrator");
   const [grinFrom] = heldBeat(scene, "a2_48_narrator");
-  const [wrongFrom, wrongTo] = lineWindow(scene, "a2_49_narrator");
   const [growFrom, growTo] = heldBeat(scene, "a2_49_narrator");
   const [pointsFrom, pointsTo] = lineWindow(scene, "a2_50_sunny");
-  const [rebuildFrom, rebuildTo] = lineWindow(scene, "a2_51_narrator");
+  const [rebuildFrom] = lineWindow(scene, "a2_51_narrator");
+  const [paintFrom] = lineWindow(scene, "a2_52_ray");
   const [landFrom, landTo] = heldBeat(scene, "a2_52_ray");
+  const [poseFrom] = lineWindow(scene, "a2_53_sunny");
+  const [twiceFrom, twiceTo] = lineWindow(scene, "a2_54_narrator");
+  const [settleFrom] = lineWindow(scene, "a2_55_narrator");
 
-  // **One continuous assembly, from his first brag to the rebuild.** It used to
-  // finish inside `a2_47` and then sit there; spread across the whole stretch it
-  // is still visibly adding pieces through the 36-frame beat, which is the one
-  // thing that beat asks for besides the grin.
-  const build = clamp01(
-    kidEase.easeInOutSine((frame - bragFrom) / Math.max(1, rebuildFrom - bragFrom)),
-  );
-  // Then it comes back with the air in it, bigger than his, around him.
-  const air = clamp01(
-    kidEase.easeInOutSine((frame - rebuildFrom - 6) / Math.max(1, (rebuildTo - rebuildFrom) * 0.9)),
-  );
+  const t = frame / fps;
 
-  // The camera pushes onto Sunny for "I checked", so "alone in frame" is
-  // literally true for the 45-frame beat, and comes back out **on `a2_49`** so
-  // that the beat after it has the diagram in shot. No camera move begins or
-  // ends inside either beat.
-  const inOn = interpolate(frame, [checkFrom, grinFrom - 6], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: kidEase.easeInOutSine,
-  });
-  const backOut = interpolate(frame, [wrongFrom, wrongTo - 6], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: kidEase.easeInOutSine,
-  });
-  const close = inOn * (1 - backOut);
-  // **A real close-up, and the numbers are load-bearing.** At 1.5× the diagram
-  // was still sitting in the corner of the frame, and the beat is "Sunny
-  // holding an enormous smug grin, *alone in frame*". At 2.5×, with the frame
-  // slid left so he is centred rather than parked on the right, the visible
-  // world starts at x≈1080 — which is why his half of the diagram is built to
-  // end at 1060.
-  const cam: Cam = {
-    x: S23_SUNNY.x,
-    y: 400,
-    zoom: 1 + close * 1.5,
-    dx: -close * 500,
-  };
+  // **The beam is on from his entrance**, because it is his light and he does
+  // not have to be told to make it. Up over the first second, and then it is
+  // simply a fact of the frame until the scene ends.
+  const beam = clamp01((frame - 10) / 30);
+  // The air arrives just behind it — it was always there, but a band of vapour
+  // that fades up under the beam reads as the beam finding it.
+  const air = clamp01((frame - 28) / 34);
+
+  // **The two beam pulses**, on `a2_51` ("The light is his.") and again inside
+  // `a2_54` ("It is his light…"). A warm swell travels from his body out to the
+  // air: 0 at Sunny, 1 at the puffs, and nothing on screen between pulses.
+  const beamPulse = s23Travel(frame, rebuildFrom + 8, 26) ?? s23Travel(frame, twiceFrom + 6, 26);
+
+  // **The painter's stroke.** One radial wavefront out of the middle of the air
+  // band on `a2_52`, and a second, brighter one on the back half of `a2_54` —
+  // the sentence drawn twice, the second time over paint that is already there.
+  const sweep = (frame - paintFrom) * S23_SWEEP_PX;
+  const sweep2 = (frame - (twiceFrom + 34)) * S23_SWEEP_PX;
+
+  // **The blue keeps arriving while he brags.** The window opens on Ray's line
+  // and closes at the end of `a2_54`, so the last copy lands before the button's
+  // 45 frames — nothing enters those.
+  const launchFrom = paintFrom + 4;
+  const launchTo = twiceTo;
 
   // **The grin, growing across the whole beat.** Nothing else in the scene is
   // allowed into those 36 frames, so it is one morph the length of the silence
@@ -3454,90 +3665,134 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     side: "right",
     offset: 320,
   };
-  // He is out of frame for the two beats in the middle; he does not creep back
-  // in behind them either, so his bubble mark travels with him.
-  const rayVisible = 1 - clamp01((close - 0.25) / 0.35);
-  const sunnyScale = 1 + grow * 0.05;
+  // **He poses, and then he poses harder.** The 5% swell out of the grin beat is
+  // the old one; the second 6% is `a2_53` — the loudest line in the scene, said
+  // while the thing behind him carries on without him.
+  const poseHarder = clamp01(kidEase.easeOutBack((frame - poseFrom) / 20, 1.7));
+  const sunnyScale = 1 + grow * 0.05 + poseHarder * 0.06;
   const sunnyMark: Mark = { ...S23_SUNNY, y: hover("sunny", 396, sunnyScale), scale: sunnyScale };
+  // **The roller, raised like a trophy.** It hung at his lower-left spike tips
+  // for seven scenes; on the brag it comes up over his shoulder and stays up for
+  // the rest of the episode's only shot of it. Still `wet={0}`, which is the
+  // whole gag: the sky behind him is being painted and the roller is bone dry.
+  const raise = clamp01(kidEase.easeOutBack((frame - bragFrom - 6) / 26, 1.5));
+  // **The roller has to slide in with the man holding it.** `enter` is a prop on
+  // `Sunny` and the roller is a separate absolutely-positioned element, so for
+  // the first twenty frames of the scene it used to sit at his final mark while
+  // he was still 900px off the right edge — a paint roller alone in the sky.
+  // Same numbers as `entranceTransform`'s `slideRight` (damping 12, mass 0.7,
+  // 900px, `easeOutQuad(f/4)` on the opacity), so the two cannot drift.
+  const enterSpring = spring({ frame, fps, config: { damping: 12, mass: 0.7 } });
+  const enterDx = (1 - enterSpring) * 900;
+  const enterOpacity = clamp01(kidEase.easeOutQuad(frame / 4));
 
   return (
     <AbsoluteFill>
       <PaintedSky bg="sky_dome_day" phase={20} drift={9} />
-      <Camera cam={cam}>
-        <WrongDiagram build={build} air={air} from={{ x: S23_SUNNY.x - 150, y: 420 }} />
 
-        {/* Still holding it, seven scenes later, and still dry. `wet` is 1
-            exactly once in the episode and that was the cold open.
-            Anchored to Sunny's own mark — tucked against his lower-left spike
-            tips (radius ~250 of a ~246px spike reach) and riding his hover bob
-            — because a roller at fixed world coordinates floated beside him,
-            visibly detached, once the ray fan enlarged his silhouette
-            (showrunner still review, batch (b)). z 23 keeps it in FRONT of the
-            fan (z 22): held prop, not a thing lost among the points. */}
+      {/* THE PAINTED SKY, underneath everything: nine strokes laid down out of
+          the air band. z 8, so the beam and the bodies are all in front of it
+          and it is scenery being made rather than an object. */}
+      <PaintedBand u={air} sweep={sweep} sweep2={sweep2} />
+
+      {/* HIS LIGHT, and it is one beam. Behind the puffs (z 12 against 14) so
+          the light visibly arrives *at* them. */}
+      <SunnyBeam u={beam} pulse={beamPulse} t={t} />
+
+      {/* THE AIR, in the beam, doing the work. The spray of short blue bounces
+          starts with Ray's line and eases back — never off — on the button, so
+          "everything settles, nothing enters" is true without the air dying. */}
+      <AirBand
+        u={air}
+        t={t}
+        spray={clamp01((frame - paintFrom) / 20) * (1 - 0.55 * clamp01((frame - settleFrom) / 40))}
+      />
+
+      {/* THE BLUE, leaving the air in every direction and staying up there. */}
+      <BluePaint frame={frame} launchFrom={launchFrom} launchTo={launchTo} />
+
+      {/* Still holding it, seven scenes later, and still dry. `wet` is 1
+          exactly once in the episode and that was the cold open. Anchored to
+          Sunny's own mark so it rides his hover bob and his pose swell — a
+          roller at fixed world coordinates floated beside him, visibly
+          detached, once the ray fan enlarged his silhouette (showrunner still
+          review, batch (b)). **T6 raised it**: it used to hang at his
+          lower-left spike tips, and it now comes up over his shoulder on the
+          brag and stays up, held like a trophy by a man who is not using it.
+          **z 25, raised from 23 with the prop itself**: at his lower-left the
+          fan (z 22) was the only thing it had to beat, but held up over his
+          shoulder it lands among his own spikes (z 24) and half of it
+          disappeared behind one. It is up and clear of his face at that mark,
+          so nothing is hidden by putting it in front. */}
+      <div style={{ position: "absolute", inset: 0, opacity: enterOpacity }}>
         <PaintRoller
-          x={S23_SUNNY.x - 88}
-          y={sunnyMark.y + 235}
+          x={S23_SUNNY.x - 88 + raise * 264 + enterDx}
+          y={sunnyMark.y + 235 - raise * 425}
           scale={0.82}
-          rot={-96}
+          rot={-96 + raise * 82}
           wet={0}
-          zIndex={23}
+          zIndex={25}
         />
+      </div>
 
-        {/* **The pun, drawn.** Extra rays, behind the disc, fanning out on the
-            word "points" — twenty-four of them on top of the twelve his own
-            component spins, so a six-year-old who has just heard "LOADS of
-            points" is looking at loads of points. Behind him rather than over
-            him: the fan is his silhouette getting bigger, not a graphic. */}
-        <RayFan x={S23_SUNNY.x} y={sunnyMark.y} scale={sunnyScale} fan={fan} />
+      {/* **The pun, drawn.** Extra rays, behind the disc, fanning out on the
+          word "points" — twenty-four of them on top of the twelve his own
+          component spins, so a six-year-old who has just heard "LOADS of
+          points" is looking at loads of points. Behind him rather than over
+          him: the fan is his silhouette getting bigger, not a graphic. */}
+      <RayFan x={S23_SUNNY.x} y={sunnyMark.y} scale={sunnyScale} fan={fan} />
 
-        <Sunny
-          x={S23_SUNNY.x}
-          y={sunnyMark.y}
-          scale={sunnyScale}
-          phase={PHASE.sunny}
-          emotion={sunnyEmotion}
-          speaking={stage.speaking("sunny")}
-          look={frame >= growFrom && frame < landTo ? { x: -0.2, y: 0.15 } : { x: -0.7, y: 0.25 }}
-          // He is *held* in the smug beat and he swells in the one after it.
-          // Both are stillness of a kind, and they are the two halves of the
-          // joke: certainty, then vindication.
-          idle={frame >= grinFrom && frame < growTo ? 0.35 : 1}
-          eyeLife={frame >= grinFrom && frame < growTo ? 0.3 : 1}
-          raySpeed={0.16}
-          enter={{ at: 0, kind: "slideRight" }}
-          zIndex={24}
-        />
+      <Sunny
+        x={S23_SUNNY.x}
+        y={sunnyMark.y}
+        scale={sunnyScale}
+        phase={PHASE.sunny}
+        emotion={sunnyEmotion}
+        speaking={stage.speaking("sunny")}
+        // Out at the sky he says he painted, until `a2_53` — from the loudest
+        // line onward he is posing at the LENS, which is what makes "the air
+        // keeps painting behind him" a thing he is not looking at.
+        look={
+          frame >= poseFrom
+            ? "camera"
+            : frame >= growFrom && frame < landTo
+              ? { x: -0.2, y: 0.15 }
+              : { x: -0.7, y: 0.25 }
+        }
+        // He is *held* in the smug beat and he swells in the one after it.
+        // Both are stillness of a kind, and they are the two halves of the
+        // joke: certainty, then vindication.
+        idle={frame >= grinFrom && frame < growTo ? 0.35 : 1}
+        eyeLife={frame >= grinFrom && frame < growTo ? 0.3 : 1}
+        raySpeed={0.16}
+        enter={{ at: 0, kind: "slideRight" }}
+        zIndex={24}
+      />
 
-        {S23_RED_WALK ? <RedAcross from={rebuildFrom} frame={frame} fps={fps} /> : null}
+      {S23_RED_WALK ? <RedAcross from={rebuildFrom} frame={frame} fps={fps} /> : null}
 
-        <div style={{ position: "absolute", inset: 0, opacity: rayVisible }}>
-          <Ray
-            x={S23_RAY.x}
-            y={rayMark.y}
-            scale={S23_RAY.scale}
-            brightness={RAY_LIGHT.afterRainbow}
-            spectrum={RAY_SPECTRUM.afterRainbow}
-            phase={PHASE.ray}
-            emotion={rayEmotion}
-            speaking={stage.speaking("ray")}
-            look={{ x: 0.85, y: -0.35 }}
-            // "It lands on him. Nobody helps." — Ray is there, and does
-            // nothing, for the whole thirty frames.
-            idle={frame >= landFrom && frame < landTo ? 0.5 : 1}
-            streak={0.25}
-            zIndex={26}
-          />
-        </div>
-      </Camera>
+      <Ray
+        x={S23_RAY.x}
+        y={rayMark.y}
+        scale={S23_RAY.scale}
+        brightness={RAY_LIGHT.afterRainbow}
+        spectrum={RAY_SPECTRUM.afterRainbow}
+        phase={PHASE.ray}
+        emotion={rayEmotion}
+        speaking={stage.speaking("ray")}
+        // Up and right at Sunny for the argument; up and *left* at the sky he
+        // just gave the air the credit for, from his own line onward.
+        look={frame >= paintFrom ? { x: -0.3, y: -0.7 } : { x: 0.85, y: -0.35 }}
+        // "It lands on him. Nobody helps." — Ray is there, and does
+        // nothing, for the whole thirty frames.
+        idle={frame >= landFrom && frame < landTo ? 0.5 : 1}
+        streak={0.25}
+        zIndex={26}
+      />
 
       <Bubbles
         scene={scene}
-        cast={
-          {
-            sunny: projectMark(cam, sunnyMark),
-            ray: projectMark(cam, rayMark),
-          } as Cast
-        }
+        cast={{ sunny: sunnyMark, ray: rayMark } as Cast}
         text={S23_BUBBLES}
         at={{
           a2_45_sunny: { x: 900, y: 200, tail: "right", tailAt: 1300 },
@@ -3546,7 +3801,11 @@ const SunnyWrongScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           a2_53_sunny: { x: 880, y: 200, tail: "right", tailAt: 1300 },
           // Ray talks from the bottom left corner and his bubble stays down
           // there with him: placed over his crown it sat straight across the
-          // diagram, which is the thing both his lines are about.
+          // mechanism, which is the thing both his lines are about. Post-T6 that
+          // is truer, not less true — the air band is at y 537..648 and the
+          // painted sky starts at 96, so anything lifted off him covers one or
+          // the other. At (700, 800) it clears the lowest puff's underside by
+          // ~38px and sits over empty plate.
           a2_46_ray: { x: 700, y: 800, tail: "left", tailAt: 430 },
           a2_52_ray: { x: 700, y: 800, tail: "left", tailAt: 430 },
         }}
@@ -3599,8 +3858,8 @@ const RayFan: React.FC<{ x: number; y: number; scale: number; fan: number }> = (
 };
 
 /**
- * Red, walking across the finished diagram at his one speed. Kept behind
- * `S23_RED_WALK`, which is off — see the argument on that constant.
+ * Red, walking across the scene at his one speed. Kept behind `S23_RED_WALK`,
+ * which is off — see the argument on that constant.
  */
 const RedAcross: React.FC<{ from: number; frame: number; fps: number }> = ({
   from,
@@ -3625,175 +3884,294 @@ const RedAcross: React.FC<{ from: number; frame: number; fps: number }> = ({
 };
 
 /**
- * The diagram Sunny builds out of his own beams, and the one that grows out of
- * it.
+ * **The sky, being painted, out of the air.**
  *
- * `build` assembles his version — sun, beam, sky, and a roller on top of it,
- * because his claim is paint — and **never unbuilds it**: there is no `droop`
- * parameter any more and there is not supposed to be. `air` then rebuilds it
- * around him with the air drawn *in*: the same sun and the same beam, arriving
- * at a band of air, and blue leaving that band in every direction. Bigger than
- * his, shifted toward him so that he ends up standing inside it, and the only
- * thing in the frame that has got bigger by being corrected.
+ * `sweep` is the wavefront radius in pixels, measured from `S23_AIR_MID` — so
+ * every stroke's trigger is its own distance from the puffs and the fill visibly
+ * *starts at the air*. `sweep2` is the same wave run a second time on the back
+ * half of `a2_54`, over paint that is already there: it repaints nothing and
+ * only brightens, which is what "It is his light. It is not his painting." looks
+ * like when a picture says the second half twice.
+ *
+ * Each stroke grows out of its own middle in both directions, because a bar that
+ * grows from one end reads as a wipe and a bar that grows from the middle reads
+ * as a roller being pushed. Deep blue under, Blue's own blue on top: the plate
+ * here is already a mid-blue sky, and a single flat wash of `SPECTRUM[4].fill`
+ * over it is invisible — the deep under-stroke is what gives every stroke an
+ * edge to be seen against.
  */
-/** The three puffs the corrected diagram's beam actually arrives at. */
-const AIR_BAND = [
-  { x: 566, y: 448 },
-  { x: 648, y: 508 },
-  { x: 726, y: 452 },
-] as const;
-
-const WrongDiagram: React.FC<{
-  build: number;
-  air: number;
-  from: { x: number; y: number };
-}> = ({ build, air, from }) => {
-  const step = (a: number, b: number): number => kidEase.easeInOutSine((build - a) / (b - a));
-  const sun = step(-0.2, 0.22);
-  const beam = step(0.2, 0.48);
-  const sky = step(0.46, 0.78);
-  const clouds = step(0.76, 1);
-  // **It rebuilds AROUND him**: bigger, and slid toward the man it is about, so
-  // that on the button he is posing *inside* the corrected picture rather than
-  // next to it. His own half is built to end at x = 1060 so the close-up can be
-  // a close-up; grown and shifted, the corrected one reaches past 1400 and he is
-  // standing in it.
-  const grow = 1 + air * 0.28;
-  const shift = air * 240;
-  const cx = 640;
-  const cy = 540;
-
+const PaintedBand: React.FC<{ u: number; sweep: number; sweep2: number }> = ({
+  u,
+  sweep,
+  sweep2,
+}) => {
+  if (u <= 0.01) return null;
   return (
-    <WideLayer zIndex={12}>
-      <g transform={`translate(${cx + shift} ${cy}) scale(${grow}) translate(${-cx} ${-cy})`}>
-        {/* The construction beams: his light, holding his diagram up, and they
-            never let go of it. */}
-        {[0, 1, 2].map((i) => {
-          const target = [
-            { x: 240, y: 470 },
-            { x: 640, y: 470 },
-            { x: 900, y: 500 },
-          ][i];
-          const on = [sun, beam, sky][i];
-          if (on <= 0.02) return null;
-          return (
+    <WideLayer zIndex={8}>
+      {/* **THE PRIMER, and it is the whole reason the paint is visible.** The
+          plate is already a blue sky, so blue paint on it is blue on blue: the
+          first pass put nine vivid strokes over `sky_dome_day` and they read as
+          outlined lozenges rather than as paint. So the band this scene is about
+          is washed PALE from the moment the air fades up — a patch of sky that
+          is not blue yet — and the air paints the blue back into it. Value, not
+          hue: a six-year-old reads pale→blue instantly and blue→bluer not at
+          all. Two feathered layers so it has no edge of its own. */}
+      <defs>
+        {/* Pale SKY, not white: `skyLow` is the plate's own horizon colour, so
+            the washed patch reads as haze rather than as a cloud parked in the
+            corner — paper would be a cloud, and there is a real one on the plate
+            two hundred pixels below it to prove it. **A gradient rather than
+            stacked ellipses**: three nested ellipses at falling alpha drew three
+            visible rims and the patch read as a lens flare. */}
+        <radialGradient id="s23-primer">
+          <stop offset="0" stopColor={kidTheme.skyLow} stopOpacity={0.62} />
+          <stop offset="0.55" stopColor={kidTheme.skyLow} stopOpacity={0.55} />
+          <stop offset="1" stopColor={kidTheme.skyLow} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <ellipse
+        cx={S23_SKY.x + S23_SKY.w / 2}
+        cy={S23_SKY.y + S23_SKY.h / 2}
+        rx={S23_SKY.w / 2 + 190}
+        ry={S23_SKY.h / 2 + 150}
+        fill="url(#s23-primer)"
+        opacity={u}
+      />
+      {S23_STROKES.map((s, i) => {
+        const p = clamp01((sweep - s.dist) / (S23_SWEEP_PX * S23_STROKE_F));
+        if (p <= 0.001) return null;
+        const mid = (s.x0 + s.x1) / 2;
+        const half = ((s.x1 - s.x0) / 2) * kidEase.easeOutCubic(p);
+        // The second wave as a moving highlight: a stroke is bright for the ~20
+        // frames the front is passing over it and settles back afterwards.
+        const lit = 1 - clamp01(Math.abs(sweep2 - s.dist) / 90);
+        const d = `M ${mid - half} ${s.y} L ${mid + half} ${s.y}`;
+        return (
+          <g key={i} transform={`rotate(${s.tilt} ${mid} ${s.y})`}>
+            {/* The outline. Every object in this show has one, and here it is
+                load-bearing twice over: it is what separates fresh paint from a
+                plate that is already sky-blue, and it is what keeps nine
+                overlapping strokes reading as nine strokes. */}
             <path
-              key={i}
-              d={`M ${from.x - shift} ${from.y} Q ${(from.x - shift + target.x) / 2} ${(from.y + target.y) / 2} ${target.x} ${target.y}`}
-              stroke={kidTheme.sunLight}
-              strokeWidth={13}
+              d={d}
+              stroke={SPECTRUM[4].deep}
+              strokeWidth={s.w + 12}
               strokeLinecap="round"
-              fill="none"
-              opacity={0.42 * on}
+              opacity={0.55 * p}
             />
-          );
-        })}
-
-        {/* His sun. */}
-        <g opacity={sun} transform="translate(240 470)">
-          <circle r={86 * sun} fill={kidTheme.sun} stroke={kidTheme.sunDeep} strokeWidth={10} />
-          {Array.from({ length: 10 }, (_, i) => (
             <path
-              key={i}
-              transform={`rotate(${i * 36})`}
-              d={`M -13 -98 L 0 ${-140 * sun} L 13 -98 Z`}
-              fill={kidTheme.sunDark}
+              d={d}
+              stroke={SPECTRUM[4].fill}
+              strokeWidth={s.w}
+              strokeLinecap="round"
+              opacity={p}
             />
-          ))}
-        </g>
-
-        {/* The beam, from the sun to the sky. On the rebuild it stops at the
-            air instead of running all the way to the sky — which is the whole
-            correction, drawn: sun to *air*, not sun to sky. */}
-        <g opacity={beam}>
-          <path
-            d={`M 344 482 L ${344 + (560 - air * 260) * beam} 492`}
-            stroke={kidTheme.sunLight}
-            strokeWidth={26}
-            strokeLinecap="round"
-          />
-        </g>
-
-        {/* The air the beam actually arrives at — drawn in only on the rebuild,
-            and the reason the second diagram is the true one. */}
-        {air > 0.02 ? (
-          <g opacity={air}>
-            {/* A soft white behind the air band: `AirBlob` is pale by design
-                (it is vapour), and pale-on-pale is the one thing the rebuilt
-                diagram cannot afford — the air is the correction. */}
-            <ellipse cx={648} cy={478} rx={200} ry={130} fill="#ffffff" opacity={0.45} />
-            {AIR_BAND.map((p, i) => (
-              <AirBlob
-                key={i}
-                x={p.x}
-                y={p.y}
-                r={50}
-                t={i * 1.6}
-                seed={i * 2.1}
-                opacity={0.85}
-                points={20}
+            {/* The wet edge: a pale highlight along the stroke while it is still
+                being laid down, and again under the second wave. */}
+            {p < 1 || lit > 0.02 ? (
+              <path
+                d={`M ${mid - half} ${s.y - s.w * 0.24} L ${mid + half} ${s.y - s.w * 0.24}`}
+                stroke={SPECTRUM[4].light}
+                strokeWidth={s.w * (0.32 + 0.24 * lit)}
+                strokeLinecap="round"
+                opacity={0.8 * Math.max(p < 1 ? 1 - p * 0.4 : 0, lit)}
               />
-            ))}
-            {/* Blue, leaving in every direction — **out of each puff**, not out
-                of one hub. Twelve spokes from a single point is a starburst,
-                which is a picture of an explosion; four out of each of three
-                puffs is a picture of bouncing off things. */}
-            {AIR_BAND.map((p, i) =>
-              [0, 1, 2, 3].map((k) => {
-                const a = (k / 4) * Math.PI * 2 + i * 0.5;
-                const d = 74 + air * 120;
-                return (
-                  <g key={`${i}-${k}`}>
-                    <path
-                      d={`M ${p.x} ${p.y} L ${p.x + Math.cos(a) * d} ${p.y + Math.sin(a) * d}`}
-                      stroke={SPECTRUM[4].fill}
-                      strokeWidth={13}
-                      strokeLinecap="round"
-                      opacity={0.9}
-                    />
-                    <circle
-                      cx={p.x + Math.cos(a) * d}
-                      cy={p.y + Math.sin(a) * d}
-                      r={15}
-                      fill={SPECTRUM[4].fill}
-                    />
-                  </g>
-                );
-              }),
-            )}
+            ) : null}
           </g>
-        ) : null}
-
-        {/* The sky his version says goes blue, with his roller on it. On the
-            rebuild the roller goes and the sky is filled by the blue arriving
-            from the air instead. */}
-        <g opacity={sky}>
-          <rect
-            x={780}
-            y={392}
-            width={280 * sky}
-            height={206}
-            rx={40}
-            fill={mixHex(kidTheme.skyLow, kidTheme.skyTop, 0.35 + 0.5 * sky)}
-            stroke={kidTheme.ink}
-            strokeWidth={9}
-            opacity={0.95}
-          />
-          {/* Two clouds in it, so a blue rounded rectangle reads as a sky
-              rather than as a screen — and they are the last thing to arrive,
-              which is what keeps the diagram visibly assembling through the
-              thirty-six frames after "He has a point." */}
-          {clouds > 0.02 ? (
-            <g opacity={0.8 * clouds}>
-              <ellipse cx={866} cy={462} rx={52 * clouds} ry={23 * clouds} fill={kidTheme.cloud} />
-              <ellipse cx={976} cy={522} rx={42 * clouds} ry={19 * clouds} fill={kidTheme.cloud} />
-            </g>
-          ) : null}
-        </g>
-      </g>
+        );
+      })}
     </WideLayer>
   );
 };
+
+/**
+ * **His light: one beam, from his body, across the frame, landing on the air.**
+ *
+ * It stops at `S23_BEAM.to`, a little past the last puff, and the last 140px of
+ * it taper away — the beam is *absorbed by the air*, which is the whole
+ * correction drawn without a label on it. A beam that ran to the frame edge
+ * would say the light goes past the air and the sky gets blue somewhere else.
+ *
+ * `pulse` is a position 0..1 along the beam, or `null` between pulses: a warm
+ * swell leaves Sunny and arrives at the puffs, once on `a2_51` and once inside
+ * `a2_54`. Nothing else about the beam animates, ever — it is the one thing in
+ * the frame that is simply true.
+ */
+const SunnyBeam: React.FC<{ u: number; pulse: number | null; t: number }> = ({ u, pulse, t }) => {
+  if (u <= 0.01) return null;
+  const a = S23_BEAM.from;
+  const b = S23_BEAM.to;
+  const at = (k: number): { x: number; y: number } => ({
+    x: a.x + (b.x - a.x) * k,
+    y: a.y + (b.y - a.y) * k,
+  });
+  // A slow shimmer, so a static beam is not a static graphic.
+  const shim = 0.94 + 0.06 * Math.sin(t * 1.6);
+  const head = pulse === null ? null : at(pulse);
+  const swell = pulse === null ? 0 : Math.sin(Math.PI * pulse);
+  return (
+    <WideLayer zIndex={12} opacity={u}>
+      <defs>
+        <linearGradient id="s23-beam" x1={a.x} y1={a.y} x2={b.x} y2={b.y} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor={kidTheme.sun} stopOpacity={0.95} />
+          <stop offset="0.78" stopColor={kidTheme.sunLight} stopOpacity={0.9} />
+          <stop offset="1" stopColor={kidTheme.sunLight} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      {/* The soft outside of the beam, then its core. */}
+      <path
+        d={`M ${a.x} ${a.y} L ${b.x} ${b.y}`}
+        stroke="url(#s23-beam)"
+        strokeWidth={(104 + swell * 38) * shim}
+        strokeLinecap="round"
+        opacity={0.5 + swell * 0.22}
+      />
+      <path
+        d={`M ${a.x} ${a.y} L ${b.x} ${b.y}`}
+        stroke="url(#s23-beam)"
+        strokeWidth={(44 + swell * 22) * shim}
+        strokeLinecap="round"
+        opacity={0.95}
+      />
+      {head === null ? null : (
+        // The pulse itself: a bulge in the beam rather than a ball on it, so it
+        // is his light getting brighter on its way out and not an object he
+        // threw. Rotated onto the beam's own angle for the same reason.
+        <g
+          opacity={Math.sin(Math.PI * Math.min(1, (pulse ?? 0) * 1.2))}
+          transform={`rotate(-12.4 ${head.x} ${head.y})`}
+        >
+          <ellipse cx={head.x} cy={head.y} rx={168} ry={62} fill={kidTheme.sunDark} opacity={0.55} />
+          <ellipse cx={head.x} cy={head.y} rx={110} ry={40} fill={kidTheme.sun} opacity={0.95} />
+          <ellipse cx={head.x} cy={head.y} rx={54} ry={20} fill={kidTheme.paper} opacity={0.9} />
+        </g>
+      )}
+    </WideLayer>
+  );
+};
+
+/**
+ * **The air the beam lands on**, and the shimmer of short blue bounces coming
+ * off it once it is working.
+ *
+ * The puffs are `AirBlob`s at `S23_AIR`, drawn over a soft white so a pale
+ * vapour outline survives on a blue plate (the same fix the deleted diagram's
+ * air band needed). The spray is six darts per puff on a rolling clock, each
+ * one leaving in its own direction and fading at ~120px — a picture of light
+ * bouncing off things rather than of an explosion, which is why it is four
+ * small fans and never one starburst.
+ */
+const S23_SPRAY_N = 6;
+
+const AirBand: React.FC<{ u: number; t: number; spray: number }> = ({ u, t, spray }) => {
+  if (u <= 0.01) return null;
+  return (
+    <WideLayer zIndex={14} opacity={u}>
+      <ellipse
+        cx={S23_AIR_MID.x}
+        cy={S23_AIR_MID.y}
+        rx={390}
+        ry={118}
+        transform={`rotate(-12.4 ${S23_AIR_MID.x} ${S23_AIR_MID.y})`}
+        fill={kidTheme.paper}
+        opacity={0.3}
+      />
+      {S23_AIR.map((p, i) => (
+        <AirBlob key={i} x={p.x} y={p.y} r={p.r} t={t + i * 1.6} seed={p.seed} points={20} />
+      ))}
+      {spray > 0.02
+        ? S23_AIR.map((p, i) =>
+            Array.from({ length: S23_SPRAY_N }, (_, j) => {
+              const a = (j / S23_SPRAY_N) * Math.PI * 2 + i * 0.7;
+              const k = ((t * 0.55 + j * 0.17 + i * 0.31) % 1 + 1) % 1;
+              const d = p.r * 0.8 + k * 110;
+              const fade = Math.sin(Math.PI * k) * spray;
+              if (fade <= 0.02) return null;
+              return (
+                <g key={`${i}-${j}`} opacity={fade}>
+                  <path
+                    d={`M ${p.x + Math.cos(a) * (d - 34)} ${p.y + Math.sin(a) * (d - 34)} L ${p.x + Math.cos(a) * d} ${p.y + Math.sin(a) * d}`}
+                    stroke={SPECTRUM[4].fill}
+                    strokeWidth={11}
+                    strokeLinecap="round"
+                  />
+                  <circle
+                    cx={p.x + Math.cos(a) * d}
+                    cy={p.y + Math.sin(a) * d}
+                    r={12}
+                    fill={SPECTRUM[4].fill}
+                  />
+                </g>
+              );
+            }),
+          )
+        : null}
+    </WideLayer>
+  );
+};
+
+/**
+ * **Twenty Blues leaving the air and filling the sky above it.**
+ *
+ * Scene 20's arrival grammar, run outward instead of inward — the streak is the
+ * same `twinLeg` pair over a paper underlay, for the same reason (a mid-blue
+ * line on a blue sky has no value contrast), and the body on the end of it is
+ * the same character rather than an arrowhead.
+ *
+ * They are drawn every frame whether or not they have launched, at `opacity` 0
+ * before their own moment, so the hook count and the element count are constant
+ * across the scene.
+ */
+const BluePaint: React.FC<{ frame: number; launchFrom: number; launchTo: number }> = ({
+  frame,
+  launchFrom,
+  launchTo,
+}) => (
+  <>
+    <WideLayer zIndex={15}>
+      {S23_COPIES.map((c, i) => {
+        const start = launchFrom + c.at * (launchTo - launchFrom);
+        const u = (frame - start) / S23_FLIGHT;
+        if (u <= 0 || u >= 1) return null;
+        const p = s23Flight(c, u);
+        const q = s23Flight(c, Math.max(0, u - 0.2));
+        const [one, two] = twinLeg({ x: q.x, y: q.y }, { x: p.x, y: p.y }, 6);
+        return (
+          <g key={i} opacity={0.85 * Math.sin(Math.PI * u)}>
+            <path
+              d={`M ${q.x} ${q.y} L ${p.x} ${p.y}`}
+              stroke={kidTheme.paper}
+              strokeWidth={28}
+              strokeLinecap="round"
+              opacity={0.5}
+            />
+            <path d={one} stroke={SPECTRUM[4].fill} strokeWidth={14} strokeLinecap="round" />
+            <path d={two} stroke={SPECTRUM[4].fill} strokeWidth={14} strokeLinecap="round" />
+          </g>
+        );
+      })}
+    </WideLayer>
+    {S23_COPIES.map((c, i) => {
+      const start = launchFrom + c.at * (launchTo - launchFrom);
+      const u = clamp01((frame - start) / S23_FLIGHT);
+      const p = s23Flight(c, u);
+      return (
+        <Shard
+          key={i}
+          who="blue"
+          x={p.x}
+          y={hover("shard", p.y, p.scale)}
+          scale={p.scale}
+          heading={u < 1 ? p.angle : 0}
+          emotion="excited"
+          look="camera"
+          opacity={frame >= start ? clamp01((frame - start) / 5) : 0}
+          zIndex={16}
+        />
+      );
+    })}
+  </>
+);
 
 // ---------------------------------------------------------------------------
 // Scene 24 — Not the plain one any more

@@ -3572,7 +3572,18 @@ const S29_BUBBLES: Record<string, string> = {
   // finding #7: an inaudible stage joke is not a joke). The actual sunset
   // reviews the show about him, passing, not stopping, not looking — and it is
   // the "Lovely air." shape, which feeds `rc_04b_red` in the recap.
-  a3_22b_red: "Nice drama.",
+  //
+  // **REWRITTEN 2026-08-05 (T7b).** It was "Nice drama." and Mike's ear killed
+  // it twice — first for an epenthetic "Nice-eh drama" (T7, re-rolled, same
+  // break), then on the re-roll: *"22b red is still weird. Something about that
+  // phrase and voice doesn't work. Maybe rewrite that one line."* The fault was
+  // the phrase, not the draw. Same joke, an onset Patient_Man can start on.
+  //
+  // **The line break is deliberate**, and it is the only one in the episode.
+  // `SpeechBubble` lays out with `white-space: pre-wrap`, so this renders as two
+  // stacked words in a ~330px box instead of one ~575px box — see the placement
+  // note below for why 575 does not fit.
+  a3_22b_red: "Very\ndramatic.",
 };
 
 /**
@@ -3817,12 +3828,22 @@ const BigWordSunsetScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // reaches back at whatever piece of him is showing between the two
           // syllables. It is up for 46 frames and he emerges under the next
           // line, so nobody is left wondering who said it.
-          // 390, not 470: `BigWordBeat` draws the card at zIndex 50 and a
-          // bubble is 40, so the "Sun" block ate the right-hand third of this
-          // one at 470 — the joke's only line, half behind the word it is
-          // about. The card's left edge is at x≈636 and the bubble is ~430
-          // wide, so 390 clears it with room and still sits over open water.
-          a3_22b_red: { x: 390, y: 200, tail: "right", tailAt: redAt.x },
+          // `BigWordBeat` draws the card at zIndex 50 and a bubble is 40, so
+          // the "Sun" block ate the right-hand third of this one at x=470 — the
+          // joke's only line, half behind the word it is about. It goes in the
+          // only clear air there is: left of the card, above the waterline,
+          // clear of Sunny's rays, with the tail reaching back at whatever piece
+          // of Red is showing between the two syllables.
+          //
+          // **`x` cannot go further left than this and that is why the text
+          // carries a line break** (T7b). `Bubbles` clamps `bx` to
+          // [400, WIDTH−400], so 390 is 400 and 330 would be 400 as well; the
+          // card's left edge is at x≈633, and "Very dramatic." on one line is a
+          // ~575px box, i.e. 112..687 — the full stop lands under the "S". Broken
+          // over two lines it is ~330px, 235..565, and clear by 68px. Moving it
+          // up instead does not work either: `by` clamps at 170, which still
+          // leaves the bubble's bottom corner inside the card.
+          a3_22b_red: { x: 400, y: 200, tail: "right", tailAt: redAt.x },
         }}
         maxWidth={780}
       />

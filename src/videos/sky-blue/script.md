@@ -4,10 +4,12 @@
 **Topic:** why the sky is blue — and why a sunset is not
 **Audience:** six-year-olds — and the grown-up in the room
 **Target:** was ~10.5–12 minutes; the comedy rewrite bought the ensemble the
-room the mandate asked for and the cut after tweak-round RUN 1 is **17:25.8**
-(31,375 frames at 30 fps). *(The 2026-08-03 delivered cut was 17:23 / 31,281;
-the s35 re-tease took it to 17:25.7 / 31,372; the tweak round is net +3 frames
-— T1 and T8 add, T2a and T10 subtract.)*
+room the mandate asked for and the cut at the end of the tweak round is
+**17:27.3** (31,419 frames at 30 fps). *(The 2026-08-03 delivered cut was 17:23
+/ 31,281; the s35 re-tease took it to 17:25.7 / 31,372; tweak-round RUN 1 was
+net +3 to 31,375 — T1 and T8 add, T2a and T10 subtract — and RUN 2 adds a
+further **+44**, all of it the new roll-call clip, which is 4.21s against the
+retired "Hi! Hi! Hi! Hi!"'s 2.74s.)*
 **Shape:** cold open, three acts, recap. Thirty-eight scenes, three hundred
 spoken lines (revision 2 brought it to three hundred and two; the tweak round
 adds `a1_16b2_narrator` and `a3_31b_sunny` and cuts `a1_42h_narrator`,
@@ -736,6 +738,11 @@ there in their arc. Ray floats along the line and greets them one at a time,
 left to right, with an eye-line and a wave for each; **each one he names responds
 in character, and Red does not respond at all.** His bubble is
 **"Hi! Hi! Hi! Hi!"**, a summary and not a transcript.
+*(Mike, tweak round note 4: this **"isn't a true roll call"** — he is right, Ray
+is greeting six different people one at a time. The scene is unchanged; the note
+was a request for a real one, and it was granted in **Scene 20**, where Blue
+holds a roll call of his own identical copies. Ray's bubble here keeps its four
+"Hi!"s because that is what a summary of six greetings looks like.)*
 **Lines:** `a1_41_narrator`, `a1_42_ray`, **`a1_42b_yellow`**,
 **`a1_42c_green`**, **`a1_42d_blue`**, **`a1_42e_orange`**,
 **`a1_42f_narrator`**, **`a1_42g_orange`**, `a1_43_narrator`, `a1_44_ray`
@@ -1556,29 +1563,39 @@ the first half only, clear of it.
 
 **GAP — 4f.**
 
-> **BLUE:** Hi! Hi! Hi! Hi!
+> **BLUE:** Hi, Bluington! Hi, Bluesworth! Hi, Bluey! Hi... me!
 
-> **PENDING — TWEAK ROUND T4 (Mike's note 4, 2026-08-04), BLOCKED on his line
-> pick.** Mike: *"I think the 'roll call' with the colors intro isn't a true
-> roll call, let's do one instead when blue says 'Hi Hi Hi', and change that to
-> 'Hi bluington, Hi <other blues>, etc'"*. This clip is being **replaced
-> outright** by one new MiniMax line in which Blue holds a roll call of his own
-> identical copies, and its four bubbles become four named greetings at the same
-> four compass marks. **Any ear item on the shipped `a2_32b_blue` take (the
-> suspected slow read at 0.68 s/word) is SUPERSEDED** — do not re-roll it, it is
-> going. The structure below survives the swap: one clip, four bubbles, the same
-> four positions, fractions re-measured on the new take.
+> **THE ROLL CALL — REVISED 2026-08-05 (tweak round T4, Mike's note 4).** Mike,
+> verbatim: *"I think the 'roll call' with the colors intro isn't a true roll
+> call, let's do one instead when blue says 'Hi Hi Hi', and change that to 'Hi
+> bluington, Hi <other blues>, etc'"*. The clip was **"Hi! Hi! Hi! Hi!"** and is
+> replaced outright; Mike picked the text (Option B of the two routed to him) and
+> **the spelling is his** — Bluington, Bluesworth, Bluey. One new MiniMax line,
+> the same four bubbles at the same four compass marks, one greeting each, in
+> order. The gag is the fourth one: Blue holds a roll call and there is nobody
+> else here. It mirrors Ray's roll call in Scene 10 — which is the one Mike is
+> right about not being a roll call, because Ray is greeting six *different*
+> people. **The old ear item on `a2_32b_blue` (a suspected slow read) died with
+> the old clip.**
 
 **ONE clip, FOUR bubbles**, popping in sequence from four points around the
-frame at measured fractions of the delivered clip (**0.069 / 0.332 / 0.574 /
-0.812** — read off the recording, and kept as fractions so a re-roll re-times
-all four for free). They **accumulate**, so by the fourth all four are up at
-once, which is "from ALL of the sky" drawn. It is Ray's roll-call bubble,
-returned from everywhere at once: the mechanism as a greeting. The four points
-are laid out to **avoid Ray** — as corners, the bottom-right one is his, and a
-tail clamped to sixty pixels of travel landed on his forehead, so four blue
-bubbles read as Ray saying them. All four tails point straight down; with two
-dozen Blues filling the frame there is always one under them.
+frame at measured fractions of the delivered clip (**0.047 / 0.295 / 0.547 /
+0.761** on the new take — read off the recording, and kept as fractions so a
+re-roll re-times all four for free; the retired take's numbers were 0.069 /
+0.332 / 0.574 / 0.812 and must not be used). The four greetings land about a
+second apart, which is a roll call rather than a volley and gives each name time
+to be read. **No pause markers were needed** — the delivered read leaves
+144–162ms between greetings on its own and reads the ellipsis in "Hi... me!" as
+a real beat. They **accumulate**, so by the fourth all four are up at once,
+which is "from ALL of the sky" drawn and a roster of four Blues with one body
+between them. The four points are laid out to **avoid Ray** — as corners, the
+bottom-right one is his, and a tail clamped to sixty pixels of travel landed on
+his forehead, so four blue bubbles read as Ray saying them. All four tails point
+straight down; with two dozen Blues filling the frame there is always one under
+them. The marks did not move for the wider boxes: read off a still with
+all four up they occupy roughly x 482..1035 / 1185..1680 / 672..1122 / 312..690,
+touching nothing. ("Hi, Bluesworth!" wraps to two lines at the house `maxWidth`, which is
+the same shape three other bubbles in the episode already have.)
 
 > **NARRATOR:** So blue is not a patch of the sky. Blue is the WHOLE sky.
 
@@ -1731,16 +1748,50 @@ a second firing anywhere would spend it.
 file and the bubble maps. Only the title changed.)*
 
 **On stage:** Narrator, Ray, Sunny
-**Visual:** Sunny slides into frame at maximum brightness, roller in hand, and a
-diagram assembles itself out of his own beams as he brags — sun to sky, sky goes
-blue. **The diagram never stops.** *(This is the single biggest staging change in
-the scene: the delivered cut had it halt and the beams droop on "He is wrong",
-and that ceremony is removed.)* Instead, on `a2_51_narrator` the diagram
-**rebuilds around him** with the air drawn *into* it, bigger and more accurate
-than the one he made, while he poses in front of it. **Free visual, droppable:**
-Red walks across the finished diagram, left to right, at his usual speed, and out
-the far side, without looking at it. He does this **on `a2_51_narrator`, never
-inside a held beat.**
+
+> **VISUAL RE-SHOT 2026-08-05 (tweak round T6, Mike's note 6).** Mike, verbatim:
+> *"That same scene (around 10:00 to 10:20) is still very awkward visually - I
+> think the speech is fine, but I don't think a kid will be able to understand
+> the visual, let's re-shoot that whole scene with some different visuals"*.
+> **Speech and timing are frozen** — all eleven clips, every gap, the tail and
+> every held beat below are byte-identical; this is a picture-only re-shoot.
+> **Deleted:** the abstract `WrongDiagram` (a sun→beam→sky→cloud schematic that
+> assembled, then rebuilt itself bigger around him) and the 2.5× camera push that
+> framed it. Those are the thing a kid cannot parse, and a scene whose mechanism
+> only fits on screen at one focal length was fighting itself.
+
+**Visual (as re-shot): "Sunny poses, the air paints."** Whole-frame staging, no
+camera moves, and every element is one of the concrete ones Scenes 19 and 20
+already proved a six-year-old can read.
+
+- **One warm beam**, out of Sunny's body at his existing mark, down across the
+  frame to the left. It *stops at the air* — the last stretch tapers out — so the
+  correction is drawn rather than labelled: sun to **air**, not sun to sky.
+- **A band of four air puffs**, their centres exactly on the beam line, sitting
+  in the light. This is the deleted diagram's own `AIR_BAND` idiom promoted to
+  whole-frame size.
+- **Blue leaves the air in every direction**: a constant shimmer of short blue
+  bounces off each puff, and twenty Blue copies fly out of them, up into the sky
+  above, and stay there. The pocket version of Scene 20's arrival grammar, run
+  outward instead of inward.
+- **The sky above gets painted.** The upper-left of the frame is washed pale from
+  the start — a patch of sky that is not blue yet — and nine roller strokes are
+  laid down over it, bottom row first, each one growing out of its own middle
+  when the wavefront out of the puffs reaches it. Pale→blue, not blue→bluer: the
+  plate is already a blue sky and blue paint on it is invisible.
+- **Sunny never paints anything.** He holds the dry roller **up like a trophy**
+  from the brag onward — the prop's seven-scene payoff shot — and poses. The
+  ray-fan pun on "LOADS of points" fires exactly as before.
+- **Ray is on stage the whole scene now**, because there is no camera to take him
+  out of it, so "It lands on him. Nobody helps." plays with him visible.
+
+**The acceptance test, written down:** a six-year-old must be able to say *"Sunny
+makes the light, the air spreads the blue"* from the picture with the sound off.
+Everything above earns its place against that sentence or comes out.
+
+**Free visual, droppable, still OFF:** Red walking across at his usual speed
+without looking. Ruled out on arithmetic (`S23_RED_WALK` in `act2.tsx` carries
+the full argument: at `RED_SPEED` he cannot cross before the held beat opens).
 **Lines:** `a2_45_sunny`, `a2_46_ray`, `a2_47_sunny`, `a2_48_narrator`,
 `a2_49_narrator`, `a2_50_sunny`, `a2_51_narrator`, `a2_52_ray`, `a2_53_sunny`,
 `a2_54_narrator`, `a2_55_narrator`
@@ -1760,8 +1811,10 @@ to 0** on the next line.
 
 **HELD BEAT — 36f (1.2s) after `a2_49_narrator`.** **Same length, opposite
 content.** The grin does not come apart — it **grows**, slowly, across the whole
-beat, and the diagram behind him keeps assembling. Nothing else enters. The laugh
-is that the audience braced for a verdict and got a concession.
+beat. Nothing else enters. *(Before the T6 re-shoot the diagram behind him went
+on assembling through this beat; there is no diagram now, and the beat is the
+grin alone, which is what it was always for.)* The laugh is that the audience
+braced for a verdict and got a concession.
 
 > **SUNNY:** I DO have a point! I have LOADS of points!
 
@@ -1785,8 +1838,24 @@ a full stop. Sunny is already re-inflating behind it.
 > **NARRATOR:** He will only remember one of those.
 
 **HELD BEAT — 45f (1.5s) after `a2_55_narrator`.** The grown-up laugh goes here.
-Sunny, restored to full brightness, posing in front of a diagram that no longer
-says what he thinks it says. Unseasoned button, no gesture, nothing enters.
+Sunny, at full brightness, holding a dry roller up like a trophy, posing at the
+lens in front of a sky that twenty Blues and a band of air have just finished
+painting without him. Unseasoned button, no gesture, nothing enters.
+
+**THE BEAT MAP OF THE RE-SHOOT**, all of it keyed to line windows and held
+beats, never to absolute frames.
+
+| On | The picture does |
+|---|---|
+| `a2_47_sunny` | Sunny poses; the roller comes **up**. Beam and air are already there; the sky is still unpainted. |
+| 45f beat | Nothing. He holds the grin, alone, and the picture holds with him — this is what the camera push used to buy. |
+| 36f beat | The grin **grows**, across the whole silence. Still nothing else. |
+| `a2_50_sunny` | The ray fan, on "points", at 0.62 of the clip. Unchanged. |
+| `a2_51_narrator` | A warm pulse travels the beam, Sunny → air. |
+| `a2_52_ray` | **The painter's stroke.** The sky fills, out of the puffs, nine strokes and nine Blues, finishing inside the 30f beat after the line. |
+| `a2_53_sunny` | He poses **harder** and turns to the lens. The air keeps painting behind him and does not look at him once. |
+| `a2_54_narrator` | Beam pulse, then sky-sweep pulse — the sentence has two halves and the picture draws both. |
+| `a2_55_narrator` + 45f | Everything settles. The air keeps shimmering at half strength. **Nothing enters.** |
 
 **THE FOUR REWORDED LINES, 2026-08-01, and what each one is doing.**
 
@@ -1836,8 +1905,11 @@ before anything else in the revision is staged; and if it cannot be made to work
 the fix is to make the concession *more* precise, **not** to restore the verdict.
 
 **`a2_47_sunny`'s three halves, and how they are now separated.** This scene
-note asks for the three halves of the brag to land separately — Sunny builds one
-third of his diagram on each. That used to be bought with the file's only two
+note asks for the three halves of the brag to land separately. *(It used to be
+load-bearing: Sunny built one third of his diagram on each. **The T6 re-shoot
+removed the diagram**, so nothing in the picture is keyed to the three halves any
+more and this is now a read note rather than a staging dependency.)* The
+separation used to be bought with the file's only two
 pause markers (`<#0.3#>`, a MiniMax feature). Sunny is back on kokoro, which
 cannot take a marker at all (the generator rejects the line rather than let the
 model read the punctuation out loud), so the separation is bought with
@@ -1911,7 +1983,7 @@ volcano, the same place on the horizon, as episode two's beach.
 **The race venue starts filling (revision 2).** Green — who sits at load-bearing
 moments — turns out to be **already on the rock Ray's shadow falls off**, as if
 this were the plan, and the Narrator never explains it (the same convention that
-puts Red on Sunny's diagram in Scene 23). His seat is measured off the rock prop
+would have put Red across Scene 23 — see `S23_RED_WALK`, which is off). His seat is measured off the rock prop
 rather than eyeballed. Then Blue arrives the way Blue arrives.
 
 > **NARRATOR:** The day went on. Ray kept scattering, and the sky kept being blue.
@@ -2684,7 +2756,7 @@ House Big Word rhythm, third and last firing.
 
 **GAP — 16f.** *(Red's house gap, crossing behind the card.)*
 
-> **RED** *(passing, not stopping, not looking)*: Nice drama.
+> **RED** *(passing, not stopping, not looking)*: Very dramatic.
 
 *(The "Lovely air." shape — **the actual sunset reviews the show about him** —
 and it feeds `rc_04b`. His bubble goes in the only clear air in the frame, left
@@ -2692,14 +2764,29 @@ of the "Sun" block and above the waterline, with its tail reaching back at the
 piece of him showing between the two syllables; the card owns z-index 50 and ate
 it at the first placement.)*
 
-**RE-ROLLED 2026-08-04** (tweak round T7). Mike: *"When someone says 'Nice
-Drama' it has a weird accent 'Nice-eh Drama' which doesn't sound like any
-character (not sure if it's supposed to be orange or red)"*. It is Red, and
-MiniMax had inserted an epenthetic vowel — the same failure class as the
-`a2_28b_blue` bad draw. Cache-bust re-roll, **same text and same fields**, two
-draws taken, both with a clean single-run onset; the tighter of the two is in.
-Fallback if it ever comes back epenthetic: text → "Good drama." **NEW EAR
-ITEM.**
+**REWRITTEN 2026-08-05** (tweak round T7b), and it took two passes to get
+there.
+
+*Pass one (T7, note 7).* Mike: *"When someone says 'Nice Drama' it has a weird
+accent 'Nice-eh Drama' which doesn't sound like any character (not sure if it's
+supposed to be orange or red)"*. It is Red, and MiniMax had inserted an
+epenthetic vowel — the same failure class as the `a2_28b_blue` bad draw.
+Cache-bust re-roll, same text and fields, two draws, both with a clean
+single-run onset on the meter; the tighter went in.
+
+*Pass two (T7b), on that re-roll.* Mike: *"22b red is still weird. Something
+about that phrase and voice doesn't work. Maybe rewrite that one line. The rest
+of the voice clips are good"*. **So the fault was the phrase, not the draw** —
+the "Nice" onset broke the same way across three takes, and a clipped two-word
+line fights Patient_Man's slow calm. The line is now **"Very dramatic."**: same
+deadpan review of Sunny's "For the drama!", same "Lovely air." shape, same feed
+into `rc_04b`, with an onset the voice can actually start on. Same fields (RED,
+`calm`, 0.9); one clean single-run draw at 1.62s. **The bubble follows the
+words**, and it now carries the episode's only deliberate line break — "Very
+dramatic." on one line is a ~575px box and `Bubbles` clamps its x to 400, which
+puts the full stop under the "Sun" block; stacked, it is ~330px and clear. If a
+draw ever comes back mangled again the problem is the casting, not the words.
+**NEW EAR ITEM.**
 
 > **NARRATOR:** A sunset is not different light. It is the same light, taking the long way.
 
@@ -2974,8 +3061,18 @@ him.** It now sits at his shoulder with a short tail across into his face.
 astronaut, so its bubble hangs over the thing he is claiming.
 > **NARRATOR:** Because the Moon has no air. And no air means nothing to bounce blue off.
 > **NARRATOR:** The light is still there. There is nothing for it to scatter on.
-> **RAY:** So the blue sky is a thing the AIR does.
+> **RAY:** So the blue sky is a thing the air does.
 > **NARRATOR:** Air, and light, and nothing else. That is your whole blue sky.
+
+**CAPS FIX 2026-08-05** (tweak round T5b). `rc_14_ray` carried the **identical**
+defect Mike reported in `a2_52_ray` — "the AIR does" on a MiniMax line, so the
+model read the capitals as an initialism and said the letter A — in the one
+sentence the episode most wants a child to repeat. Found by the RUN 1 caps
+sweep, not by ear, and fixed the same way: lowercase, same fields,
+re-synthesized (~$0.003). **The s34 bubble keeps its capitals** ("The AIR does
+the blue!") — print, not pronunciation. The sweep's other twenty-eight all-caps
+MiniMax lines are a STYLE watch-list for the retro, not a change: Mike has
+flagged none of them by ear across two screenings. **NEW EAR ITEM.**
 
 **Pedagogy:** The fact the child repeats at dinner, and — unusually for a
 mind-blower — it is also **the proof**. Everything before this was a mechanism
@@ -3099,7 +3196,8 @@ reversal. No scary peril: the volcano is asleep and stays asleep, and
 the sunset must never read as the light dying — Scene 31 exists to make it a
 journey. No potty humour. Nobody is unkind: Ray corrects Sunny by *giving* him
 the half he actually owns, and Sunny's wrongness is played as a man
-enthusiastically rebuilding his own diagram rather than as a comeuppance.
+enthusiastically posing in front of somebody else's work rather than as a
+comeuppance.
 
 **Line length.** Every line sits between two and fifteen words. Since
 `a3_06_narrator` was cut there is **no line in the episode over fifteen words**.
@@ -3361,9 +3459,9 @@ npm run narration -- --audition sky-blue:a1_26_ray <dir> \
 5. **`a2_47_sunny`** — the only line whose internal timing is not a `gap`, and
    the one the pause markers used to buy. On kokoro at 0.92, listen for **three
    halves, not one sentence**: "So I painted the sky!" / "With my sky paint!" /
-   "Obviously!" Scene 23 builds a third of his diagram on each, so if they run
-   together the diagram assembles as one move. Fix is `speed` (0.88), never the
-   text.
+   "Obviously!" *(Scene 23 used to build a third of his diagram on each; the T6
+   re-shoot deleted the diagram, so this is now purely a question of how the line
+   reads.)* Fix is `speed` (0.88), never the text.
 6. **Sunny's concession run** (`a2_48` → `a2_49` → `a2_50` → `a2_53`), and
    **`a2_49` is the single most important clip in the revision**. "He has a
    point." at 0.85 must be **flat, not amused and not apologetic** — the whole
@@ -3483,7 +3581,10 @@ before anything is re-cut. Items 20–24 are the highest risk in the rewrite.
    re-take again. Four words at 0.8 is a lot of drag: listen for distortion, and
    if it is there, 0.85 and let the 210f hold after it do the dragging.
 
-**Ear-check list — the 2026-08-04 additions (tweak round)**:
+**Ear-check list — the 2026-08-04 additions (tweak round). ALL SEVEN CLEARED
+by Mike's ear on 2026-08-04/05** (*"the rest of the voice clips are good"*),
+with one exception that became a rewrite rather than a re-take: item 35.
+They are kept here as the record of what was listened for.
 
 31. **`rc_21_ray`** ("Is it me??") — Ray's first `fearful`, and the episode's
    final word. Must read as a **comic squeak, not distress** — scared the way a
@@ -3504,10 +3605,9 @@ before anything is re-cut. Items 20–24 are the highest risk in the rewrite.
    after Mike heard "the A did the painting". Confirm the word is now *air* and
    not a letter, and that the pedant register survived the re-roll.
 35. **`a3_22b_red`** ("Nice drama.") — RE-ROLLED with T7 after the epenthetic
-   "Nice-eh drama". Two draws were taken, both with a clean single-run onset
-   (the shipped bad take had a detached 72ms blip at the front); the tighter one
-   is in, at 1.48s against the old 1.51s. **Confirm the schwa is gone.** If not,
-   fallback text: "Good drama."
+   "Nice-eh drama". **FAILED on Mike's ear a second time** (*"still weird…
+   something about that phrase and voice doesn't work"*) and was **rewritten**
+   under T7b. Superseded by item 40.
 36. **`a3_31b_sunny`** ("I invented mornings! You're welcome! HA! HA!") — NEW
    with T8, kokoro `am_puck`, and it must sound like the *same brag* as episodes
    one and two, because that is the whole of the gag. It is also the episode's
@@ -3516,7 +3616,32 @@ before anything is re-cut. Items 20–24 are the highest risk in the rewrite.
 37. **The race as a run, end to end** (`a3_11c` → `a3_18f`), which is now four
    minutes across five legs and seven voices. Listen for whether the exits read
    as *departures* or as *casualties*, and whether Yellow's five cheers land as
-   generosity rather than as a catchphrase being worked.
+   generosity rather than as a catchphrase being worked. **Covered by the two
+   family screenings; no note came back.**
+
+**Ear-check list — the 2026-08-05 additions (tweak round RUN 2), and these are
+the only OPEN items on the whole list.** Three new takes, all MiniMax, ~$0.01
+the lot.
+
+38. **`a2_32b_blue`** ("Hi, Bluington! Hi, Bluesworth! Hi, Bluey! Hi... me!") —
+   **the new roll call** (T4), and the clip the whole of Scene 20's second
+   picture now hangs on. It replaces "Hi! Hi! Hi! Hi!", whose take was the slow
+   one at 0.68 s/word. Listen for: four *separate* greetings with the little
+   beat between them intact (the four bubbles are keyed to onsets measured off
+   this take — 0.047 / 0.295 / 0.547 / 0.761 — so a re-roll means re-measuring),
+   the ellipsis in "Hi... me!" landing as a beat rather than as a stumble, and
+   the three names surviving Decent_Boy's mouth. Measured at 0.326 s/syllable of
+   actual speech, which is Blue's corpus median; the wall-clock 0.53 s/word is
+   the four deliberate silences, not drag.
+39. **`rc_14_ray`** ("So the blue sky is a thing the air does.") — RE-SYNTHESIZED
+   with T5b, lowercase. **Confirm the word is now *air* and not a letter**, in
+   the recap, in the sentence the episode most wants repeated.
+40. **`a3_22b_red`** ("Very dramatic.") — the **rewrite** of item 35 (T7b). Mike
+   killed both takes of "Nice drama."; this is a new phrase, not a new draw.
+   Listen for whether it sounds like *Red* — patient, flat, uninterested — and
+   whether the deadpan review still reads as a review. One draw, clean single
+   speech run 0.180–1.422s, no detached onset. If this one fails too, the note
+   in `narration.mjs` says what to do: re-cast, do not rewrite a third time.
 
 **Grown-up smirks.** `co_04` ("Every kid on this whole planet picks blue"),
 the almanac answers around "Are we there yet?" (the **skipped arithmetic** at

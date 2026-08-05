@@ -160,17 +160,36 @@ overridden in substance; R2 superseded.
   4 deleted, .cache.json), tweak1-worklist.md, tweak1-retro-notes.md,
   docs/HANDOFF.md. NO deploy yet (full render owed at round close
   after RUN 2).
-- **ORCHESTRATOR QUEUE (pending relay to showrunner at quota reset
-  ~2026-08-05T04:00Z — RUN 1 committed aa4478e, gate hit PAUSE):**
-  (1) RUN 2 GREEN-LIT by Mike: T4 = Option B ("Hi, Bluington! Hi,
-  Bluesworth! Hi, Bluey! Hi... me!"), T6 concept APPROVED ("Sunny
-  poses, the air paints"). (2) Mike ear verdict on the RUN 1 packet,
-  verbatim: "22b red is still weird. Something about that phrase and
-  voice doesn't work. Maybe rewrite that one line. The rest of the
-  voice clips are good" → a3_22b_red "Nice drama." = REWRITE THE LINE
-  (text change, showrunner's pen), all other 6 clips approved. (3) Mike
-  2026-08-05: "rc20/21 are fine" — re-tease clips APPROVED; ear list
-  fully clear except the a3_22b rewrite.
+- **RUN 2 IN FLIGHT (2026-08-05, quota-reset gate 0k/450k PROCEED;
+  queue block delivered + cleared):** RUN 1 committed aa4478e. Mike's
+  picks recorded in tweak1-worklist.md RUN 2 FINAL SCOPE: T4 = Option B
+  verbatim, T6 concept approved, plus T5b (rc_14_ray caps fix) and NEW
+  T7b (a3_22b_red rewrite → "Very dramatic." — showrunner's pen per
+  Mike's "rewrite that one line"; re-roll had not fixed it). All other
+  RUN 1 clips + rc_20/rc_21 APPROVED by Mike's ear — ear list clear
+  except RUN 2's three new takes (a2_32b_blue roll call, rc_14_ray,
+  a3_22b_red). Builder spawned; after it lands + showrunner review:
+  round close = full every-frame render, orchestrator commit + deploy,
+  retro + BIBLE (seed: tweak1-retro-notes.md).
+  **RUN 2 LANDED + SHOWRUNNER-REVIEWED 2026-08-05, PASSED (no fix
+  round). TWEAK ROUND CLOSED — READY TO COMMIT + DEPLOY.** All four
+  items in (T4 Option B verbatim, T6 re-shoot passed the six-year-old
+  acceptance test, T5b, T7b "Very dramatic."). Gates: synth exactly 3
+  (~$0.01) then 0, typecheck 0, lint:hooks 0, four scene-range renders
+  exit 0, FULL every-frame --scale=0.25 render exit 0 = 31,419f =
+  17:27.3 (107MB). Showrunner rulings on all six builder flags in
+  tweak1-worklist.md RUN 2 review section (primer licence ACCEPTED as
+  canvas device; a2_53 bubble overlap accepted; note-4 = s20-only
+  stands). Commit paths: narration.mjs, narrationManifest.ts,
+  scenes/{act2,act3,recap}.tsx, script.md, tweak1-worklist.md,
+  tweak1-retro-notes.md, public/narration/sky-blue/{a2_32b_blue,
+  rc_14_ray,a3_22b_red}.mp3 + .cache.json, docs/HANDOFF.md. Deploy via
+  clean worktree (CLAUDE.md recipe); verify page + the 3 new clips 200.
+  EAR LIST after deploy: only the 3 new takes (a2_32b, rc_14, a3_22b —
+  measurements healthy, in worklist). Re-screening link → Mike.
+  NEXT (boundary work, owed): retro → LEARNINGS/STYLE + BIBLE first
+  write-up (story-writer drafts from tweak1-retro-notes.md + decision
+  record; showrunner reviews; quota-gate the fable story-writer spawn).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE

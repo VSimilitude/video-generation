@@ -562,6 +562,63 @@ as a STYLE watch-list (new rule: no all-caps emphasis on MiniMax lines;
 caps live in bubble text only). Mike flagged none of them by ear across
 two screenings; speculative re-rolls are not worth cents yet.
 
+## T7b — a3_22b_red REWRITE (Mike ear verdict on the RUN 1 re-roll)
+
+**Mike, verbatim (2026-08-05):** "22b red is still weird. Something
+about that phrase and voice doesn't work. Maybe rewrite that one line.
+The rest of the voice clips are good"
+
+The re-roll didn't fix it — the phrase/voice combo is the problem (the
+"Nice" onset broke identically across draws, and the clipped two-word
+shape fights Patient_Man's slow calm). Showrunner rewrite: text →
+**"Very dramatic."** — keeps the deadpan callback to Sunny's "For the
+drama!", fits Red's patient register, drops the failing onset. Same
+fields (RED, calm, 0.9). Bubble text (if any) follows the new words.
+~$0.01. EAR ITEM (the only one left plus RUN 2's new takes).
+script.md: fold text + note the phrase-level diagnosis.
+
+## RUN 2 FINAL SCOPE (green-lit 2026-08-05, quota 0k/450k)
+
+- **T4** with Mike's pick = **Option B**: "Hi, Bluington! Hi,
+  Bluesworth! Hi, Bluey! Hi... me!" (exact text, spelling as written).
+- **T6** concept **APPROVED as designed** ("Sunny poses, the air
+  paints").
+- **T5b** rc_14_ray caps fix.
+- **T7b** a3_22b_red → "Very dramatic."
+Ear-list state going in: FULLY CLEAR (all 6 other RUN 1 clips approved;
+rc_20/rc_21 approved) — RUN 2's new takes are the only additions:
+a2_32b_blue (new roll call), a2_52? no — just a2_32b, rc_14_ray,
+a3_22b_red.
+Round close after RUN 2: full every-frame --scale=0.25 render exit 0,
+script.md counts/ear-list final sweep, HANDOFF, deploy handoff to
+orchestrator, then retro + BIBLE (seed: tweak1-retro-notes.md).
+
+## RUN 2 showrunner review (2026-08-05) — PASSED, no fix round. ROUND CLOSED.
+
+Sampled T6_18500 (acceptance frame), T6_18910 (button), t4_15792 (four
+greetings up). All accepted. Rulings on the builder's flags:
+1. a2_53 bubble covering the band's top-right for 115f: ACCEPTED as-is
+   — Sunny's brag physically covering part of the air's work is
+   thematically right; no fix.
+2. The pale-primer licence: ACCEPTED. It reads as a canvas-strip
+   device, which is exactly the metaphor; legibility beats literalism
+   here. Watch-item at the re-screening only.
+3. "Paint the value, not the hue" → added to tweak1-retro-notes.md for
+   STYLE.
+4. Bubbles bx/by clamp under-documentation → kit backlog (with plate
+   shift + Freeze re-export + browAsym single-side notes).
+5. Note-4 interpretation stands: "let's do one INSTEAD when blue says
+   Hi Hi Hi" — the true roll call lives in s20, s10 untouched. If Mike
+   meant both, that's a cents-scale follow-up after re-screening.
+6. Correct — HANDOFF is showrunner/orchestrator-owned.
+
+ROUND-CLOSE STATE: full every-frame --scale=0.25 render exit 0
+(31,419/31,419 frames = 17:27.3, 107MB) — DEPLOY-READY on commit.
+EAR LIST (the only open items, all shipped-in-cut): a2_32b_blue
+"Hi, Bluington!..." (0.326 s/syll, Blue's median), rc_14_ray (0.266
+s/word), a3_22b_red "Very dramatic." (clean onset). Everything else
+Mike-approved 2026-08-05.
+
 ## RUN 1 showrunner review (2026-08-04) — PASSED, no fix round
 
 Sampled 13 stills (skeptical face hero+in-scene, T1 almost-ask
@@ -1001,3 +1058,264 @@ the low mark, correctly — that line is about the astronaut. Still `t9c_30490`.
    wrong at showrunner review the ladder is still available (B2, then A), but I
    would spend a still or two first: it is a subtle face by design and it does
    not photograph as strongly as it plays.
+
+---
+---
+
+# BUILDER RUN 2 — DONE (scene-builder, 2026-08-05)
+
+Items implemented: **T4, T6, T5b, T7b**, and the tweak round's closing gates.
+Nothing outside those four was touched. **New total: 31,419 frames = 17:27.3**
+(RUN 1 left 31,375 = 17:25.8; net **+44 frames**, all of it the new roll-call
+clip — 4.212s against the retired "Hi! Hi! Hi! Hi!"'s 2.736s, minus three frames
+from `rc_14_ray` and plus four from `a3_22b_red`).
+
+## Gate results
+
+| Gate | Result |
+|---|---|
+| `npm run narration -- --video sky-blue` | **3 clips synthesized**, exactly the three the brief authorised. Second run: **0**. |
+| `npm run typecheck` | 0 errors |
+| `npm run lint:hooks` | 0 findings |
+| s20 range render, every frame, `--scale=0.25` (15308–16521) | **exit 0** |
+| s23 range render, every frame, `--scale=0.25` (17796–18938) | **exit 0** |
+| s29 range render, every frame, `--scale=0.25` (26791–27577) | **exit 0** |
+| s34 range render, every frame, `--scale=0.25` (29898–31122) | **exit 0** |
+| **FULL every-frame `--scale=0.25` render** | **exit 0** (hand-verified) — `Encoded 31419/31419`, 107 MB, 17:27.3 |
+
+**FULL RENDER, hand-verified.** `npx remotion render src/index.ts RaySkyBlue
+<out>.mp4 --scale=0.25`, every frame, no `--frames` window:
+
+```
+Encoded 31419/31419
+FULL_EXIT=0
+```
+
+**31,419 frames = 17:27.3 at 30fps; 111,934,269 bytes (107 MB) at quarter
+scale.** It ran after the last code change in this run, so it covers the final
+tree — including the twenty always-mounted `Shard` bodies in Scene 23, which is
+the only hook-count risk this run introduced and the only gate that can catch it.
+(The four scene-range renders above were run before the roller-entrance fix and
+are superseded by this one.)
+
+**Synthesis, and there was nothing else.** MiniMax reported **105 characters
+this run ≈ $0.01**. No clip was re-rolled: all three came back clean on the first
+draw, measured before acceptance.
+
+| key | engine | draws | duration | why |
+|---|---|---|---|---|
+| `a2_32b_blue` | minimax Decent_Boy/happy | 1 | 2.736 → **4.212s** | T4 — the new roll call |
+| `rc_14_ray` | minimax Young_Knight/happy | 1 | 2.772 → **2.664s** | T5b — "the AIR does" → "the air does" |
+| `a3_22b_red` | minimax Patient_Man/calm | 1 | 1.476 → **1.620s** | T7b — "Nice drama." → "Very dramatic." |
+
+**Take measurements.** Method: the same MPEG-1 side-info `global_gain` probe RUN
+1 used (no ffmpeg on this box, so no `silencedetect`); 576 samples/granule = 18ms
+at these files' 32kHz. Thresholds quoted because the shape depends on them.
+
+- **`a2_32b_blue`** — at threshold 120 the clip is **four clean runs**:
+  0.198–1.098 / 1.242–2.142 / 2.304–3.042 / 3.204–4.086, i.e. one greeting each
+  with 144–162ms between them, and at threshold 130 the fourth run splits at
+  3.546–3.708 — **MiniMax read the ellipsis in "Hi... me!" as a real beat**. So
+  the four bubble fractions are **0.047 / 0.295 / 0.547 / 0.761**, re-measured
+  and written into `S20_HELLO_AT` with the method and the retired take's numbers
+  beside them.
+  **Quality verdict: KEEP, and it is not the draggy read.** Wall-clock is 0.53
+  s/word, which is above the brief's 0.31–0.36 band — but the brief also says to
+  judge the spoken portions, and this line has four deliberate silences plus an
+  ellipsis in it. Speech-only it is **0.407 s/word and 0.326 s/syllable**, and
+  0.326 is Blue's corpus median (his 38 MiniMax lines run 0.21–0.86 s/syllable,
+  his eight-word lines 0.34–0.36). The names are the reason per-word is not the
+  right meter here: "Bluington" is three syllables and "Hi" is one. The retired
+  take was **0.684 s/word on four one-syllable words**, i.e. 0.684 s/syllable —
+  twice this. No pause markers added; nothing needed fixing.
+- **`rc_14_ray`** — 2.664s / 10 words = **0.266 s/word, 0.266 s/syllable**, which
+  is the fast third of Ray's 57-line corpus and 0.011 faster than the old take.
+  Four spoken runs at threshold 130, no detached onset. The old take was longer
+  *because it was spelling a letter*.
+- **`a3_22b_red`** — **single speech run 0.180–1.422s at threshold 130**, no
+  detached pre-word blip. That matters: the shipped bad take was 0.180–0.252 then
+  a dip then 0.270–1.404 — the epenthesis signature — and RUN 1's kept re-roll
+  was 0.234–1.278. Accepted on onset shape, the same test RUN 1 used, because
+  Red's corpus s/word band (0.42–1.04, two-word lines 0.65–0.76) is too wide to
+  decide anything.
+
+**Stills:** 40+ rendered and read, in
+`/tmp/claude-1000/-home-mike-projects-video-generation/6d0bf85a-ed8c-47e4-95bd-f064f9bc68c7/scratchpad/tweak1_run2/`.
+The ones to look at first are `T6_18500.png` (the painter's stroke, on Ray's
+line — the acceptance-test frame), `T6_18910.png` (the button, sky finished) and
+`t4_15792.png` (all four greetings up).
+
+## T4 — s20 Blue roll call — DONE
+
+- `narration.mjs`: `a2_32b_blue` → **"Hi, Bluington! Hi, Bluesworth! Hi, Bluey!
+  Hi... me!"**, Mike's text and Mike's spelling, fields untouched (BLUE,
+  `happy`, 1.05). The comment block now carries his note, the reason the fourth
+  greeting is the joke, and the no-pause-markers decision with its evidence.
+- `act2.tsx`: `S20_HELLO_AT` re-measured (see above, with the method and a
+  do-not-use-the-old-numbers warning). `S20_HELLO` gains a `text` per mark, so
+  the greeting and the place it stands are one object and a fifth greeting cannot
+  be added without a place to put it. `BlueHellos` reads `corner.text`.
+- **Marks unchanged.** All four boxes verified on frame with all four up: they
+  occupy roughly x 482..1035 / 1185..1680 / 672..1122 / 312..690, and none of
+  them touches another, the frame edge, Ray (whose bottom-right corner is still
+  nobody's mark) or Violet. **No nudge was needed.** "Hi, Bluesworth!" wraps to
+  two lines at the house `maxWidth` and is left wrapped — unwrapping it makes a
+  ~720px box that comes within 60px of bubble one.
+- Comments updated: `S20_BUBBLES`' "four Hi!s" note, the `S20_HELLO_AT` and
+  `S20_HELLO` docs, the `BlueHellos` doc.
+- `script.md`: Scene 20's PENDING block replaced by the fold (Mike's note 4
+  verbatim, the new text, the new fractions with the retired ones marked
+  unusable, the no-markers finding, the measured box extents). The old ear item
+  is recorded as dead with its clip. Scene **10** gains a cross-reference:
+  Mike is right that Ray's greeting is not a roll call, the scene is unchanged,
+  and the real one is now in Scene 20.
+- Stills: `t4_15682` (first pop), `t4_15716` (two), `t4_15748` (three),
+  `t4_15776` / `t4_15792` (all four, accumulating, nothing colliding).
+
+## T6 — s23 visual re-shoot — DONE
+
+**Speech and timing are byte-identical.** `Video.tsx`'s `s23_sunny_wrong` entry
+was not opened: eleven clips, five gaps, `tailFrames: 16`, all unchanged. The
+scene is 1143 frames before and after.
+
+**Deleted:** `WrongDiagram` (the whole component, ~150 lines), its `AIR_BAND`
+constant, the 2.5× camera push and the `Camera`/`Cam`/`projectMark` imports that
+existed only to serve it, and `rayVisible` (the fade that took Ray out of frame
+for the two middle beats).
+
+**Built, all of it line-keyed via `lineWindow`/`heldBeat`:**
+
+| element | what it is |
+|---|---|
+| `S23_BEAM` + `SunnyBeam` | one warm beam from Sunny's body to (372, 671), tapering out just past the last puff so the light is *absorbed by the air*. Two pulses travel it — `a2_51` and inside `a2_54` — as a golden bulge, not a ball. |
+| `S23_AIR` + `AirBand` | four puffs whose centres sit **exactly on the beam line** (y = 430 − 0.2203·(x − 1466)), plus a rolling spray of six short blue bounces per puff once the air is working. The `AIR_BAND` idiom at twenty times the size. |
+| `S23_SKY` + `S23_STROKES` + `PaintedBand` | the upper-left sky, washed pale from the start, then painted by nine roller strokes that grow out of their own middles as a radial wavefront out of `S23_AIR_MID` reaches them — **bottom row first**, so the paint climbs away from the air. A second, brighter wave on the back half of `a2_54`. |
+| `S23_COPIES` + `BluePaint` | twenty Blues, born round-robin at the four puffs, flying bowed paths with the Scene 20 `twinLeg` streak into a 5×4 grid over the sky, and staying. Nine of them go inside the first quarter of the window — the burst on Ray's line — and eleven trickle out behind Sunny while he takes the credit. |
+
+**Four iterations, and what each still forced.** This is the part worth reading.
+
+1. **First pass: the paint was invisible.** Nine vivid `SPECTRUM[4].fill` strokes
+   over `sky_dome_day` read as a pale slab with a faint border, because the plate
+   *is already a blue sky* and the paint was lighter than it. Blue on blue is a
+   hue change, and a hue change at this size is not a change.
+2. **Second pass: outlines helped, and the picture became a barcode.** A heavy
+   `SPECTRUM[4].deep` outline made the strokes objects, but ±4° of tilt on
+   ~1000px strokes drifts their ends by 70px and opened gaps the primer showed
+   through. Tilt cut to ±1.4°.
+3. **Third pass: the primer, and it is the fix.** The band is washed **pale**
+   from the moment the air fades up and the paint restores the blue: **value, not
+   hue**. A six-year-old reads pale→blue instantly. It is `kidTheme.skyLow` (the
+   plate's own horizon colour), not `paper`, so it reads as haze and not as a
+   cloud — there is a real cloud on the plate 200px below it to prove the
+   difference.
+4. **Fourth pass: three stacked ellipses drew three visible rims** and the
+   washed patch read as a lens flare. Replaced with one `radialGradient`.
+
+Also fixed on stills, and both were pre-existing: the **beam pulse was
+invisible** (white-on-yellow; it is now a saturated `sunDark`/`sun`/`paper` bulge
+rotated onto the beam's own angle), and **the roller did not slide in with the
+man holding it** — `enter` is a prop on `Sunny` and the roller is a separate
+element, so for the first twenty frames of the scene a paint roller sat alone in
+the sky at his final mark. It now carries the same `slideRight` numbers
+(damping 12, mass 0.7, 900px, `easeOutQuad(f/4)`), taken from
+`entranceTransform` so the two cannot drift.
+
+**Kept exactly as briefed:** Sunny at `S23_SUNNY`, Ray at `S23_RAY` with his 30f
+"It lands on him" beat, the roller as a held prop (now raised trophy-style on the
+brag, `zIndex` 23 → **25** because at the new mark his own spikes ate it), the
+`RayFan` on "points" at 0.62 of `a2_50`, the grin growing through the `a2_49`
+beat (`emotionAt` proud→excited untouched), all six `S23_BUBBLES` texts and
+positions, and `S23_RED_WALK = false`.
+
+**Two additions beyond the brief, both small and both defensible:** Sunny turns
+to the **lens** from `a2_53` onward (he cannot be "ignoring the air" while
+looking at it), and Ray's eye-line goes up-left to the sky he just credited from
+his own line onward. Say the word and either comes out.
+
+**Comments swept:** the `SunnyWrongScene` doc rewritten with the beat map, the
+`S23_RAY` doc, the `S23_RED_WALK` argument (its arithmetic survives the
+re-shoot; only its scenery nouns changed), `RedAcross`'s doc, Ray's bubble
+placement note, and the `a2_52_ray` bubble note (which now records why the clip
+is lowercase and the bubble is not). `script.md` Scene 23: REVISED banner with
+Mike's note 6 verbatim, the staging spec replaced, a beat-map table added, the
+held-beat table and **"THE RISK, WRITTEN DOWN"** untouched, and the four places
+elsewhere in the file that still described the diagram (the 36f beat, the button
+beat, the `a2_47` three-halves note twice, Scene 26's aside, the production
+notes) corrected.
+
+**Stills:** `T6_17800/17810/17825` (entrance + roller), `T6_18170` (the smug 45f
+beat, alone in frame without a lens), `T6_18270` (grin grows), `T6_18360` (fan),
+`T6_18401` (beam pulse), `T6_18500/18520/18545` (the stroke beginning, mid-sweep,
+band full), `T6_18620` (poses harder), `T6_18700/18745` (beam pulse then
+sky-sweep), `T6_18830/18910/18937` (settle, button, last frame), plus the
+`t6a`–`t6h` iteration series.
+
+## T5b — `rc_14_ray` — DONE
+
+- Text → "So the blue sky is a thing the **air** does." Lowercase only; fields
+  untouched. Re-synthesized.
+- `recap.tsx`: the `rc_14_ray` bubble **keeps its capitals** ("The AIR does the
+  blue!") — print, not pronunciation — and its comment, which quoted the clip
+  with the old capitals and was therefore stale, now quotes the new text and
+  records the rule.
+- `script.md`: Scene 34 fold with the diagnosis and the pointer to the
+  twenty-eight remaining all-caps MiniMax lines as a retro watch-list.
+
+## T7b — `a3_22b_red` — DONE
+
+- Text → **"Very dramatic."**, fields untouched (RED, `calm`, 0.9). One draw,
+  clean onset (measured above). The comment records both failures and the ruling
+  for a third: **re-cast, do not rewrite again.**
+- `act3.tsx`: the bubble follows the words — and it carries **the episode's only
+  deliberate line break**. `Bubbles` clamps `bx` to [400, WIDTH−400] and the
+  SUNSET card's left edge is at x≈633; "Very dramatic." on one line is a ~575px
+  box, i.e. 112..687, so the full stop landed under the "S" (verified on a
+  still). Broken over two lines it is ~330px, 235..565, clear by 68px.
+  `SpeechBubble` already lays out with `white-space: pre-wrap`. Moving it up
+  instead does not work: `by` clamps at 170 and the bubble's bottom corner is
+  still inside the card.
+- `script.md`: Scene 29 fold with both of Mike's verdicts verbatim, the
+  phrase-level diagnosis, and the bubble note.
+
+## script.md final sweep
+
+- **Counts:** header updated to **17:27.3 / 31,419 frames** with the arithmetic
+  of every step from the delivered cut.
+- **Ear list:** items 31–37 (the 2026-08-04 tweak-round additions) marked
+  **CLEARED** on Mike's ear, with item 35 recorded as failed-and-rewritten and
+  item 37 as covered by the two family screenings. **Three open items, and only
+  three:** 38 `a2_32b_blue`, 39 `rc_14_ray`, 40 `a3_22b_red`, each with what to
+  listen for and what to do if it fails.
+- Scene sections folded: 10 (cross-reference), 20, 23, 29, 34.
+
+## FLAGS for the showrunner
+
+1. **The `a2_53_sunny` bubble sits on the painted sky.** "THE SKY IS MY LIGHT!"
+   is at (880, 200) and the painted band runs x 70..1100, y 96..446, so the
+   bubble covers its top-right quarter for 115 frames. I left it: the brief says
+   keep the bubble positions unless a still shows a collision, the band's left
+   half stays fully visible, and there is nowhere else for a bubble from a
+   speaker who owns the right of the frame. If it bothers you at review, the
+   cheapest fix is to shorten `S23_SKY.w` to ~900 rather than move the bubble.
+2. **The primer is a licence, and you should look at it with that in mind.** For
+   the twenty-one seconds before the paint arrives, the upper-left of the sky is
+   visibly *paler than the rest of the sky*. It is the thing that makes the
+   payoff legible and it is also, strictly, the episode saying a patch of real
+   sky is not blue yet in a scene that is otherwise about a sky that already is.
+   I judged the trade worth it because the alternative was an invisible payoff;
+   it is the one deliberate untruth in the shot.
+3. **`sky_dome_day` cannot show blue paint, and this will come up again.** Any
+   future "the sky turns blue" beat on a blue plate needs either a primer like
+   this one or a plate that is not already the answer. Worth a STYLE line at the
+   retro: **paint the value, not the hue.**
+4. **`Bubbles` clamps `bx` to [400, WIDTH−400] and `by` to [170, HEIGHT−280]**,
+   which is not documented anywhere a scene author would look — I lost a still to
+   it on T7b, and RUN 1's T9 note reads as though its author hit the same wall.
+   Worth a sentence in the `Bubbles` doc comment. (I did not add it: `common.tsx`
+   is not in my scope this run.)
+5. **The s10 roll call is still not a roll call.** Mike's note 4 opened by saying
+   so, and the fix he asked for was a *new* one in s20, which is what was built.
+   If he meant s10 should change too, that is a fresh item and it is in act1.tsx.
+6. **Twenty `Shard` bodies are mounted for all 1143 frames of s23** (opacity 0
+   before they launch), because a varying element count is the one thing stills
+   cannot catch. Cost is real but the full render is clean.

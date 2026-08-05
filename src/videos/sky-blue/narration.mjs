@@ -1091,12 +1091,33 @@ export default {
       ...RAY,
       emotion: "surprised",
     },
-    // ONE CLIP, FOUR BUBBLES, popping from four corners of the dome: Ray's
-    // roll-call greeting returned from everywhere at once — the mechanism as a
+    // ONE CLIP, FOUR BUBBLES, popping from four points around the dome: Blue
+    // holding a roll call of his own identical copies — the mechanism as a
     // greeting. Deliberate override of script.md's "this scene does not get a
     // Blue line"; it lands in the first half, clear of the "Sorry, Violet."
     // button, which nothing follows.
-    a2_32b_blue: { text: "Hi! Hi! Hi! Hi!", ...BLUE, emotion: "happy" },
+    //
+    // **TEXT CHANGED 2026-08-05 (tweak round T4, Mike's note 4.)** It was
+    // "Hi! Hi! Hi! Hi!", which Mike named as the place the episode's *real*
+    // roll call should live: "let's do one instead when blue says 'Hi Hi Hi',
+    // and change that to 'Hi bluington, Hi <other blues>, etc'". Mike picked
+    // this text (Option B) and the spelling is his, verbatim — Bluington,
+    // Bluesworth, Bluey. It mirrors Ray's s10 roll call, and the fourth
+    // greeting is the whole gag: they are all him.
+    //
+    // The four bubbles are these four greetings in order, at four fractions
+    // MEASURED off the delivered take (see `S20_HELLO_AT` in act2.tsx — the
+    // fractions were re-measured on this clip and must be re-measured again if
+    // it is ever re-rolled). **No pause markers**, though the brief allowed
+    // them: the delivered read already leaves 144-162ms between greetings and
+    // reads the ellipsis in "Hi... me!" as a real 162ms beat, so the four
+    // bubble pops land ~31 frames apart with nothing to fix. Markers would only
+    // have made a 4.2s clip longer for no gain.
+    a2_32b_blue: {
+      text: "Hi, Bluington! Hi, Bluesworth! Hi, Bluey! Hi... me!",
+      ...BLUE,
+      emotion: "happy",
+    },
     a2_33_narrator: {
       text: "So blue is not a patch of the sky. Blue is the WHOLE sky.",
       ...NARRATOR,
@@ -1820,14 +1841,23 @@ export default {
     // shape, and the actual sunset reviewing the show about him. Feeds
     // rc_04b_red, which is why this one is not "It is mostly Red."
     //
-    // **RE-ROLLED 2026-08-04 (T7, Mike's note 7).** The delivered take inserted
-    // an epenthetic vowel — "Nice-eh drama" — the same failure class as the
-    // a2_28b_blue bad draw, and it did not sound like any character in the
-    // show. Text and fields are UNCHANGED; the clip was cache-busted (delete
-    // the key's entry in `public/narration/sky-blue/.cache.json` and its mp3,
-    // then re-run) and re-drawn until the "Nice" onset came back clean. If it
-    // ever comes back epenthetic again, the fallback text is "Good drama."
-    a3_22b_red: { text: "Nice drama.", ...RED, emotion: "calm" },
+    // **REWRITTEN 2026-08-05 (T7b, Mike's ear verdict on the T7 re-roll).** The
+    // line was "Nice drama." and it failed twice. First pass (T7, note 7): "it
+    // has a weird accent 'Nice-eh Drama' which doesn't sound like any
+    // character" — MiniMax was inserting an epenthetic vowel, so the clip was
+    // cache-busted and re-drawn with the same text, twice, both draws clean on
+    // the meter. Second pass, on that re-roll: *"22b red is still weird.
+    // Something about that phrase and voice doesn't work. Maybe rewrite that
+    // one line. The rest of the voice clips are good."* So the fault is the
+    // PHRASE, not the draw: the "Nice" onset broke the same way across every
+    // take, and a clipped two-word line fights Patient_Man's slow calm.
+    //
+    // "Very dramatic." keeps everything the line is for — the deadpan review of
+    // Sunny's "For the drama!", the "Lovely air." shape, the feed into
+    // rc_04b_red — with a soft open the voice can start on. Same fields. If a
+    // draw comes back mangled again the problem is the casting, not the words:
+    // re-cast before rewriting a third time.
+    a3_22b_red: { text: "Very dramatic.", ...RED, emotion: "calm" },
     a3_23_narrator: {
       text: "A sunset is not different light. It is the same light, taking the long way.",
       ...NARRATOR,
@@ -2009,8 +2039,15 @@ export default {
       text: "The light is still there. There is nothing for it to scatter on.",
       ...NARRATOR,
     },
+    // **NO ALL-CAPS EMPHASIS ON A MINIMAX LINE.** TEXT CHANGED 2026-08-05 (T5b):
+    // the word was "AIR" in capitals, the identical defect Mike heard in a2_52
+    // ("it sounds like 'but the A did the painting'") — capitals are kokoro
+    // grammar, MiniMax reads them as an initialism. This is the same sentence
+    // said in the recap, so it was carrying the same bug in the most-repeated
+    // fact of the episode. Lowercase, same fields, re-synthesized. The s34
+    // BUBBLE keeps its capitals: a bubble is print, not pronunciation.
     rc_14_ray: {
-      text: "So the blue sky is a thing the AIR does.",
+      text: "So the blue sky is a thing the air does.",
       ...RAY,
       emotion: "happy",
     },

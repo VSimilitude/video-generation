@@ -997,7 +997,14 @@ const S34_SUNNY = { x: 1706, y: 214, scale: 1.22 } as const;
 const S34_BUBBLES: Record<string, string> = {
   rc_11_ray: "Black? In the daytime? Why?",
   // A summary, not a transcript: the clip is "So the blue sky is a thing the
-  // AIR does." Six words is the ceiling and this is five.
+  // air does." Six words is the ceiling and this is five.
+  //
+  // **The clip's caps went, the bubble's stay** (T5b, 2026-08-05). The line
+  // used to read "the AIR does" and MiniMax said the *letter* A, exactly as it
+  // did in `a2_52_ray` — the defect Mike reported in the tweak round. The
+  // narration text is lowercase now; this bubble is print rather than
+  // pronunciation, so its capital is the emphasis the read has to earn some
+  // other way. Same rule as the s23 bubble.
   rc_14_ray: "The AIR does the blue!",
   // Both Sunny bubbles are DELIBERATE TRIMS to the punch clause (house law:
   // six words is the ceiling; the clips are 10 and 8 words). Clips:
