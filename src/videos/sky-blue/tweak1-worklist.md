@@ -139,7 +139,181 @@ deviation). Ear-check list: ADD `a1_16d_narrator` "No, Ray, not yet." at
 
 ---
 
+## T2 — s10 Ahem verdict + s09/s10/s11 continuity jumps + bubble sweep (Mike note 2)
+
+**Mike, verbatim (2026-08-04):** "for the first ensemble scene, the
+narrator "Ahem" and Ray's look doesn't really fit Orange "He meant to"
+line - let's let it sit with no reaction, unless we can easily switch
+Ray's reaction to more of an eyebrow raise type reaction (currently it's
+more a happy face) - also, this scene jumps around a few times, it looks
+good until 3:49, then they all jump a bit when white Ray returns, which
+feels awkward, then it jumps again at 4:28 after "I have never met me
+before" when Ray jumps to the back with Drip, which again feels
+cheap/awkward. Also the word bubbles are all in the wrong place after
+the rainbow word learn"
+
+**Timestamp map (deployed cut):** 3:49 = the s09_split→s10_rollcall cut
+(f6903 = 3:50.1); 4:28 = the s10_rollcall→s11_bigword_rainbow cut
+(f8014 = 4:27.1); "after the rainbow word learn" = s11 post-slam + s12
+(+ s13 verify). Measured root causes are in the fact report distilled
+below — all numbers verified against the timeline math.
+
+### T2a — cut "Ahem.", Ray's reaction becomes an eyebrow raise
+
+The "Ahem." cut-if-it-fails verdict has arrived: it failed. CUT
+`a1_42h_narrator` (remove from narration.mjs AND from s10_rollcall's
+clip list in Video.tsx). Never substitute "Hmm." (standing ruling,
+script.md ear item 31 wording).
+
+Ray's reaction: Mike's conditional — eyebrow raise if easy — is
+satisfied: the rig already draws brows and has two wired-but-unused
+affordances (`browAsym`, one-brow tilt, Character.tsx:405; `lidBase`
+half-lids). So:
+
+- NEW shared emotion **`skeptical`** in `src/lib/kid/rig.ts` EMOTIONS
+  table (kit addition, series-wide deadpan vocabulary; no other scene
+  uses the name, zero regression surface). Starting values, builder
+  tunes on stills: `browAsym` ±10–14 (ONE brow up — pick the sign that
+  raises the camera-left brow), `browRaise` 2, `lidBase` 0.12,
+  `eyeScaleY` 0.94, `mouthCurve` 2 (near-flat — deliberately the first
+  non-smiling non-frown mouth in the table), `mouthWidth` 48, no blush.
+  Target read at hero scale: "one eyebrow up, unimpressed", NOT grumpy,
+  NOT smug-villain.
+- In RollCallScene: the `emotionAt` map's `neutral` window becomes
+  `skeptical` (same camFrom = a1_42e start). Camera look UNCHANGED
+  (take-to-camera is the right grammar; the failure was the smiling
+  face + throat-clear, not the look).
+- Re-key the window end: `camTo` was read off a1_42h (now gone) — both
+  the eye-line break-back and the emotion restore re-key to
+  `lineWindow(scene, "a1_43_narrator")` start. Ray holds the skeptical
+  camera look through the post-"He meant to." silence and breaks back
+  as a1_43 opens.
+- "Let it sit": give `a1_42g_orange` `gapFrames: 40` in Video.tsx (was
+  default 8) — a held deadpan beat where NOTHING happens (comedy-pacing
+  rule). Net timing vs deployed: −48f (Ahem) −8f (its gap) +32f (gap
+  8→40) = **−24f**.
+- FALLBACK LADDER (showrunner still review picks): B1 skeptical across
+  the whole exchange window → B2 skeptical only from `a1_42g_orange`
+  onward → A = Mike's stated default, no reaction at all (delete the
+  camera-look + emotion windows entirely; Ray keeps his volley
+  eye-lines and stays happy). Builder stills B1 at minimum; if it reads
+  wrong at review we step down the ladder, no re-ask of Mike.
+- script.md: fold the cut + new reaction into the Scene 10 section;
+  mark ear item 31 RESOLVED (cut executed).
+
+### T2b — the 3:49 jump (s09→s10 cut, f6903)
+
+Measured discontinuities at the cut (only these — Red, Orange, Yellow,
+Green, Violet are pixel-identical across it):
+
+- Blue: (1157.0, 429.1, lean −90°) → (1233.5, 701.3, −25.4°). ~283px +
+  65° snap. Cause: s09 uses DRIFT_BOX seed 4, s10 uses S10_BLUE_BOX
+  seed 9 — same `blueRicochet()`, no phase/position handoff.
+- Indigo: (1320.9, 686.0, −90°) → (1333.5, 818.8, 0°). ~133px + 90°.
+- Ray: opacity 0 (since s09 local f180!) → full pop-in at
+  arcPointLifted(0.18) = (409.6, 610.6) scale 0.78 on the cut frame.
+
+Fixes:
+
+1. **Handoff constants + settle-in**: bake `S9_END_BLUE = {x: 1157.03,
+   y: 429.06, heading: -90}` and `S9_END_INDIGO = {x: 1320.92,
+   y: 685.97, heading: -90}` (deterministic s09 final-frame values; add
+   a comment that they are derived from s09's last local frame 1060 and
+   must be re-derived if s09's clip list ever changes). In
+   RollCallScene, for the first ~30f (Indigo +INDIGO_LAG), render
+   Blue/Indigo at these poses eased (kidEase) into their live s10
+   positions/headings. Reads as Blue settling grudgingly back toward
+   the line — in character.
+2. **Ray enters instead of popping**: over s10 local f0–14, Ray eases
+   in — opacity ramp 0→1 with a small drift down from (409.6, 590) to
+   his track start (409.6, 610.6). No streak, no flash; the first clip
+   is a narrator line (`a1_41_narrator`, opens at local 0) so the
+   entrance sits under narration, not under a Ray line.
+3. GATE for this item: render the exact boundary stills f6902 vs f6903
+   (and f6903+30) and eyeball-diff — residual jump must be
+   imperceptible (only Ray's 0→0.05 opacity onset may differ at the
+   cut frame).
+
+### T2c — the 4:28 jump (s10→s11 cut, f8014)
+
+Measured: BigWordBeat renders its `children` (Ray + Drip) UNGATED from
+s11 frame 0 (BigWord.tsx:88-95) — Ray snaps from (1453.3, 565.4) scale
+0.78 to the W-bar perch (1272, 258) scale 0.36, and Drip (not on stage
+AT ALL in s10) materialises at (990, 274), both floating over an empty
+garden for ~302 frames until the card slams (slamAt ≈ 86% through
+a1_46_narrator, abs ≈f8316). Plus formation snaps: Blue (1156.6, 665.2)
+→ (1233.5, 641.3) and Indigo (1221.5, 817.3) → (1463.5, 758.8).
+
+Fixes (all inside act1.tsx s11; do NOT gate BigWord.tsx's children
+generally without checking its other call sites — prefer gating in the
+children we pass):
+
+1. **Pre-slam continuity**: from s11 local 0 → slamAt, render Ray at
+   his exact s10 end pose — arcPointLifted(0.78) = (1453.30, 565.43),
+   scale 0.78, same look/emotion he ended s10 with (nothing mapped to
+   a1_44 = the face he said the button on). Zero jump across the cut.
+   Drip is NOT rendered pre-slam (she was never on stage in s10).
+2. **The card brings them**: at slamAt, Ray swoops from his s10 pose to
+   the W-bar perch (1272, 258) over ~22f with scale ease 0.78→0.36
+   (PERCH) — a visible travel, motion-is-the-explanation, arriving just
+   after the card lands. Drip ENTERS: drops from above the frame to
+   B_TOP (990, 274) scale 0.3, starting ~10f after the slam, ~18f fall
+   with a small landing squash (she is a water drop; dropping in is her
+   grammar). Keep zIndex as-shipped (tie 55/55, Drip painted after Ray)
+   unless stills show a wrong overlap during the swoop — then Ray 55 /
+   Drip 56.
+3. **Formation settle**: same handoff treatment as T2b — bake
+   `S10_END_BLUE = {x: 1156.58, y: 665.24, heading: 84.96}` and
+   `S10_END_INDIGO = {x: 1221.47, y: 817.28, heading: -54.68}`, ease
+   into SevenOnTheWord's u=0 marks over ~30f (Indigo +INDIGO_LAG).
+4. GATE: boundary stills f8013 vs f8014 (must be near-identical), plus
+   a 6-still strip of the slam window (card in, Ray swoop mid/end, Drip
+   drop mid/land).
+
+### T2d — bubble sweep, card slam → s13
+
+Known wrong (fix outright):
+
+- `a1_53_ray` (s12, act1.tsx:3595): `tailAt: 430` but Ray is static at
+  x=360 all scene. Set `tailAt: 360` (or key it to S12_RAY.x so it
+  can't drift).
+- `a1_48c_blue` (s11, act1.tsx:3215): `tailAt` pinned to the static
+  contact point while Blue's bounce swings his rendered x by +100/−65px
+  across the exact line window. Make `tailAt` live: contact.x +
+  bounceOff(frame).x (overrides are computed per-frame; dripContact
+  already does this pattern).
+
+Then the sweep — Mike said "ALL in the wrong place", which is stronger
+than these two, so verify by eye, not by code-reading: for EVERY spoken
+line from the card slam (`a1_47_ray`) through s13 end, render a still
+at the line's midpoint and check (a) tail points at the speaker's
+rendered body, (b) bubble does not cover the RAINBOW card word or
+another character's face, (c) no-override lines whose speakers are tiny
+(0.3–0.36 perch scale) or clamped (by floor 170 / bx clamp) don't park
+the tail at the corner-inset default aiming at nobody — any miss gets
+an explicit `at` override with a live `tailAt`. List every change made
+in the DONE section with before/after coords.
+
+### T2 gates (rides with the T1 builder batch)
+
+- typecheck 0, lint:hooks 0.
+- Narration regen: `a1_42h_narrator` cache entry retired; ZERO new
+  synthesis (the cut is kokoro; nothing else changes text). Still zero
+  minimax synthesis across T1+T2.
+- Scene-range every-frame render s09→s13 (f5842–f10000ish on the NEW
+  timeline — recompute after T1 shifts frames), exit 0.
+- Boundary still pairs per T2b/T2c + the T2d bubble strip + skeptical
+  face stills (hero scale + in-scene at 0.78).
+- Timing note: T1 (+~285f) and T2a (−24f) both shift everything after
+  s05; all T2 timestamps above are DEPLOYED-cut references — builders
+  re-derive local frames from line keys, never from absolute frames.
+
+---
+
 ## Round status
 
-- T1 designed (this file), awaiting quota green-light to spawn builder.
-- Further Mike notes: pending — append as T2, T3, … above this section.
+- T1 designed (committed 7a84e82), awaiting quota green-light to spawn
+  builder.
+- T2 designed (Ahem cut + skeptical emotion + s09/s10/s11 continuity +
+  bubble sweep); batches with T1 into ONE builder run.
+- Further Mike notes: pending — append as T3, T4, … above this section.

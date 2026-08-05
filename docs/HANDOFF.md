@@ -119,9 +119,19 @@ overridden in substance; R2 superseded.
   winds up and withdraws, no face change), same hard cut to arrival.
   $0 synthesis (kokoro-only changes; MiniMax clips must stay cache hits).
   Full every-frame render deferred to tweak-round close; scene-range
-  render per batch. T1 designed, NOT yet built — awaiting quota
-  green-light for the builder. More notes expected (T2+ append to the
-  worklist).
+  render per batch. T1 designed (committed 7a84e82). T2 designed (Mike
+  note 2): "Ahem." CUT (cut-if-it-fails verdict arrived; never "Hmm."),
+  Ray's reaction → NEW shared `skeptical` emotion (rig.ts EMOTIONS —
+  browAsym one-brow raise + half-lids + first flat mouth; fallback
+  ladder down to no-reaction recorded in the worklist), s09→s10 jump
+  fixed via baked Blue/Indigo handoff poses + 30f settle + Ray 14f
+  ease-in entrance, s10→s11 fixed by pre-slam Ray continuity at his s10
+  mark + card-slam swoop to perch + Drip drop-in entrance + formation
+  settle, bubble sweep card-slam→s13 (known: a1_53_ray tailAt 430→360,
+  a1_48c_blue tail goes live with his bounce; then stills-verified
+  sweep of every line). $0 synthesis total. T1+T2 batch into ONE
+  builder — NOT yet spawned, awaiting quota green-light. More notes
+  expected (T3+ append to the worklist).
 
 ## Prior campaign record: ep-3 rebuild ("Ray and the Sky Nobody Painted")
 Full spec: src/videos/sky-blue/revision.md — READ END TO END INCLUDING THE
