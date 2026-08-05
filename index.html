@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#10141d" />
+    <meta
+      name="description"
+      content="Watch the video_generation suite — Remotion compositions playing live in the browser."
+    />
+    <title>video_generation — player</title>
+
+    <!-- Installable web app. Every path here is relative on purpose: the site
+         is served from a repo subpath on GitHub Pages, so a leading "/" would
+         point at the wrong origin root. -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon-180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <!-- iOS: added to the home screen, run without Safari's chrome. The
+         translucent status bar plus viewport-fit=cover above means the page
+         owns the full screen and honours env(safe-area-inset-*) itself. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Videos" />
+    <style>
+      /* Page chrome only; everything inside #root is styled from
+         src/lib/theme.ts so the site matches the videos. */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(180deg, #1d2433 0%, #10141d 100%);
+        background-attachment: fixed;
+        color: #f4f6fb;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: hidden;
+        /* No pull-to-refresh / rubber band: mid-episode, both read as the
+           video breaking. */
+        overscroll-behavior: none;
+      }
+      a {
+        -webkit-tap-highlight-color: rgba(76, 194, 255, 0.2);
+      }
+      img,
+      video,
+      canvas {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Relative path on purpose: the site is served from a repo subpath on
+         GitHub Pages, so nothing here may start with "/". -->
+    <script src="./bundle.js" defer></script>
+    <!-- Offline support. Registered relative to this page so the worker's
+         scope is the repo subpath, and after load so it never competes with
+         the first paint. Failure is silent: the site works without it. -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("./sw.js").catch(function () {});
+        });
+      }
+    </script>
+  </body>
+</html>
