@@ -63,11 +63,18 @@ one, not free capacity.
   transcript intact and resumes with full context. A clean stop always
   resumes; a mid-flight kill loses the transcript and forces a fresh boot +
   audit. Re-calibrate the script's CEILING when a kill contradicts it.
-  On **UNRELIABLE (exit 3)**: the script caught ccusage misparsing the
-  transcripts (2026-08-07: out=1.23M against in=802 across 408 entries → a
-  bogus PAUSE, while Mike's own /usage read 38%). Do NOT idle on it — gate
-  on Mike's last /usage reading, or proceed with bounded batches whose
-  inputs survive on disk if a kill lands. A broken meter is not a red light.
+  **The window is per-ACCOUNT, not per-session** — Mike's other sessions burn
+  the same pool, so a quiet orchestrator can still be at 90%. Ceiling
+  recalibrated 2026-08-07 to 1.2M output (live reading: 1.24M ↔ 93%, ~13.4k
+  output tokens per percent); the old 450k dated from when this machine ran
+  one session. Re-calibrate against a live /usage reading, not against kills.
+  On **UNRELIABLE (exit 3)**: a genuine parse failure — ask Mike for /usage.
+  Do NOT talk yourself out of a PAUSE. This session did (2026-08-07): ccusage
+  showed out=1.23M against in=802 and that looked impossible, so the gate was
+  overridden as broken — but `inputTokens` counts only UNCACHED input, and the
+  real 21.6M cache reads sat in `cacheReadInputTokens`. The meter was right,
+  the true state was 93%, and a batch went out believing 38%. When a reading
+  looks absurd, check the cache fields and ask Mike before overriding.
   WEEKLY dimension (not in the script — only Mike's /usage sees it): the
   fable weekly limit is the binding constraint, since orchestrator +
   showrunner + story-writer are all fable; opus builders draw on the larger

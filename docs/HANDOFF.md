@@ -19,9 +19,17 @@ Push each wave through to something screenable and deployed; take reasonable
 creative calls in his stead within the standing decision record; LOG every
 call taken so the tweak round can reverse it. Give him a link plus a short
 list of calls to overturn, never documents to read. Normal sign-off gates
-resume when he is reachable. Weekly fable pool reset 2026-08-07 (ample); the
-5-hour window is SHARED with another of Mike's sessions — keep gating with
-`node scripts/check-quota.mjs` between batches.
+resume when he is reachable. Weekly fable pool reset 2026-08-07 (ample).
+
+**The 5-hour window is per-ACCOUNT and shared with Mike's other sessions,
+which can burn it fast while this one sits quiet.** On 2026-08-07 this
+session read 38% from Mike, overrode a correct PAUSE on a bad diagnosis, and
+was actually at 93%. check-quota is recalibrated (ceiling 450k → 1.2M output,
+from a live 1.24M ↔ 93% reading) and now sums cache tokens when sanity-
+checking. Gate between every batch; when a reading looks absurd, check the
+cache fields and ask Mike rather than overriding. Window resets
+2026-08-08T05:00Z; a one-shot cron at 01:37 local resumes the bible batch,
+then ep 4.
 
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).
