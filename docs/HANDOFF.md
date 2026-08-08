@@ -99,13 +99,30 @@ ear pending; clips `scratchpad/ep4_pip_audition/`).
   string-as-number cast crashed PipPlants frames 0–525 (one-token fix);
   W2 `NO_LEAD || 8` booby-trap tidied. Skeleton verified: 29 scenes,
   44/44 held beats exact vs script.md, comp `PipPlants` 28085 frames.
-- IN FLIGHT: scene-builder restaging the cold open (built blind while
-  frames crashed — kid+dandelion invisible, characters buried at the
-  horizon band; systemic mark-Y fix + Scenes 1–4 restage + PipPlants
-  every-frame validation is its exit gate).
-- B2 design ready: `src/videos/plants/ep4-plate-design.md` (~13 plates).
-- Pip sheet ready for Mike's eye: `scratchpad/ep4_pip_sheet.png`
-  (decision-log TOP item has the calls).
+- Cold open RESTAGED and accepted (root cause: z-order painted grass over
+  every character; builder fixed + showrunner still-reviewed). Roll-call
+  fixed to five sequential NAME bubbles timed to measured phrase
+  boundaries (showrunner edit, ep-3 a2_32b precedent). A post-B1 builder
+  eyeline fix (divisors 520/380 → 1000/400 in coldOpen.tsx, uncommitted)
+  was showrunner still-reviewed at all five swap frames on reboot 2: the
+  eyes walk the queue, PASS. Every-frame PipPlants validation re-run at
+  the B2 boundary — see below.
+- B1 committed 6d9dc3b. Pip sheet ready for Mike's eye:
+  `scratchpad/ep4_pip_sheet.png` (decision-log TOP item has the calls);
+  audition clips `scratchpad/ep4_pip_audition/` still pending his ear.
+
+**B2 DONE pending commit (backgrounds, showrunner reboot 2 2026-08-08):**
+13 plates accepted in public/backgrounds/plants/ (builder's set audited
+and six keys re-rolled to acceptance across 3 rounds — the flagged
+aerial/golden/sunrise/rain/dawn/grass_close). `meadow_golden` CUT after
+five failed rolls: scenes 22/23/28 = `meadow_day` + comp warm grade
+(autopsy in backgrounds.mjs, call in decision-log). Measured seating
+table + per-plate grass palette = `PLATES` in scenes/common.tsx (skyline
+fraction, seat scale, grass hex; volcano seats at MEADOW.horizon=604 in
+every wide). Acceptance notes + value ladder at the bottom of
+backgrounds.mjs. B3 (acts in parallel, per-act scene-map files) is next;
+brief must carry: PLATES seating rule, golden-grade note, dusk-is-
+silhouette-card, morning cloud near bubble zone.
 
 ## Backlog (owned, not started)
 - **Kit cleanup pass** (accumulated through eps 2–3): re-export `Freeze`

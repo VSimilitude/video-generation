@@ -525,10 +525,16 @@ const RideScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   let which = 0;
   for (let i = 0; i < sayAt.length; i += 1) if (frame >= sayAt[i]) which = i;
   const target = SIBLINGS[which];
+  // The divisors are the SPREAD of the queue, not a guess. Every sibling is
+  // more than 520px to her right, so dividing by 520 clamped all five to
+  // `x: 1` and the roll call played with her eyes locked in one position —
+  // five names, one eyeline, no queue. 1000/400 is the actual extent of
+  // `SIBLINGS` about her, so the five land on distinct pupil positions and the
+  // eyes visibly walk the line.
   const look = naming
     ? {
-        x: Math.max(-1, Math.min(1, (target.x - S2_PIP.x) / 520)),
-        y: Math.max(-1, Math.min(1, (target.y - S2_PIP.y) / 380)),
+        x: Math.max(-1, Math.min(1, (target.x - S2_PIP.x) / 1000)),
+        y: Math.max(-1, Math.min(1, (target.y - S2_PIP.y) / 400)),
       }
     : ("camera" as const);
 

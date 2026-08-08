@@ -64,6 +64,38 @@ in the bible / arc canon are not re-logged.
   argues it in. Final call at synthesis. Reversal: script edit + 1 kokoro
   line (free) any time before ep 5.
 
+## B2 plate acceptance (showrunner reboot 2, 2026-08-08)
+
+- **GOLDEN-HOUR PLATE CUT** after five failed rolls (value rung kept
+  collapsing onto day's or sunset's, or the roll went photoreal / grew a
+  farmhouse on the load-bearing bare horizon — autopsy comment sits at the
+  `meadow_golden` slot in backgrounds.mjs). Scenes 22/23/28 use
+  `meadow_day` + a comp-level warm grade (target meanLum ≈ 140; note in
+  `PLATES`, scenes/common.tsx). Reversal: re-add the key, cents.
+- **Old tree painted → SVG** (builder-flagged deviation from
+  ep4-plate-design.md, showrunner ACCEPTED): design put the painted oak
+  frame-left, but the volcano seats at x=336 frame-left, and Scene 20's
+  camera push cannot survive a 1344-wide painted tree. The design's own
+  fallback (drawn `OldTree` at x=1588 on bare-edge plates) is what shipped.
+- **Plate seating table is canon** (`PLATES` in scenes/common.tsx): per-key
+  skyline fraction + seat scale; sunset (21% h-crop) and rain (11%) crop
+  safely — band skies, nothing composed in their corners.
+- **Accepted with notes** (full list at the bottom of backgrounds.mjs):
+  morning measures a value step ABOVE day (design said below; reads right
+  on screen); morning's third cloud sits high left-of-centre near the
+  bubble zone; dusk's field darker than night's (end-card silhouette
+  scene); aerial is an elevated wide (~55% sky) not the three-quarter-sky
+  extreme aerial — `MeadowWorld` lift sells the title altitude; dawn has a
+  ~10px horizon speck at x≈0.46 (volcano stands at x=336); grass_close is
+  crisper vector than the soft wides (close-scale grammar; cream top =
+  clean bubble zone). Reversal for any: prompt edit + re-roll, cents.
+- **Re-rolled to acceptance** (vs the set the dead reviewer flagged):
+  aerial (yellow crop checkerboard → continuous green meadow), rain (fence
+  + farm rolls rejected; misty silver take accepted), dawn (flat-vector
+  and wrong-palette rolls rejected; gold-band/blue-hills take accepted),
+  grass_close (orange 3D-render → matte flat cocoa brown), sunrise's
+  second roll accepted as-is, sunset accepted on seat-by-crop.
+
 ## Wave-B staging calls (showrunner reboot session, 2026-08-08)
 
 - **Plate design** (`ep4-plate-design.md`, ~13 keys): old tree painted,

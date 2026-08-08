@@ -3,6 +3,10 @@ import { Series } from "remotion";
 import { DialogueAudio, buildTimeline, type TimedScene } from "../../lib/narration";
 import { FPS, HEIGHT, WIDTH, ScenePlaceholder, turnsOf } from "./scenes/common";
 import { COLD_OPEN_SCENES } from "./scenes/coldOpen";
+import { ACT1_SCENES } from "./scenes/act1";
+import { ACT2_SCENES } from "./scenes/act2";
+import { ACT3_SCENES } from "./scenes/act3";
+import { RECAP_SCENES } from "./scenes/recap";
 
 // "Pip and the Sunshine Kitchen" — Little Big World, episode four: what plants
 // eat (nothing — they cook), and who the kitchen actually runs on.
@@ -702,6 +706,10 @@ export function timeline() {
 /** Every staged scene in the episode. Unlisted ids fall back to a placeholder. */
 const SCENES: Record<string, React.FC<{ scene: TimedScene }>> = {
   ...COLD_OPEN_SCENES,
+  ...ACT1_SCENES,
+  ...ACT2_SCENES,
+  ...ACT3_SCENES,
+  ...RECAP_SCENES,
 };
 
 export const PlantsVideo: React.FC = () => {

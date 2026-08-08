@@ -637,6 +637,49 @@ export const MEADOW = {
 export const VOLCANO_AT = { x: 336, scale: 0.92 } as const;
 
 /**
+ * **The painted plates, measured (B2 showrunner acceptance, 2026-08-08).**
+ *
+ * One row per plate the acts stage against; derivation and the acceptance
+ * notes live at the bottom of `backgrounds.mjs` (scratchpad/ep4b2/measure.mjs
+ * + skyline.mjs are the scripts). What each number buys:
+ *
+ *   `skyline`  the sky→land row as a fraction of plate height. THE SEATING
+ *              NUMBER: draw the plate so this row lands on `MEADOW.horizon`
+ *              (604) and the volcano stands on the painted horizon.
+ *   `scale`    the plate width ÷ 1344 that seating requires (1.43 is the
+ *              bare 1920-fit; bigger means the skyline is above 0.545 and
+ *              the plate must be enlarged and cropped horizontally — safe on
+ *              every plate here, see backgrounds.mjs).
+ *   `grass`    mean near-field grass colour (rows 70–85%), the ep-2
+ *              `PAINTED_GREEN` precedent: any drawn surface sharing an edge
+ *              with the plate (near-field crest, tufts, Pip's patch rim)
+ *              tints from this so the seam does not read.
+ *
+ * GOLDEN HOUR HAS NO PLATE (cut after five rolls — backgrounds.mjs has the
+ * autopsy): scenes 22/23/28 stage on `meadow_day` under a comp-level warm
+ * grade targeting mean luminance ≈ 140, between day (178) and rain (169) on
+ * the delivered ladder. Grade the WHOLE frame group, not the plate alone,
+ * or Pip reads as standing in different light than her field.
+ */
+export const PLATES = {
+  meadow_morning: { skyline: 0.543, scale: 1.45, grass: "#c7cd34" },
+  meadow_day: { skyline: 0.533, scale: 1.48, grass: "#cdd306" },
+  meadow_sunrise: { skyline: 0.617, scale: 1.43, grass: "#99a725" },
+  meadow_night: { skyline: 0.51, scale: 1.54, grass: "#0c3f5d" },
+  meadow_dawn: { skyline: 0.52, scale: 1.51, grass: "#153639" },
+  meadow_dusk: { skyline: 0.594, scale: 1.43, grass: "#051820" },
+  meadow_sunset: { skyline: 0.435, scale: 1.81, grass: "#253515" },
+  meadow_rain: { skyline: 0.492, scale: 1.6, grass: "#4d5d06" },
+  meadow_aerial: { skyline: 0.592, scale: 1.43, grass: "#a1bc17" },
+  /** No skyline — the cloud floor's top edge, where the Hotel seats. */
+  sky_cloud_level: { skyline: 0.557, scale: 1.43, grass: "#f7eedf" },
+  /** No skyline or seat; grass = the dirt patch's brown, for the SVG rim. */
+  grass_close: { skyline: null, scale: 1.43, grass: "#a7582d" },
+  sky_drift: { skyline: null, scale: 1.43, grass: "#1b98fa" },
+  soil_cutaway: { skyline: null, scale: 1.43, grass: "#5e2e18" },
+} as const;
+
+/**
  * **The episode's stacking order, and the bug it exists to make impossible.**
  *
  * A `WideLayer` is an absolutely-positioned `<svg>`; giving it a positive
