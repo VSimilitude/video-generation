@@ -4,24 +4,24 @@
 // question: is there headroom to start the next batch, or should we pause
 // until the window resets?
 //
-//   node scripts/check-quota.mjs [expectedBatchOutputTokens]
+//   node scripts/check-quota.mjs [expectedBatchWeightedTokens]
 //
 // Prints a one-line verdict (PROCEED / PAUSE until <reset>) plus the numbers.
 // Exit code 0 = proceed, 2 = pause.
 //
-// Calibration (2026-08-07, live /usage reading): 1.24M output tokens
-// measured ↔ 93% used → ~13.4k output tokens per percent, implied ceiling
-// ~1.34M. CEILING=1.2M is kept as the conservative floor. Default batch cost
-// 200k (observed showrunner batches: 160-260k). Threshold = ceiling - batch.
+// METRIC (2026-08-08): the window is budgeted in WEIGHTED tokens, not output
+// tokens. Weights follow API pricing ratios: input x1, output x5, cache
+// creation x1.25, cache READ x0.1. Cache reads dominate agentic work — a
+// parallel-builder fleet re-reads a multi-hundred-k cached context every
+// tool turn, so raw output wildly understates cost when parallelism is high.
 //
-// SUPERSEDED (2026-08-02/03): ceiling was 450k, from two same-day kills at
-// ~452k/~546k output and a 25%↔127k reading (~5.1k per percent). That was
-// measured when this machine ran ONE session; the window is now shared with
-// Mike's other sessions and the per-percent rate came out 2.6x higher. Two
-// lessons: the window is per-account, not per-session, so a quiet session can
-// still be at 90%; and a stale ceiling reads as a hard stop, which cost this
-// session a near-miss (a batch was launched believing 38% when the true state
-// was 93%). Re-calibrate against a live /usage reading, not against kills.
+// Calibration (2026-08-08, two same-day session-limit kills):
+//   kill 1: out 417k, cacheRead 185M, cacheCreate 5M  -> ~26.9M weighted
+//   kill 2: out 548k, cacheRead 148M, cacheCreate 8M  -> ~27.5M weighted
+// Output varied 30% between kills; weighted totals agree within 2%. The
+// earlier output-based calibrations (450k on 2026-08-02 sequential work,
+// 1.2M on 2026-08-07) were both mix-dependent snapshots of the same
+// underlying ~27M weighted budget. CEILING=24M is ~90% of observed.
 //
 // Caveat (researched 2026-08-02): there is NO supported programmatic quota
 // API — the live state is only in the interactive /usage command. ccusage
@@ -31,8 +31,10 @@
 
 import { execSync } from "node:child_process";
 
-const CEILING = Number(process.env.QUOTA_CEILING_OUTPUT ?? 1_200_000);
-const batch = Number(process.argv[2] ?? 200_000);
+const CEILING = Number(process.env.QUOTA_CEILING_WEIGHTED ?? 24_000_000);
+// Default batch: showrunner + 2 builders for one act-sized batch, observed
+// 5-8M weighted; 8M is the conservative planning figure.
+const batch = Number(process.argv[2] ?? 8_000_000);
 
 const raw = execSync("npx --yes ccusage@latest blocks --json", {
   encoding: "utf8",
@@ -45,20 +47,19 @@ if (!active) {
   process.exit(0);
 }
 
-const out = active.tokenCounts.outputTokens;
-const inp = active.tokenCounts.inputTokens;
+const t = active.tokenCounts;
+const out = t.outputTokens;
+const inp = t.inputTokens;
+const cacheRead = t.cacheReadInputTokens ?? 0;
+const cacheCreate = t.cacheCreationInputTokens ?? 0;
 const resetAt = new Date(active.endTime);
-const fmt = (n) => `${Math.round(n / 1000)}k`;
+const fmt = (n) =>
+  n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : `${Math.round(n / 1000)}k`;
 
 // Sanity gate (2026-08-07): compare output against TOTAL input, cache
-// included. `inputTokens` alone counts only uncached input — with prompt
-// caching that is a rounding error (one live reading: in=1694 uncached
-// against 21.6M cache reads + 3.3M cache creation), so testing against it
-// alone falsely flags every healthy window as a parse failure.
-const inpTotal =
-  inp +
-  (active.tokenCounts.cacheReadInputTokens ?? 0) +
-  (active.tokenCounts.cacheCreationInputTokens ?? 0);
+// included — agentic work reads far more than it writes, so out >= inpTotal
+// means ccusage parsed nonsense, not that the window is healthy.
+const inpTotal = inp + cacheRead + cacheCreate;
 if (inpTotal <= out) {
   console.log(
     `UNRELIABLE — ccusage returned total input ${fmt(inpTotal)} vs output ` +
@@ -68,12 +69,15 @@ if (inpTotal <= out) {
   );
   process.exit(3);
 }
+
+const weighted = inp + out * 5 + cacheCreate * 1.25 + cacheRead * 0.1;
 const minsLeft = Math.max(0, Math.round((resetAt - Date.now()) / 60000));
-const headroom = CEILING - out;
+const headroom = CEILING - weighted;
 
 console.log(
-  `window: ${fmt(out)} output tokens used, ceiling ~${fmt(CEILING)}, ` +
-    `headroom ${fmt(headroom)}, next batch ~${fmt(batch)}, ` +
+  `window: ${fmt(weighted)} weighted tokens used ` +
+    `(out ${fmt(out)}, cacheRead ${fmt(cacheRead)}, cacheCreate ${fmt(cacheCreate)}), ` +
+    `ceiling ~${fmt(CEILING)}, headroom ${fmt(headroom)}, next batch ~${fmt(batch)}, ` +
     `window resets ${resetAt.toISOString()} (~${minsLeft} min)`
 );
 
