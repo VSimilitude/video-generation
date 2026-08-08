@@ -57,6 +57,13 @@ import {
   HEIGHT as SKY_BLUE_HEIGHT,
 } from "./sky-blue/Video";
 import {
+  PlantsVideo,
+  timeline as plantsTimeline,
+  FPS as PLANTS_FPS,
+  WIDTH as PLANTS_WIDTH,
+  HEIGHT as PLANTS_HEIGHT,
+} from "./plants/Video";
+import {
   KidDemoVideo,
   timeline as kidDemoTimeline,
   FPS as KID_DEMO_FPS,
@@ -232,6 +239,17 @@ export const VIDEOS: VideoEntry[] = [
     width: SKY_BLUE_WIDTH,
     height: SKY_BLUE_HEIGHT,
     durationInFrames: skyBlueTimeline().durationInFrames,
+  },
+  {
+    id: "PipPlants",
+    title: "Pip and the Sunshine Kitchen",
+    description:
+      "What do plants eat? Nothing — they cook. A dandelion seed who will never take a single step builds the biggest thing in the world out of light, water and air. Episode four of Little Big World.",
+    component: PlantsVideo,
+    fps: PLANTS_FPS,
+    width: PLANTS_WIDTH,
+    height: PLANTS_HEIGHT,
+    durationInFrames: plantsTimeline().durationInFrames,
   },
   {
     id: "DripChooses",

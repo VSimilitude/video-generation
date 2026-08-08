@@ -18,6 +18,7 @@ import {
   SpeechBubble,
   Sunny,
   EMOTION_EASE,
+  SNORE_RING_EP2,
   kidEase,
   kidInkOutline,
   kidOutline,
@@ -28,6 +29,7 @@ import {
   lineKeyOf,
   lookAt,
   makeBodyGeometry,
+  makeSleepingVolcano,
   makeWideLayer,
   settleWave,
   useRig,
@@ -613,6 +615,16 @@ const RiseArrow: React.FC<{ color: string; landed: boolean; frame: number }> = (
 export const WIDE = { x: -1200, y: -600, w: 4400, h: 2400 } as const;
 
 export const WideLayer = makeWideLayer(WIDE);
+
+/**
+ * The sleeping volcano, bound to this episode's `WideLayer` and to **episode
+ * two's own snore-ring style**: the face colour at 0.55 alpha, which is what it
+ * was written with and what reads against the pale blue skies this episode
+ * plays on. It was written out in `scenes/act3.tsx` until episode four made it
+ * a third-time-needed component and it moved to `src/lib/kid/props.tsx`; it is
+ * bound here so `act3.tsx` reaches it through `./common` like everything else.
+ */
+export const SleepingVolcano = makeSleepingVolcano(WideLayer, SNORE_RING_EP2);
 
 /**
  * Ground height of the hill at composition `x` — a single broad crest.

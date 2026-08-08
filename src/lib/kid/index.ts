@@ -15,8 +15,11 @@
 //   characters/     the cast, the cameo bodies, and faceless air
 //   lines.ts        line-key -> turn lookups (the timeline's own vocabulary)
 //   staging.tsx     marks, ground lines, bubbles' headroom, the camera
+//   shards.tsx      the seven colours AS A CAST: identities, laws of motion,
+//                   and `makeShard` — the wrapper an act stages one through
 //   BigWord.tsx     the Big Word signature beat
-//   props.tsx       drawn furniture that recurs across episodes
+//   props.tsx       drawn furniture that recurs across episodes, including the
+//                   sleeping volcano (`makeSleepingVolcano`)
 //
 // An episode binds the cast-shaped parts of this in its own
 // `scenes/common.tsx` and re-exports the rest, so its act files have one
@@ -26,9 +29,21 @@ export * from "./theme";
 export * from "./rig";
 export * from "./lines";
 export * from "./staging";
+export * from "./shards";
 export { CharacterFrame, Face, useRig, type CharacterProps, type Rig } from "./Character";
 export { BigWordBeat, CutFlash } from "./BigWord";
-export { CaptionCard, CloudiaHat, Thermometer } from "./props";
+export {
+  CaptionCard,
+  CloudiaHat,
+  Thermometer,
+  makeSleepingVolcano,
+  SNORE_RING_EP2,
+  SNORE_RING_WARM,
+  VOLCANO_BODY,
+  VOLCANO_SHAPE,
+  type SleepingVolcanoProps,
+  type SnokeRingStyle,
+} from "./props";
 export { KidBackdrop, type KidBackdropProps } from "./KidBackdrop";
 export {
   KidPaintedBackdrop,

@@ -17,8 +17,21 @@ in the bible / arc canon are not re-logged.
   disqualified before audition (Yellow's/Cloudia's voices —
   distinct-voice rule). Reversal: one constant + re-buy her ~60 clips,
   ~$1–2.
-- (placeholder) **Pip body design** — new rig body, staged in Wave B,
-  shipped in-cut. Reversal: redesign + re-render, hours not dollars.
+- **PIP BODY DESIGN — character sheet for Mike's eye:**
+  `scratchpad/ep4_pip_sheet.png` (full sheet: growth states, emotions,
+  lean, leaf-point, mirrored silhouettes; detail renders
+  `scratchpad/ep4b1/sheet_growth.png`, `sheet_leafpoint.png`). Calls
+  taken (2026-08-08, showrunner-reviewed on the sheet): five staged
+  growth states (seed-in-air / planted / sprout / first-leaf / young
+  plant) on script beats Sc 3/14/16/24 — capability unlocks, never a
+  time-lapse; NO ARMS ever — the leaf-point + heliotropism lean ARE her
+  gesture rig (`pipLean()` API, signed degrees, snap-back); the pappus
+  ruff is KEPT after planting (silhouette identity survives the fluff
+  folding); warm-oat seed palette (#f3ddb0, stem #5ccc63) chosen to dodge
+  Sunny's gold; `skeptical` as her RESTING face (site-manager register —
+  extends the ep-3 shared-rig face from reaction-only to a resting
+  default, new use, flagged). Reversal: redesign + re-render, hours not
+  dollars.
 
 ## Script-round calls (showrunner edit pass, 2026-08-08)
 
@@ -50,6 +63,16 @@ in the bible / arc canon are not re-logged.
   ep-5 cold open**; ep-4 volcano stir stays wordless unless a treatment
   argues it in. Final call at synthesis. Reversal: script edit + 1 kokoro
   line (free) any time before ep 5.
+
+## Wave-B staging calls (showrunner reboot session, 2026-08-08)
+
+- **Plate design** (`ep4-plate-design.md`, ~13 keys): old tree painted,
+  frame-LEFT in every wide (keeps bubble stack over centre-Pip clear);
+  volcano NOT painted — bare painted horizon + promoted `SleepingVolcano`
+  SVG on the measured horizon (Scene-13 steam curl must anchor to the
+  summit, flux can't place a summit repeatably); no painted sun/moon
+  discs anywhere (Sunny, moon, beams are SVG geometry). Reversal: prompt
+  edits + re-roll, cents.
 
 ## Synthesis calls (2026-08-08, treatments A+B → ep4-synthesis.md)
 

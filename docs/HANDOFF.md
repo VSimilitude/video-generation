@@ -76,23 +76,36 @@ maximum ego (wake-claim + "That is not me." unfired, available for tease);
 Blue's anti-Sunny cameo seed slot open (payoff forbidden); roll-call variant
 owed; soil stays an unexplained given.
 
-**Wave A in flight (2026-08-08).** Slug `plants`. Brief written
-(`src/videos/plants/ep4-brief.md`) — premise: seed hero (working name Pip,
-new voice, the episode's only new casting) gathers the three ingredients of
-photosynthesis, which ARE the three previous heroes (Ray=light, Drip=water,
-Puff=air); Sunny fully vindicated at maximum ego; hero cannot move once
-planted (quest-by-summons, not waiting). Decision log live at
-`src/videos/plants/ep4-decision-log.md`. Treatments A ("The Kitchen") and
-B ("The Summons") both landed; synthesis rulings in `ep4-synthesis.md`
-(B's structure spine + A's stamp-chain/job-title grafts; title "Pip and
-the Sunshine Kitchen"). Script DONE: `script.md` (29 scenes, 238 lines, 222 recordings) +
-`narration.mjs`, showrunner edit pass complete (a3_75 split; all
-invariants machine-checked green). **Pip CAST: `Inspirational_girl`**
-(3-voice audition ~$0.02, clips in `scratchpad/ep4_pip_audition/`,
-decision-log TOP item — Mike's ear pending). Cache migrations done
-(a2_13_drip ← sky-blue, a2_55_puff ← wind; committed with audio). TTS
-generation running; Wave B plan in `src/videos/plants/wave-b-worklist.md`
-(B1 promotions+skeleton+Pip body, B2 backgrounds, B3+ acts).
+**Wave A committed** (6db4202): brief, treatments, synthesis, script.md
+(29 scenes; single source of truth), narration.mjs, decision log, wave-B
+worklist. **Pip CAST: `Inspirational_girl`** (decision-log TOP — Mike's
+ear pending; clips `scratchpad/ep4_pip_audition/`).
+
+**Wave B, batch B1 (2026-08-08, reboot session after a lost one) — repair
++ verification COMPLETE except cold-open restage in flight:**
+- TTS gates now fully green (auditor ran them): 239 keys / 223 recordings /
+  16 sameAs aliases all byte-identical / both cache migrations
+  byte-identical to source episodes / all generator hashes current.
+- Promotions (shard kit + SleepingVolcano → `src/lib/kid/shards.tsx`,
+  4 scene files collapsed to re-exports) VERIFIED per PROCESS §7:
+  before/after/control grids 1489 frames each, all diffs at/under
+  antialias noise, eyeballed; sign-off in
+  `scratchpad/ep4b1_promotion_signoff.md`. tsc + lint:hooks clean.
+  Every-frame validation renders for the four legacy comps running/done —
+  see batch report. NOTE: `src/lib/kid/shards.tsx` is UNTRACKED and
+  load-bearing for 3 episodes — must be in the B1 commit.
+- Full audit of inherited B1: `scratchpad/ep4b1_audit.md` (24 CONFIRMED /
+  3 MISSING / 2 WRONG). Both WRONGs fixed by showrunner: W1 a masked
+  string-as-number cast crashed PipPlants frames 0–525 (one-token fix);
+  W2 `NO_LEAD || 8` booby-trap tidied. Skeleton verified: 29 scenes,
+  44/44 held beats exact vs script.md, comp `PipPlants` 28085 frames.
+- IN FLIGHT: scene-builder restaging the cold open (built blind while
+  frames crashed — kid+dandelion invisible, characters buried at the
+  horizon band; systemic mark-Y fix + Scenes 1–4 restage + PipPlants
+  every-frame validation is its exit gate).
+- B2 design ready: `src/videos/plants/ep4-plate-design.md` (~13 plates).
+- Pip sheet ready for Mike's eye: `scratchpad/ep4_pip_sheet.png`
+  (decision-log TOP item has the calls).
 
 ## Backlog (owned, not started)
 - **Kit cleanup pass** (accumulated through eps 2–3): re-export `Freeze`

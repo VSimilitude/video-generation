@@ -46,6 +46,19 @@ treatments/synthesis are history; the script won.
 3. **B3+ — acts in parallel** (per-act scene-map files, zero merge
    conflicts), then showrunner still review per batch, gates, cut.
 
+## Retro reminders (parked here so the episode retro collects them)
+
+- Bible counter updates owed: Puff catch-phrase now 5 series-wide
+  (wind ×3 incl. roll-call impression context — audit counted wind ×2 +
+  sky ×1 + plants ×1 = 4 at the bible's stated number; recount at retro),
+  "Different show. Same ___." now 6 blanks (+beam, +weather), credit-
+  allocation device at 5 firings ("It is mostly him.", `a3_36_ray`).
+- Ep-2 tidy (separate ticket, pre-existing): `wind/scenes/act1.tsx:779`
+  7-word bubble warns on every render ("I FILLED it! I have a SHAPE!").
+- TTS cache is lamejs-encoded; a machine WITH system ffmpeg would
+  re-encode all kokoro clips on `npm run narration` and shift the whole
+  timeline (audit N4). Regenerate only on this box, or expect re-timing.
+
 ## Carry-forward flags for builder briefs
 
 - Ep-3 flagged weak points travel: badge occlusion class, bubble z-index

@@ -34,6 +34,7 @@ import {
   PUFF_OPACITY,
   PaintedSky,
   Rock,
+  SleepingVolcano,
   Thermometer,
   WIDE,
   WideLayer,
@@ -264,142 +265,19 @@ const Gulls: React.FC<{ lift?: number }> = ({ lift = 0 }) => {
 // The sleeping volcano — a running gag that has not started yet
 // ---------------------------------------------------------------------------
 //
-// A small island out on the sea horizon with a face on it, fast asleep. It is
-// never mentioned: no line, no bubble, no narration, no reaction anywhere in
-// the episode except one four-frame flick of Puff's eyes in Scene 23. The plan
-// is that it is asleep in the background of every coastal scene the series ever
-// shoots, until the episode where it wakes up.
+// **PROMOTED, 2026-08-08.** This is where it was written first; episode three
+// wrote it out a second time (adding a rim light, a stir and one eyelid), and
+// episode four is the third to need it — so the component, its geometry, its
+// palette and its snore period now live in `src/lib/kid/props.tsx`
+// (`makeSleepingVolcano`) and this episode binds it in `scenes/common.tsx`.
 //
-// Which makes the direction here entirely about restraint:
+// The one thing the two written copies disagreed about was the smoke ring's
+// colour, so that is the factory's one parameter and this episode keeps its
+// own: `SNORE_RING_EP2` — the face colour at 0.55 alpha, picked against the
+// pale blue sky these scenes play on, where episode three's paper-tinted ring
+// would be a white smudge.
 //
-//   - **It must read as a character, not a mountain.** Closed happy eyes and a
-//     small smile, or it is scenery and there is no gag to pay off later.
-//   - **It must not compete.** Low contrast against the sea (a dusty warm dark,
-//     not ink), no outline, and small — 176px wide against a 1920 frame, which
-//     is about the size of the gulls.
-//   - **It is a place, so it does not move between shots.** Same `x`, same
-//     `scale` in every scene it appears; only the horizon it sits on changes,
-//     because Scene 23 draws its own horizon at `HORIZON` and Scene 24's is the
-//     painted one in `beach_wide`.
-//
-// The snore is the whole performance: a slow breath and a smoke ring out of the
-// crater on a 3s loop, deterministic from the frame like everything else in the
-// kit, `phase` per scene so two shots do not snore in lockstep.
-
-/** Half-width, height and crater width of the island at `scale` 1. */
-const VOLCANO = { halfW: 88, h: 108, crater: 18 };
-/** One snore: breath in, ring out. Seconds. */
-const SNORE = 3;
-/**
- * How long a ring lives after it leaves the crater. Seconds. Shorter than the
- * snore on purpose — a ring still climbing when the next one appears reads as a
- * chimney, and a ring that has drifted a long way from the crater reads as a
- * stray halo in the sky rather than as something this island did.
- */
-const SNORE_RING_LIFE = 2;
-
-/**
- * Warm and dark, but nowhere near ink, and then hazed a fifth of the way back
- * towards the sky: the first pass was #604b4e and read as a sticker stuck on
- * the horizon rather than as something a long way off.
- */
-const VOLCANO_BODY = mixHex(mixHex(kidTheme.ink, "#c2705a", 0.38), kidTheme.skyLow, 0.24);
-/** The face, pale enough to read on the silhouette and no paler. */
-const VOLCANO_FACE = mixHex(VOLCANO_BODY, kidTheme.paper, 0.52);
-
-/**
- * The island itself. `base` is the horizon line it sits on — the shape's
- * baseline is y=0 in its own coordinates, so it seats exactly on that line
- * rather than floating above it or cutting into the water.
- */
-const SleepingVolcano: React.FC<{
-  x: number;
-  base: number;
-  scale?: number;
-  phase?: number;
-}> = ({ x, base, scale = 1, phase = 0 }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const t = frame / fps + phase * SNORE;
-
-  // One breath per snore, and the ring leaves the crater at the top of it.
-  const breath = Math.sin((t / SNORE) * Math.PI * 2);
-  const sy = 1 - 0.03 * breath;
-  const sx = 1 + 0.022 * breath;
-
-  // The last two rings emitted. Deterministic from the frame: ring `k` left the
-  // crater at t = k * SNORE, so nothing here remembers anything.
-  const newest = Math.floor(t / SNORE);
-
-  const { halfW, h, crater } = VOLCANO;
-  return (
-    <WideLayer>
-      <g transform={`translate(${x} ${base}) scale(${scale})`} opacity={0.92}>
-        {/* Haze where the island meets the water. Ink at low alpha rather than
-            a sea colour, because the same component sits on the drawn horizon
-            in Scene 23 and the painted one in Scene 24. */}
-        <ellipse cx={0} cy={0} rx={halfW * 1.08} ry={6} fill={kidTheme.ink} opacity={0.16} />
-        <g transform={`scale(${sx} ${sy})`}>
-          <path
-            d={
-              `M ${-halfW} 0` +
-              ` C ${-halfW * 0.66} ${-h * 0.32} ${-halfW * 0.39} ${-h * 0.7} ${-crater} ${-h}` +
-              ` Q 0 ${-h * 0.87} ${crater} ${-h}` +
-              ` C ${halfW * 0.39} ${-h * 0.7} ${halfW * 0.66} ${-h * 0.32} ${halfW} 0 Z`
-            }
-            fill={VOLCANO_BODY}
-          />
-          {/* One lit flank, so it has a shape instead of being a cut-out. */}
-          <path
-            d={
-              `M ${-halfW} 0` +
-              ` C ${-halfW * 0.66} ${-h * 0.32} ${-halfW * 0.39} ${-h * 0.7} ${-crater} ${-h}` +
-              ` L ${-crater * 0.2} ${-h * 0.9} L ${-halfW * 0.42} 0 Z`
-            }
-            fill={mixHex(VOLCANO_BODY, kidTheme.sunLight, 0.16)}
-            opacity={0.7}
-          />
-          {/* The face. Closed, content, and the only reason this is a gag. */}
-          <g
-            stroke={VOLCANO_FACE}
-            strokeWidth={6}
-            strokeLinecap="round"
-            fill="none"
-            opacity={0.8}
-          >
-            <path d={`M -33 ${-h * 0.56} q 11 -13 22 0`} />
-            <path d={`M 11 ${-h * 0.56} q 11 -13 22 0`} />
-            <path d={`M -10 ${-h * 0.4} q 10 9 20 0`} strokeWidth={5} />
-          </g>
-        </g>
-        {/* The snore. */}
-        {[newest, newest - 1].map((k) => {
-          const age = t - k * SNORE;
-          if (age < 0 || age > SNORE_RING_LIFE) return null;
-          const u = age / SNORE_RING_LIFE;
-          // 62, not the 104 of the first pass: at 104 the ring topped out level
-          // with the gull at x=300 in `Gulls`, and two unrelated small things at
-          // the same height read as one cluttered corner.
-          const rise = kidEase.easeOutSine(u) * 62;
-          const rx = 11 + u * 24;
-          return (
-            <ellipse
-              key={k}
-              cx={u * 30 + Math.sin(u * 3.4 + k) * 6}
-              cy={-h - 4 - rise}
-              rx={rx}
-              ry={rx * 0.44}
-              fill="none"
-              stroke={VOLCANO_FACE}
-              strokeWidth={7 * (1 - u * 0.55)}
-              opacity={0.55 * Math.min(1, u * 7) * (1 - u) ** 1.2}
-            />
-          );
-        })}
-      </g>
-    </WideLayer>
-  );
-};
+// The direction it was written to is in the promoted file, verbatim.
 
 /**
  * Where it is. Far enough left to be over open water in Scene 23 — the sea only

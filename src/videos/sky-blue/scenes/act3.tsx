@@ -1,5 +1,10 @@
 import React from "react";
-import { Rock, mixHex } from "../../../lib/kid";
+import {
+  Rock,
+  VOLCANO_BODY,
+  VOLCANO_SHAPE as VOLCANO,
+  mixHex,
+} from "../../../lib/kid";
 import {
   ACT_COLOR,
   AbsoluteFill,
@@ -20,6 +25,7 @@ import {
   SHARD_BODY,
   SPECTRUM,
   Shard,
+  SleepingVolcano,
   SoftShade,
   Sunny,
   WIDTH,
@@ -183,286 +189,22 @@ const SEA_DRIFT = 10;
 // The sleeping volcano
 // ---------------------------------------------------------------------------
 //
-// **This is episode two's `SleepingVolcano`, written out a second time.** It is
-// `const` (not exported) in `src/videos/wind/scenes/act3.tsx`, and this file may
-// not edit another episode — so the component is reproduced here with its
-// geometry, its palette, its snore period and its restraint intact, plus the two
-// things episode three needs and episode two did not:
+// **PROMOTED, 2026-08-08.** It was episode two's component written out a second
+// time here (with a rim light, a stir and an eyelid added); episode four is the
+// third to need it, so the component, its geometry, its palette, its snore
+// period and `wobbleRing` all moved to `src/lib/kid/props.tsx`
+// (`makeSleepingVolcano`). The two copies had drifted in exactly one place —
+// how the smoke ring is coloured — and that is now the factory's one parameter:
+// this episode binds `SNORE_RING_WARM` in `scenes/common.tsx`, because every
+// horizon in this act plays against orange or indigo and episode two's ring
+// colour is invisible on them.
 //
-//   `rim`   a warm rim light. `sea_dusk` is very dark and the ep-2 body colour
-//           is a near-black silhouette against it; the tease has to stay
-//           **wondrous**, which means the island has to be *visible* and shaped
-//           rather than a hole in the picture.
-//   `stir`  Scene 35, and the only frame of this gag that has ever moved: the
-//           newest ring comes out wobbling and does not close.
-//
-// It is now written twice, which by the `props.tsx` rule means the *next* thing
-// anybody does with it is promote it to `src/lib/kid/props.tsx` and delete both
-// copies. See the retro.
-//
-// The direction, unchanged from episode two:
-//
-//   - **It must read as a character, not a mountain.** Closed happy eyes and a
-//     small smile, or it is scenery and there is no gag to pay off later.
-//   - **It must not compete.** Low contrast against the sea, no outline, small.
-//   - **It is a place, so it does not move between shots.** Same `x`, same
-//     `scale` in every scene; only the horizon it sits on changes. Scene 26 and
-//     Scene 35 push in on it with the *camera* rather than by growing it, which
-//     is the same rule stated for a shot that is about it.
+// It is re-exported below rather than imported at each use, because
+// `recap.tsx` and `s28b2_two_walkers.tsx` import it *from this file* and a
+// promotion that rewrites three files' imports is a promotion that will not be
+// verified.
+export { SleepingVolcano };
 
-/** Half-width, height and crater width of the island at `scale` 1. */
-const VOLCANO = { halfW: 88, h: 108, crater: 18 };
-/** One snore: breath in, ring out. Seconds. */
-const SNORE = 3;
-/** How long a ring lives after it leaves the crater. Seconds. */
-const SNORE_RING_LIFE = 2;
-
-/** Warm and dark, but nowhere near ink, and hazed back towards the sky. */
-const VOLCANO_BODY = mixHex(mixHex(kidTheme.ink, "#c2705a", 0.38), kidTheme.skyLow, 0.24);
-/** The face, pale enough to read on the silhouette and no paler. */
-const VOLCANO_FACE = mixHex(VOLCANO_BODY, kidTheme.paper, 0.52);
-
-export const SleepingVolcano: React.FC<{
-  x: number;
-  /** The horizon line it seats on. The shape's baseline is y=0 locally. */
-  base: number;
-  scale?: number;
-  phase?: number;
-  /**
-   * Warm rim light, 0..1. Zero on `sea_sunset` (the plate is bright behind it
-   * already); ~0.9 on `sea_dusk`, where without it the island is black on
-   * near-black and the tease reads as an absence rather than as a place.
-   */
-  rim?: number;
-  /**
-   * 0..1. Scene 35 only. Above zero the newest ring comes out **wobbling** and
-   * open-ended, the breath deepens, and the island itself gets a very slow
-   * half-pixel sway — a rumble you feel rather than a camera shake.
-   */
-  stir?: number;
-  /**
-   * **One eye, open. Scene 28b only, and it is the whole escalation.**
-   *
-   * 0 is the closed happy arc it has worn for two episodes; 1 is the right eye
-   * fully open. The left one never moves, because "one eye" is the joke — two
-   * would be the volcano waking up, which belongs to the volcano episode (ep 5).
-   *
-   * It looks **straight ahead**, not at Yellow, who is sitting on it. Aiming
-   * the pupil at him would make this a reaction, and the value of the beat is
-   * that nothing in the show acknowledges anything: a rock opens an eye, looks
-   * at nothing in particular for a second and a half, and closes it again
-   * while a small yellow character has a sit down on its head.
-   */
-  eye?: number;
-}> = ({ x, base, scale = 1, phase = 0, rim = 0, stir = 0, eye = 0 }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const t = frame / fps + phase * SNORE;
-  const s = clamp01(stir);
-
-  // One breath per snore, and the ring leaves the crater at the top of it.
-  const breath = Math.sin((t / SNORE) * Math.PI * 2);
-  const sy = 1 - (0.03 + 0.016 * s) * breath;
-  const sx = 1 + (0.022 + 0.012 * s) * breath;
-  // The rumble: slow, tiny, and in the island rather than in the lens.
-  const sway = s * Math.sin(t * 5.1) * 1.6;
-
-  // The last two rings emitted. Deterministic from the frame: ring `k` left the
-  // crater at t = k * SNORE, so nothing here remembers anything.
-  const newest = Math.floor(t / SNORE);
-
-  const open = clamp01(eye);
-  const { halfW, h, crater } = VOLCANO;
-  const body =
-    rim > 0 ? mixHex(VOLCANO_BODY, kidTheme.sunDeep, 0.18 * rim) : VOLCANO_BODY;
-  const face = rim > 0 ? mixHex(VOLCANO_FACE, kidTheme.sunLight, 0.5 * rim) : VOLCANO_FACE;
-
-  return (
-    <WideLayer>
-      <g transform={`translate(${x + sway} ${base}) scale(${scale})`} opacity={0.92}>
-        {/* The warm glow the rim light sits in. Behind everything, wide and
-            soft: it is what keeps a dark island from cutting a hole in a dark
-            sea, and it reads in-fiction as the last of the day on the water. */}
-        {rim > 0 ? (
-          <>
-            <defs>
-              <radialGradient id="a3-volcano-glow">
-                <stop offset="0" stopColor={kidTheme.sunDark} stopOpacity={0.42 * rim} />
-                <stop offset="0.5" stopColor={kidTheme.sunDark} stopOpacity={0.16 * rim} />
-                <stop offset="1" stopColor={kidTheme.sunDark} stopOpacity={0} />
-              </radialGradient>
-            </defs>
-            {/* Small and soft. A flat-filled ellipse at 2.4 half-widths was, at
-                Scene 35's 1.9× camera, a 900px grey oval lying across a quarter
-                of the frame — fog, not a rim light, and the one thing that made
-                a still of the tease look like a mistake. */}
-            <ellipse
-              cx={0}
-              cy={-h * 0.5}
-              rx={halfW * 1.45}
-              ry={h * 0.92}
-              fill="url(#a3-volcano-glow)"
-            />
-          </>
-        ) : null}
-        {/* Haze where the island meets the water. */}
-        <ellipse cx={0} cy={0} rx={halfW * 1.08} ry={6} fill={kidTheme.ink} opacity={0.16} />
-        <g transform={`scale(${sx} ${sy})`}>
-          <path
-            d={
-              `M ${-halfW} 0` +
-              ` C ${-halfW * 0.66} ${-h * 0.32} ${-halfW * 0.39} ${-h * 0.7} ${-crater} ${-h}` +
-              ` Q 0 ${-h * 0.87} ${crater} ${-h}` +
-              ` C ${halfW * 0.39} ${-h * 0.7} ${halfW * 0.66} ${-h * 0.32} ${halfW} 0 Z`
-            }
-            fill={body}
-          />
-          {/* One lit flank, so it has a shape instead of being a cut-out. */}
-          <path
-            d={
-              `M ${-halfW} 0` +
-              ` C ${-halfW * 0.66} ${-h * 0.32} ${-halfW * 0.39} ${-h * 0.7} ${-crater} ${-h}` +
-              ` L ${-crater * 0.2} ${-h * 0.9} L ${-halfW * 0.42} 0 Z`
-            }
-            fill={mixHex(body, kidTheme.sunLight, 0.16 + 0.14 * rim)}
-            opacity={0.7 + 0.1 * rim}
-          />
-          {/* The rim itself: one warm stroke down the lit edge and along the
-              crest. Drawn, not filtered — a glow filter on a 176px shape at
-              this value just fogs it. */}
-          {rim > 0 ? (
-            <path
-              d={
-                `M ${-halfW} 0` +
-                ` C ${-halfW * 0.66} ${-h * 0.32} ${-halfW * 0.39} ${-h * 0.7} ${-crater} ${-h}` +
-                ` Q 0 ${-h * 0.87} ${crater} ${-h}`
-              }
-              fill="none"
-              stroke={kidTheme.sunLight}
-              strokeWidth={5}
-              strokeLinecap="round"
-              opacity={0.72 * rim}
-            />
-          ) : null}
-          {/* The face. Closed, content, and the only reason this is a gag. */}
-          <g
-            stroke={face}
-            strokeWidth={6}
-            strokeLinecap="round"
-            fill="none"
-            opacity={0.8 + 0.2 * rim}
-          >
-            <path d={`M -33 ${-h * 0.56} q 11 -13 22 0`} />
-            <path d={`M 11 ${-h * 0.56} q 11 -13 22 0`} opacity={1 - open} />
-            <path d={`M -10 ${-h * 0.4} q 10 9 20 0`} strokeWidth={5} />
-          </g>
-          {/* ONE EYE. Drawn as a lid *rising* — the eye grows in height about
-              its own centre and the upper lid rides up with it — rather than
-              as a shape that fades in on top of the closed one, because a
-              cross-faded eye reads as a double exposure and this beat has to
-              read as a decision. Pupil dead centre: it is not looking at
-              anybody (see the `eye` prop). */}
-          {open > 0.01 ? (
-            <g transform={`translate(22 ${-h * 0.56 - 2})`}>
-              <ellipse rx={13} ry={11.5 * open} fill={mixHex(face, kidTheme.paper, 0.6)} />
-              <circle cx={0} cy={0} r={5.6 * open} fill={mixHex(VOLCANO_BODY, kidTheme.ink, 0.5)} />
-              <path
-                d={`M -13 ${-11.5 * open} q 13 ${-8 * open} 26 0`}
-                stroke={face}
-                strokeWidth={6}
-                strokeLinecap="round"
-                fill="none"
-                opacity={0.8 + 0.2 * rim}
-              />
-            </g>
-          ) : null}
-        </g>
-        {/* The snore.
-            **Asleep, a ring lives two seconds out of every three, so there is
-            one second in every snore with no ring on screen at all — which is
-            correct for a background gag nobody is looking at, and fatal for
-            Scene 35, whose first held beat *is* "the wobbling smoke ring,
-            alone, in silence" for forty-five frames. Stirring, the smoke hangs
-            around: 3.2s of life against a 3s period, so the rings overlap and
-            the beat always has one in it.** (It reads, too — smoke that stops
-            dissipating is a thing that has started producing more of it.) */}
-        {[newest, newest - 1].map((k) => {
-          const life = SNORE_RING_LIFE * (1 + 0.6 * s);
-          const age = t - k * SNORE;
-          if (age < 0 || age > life) return null;
-          const u = age / life;
-          const rise = kidEase.easeOutSine(u) * 62;
-          const rr = 11 + u * 24;
-          const cx = u * 30 + Math.sin(u * 3.4 + k) * 6;
-          const cy = -h - 4 - rise;
-          const alpha = 0.8 * Math.min(1, u * 7) * (1 - u) ** 1.2;
-          // Smoke, not rock: paler than the face, because episode two's ring
-          // colour was picked against a pale blue sky and this act plays every
-          // one of its horizons against orange or indigo. At the ep-2 value the
-          // ring is completely invisible on `sea_sunset` — which would take
-          // Scene 35's whole beat with it, since the payoff of three episodes
-          // is *one of these rings not closing*.
-          const stroke = mixHex(face, kidTheme.paper, rim > 0 ? 0.75 : 0.6);
-          // Asleep: a closed ring. Stirring: the newest one comes out open and
-          // wobbling and never closes, and it is the only thing in three
-          // episodes this gag has ever done.
-          if (s > 0.02 && k === newest) {
-            return (
-              <path
-                key={k}
-                d={wobbleRing(cx, cy, rr, rr * 0.44, t * 2.6 + k, s)}
-                fill="none"
-                stroke={stroke}
-                strokeWidth={7 * (1 - u * 0.55)}
-                strokeLinecap="round"
-                opacity={alpha}
-              />
-            );
-          }
-          return (
-            <ellipse
-              key={k}
-              cx={cx}
-              cy={cy}
-              rx={rr}
-              ry={rr * 0.44}
-              fill="none"
-              stroke={stroke}
-              strokeWidth={7 * (1 - u * 0.55)}
-              opacity={alpha}
-            />
-          );
-        })}
-      </g>
-    </WideLayer>
-  );
-};
-
-/**
- * A smoke ring that has stopped being a ring: an open arc with a wobble running
- * round it, missing the last fifth of itself. The gap is the whole tell — a
- * ring that closes is a snore and a ring that does not is a thing waking up.
- */
-function wobbleRing(
-  cx: number,
-  cy: number,
-  rx: number,
-  ry: number,
-  t: number,
-  amount: number,
-): string {
-  const steps = 26;
-  let d = "";
-  for (let i = 0; i <= steps; i++) {
-    // 0.82 of the way round, so the ring is visibly unfinished.
-    const a = -Math.PI / 2 + (i / steps) * Math.PI * 2 * 0.82;
-    const wob = 1 + amount * (0.2 * Math.sin(a * 3 + t) + 0.12 * Math.sin(a * 5 - t * 1.3));
-    const x = cx + Math.cos(a) * rx * wob;
-    const y = cy + Math.sin(a) * ry * wob * (1 + amount * 0.25 * Math.sin(t * 0.9));
-    d += `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)} `;
-  }
-  return d.trim();
-}
 
 /**
  * Where it is: the same island in the same place on the same horizon, in every
