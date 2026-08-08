@@ -76,6 +76,24 @@ maximum ego (wake-claim + "That is not me." unfired, available for tease);
 Blue's anti-Sunny cameo seed slot open (payoff forbidden); roll-call variant
 owed; soil stays an unexplained given.
 
+**Wave A in flight (2026-08-08).** Slug `plants`. Brief written
+(`src/videos/plants/ep4-brief.md`) — premise: seed hero (working name Pip,
+new voice, the episode's only new casting) gathers the three ingredients of
+photosynthesis, which ARE the three previous heroes (Ray=light, Drip=water,
+Puff=air); Sunny fully vindicated at maximum ego; hero cannot move once
+planted (quest-by-summons, not waiting). Decision log live at
+`src/videos/plants/ep4-decision-log.md`. Treatments A ("The Kitchen") and
+B ("The Summons") both landed; synthesis rulings in `ep4-synthesis.md`
+(B's structure spine + A's stamp-chain/job-title grafts; title "Pip and
+the Sunshine Kitchen"). Script DONE: `script.md` (29 scenes, 238 lines, 222 recordings) +
+`narration.mjs`, showrunner edit pass complete (a3_75 split; all
+invariants machine-checked green). **Pip CAST: `Inspirational_girl`**
+(3-voice audition ~$0.02, clips in `scratchpad/ep4_pip_audition/`,
+decision-log TOP item — Mike's ear pending). Cache migrations done
+(a2_13_drip ← sky-blue, a2_55_puff ← wind; committed with audio). TTS
+generation running; Wave B plan in `src/videos/plants/wave-b-worklist.md`
+(B1 promotions+skeleton+Pip body, B2 backgrounds, B3+ acts).
+
 ## Backlog (owned, not started)
 - **Kit cleanup pass** (accumulated through eps 2–3): re-export `Freeze`
   from sky-blue/scenes/common.tsx (recap.tsx imports it straight from
