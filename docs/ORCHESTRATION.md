@@ -63,6 +63,11 @@ one, not free capacity.
   transcript intact and resumes with full context. A clean stop always
   resumes; a mid-flight kill loses the transcript and forces a fresh boot +
   audit. Re-calibrate the script's CEILING when a kill contradicts it.
+  On **UNRELIABLE (exit 3)**: the script caught ccusage misparsing the
+  transcripts (2026-08-07: out=1.23M against in=802 across 408 entries → a
+  bogus PAUSE, while Mike's own /usage read 38%). Do NOT idle on it — gate
+  on Mike's last /usage reading, or proceed with bounded batches whose
+  inputs survive on disk if a kill lands. A broken meter is not a red light.
   WEEKLY dimension (not in the script — only Mike's /usage sees it): the
   fable weekly limit is the binding constraint, since orchestrator +
   showrunner + story-writer are all fable; opus builders draw on the larger

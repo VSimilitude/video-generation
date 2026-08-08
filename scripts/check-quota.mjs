@@ -41,7 +41,23 @@ if (!active) {
 }
 
 const out = active.tokenCounts.outputTokens;
+const inp = active.tokenCounts.inputTokens;
 const resetAt = new Date(active.endTime);
+
+// Sanity gate (2026-08-07): ccusage misparsed the transcript format and
+// reported out=1.23M against in=802 across 408 entries — an impossible ratio
+// (agentic work reads far more than it writes), which produced a bogus PAUSE
+// while Mike's own /usage read 38%. Any reading where input does not exceed
+// output is a parse failure, not a quota state: say so and fall back to the
+// manual reading rather than idling the session for hours on garbage.
+if (inp <= out) {
+  console.log(
+    `UNRELIABLE — ccusage returned in=${inp} out=${out} (input must exceed ` +
+      `output; this is a parse failure, not a quota reading). Ask Mike for a ` +
+      `/usage percent and gate on that; ~5.1k output tokens per percent.`
+  );
+  process.exit(3);
+}
 const minsLeft = Math.max(0, Math.round((resetAt - Date.now()) / 60000));
 const headroom = CEILING - out;
 const fmt = (n) => `${Math.round(n / 1000)}k`;
