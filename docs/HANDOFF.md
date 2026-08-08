@@ -56,6 +56,25 @@ teases incl. the volcano eye, world rules), story-writer drafts, showrunner
 edits. On landing, wire the bible into docs/roles/{showrunner,auditor,
 story-writer}.md boot orders/checklists. Explicitly NOT starting ep 4.
 
+**Wave state (showrunner, 2026-08-07):**
+- **Retro DONE, uncommitted**: watch-side entry appended to
+  docs/LEARNINGS.md (2026-08-07 — headline: "dry" is a structure note;
+  rewrite wants + replies, not staging) and rules folded into
+  docs/STYLE.md (comedy: cadence measured on spoken lines against the
+  shipped cut / ensemble = members answering each other / set pieces
+  belong to characters; voice: MiniMax all-caps print-only, re-roll vs
+  reword diagnosis, sameAs backwards-only + cache-migration re-keys;
+  kids: paint-the-value, scene-boundary continuity checklist,
+  `skeptical` register).
+- **Bible batch PAUSED on quota**: check-quota said PAUSE (window
+  722k/450k, resets 2026-08-08T05:00Z) — per standing rule, not pushed
+  through. The story-writer brief is READY and self-contained at
+  **docs/kids/bible-writer-brief.md**: at reset, spawn one fable
+  story-writer on it (writes docs/kids/BIBLE.md directly), then
+  showrunner review-and-edit, then the role-doc wiring above. Any fresh
+  showrunner can run this step from the brief alone; delete the brief
+  when the bible lands.
+
 ## NEXT: ep 4 — plants / photosynthesis
 Order decided by Mike 2026-08-04; full arc rationale and guardrails live in
 `docs/roles/audience.md` "Series arc canon" (seed-hero ingredients quest,

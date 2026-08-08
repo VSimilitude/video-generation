@@ -962,7 +962,8 @@ straight out of doing it, and are now in STYLE.md:
 
 ## Next: sky-blue (Ray and the Sky Nobody Painted — kids ep 3)
 
-_Build-side notes (2026-07-28); watch-side retro pending._
+_Build-side notes (2026-07-28); the watch-side retro is the 2026-08-07 entry
+at the bottom of this file._
 
 - **Third-episode pipeline maturity**: script approved zero-edit; wave 1
   survived a mid-build quota kill with zero paid-work loss (plates + rig
@@ -1085,3 +1086,110 @@ installed PWA. Two stacked causes, both worth remembering:
 Symptom fingerprint for next time: "random" audio glitches that are
 device-specific and episode-specific are usually *cache-state*-specific —
 ask what changed under a stable URL, and what the slowest device has cached.
+
+## 2026-08-07 — sky-blue watched: the comedy-rewrite retro (kids ep 3)
+
+Ep 3 shipped twice. The first cut (13:32.5, wave 2) had followed every pacing
+rule in STYLE.md, passed a preemptive density audit, and been punched up — and
+the family screening verdict was *"we didn't change much to be honest. It's
+still quite dry most of the episode… even the race felt very dry, they barely
+interacted, and we zoomed through the whole thing."* The second cut (17:27.3,
+after the wave-3 script-level rewrite and a ten-note tweak round) got *"this
+rewrite really works. It's genuinely funny now"*, an out-loud laugh, and a
+cameo mandate for a breakout character. What separated the two passes is the
+lesson of the episode.
+
+**A comedy pass that leaves the structure alone doesn't change the verdict.**
+The failed pass was additive: beats slotted into measured sags, held-beat
+timing, staging polish. The pass that worked changed *who wants what and who
+answers whom* — every colour got a WANT expressible inside its one cast
+emotion (Red wants quiet, Orange wants to be Red, Blue wants to be first and
+liked, Green wants to sit down…), recurring two-hander engines were built out
+of the colliding wants (Blue↔Red, Orange↔Red, Indigo↔Blue, Yellow↔Violet),
+and the race got a start line, stakes, banter, and exits staged as scenes
+with reactions instead of self-announced departures. Runtime grew four
+minutes and Mike had explicitly authorized it ("make room for them to have
+fun interactions, even if it stretches the episode longer"). "Dry" is a
+structure note, not a gag-count note: when it arrives, rewrite wants and
+replies; do not decorate the existing skeleton.
+
+**The measured audit is what made the rewrite land, and its two method rules
+are keepers.** First: *a planning document's density claims are claims, not
+evidence.* `revision.md`'s own §7 map claimed a 55s max laugh gap; recomputed
+against the shipped manifest with the real `buildTimeline` arithmetic, the
+max gap was 92.9s with four gaps over the 50s ceiling — the map was also a
+scene short and 31s of runtime stale. Recompute against the cut, never trust
+the plan's self-score. Second: *grade cadence on spoken lines only.* The
+script was full of written-and-funny visual business (Orange glancing at Red
+"to check that was allowed") that is inaudible, and a six-year-old is
+listening as much as watching; even crediting every visual gag as a laugh,
+the max gap only fell to ~59s. Sight gags are free garnish (the Violet rule
+stands) but they do not feed the laugh clock.
+
+**One number diagnosed the whole thing: zero.** In 812 seconds, no colour
+ever answered another colour — four one-way addresses, no replies, no
+objections, no rivalry, nobody wanting anything anybody else had. The seven
+were an ensemble on the cast sheet and a diagram with faces in the cut
+(4.5% of spoken time; Sunny alone out-spoke all seven combined at 1.5×).
+The race was 50% narrator by seconds, its longest silence 1.97s. Count
+replies, not lines — an ensemble whose members never answer each other is
+not an ensemble, and a set piece the narrator carries is not a set piece.
+
+**Competing treatments, then synthesis, is now the proven revision loop at
+episode scale.** Two text-only story-writers drafted rival treatments from
+the same brief (A "sitcom ensemble", B "the race is the episode"); the
+synthesis took B's act 3 as the spine and A's acts 1–2, with binding
+rulings written down before any implementation. Total cost of the design
+phase was text; total paid cost of the whole rewrite — 88 new MiniMax clips
+plus tweak-round re-rolls — was about twenty cents. Design as text, always,
+before build.
+
+**The wants engine minted a breakout character.** Blue — apologises
+mid-collision, everywhere at once, certain he is winning — got the
+episode's out-loud laugh and a standing cameo mandate from Mike, with an
+approved-for-development long arc (the anti-Sunny: confidently wrong about
+being "first" every episode until the one day he isn't). A character
+specified as a *want* travels between episodes; a character specified as a
+motion law does not. Ledger and mechanics are bible material
+(`docs/kids/BIBLE.md`).
+
+**Tweak-round findings, both runs (~$0.02 total):**
+
+- **All-caps emphasis is print-only on MiniMax.** "the AIR" was read "the A"
+  — two shipped defects with the identical signature. Caps stay in bubble
+  text; the ear gets lowercase and carries emphasis in emotion/speed. Rule
+  folded into STYLE's per-engine spelling section.
+- **Phrase/voice fit is a failure mode distinct from a bad draw.** A bad
+  draw is an s/word outlier against the voice's own band and a cache-bust
+  re-roll fixes it for a cent (the B12 pattern). `a3_22b` "Nice drama."
+  broke the *same way on every draw* — the phrase didn't fit the voice, and
+  rewording to "Very dramatic." fixed it instantly. When a re-roll
+  reproduces the artifact, rewrite the line.
+- **Paint the value, not the hue.** The dry-roller payoff repainted a blue
+  sky blue — invisible. A payoff that adds colour over a same-hue plate
+  must change value (pale primer → saturated). Folded into STYLE.
+- **Scene-boundary continuity is a bug class, not a bug.** Three
+  "everything jumps at the cut" defects in one cut: per-scene ricochet
+  boxes that don't hand off position/heading, camera zoom discontinuity,
+  emotion snap, pop-in entrances. The checklist and its verification
+  (paired boundary-frame stills) are now in STYLE's motion section.
+- **The comedy-pacing rule re-confirmed itself with data Mike asked for**:
+  escalating repetition delays (+30f per firing, to 165f) and the
+  count-answers-that-sum gag both held through two screenings.
+
+**`sameAs` direction is a script-stage decision.** The generator resolves
+aliases backwards only, so the *earliest firing* must be the source
+recording. The rewrite drafted its chains the other way; flipping them
+replaced two already-ear-approved takes with fresh MiniMax draws — new ear
+items that existed only because of chain direction. Plan the source when
+the chain is written. The corollary was the good surprise: a re-key of a
+chain source is *free* if you migrate the cache (`git mv` the mp3, rename
+the `.cache.json` entry, hashes untouched) instead of re-buying — which
+also protects an ear-checked take from a second roll of the dice.
+
+**Ship-and-revise held up end to end.** Every ear-risk shipped in-cut with
+an unexercised fallback recorded next to it; Mike's ear ran in parallel
+with builds and never serialized anything; the tweak rounds cost cents.
+Three ear items remain open at retro time (a2_32b roll call, rc_14,
+a3_22b) — measurements healthy, fallbacks recorded in
+`src/videos/sky-blue/tweak1-worklist.md`.

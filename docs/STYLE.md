@@ -152,7 +152,15 @@ our theme palette overrides its colors:
   sentence at 2.20s and then 2.84s, in the line whose entire job was to sound
   the same as it had five minutes earlier. Use
   `{ sameAs: "<earlier key>" }` — the generator copies the clip under the new
-  key, so nothing downstream can tell, and it costs nothing.
+  key, so nothing downstream can tell, and it costs nothing. Two rules that
+  came from getting it wrong: **aliases resolve backwards only**, so the
+  chain's source is the *earliest firing* — decide that when the chain is
+  written, because flipping a drafted chain later replaces an approved take
+  with a fresh paid draw. And **re-key by cache migration, never
+  re-synthesis**: the cache is keyed by line key, so renaming a key re-buys
+  the clip unless you `git mv` the mp3 and rename its `.cache.json` entry —
+  which is free and, for an ear-checked chain source, the only way that
+  doesn't roll the dice on a take heard in several scenes.
 - **Spell out initialisms** so the voice reads letters, not a word: "U R",
   not "UR". Same for anything the model mangles — respell phonetically
   ("kay-o-koh"). Listen to every clip before building visuals; fixes are
@@ -165,6 +173,19 @@ our theme palette overrides its colors:
   `angry`, which that engine plays as effort and volume, not temper). Single
   letter runs — WHOOSH, FWOOSH — are fine on both. When a line moves engines,
   sweep its sound words before assuming the clip is the same clip.
+- **All-caps emphasis is print-only on MiniMax.** An emphasis word in caps is
+  read letter-wise — "the AIR" arrives as "the A" (two shipped ep-3 defects,
+  identical signature). A whole-shout line ("PUSH!") survives; a capitalized
+  word inside a sentence does not. Caps live in the drawn bubble, where they
+  are a picture of loudness; the clip text goes lowercase and the emphasis
+  is carried by `emotion` and `speed`. Sweep for mid-sentence caps whenever
+  a line lands on or moves to MiniMax.
+- **A clip that sounds wrong has two distinct fixes — diagnose before paying.**
+  A *bad draw* is a seconds-per-word outlier against the same voice's other
+  clips; a cache-bust re-roll with identical text and fields fixes it for a
+  cent. A *phrase/voice mismatch* breaks the same way on every draw (ep 3's
+  "Nice drama." did) — re-rolling reproduces the artifact, and the fix is to
+  reword the line. Measure s/word first; it tells you which one you have.
 - **A recast is a sweep of every per-line field, not just the voice id.** The
   two engines do not have the same fields, and the failure modes are asymmetric:
   an `emotion` on a kokoro line is silently ignored (so the seasoning a line was
@@ -377,6 +398,11 @@ came out of it.
 - **The plate is 1344×768 and the frame is 1920×1080.** Everything is upscaled
   ~1.4×, which soft painting survives and hard edges would not. Don't put text,
   a logo or a fine grid in a prompt.
+- **Paint the value, not the hue.** A payoff that adds colour over a plate of
+  the same hue is invisible — ep 3's roller painting a blue sky blue read as
+  nothing happening. Stage the change as a *value* change: a pale,
+  desaturated primer state that the payoff saturates. If before and after
+  differ only in hue name, they differ in nothing a viewer can see.
 
 ## Character-first staging
 
@@ -491,6 +517,21 @@ the previous frame renders differently every time.
   crossing the frame; it returns the point *and* the heading, so a flyer can
   bank into its own path. A straight lerp between two marks is the clearest
   tell that a scene was positioned rather than animated.
+- **A cut inside a continuous space gets the boundary checklist.** "Everything
+  jumps at the cut" is a bug *class* — ep 3's tweak round found three in one
+  cut, each a different species. When two adjacent scenes show the same place
+  and cast, verify all four: (1) position/heading handoff — a character in a
+  per-scene motion box starts the new scene where and how the old one left
+  him, then settles; (2) camera zoom/framing continuity; (3) emotion handoff —
+  the face carries across, no snap; (4) no pop-in — anyone new to the shot
+  gets an entrance. Verify with a paired-still check: render the last frame
+  of one scene and the first of the next and look at them side by side.
+- **`skeptical` is the series' deadpan face — unimpressed, never grumpy.**
+  One raised brow (`browAsym` — which is single-sided, camera-right only, so
+  the pose uses the achievable side), half-lids, the first flat mouth in the
+  rig. Its register is "I am not convinced", for reaction beats under another
+  character's claim; if a scene needs anger or smugness, that is a different
+  face and mostly a different show.
 - **Eyes are never still.** Micro-saccades run on every character
   (`eyeLife`); a character with no staged `look` also glances away
   occasionally. A staged `look`/`lookAt` is always authoritative — eye life is
@@ -561,6 +602,33 @@ the previous frame renders differently every time.
   character beat inside it.** A diagram cannot be funny; a character standing in
   one can. Audit by what is on screen, not by act number — and expect the answer
   to move episode to episode.
+- **Cadence is measured on spoken lines, against the shipped cut.** Two method
+  rules from the ep-3 rewrite: a planning document's density self-score is a
+  claim, not evidence — recompute the laugh-gap map from the generated
+  manifest with the real timeline arithmetic before believing any number. And
+  visual-only business does not feed the laugh clock: a six-year-old is
+  listening as much as watching, and a written-and-funny stage direction with
+  no sound is invisible to the ear (ep 3's max gap barely moved even when
+  every sight gag was credited as a laugh). Sight gags are free garnish on
+  top of a healthy spoken cadence, never a substitute for one.
+- **An ensemble is only an ensemble if its members answer each other.** Count
+  replies, not lines. Ep 3's first cut cast seven colours and shipped zero
+  colour-to-colour replies — 4.5% of spoken time, four one-way addresses,
+  nobody wanting anything anybody else had — and the screening verdict was
+  "they barely interacted". The fix that worked was structural: every
+  ensemble member gets a WANT, expressible inside its single cast emotion,
+  and the comedy is the wants colliding in recurring two-hander engines.
+  When a screening verdict says "dry", rewrite wants and replies; adding
+  beats to the existing skeleton is the pass that changes nothing.
+- **A set piece belongs to its characters.** The race that "zoomed by" was,
+  measured, 50% narrator with no incident, no reaction to any exit, and
+  never two seconds of silence. In an ensemble set piece the narrator's
+  lines convert to character beats, every exit or incident gets an on-stage
+  reaction, and something has to happen TO somebody. Corollary: deadpan
+  needs liveliness to push against — a wall-to-wall stillness discipline
+  (ep 3 shipped 42 "nothing enters this beat" holds) starves the comedy it
+  was protecting. Held beats stay empty only where they are the episode's
+  spine; everywhere else, ensemble business is allowed in.
 - **The fix is structural, not additive.** The temptation on any sag is to add
   jokes on top. Don't. Two moves, both of which make the gag *be* the lesson:
   - **Put the funny characters inside the mechanism scenes and let them deliver
