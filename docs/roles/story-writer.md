@@ -10,6 +10,14 @@ existing script exactly (e.g. `src/videos/wind/script.md`) — format/pattern
 drift is the known failure mode of delegated drafts, and the showrunner will
 be checking for it.
 
+Character canon comes from `docs/kids/BIBLE.md`, and your brief carries the
+bible excerpts for every character in scope — casting fields, wants, speech
+patterns, catch-phrase counts and ceilings, staging laws. Treat excerpts as
+CANON: don't re-invent a voice, fire a gag past its ceiling, or spend banked
+material the ledger reserves for a later episode. If you need a character
+your brief carries no excerpt for, flag it in your report rather than
+inventing them.
+
 ## Writing rules that interact with the TTS pipeline
 
 - Spell out initialisms ("U R", not "UR") so the voice reads letters.

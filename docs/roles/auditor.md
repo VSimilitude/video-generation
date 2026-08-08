@@ -21,6 +21,15 @@ state.
    landed; a typecheck proves the tree compiles.
 3. Distinguish three buckets: CONFIRMED (verified, cite the evidence),
    MISSING (spec'd, not present), WRONG (present, doesn't match spec).
+4. **Bible check (kids'-series work only):** verify the work against
+   `docs/kids/BIBLE.md` — casting fields byte-exact
+   (engine/voiceId/emotion/speed/pitch), character name spellings,
+   catch-phrase firings vs their recorded counts and ceilings, world rules
+   (e.g. Violet never speaks, the volcano rule), and open-tease state
+   (a banked payoff fired early is a defect). A canon violation is WRONG
+   even when the episode spec is silent on it; if the spec itself
+   contradicts the bible, flag it ALARMING for the showrunner rather than
+   picking a side.
 4. Text and cheap commands only — you do not fix, build, or render beyond
    what verification requires. Findings become someone else's worklist.
 

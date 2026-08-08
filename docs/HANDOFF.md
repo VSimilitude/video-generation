@@ -27,13 +27,11 @@ session read 38% from Mike, overrode a correct PAUSE on a bad diagnosis, and
 was actually at 93%. check-quota is recalibrated (ceiling 450k → 1.2M output,
 from a live 1.24M ↔ 93% reading) and now sums cache tokens when sanity-
 checking. Gate between every batch; when a reading looks absurd, check the
-cache fields and ask Mike rather than overriding. Window resets
-2026-08-08T05:00Z; a one-shot cron at 01:37 local resumes the bible batch,
-then ep 4.
+cache fields and ask Mike rather than overriding.
 
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).
-- Kids: DripWaterCycle (ep1), PuffWind (ep2 third cut, 12:25),
+- Kids: DripWaterCycle (ep1), PuffWind (ep2 third cut, 12:29),
   RaySkyBlue (ep3 FINAL cut, 17:27.3 — deployed 2026-08-05),
   DripChooses (CYOA branching demo).
 
@@ -53,46 +51,30 @@ Still open on ep 3 (non-blocking):
 - Ep-1 full-family watch verdict and ep-2 third-cut ear checks (list in
   wind/script.md) also still pending.
 
-## IN FLIGHT: ep-3 boundary wave — retro + first SERIES BIBLE
-Showrunner spawned 2026-08-07. Deliverables: (1) dated ep-3 retro entry in
-docs/LEARNINGS.md + rules folded into docs/STYLE.md (seed:
-sky-blue/tweak1-retro-notes.md, the worklists, wave reports,
-scratchpad/ep3_comedy_audit.md); (2) `docs/kids/BIBLE.md` first write-up —
-per-character canon (casting, personality, speech patterns, catch-phrase rep
-counts, arc history eps 1–3) + series ledger (running gags and state, open
-teases incl. the volcano eye, world rules), story-writer drafts, showrunner
-edits. On landing, wire the bible into docs/roles/{showrunner,auditor,
-story-writer}.md boot orders/checklists. Explicitly NOT starting ep 4.
+## Ep-3 boundary wave — DONE (2026-08-08)
+Retro committed 3a5f6b8 (LEARNINGS + STYLE). **docs/kids/BIBLE.md is live**
+("Little Big World — series bible": per-character canon incl. all seven
+colours, series ledger, world rules, forward-arc pointer) and wired into
+docs/roles/{showrunner,auditor,story-writer}.md — showrunner owns it and
+updates it at every episode retro; cold-boot path for story work is now
+bible + audience.md "Series arc canon", no episode scripts needed.
+Known stale text the bible supersedes: sky-blue script.md :2071/:3345 still
+say the volcano "stirs in Scene 35" (pre-T10) — the bible wins.
 
-**Wave state (showrunner, 2026-08-07):**
-- **Retro DONE, uncommitted**: watch-side entry appended to
-  docs/LEARNINGS.md (2026-08-07 — headline: "dry" is a structure note;
-  rewrite wants + replies, not staging) and rules folded into
-  docs/STYLE.md (comedy: cadence measured on spoken lines against the
-  shipped cut / ensemble = members answering each other / set pieces
-  belong to characters; voice: MiniMax all-caps print-only, re-roll vs
-  reword diagnosis, sameAs backwards-only + cache-migration re-keys;
-  kids: paint-the-value, scene-boundary continuity checklist,
-  `skeptical` register).
-- **Bible batch PAUSED on quota**: check-quota said PAUSE (window
-  722k/450k, resets 2026-08-08T05:00Z) — per standing rule, not pushed
-  through. The story-writer brief is READY and self-contained at
-  **docs/kids/bible-writer-brief.md**: at reset, spawn one fable
-  story-writer on it (writes docs/kids/BIBLE.md directly), then
-  showrunner review-and-edit, then the role-doc wiring above. Any fresh
-  showrunner can run this step from the brief alone; delete the brief
-  when the bible lands.
-
-## NEXT: ep 4 — plants / photosynthesis
+## IN FLIGHT: ep 4 — plants / photosynthesis
 Order decided by Mike 2026-08-04; full arc rationale and guardrails live in
 `docs/roles/audience.md` "Series arc canon" (seed-hero ingredients quest,
 Sunny fully vindicated as the peak, soil bridge into ep 5, volcano sleep-gag
 gets one more rep, ep-2 Rock cast in ep 5, outgassing ruled OUT of ep-5
 scope). Ep 5 = the volcano wakes. Runtime rule: 10–30 min is fine, hit the
 beats, never target a duration.
-Sequence once the bible lands: fresh showrunner → ep-4 brief → treatment →
-script → staging waves → deploy a screenable cut. Under this week's
-autonomous mode, run that straight through rather than stopping for sign-off.
+Campaign showrunner spawned 2026-08-08 (autonomous mode): brief → treatment
+→ script → staging waves → deployed screenable cut, straight through, no
+sign-off stops. Creative calls taken in Mike's stead are LOGGED per wave for
+his tweak round. Story-work handoffs from the bible wave: Sunny enters at
+maximum ego (wake-claim + "That is not me." unfired, available for tease);
+Blue's anti-Sunny cameo seed slot open (payoff forbidden); roll-call variant
+owed; soil stays an unexplained given.
 
 ## Backlog (owned, not started)
 - **Kit cleanup pass** (accumulated through eps 2–3): re-export `Freeze`

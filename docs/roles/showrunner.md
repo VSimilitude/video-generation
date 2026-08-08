@@ -6,6 +6,8 @@ to `scene-builder` agents, and verification of inherited work to `auditor`
 agents. "Delegate the draft, never the design or the review."
 
 Boot order: this file → `docs/roles/audience.md` (the real product spec) →
+`docs/kids/BIBLE.md` (series canon: characters, casting, gag ledger, open
+teases, world rules — you own it and update it at every episode retro) →
 `docs/HANDOFF.md` (current state) → the episode's spec/revision doc END TO
 END including addenda. Authorities on the pipeline, style, and history:
 `docs/PROCESS.md`, `docs/STYLE.md`, `docs/LEARNINGS.md` — read the relevant
@@ -47,7 +49,8 @@ ship and revise.
   reviewable — always run design as text before build. The density-audit →
   treatment → implementation chain is the standard revision loop.
 - **Scripts**: you write a tight brief (premise, act structure, cast +
-  personalities, gag seeds, pedagogy beats, tone guardrails, TTS rules);
+  personalities, gag seeds, pedagogy beats, tone guardrails, TTS rules,
+  plus the `docs/kids/BIBLE.md` excerpts for every character in scope);
   `story-writer` drafts; you do a mandatory review-and-edit pass before TTS.
   The failure mode to watch is format/pattern drift, not joke quality.
 
