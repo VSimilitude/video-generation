@@ -96,6 +96,98 @@ in the bible / arc canon are not re-logged.
   grass_close (orange 3D-render → matte flat cocoa brown), sunrise's
   second roll accepted as-is, sunset accepted on seat-by-crop.
 
+## B3 audit rulings (showrunner reboot 3 after mid-batch kill, 2026-08-08)
+
+Full audit of the four dead builders' act files: `scratchpad/
+ep4b3_audit_act12.md` (+ act3/recap counterpart). Calls taken on its
+escalations:
+
+- **s10|s11 boundary: Sunny stays in s11's sky** (ambient, his act-1 mark,
+  no lines) — a daylight sky may not lose its sun at a hard cut; Ray may
+  vanish (time-cut film grammar, script-faithful cast). Reversal: trivial.
+- **s06 order board persists through the close** — a posted work order
+  stays posted; the dead builder had it vanish for 242 frames. Reversal:
+  trivial.
+- **"Sorry, fence!" gets a keyed fence bounce** inside `a1_37`'s window
+  (audit found the gag left to chance). Ray's late-catching Cheshire face
+  staged once on the s07 arrival (scripted tic, was unstaged). Reversal:
+  trivial.
+- **Ratified in place:** s11 on `meadow_day` (the plate-design table's
+  `sky_cloud_level` row is wrong, not the code); s12a no-volcano (no-horizon
+  shot exemption); Sunny ambient in s09; act1's dawn-plate flip; Drip's
+  stem-face substitution (s15). All flagged in-code by the builders/audit.
+- **OldTree promotion DEFERRED to the kit-cleanup pass** (three copies,
+  three palettes — mid-wave shared-file surgery declined); act1/act2
+  palettes aligned to one rule now.
+- P0 defects fixed per audit prescription (Ray −62° parked bank → clamped
+  travel bank + RAY_STOOP landing; Sunny restored frame-right in s15 +
+  lean sign flipped; act2's five unfrozen held beats frozen to act1's
+  `held` pattern).
+
+Act3/recap audit rulings (same session, `scratchpad/
+ep4b3_audit_act3recap.md` + repair brief `ep4b3_repair3r_brief.md`):
+
+- **Golden hour: act3's filter-chain grade is canon** (measures the target
+  ~140 warm); recap s28's cool blend-layer version replaced with it. The
+  script treats 22/23/28 as one hour. Reversal: re-grade, free.
+- **s28|s29 is a motivated time cut, not continuous** — Pip's two scales
+  both kept (s29 crown-into-ember justification stands); header claim
+  rewritten. Reversal: free.
+- **Held-beat purity enforced everywhere** (audit found emotion/look/lean
+  changes starting inside five holds incl. the break and the s26
+  resolution): reactions land ON the boundary frame, then dead still.
+  "The realisation is the beat" staging rejected in favour of the script's
+  own words ("nothing starts inside it").
+- **Sprout-row canon = act2 Scene 15's marks** (plants cannot move): recap
+  s29's drifted row moved back onto them; row ADDED to s24/s26/s28 wides
+  (script sells the growth spurt and "taller than the sprout row" against
+  it; it was missing from all three).
+- **s20 push reframed** (~1.35 not 1.66): the mind-blower's picture is the
+  enormous tree, not the cast sliced at the neck and the volcano off frame.
+- **Drawn-caps additions sanctioned** (five bubbles beyond the script's
+  three enumerated drawn/spoken disagreements — emphasis-consistent, kept,
+  logged). Two 7-word bubbles trimmed to <=6.
+- **Ratified as staged:** s21 grass_close cutaway (plate-design table row
+  stale, annotated); s27 Pip off-mark (recap-world licence, ep-3
+  precedent); panel bow order; Sunny frame-right in act3.
+- **Pip pointer rig DEFERRED to a follow-up batch**: `POINT_CEILING` 14°
+  means the leaf-point barely reads (s23's "turns her leaf up at the Sun"
+  is effectively invisible — audit M-A5). Fix belongs in Pip.tsx (shared),
+  so it waits until both repair builders land, then one small batch +
+  targeted re-stills (incl. act2 s16's point). Until then all points ramp
+  within 14°.
+- **Repair verification rulings (reboot 4, 2026-08-09,
+  `scratchpad/ep4b3_verify_act12.md`):** (a) s13's two in-hold Drip
+  emotion changes STAND — script.md Scene 13 itself stages "Drip decides,
+  visibly" inside the 36f beat; the act3/recap purity ruling bars
+  unscripted business only, so acts 2 and 3 agree once the exception is
+  read as scripted (N-03). (b) s16 Ray's arc over the cutaway RATIFIED —
+  still f15060 shows him in the clear cream gap between the giant grass
+  clumps; close-grass scale sells him as distant (W-A2-12). Reversal:
+  restage, trivial.
+- **Pointer fix design (reboot 4, 2026-08-09): elbow morph above 14°**
+  (brief `scratchpad/ep4b3_pointer_brief.md`) — two-segment leaf that
+  clears the pod rim laterally then rises, engaging only past the old
+  ceiling so every already-staged pose in the ≤14° band stays
+  byte-identical by construction; act3 POINT_CEILING → 56 so s23's Sun aim
+  reads. Rejected: drawing the pointer OVER the pod (leaf across the face
+  on a face-dominant body); lowering the node with a longer straight leaf
+  (changes rest silhouette in every staged scene). Reversal: revert
+  Pip.tsx + ceiling, free.
+- **Pointer batch LANDED + ratified (2026-08-09):** all 7 builder
+  deviations accepted — POINT_HELD=14 decoupled from POINT_CEILING=56
+  (prevents silent re-posing of s17/19/21/24), elbow joint below the pod
+  (measured better than the brief's lateral-clearance sketch: tip rise
+  107 vs 78), bent blade slimmed 30%, raised pointer over the cotyledons
+  when bent, SunWash `spread` prop, s16's 78° saturating at the rig's
+  honest 61.1° limit. s16 unlock + s23 Sun-aim verified on stills — the
+  aim reads via lean + eyes + lift. Rig limit "raised toward, not
+  pointing at" ACCEPTED for this cut (real fixes = lower pointer node or
+  leaf-over-pod, both rejected above); leafAt ignoring lean noted for
+  retro. Recap M-R1 closed: full-res f26209/26800/27282/27283 all pass
+  (chant cards, warm s28 grade matching act3, motivated s28|s29 dusk
+  cut).
+
 ## Wave-B staging calls (showrunner reboot session, 2026-08-08)
 
 - **Plate design** (`ep4-plate-design.md`, ~13 keys): old tree painted,

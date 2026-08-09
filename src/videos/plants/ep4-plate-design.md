@@ -45,7 +45,7 @@ the texture words.
 | `sky_drift` | 2 | Sky only, mid-air: blue with soft drifting cumulus, morning. Seeds are SVG. Open centre. |
 | `grass_close` | 3, 5(close), 6, 9, 10, 14/16 surface halves | Low, close grass world: grass blades painted soft at frame edges, small clear centre-ground where Pip's SVG dirt patch + mark sit. No horizon needed. |
 | `meadow_sunrise` | 5 | Sunrise wide: warm pink-gold east sky, long shadows, greens still cool. Tree + bare horizon. Sunny is SVG — leave the sun OUT of the sky (describe glow, not a disc). |
-| `meadow_day` | 6, 9, 10, 15, 20(wide), 21 | Full daylight wide, biggest bluest sky (the vast-sky-over-tiny-dot scenes). |
+| `meadow_day` | 6, 9, 10, 15, 20(wide), ~~21~~ | Full daylight wide, biggest bluest sky (the vast-sky-over-tiny-dot scenes). **Scene 21 no longer uses it** (showrunner ratification, B3 repair pass): the crumb is staged as a `grass_close` cutaway with `wide={false}`, the one sanctioned way to be in this episode without a volcano in it — see `scenes/common.tsx`'s `MeadowWorld` note and act3.tsx's header. |
 | `meadow_night` | 7 | Night: deep blue (not black), stars, pale silver ground light. Moon is SVG (Ray arrives down its light — geometry must line up); prompt moonGLOW sky, no moon disc. |
 | `meadow_dawn` | 8, 24 | Dawn: first gold at the horizon, sky still half-cool. No sun disc (Sunny SVG). |
 | `sky_cloud_level` | 11–12 | Up at cloud height for the Cloud Hotel: blue sky, cloud floor/banks below, afternoon warm. Hotel + Cloudia are SVG. |

@@ -66,7 +66,10 @@ import {
 //               a snap-back, and it has its own scheduler: `pipLean`.
 //   THE LEAF    her first pointer, unlocked in Scene 16. Before it she can
 //               only lean at the world; after it she has an arm. `point` is
-//               the angle it is held at.
+//               the angle it is held at, and above 14° the leaf BENDS at an
+//               elbow to get past her own head — see `ELBOW`, which is what
+//               lets Scene 23 aim it at a Sun 56° up instead of settling for
+//               a leaf held out at 14°.
 //   THE TREMBLE small, fast, on top of the lean — straining against being
 //               planted, and later the kitchen at full roar.
 //
@@ -496,12 +499,144 @@ const Fluff: React.FC<{
 // Leaves
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// THE POINTER'S ELBOW — how a leaf shorter than her head points above her head
+// ---------------------------------------------------------------------------
+
+/**
+ * **Below this angle the pointer is the drawing it always was, to the byte.**
+ *
+ * The rig's original problem, written down in `act3.tsx`'s own analysis and now
+ * obsolete: the pointer is the topmost true leaf, its node sits 56 local units
+ * under the pod's bottom edge, the leaf is 150 long, the pod is 208 across and
+ * leaves are drawn BEHIND the pod. A straight leaf raised past ~14° therefore
+ * walks its own tip into her cheek — at 56° (the angle Scene 23's Sun actually
+ * sits at) the tip is *inside* the pod ellipse and the gesture reads as a
+ * collar. Fourteen degrees was the whole usable range, and 14° is barely
+ * distinguishable from rest.
+ *
+ * Above 14° the leaf now bends. `POINT_ELBOW_FROM` is the threshold and
+ * `POINT_ELBOW_FULL` is where the bend is fully engaged; in between the joint
+ * is interpolated, so a ramp *through* the threshold has no kink in it. At or
+ * below the threshold — and at every negative angle down to the −24° floor the
+ * acts clamp to — `Leaf` takes the same branch, builds the same path string and
+ * hangs it off the same `rotate()` transform as before this existed.
+ */
+const POINT_ELBOW_FROM = 14;
+const POINT_ELBOW_FULL = 40;
+
+/**
+ * The elbow's geometry, and every number in it is paid for by the pod.
+ *
+ *   `baseAngle`  the first run goes out at 12°, nearly flat, because the thing
+ *                it has to do is get OUT before it goes UP. Everything that
+ *                climbs early climbs into her cheek.
+ *   `baseFrac`   0.36 of the leaf — 68 units at full bend, putting the joint
+ *                at (67, 117) local, which is 39 units *below* the pod's
+ *                bottom edge. **The joint deliberately does NOT clear the
+ *                pod's 104-unit rim laterally**, and it does not have to:
+ *                there is no pod at that height. What has to clear the pod is
+ *                the blade's upper edge as it comes round, and the measured
+ *                test below is the one that matters. Longer base runs are
+ *                safer and *worse*: at 0.6 the tip only gets 78 units above
+ *                its rest height, at 0.36 it gets 107, and a gesture reads on
+ *                how far it moved.
+ *   `tailFrac`   at least 45% of what is left after the base is a STRAIGHT run
+ *                at the angle she asked for. That straight run is the part
+ *                that reads as aim: the first pass spent the whole budget on
+ *                the arc and drew a curl.
+ *   `rPref`/`rMin`  the joint is a CURVE, not a hinge: she is a plant. 90 is
+ *                the radius it prefers; 78 is the tightest it will bend,
+ *                which is what stops the blade pinching into a cusp on the
+ *                inside of the turn. That floor is also the rig's real aim
+ *                limit — 12° plus the 49.1° the arc budget buys at r=78 =
+ *                **61.1°** — and a `point` above it saturates there rather
+ *                than kinking. Scene 23's Sun is at 56.5°, which is the number
+ *                this was solved for; Scene 16's 78° comes out at 61.1.
+ *   `lenGain`/`lenCap`  the bent leaf reaches 40 units further than the
+ *                straight one (190 total) so the tip still ends up somewhere,
+ *                capped so it stays a leaf rather than becoming an arm.
+ *
+ * Measured (`scratchpad/ep4b3_pointer/geom.mjs`, which mirrors this file, blade
+ * slimming included). In the `leaf` state — every raised pointer in episode
+ * four — the tip is outside the pod at EVERY angle, and the share of the blade
+ * outline inside the pod is 0% at 26° and above, ≤3% at 18–22°. A straight leaf
+ * buries its tip from ~48° up and a third of its blade from 20°.
+ *
+ * (The `young` plant's top node sits 13 units under the pod rather than 56, so
+ * a third of that leaf overlaps the pod at ANY angle including rest — 33% at
+ * 14°, 34% at 60°. Pre-existing, unchanged by the elbow, and academic: nothing
+ * in the episode points the young pointer above 14°.)
+ */
+const ELBOW = {
+  baseAngle: 12,
+  baseFrac: 0.36,
+  tailFrac: 0.45,
+  rPref: 90,
+  rMin: 78,
+  lenGain: 40,
+  lenCap: 190,
+} as const;
+
+/**
+ * The bent leaf's spine: an arc-length parameterised curve from the node out.
+ *
+ * A straight run at `a1`, a constant-radius turn, then a straight run at the
+ * angle it was asked for. It is written as an integral of the tangent rather
+ * than as a Bézier for one reason: at `bend` 0 it collapses **exactly** onto
+ * `s ↦ (s cos θ, −s sin θ)`, which is what `rotate(-angle)` does to the flat
+ * profile, so the drawing is continuous across the threshold instead of
+ * jumping onto a differently-parameterised curve.
+ */
+function elbowSpine(angle: number, L: number, bend: number) {
+  const total = lerp(L, Math.min(ELBOW.lenCap, L + ELBOW.lenGain), bend);
+  const a1 = (lerp(angle, ELBOW.baseAngle, bend) * Math.PI) / 180;
+  const base = total * ELBOW.baseFrac;
+  const budget = (total - base) * (1 - ELBOW.tailFrac);
+  // How far it is allowed to turn: what was asked for, or what the tightest
+  // honest radius can buy out of the length that is left.
+  const turn = Math.min(Math.max(0, (angle * Math.PI) / 180 - a1), budget / ELBOW.rMin);
+  const r = turn > 1e-6 ? Math.min(ELBOW.rPref, budget / turn) : 0;
+  const arc = r * turn;
+  const a2 = a1 + turn;
+  const jx = base * Math.cos(a1);
+  const jy = -base * Math.sin(a1);
+  const ex = jx + r * (Math.sin(a2) - Math.sin(a1));
+  const ey = jy + r * (Math.cos(a2) - Math.cos(a1));
+  /** The point `n` units off the spine's left-hand normal, `s` along it. */
+  const at = (s: number, n: number): { x: number; y: number } => {
+    let x: number;
+    let y: number;
+    let th: number;
+    if (s <= base) {
+      th = a1;
+      x = s * Math.cos(a1);
+      y = -s * Math.sin(a1);
+    } else if (s <= base + arc) {
+      th = a1 + (s - base) / r;
+      x = jx + r * (Math.sin(th) - Math.sin(a1));
+      y = jy + r * (Math.cos(th) - Math.cos(a1));
+    } else {
+      th = a2;
+      const k = s - base - arc;
+      x = ex + k * Math.cos(a2);
+      y = ey - k * Math.sin(a2);
+    }
+    return { x: x + n * Math.sin(th), y: y + n * Math.cos(th) };
+  };
+  return { total, at };
+}
+
 /**
  * One leaf, drawn pointing along +x from its own origin, then rotated.
  *
  * `grow` scales it out of nothing at the node — Scene 16 unfurls one of these
  * in real time and the audience has to see it *become* a leaf, so it opens
  * width-first (a rolled leaf unrolls) rather than scaling uniformly.
+ *
+ * `elbow` bends it (see `ELBOW`). At 0 — every leaf that is not the pointer,
+ * every pointer at or below `POINT_ELBOW_FROM`, and both cotyledons — this
+ * function is the one it always was: same path string, same transform.
  */
 const Leaf: React.FC<{
   x: number;
@@ -513,21 +648,77 @@ const Leaf: React.FC<{
   grow: number;
   /** Toothed edge — the dandelion tell. Off on the cotyledons. */
   toothed?: boolean;
-}> = ({ x, y, angle, side, length, grow, toothed = true }) => {
+  /** 0..1, how far the pointer's joint is engaged. 0 = today's flat leaf. */
+  elbow?: number;
+}> = ({ x, y, angle, side, length, grow, toothed = true, elbow = 0 }) => {
   const g = clamp01(grow);
   if (g <= 0.01) return null;
   const L = length * (0.34 + 0.66 * g);
   const w = length * 0.3 * g;
+  const bend = clamp01(elbow);
+  if (bend <= 0) {
+    const d = toothed
+      ? `M 0 0 Q ${L * 0.22} ${-w} ${L * 0.42} ${-w * 0.72}` +
+        ` Q ${L * 0.5} ${-w * 1.15} ${L * 0.66} ${-w * 0.78}` +
+        ` Q ${L * 0.78} ${-w * 1.05} ${L} 0` +
+        ` Q ${L * 0.78} ${w * 1.05} ${L * 0.66} ${w * 0.78}` +
+        ` Q ${L * 0.5} ${w * 1.15} ${L * 0.42} ${w * 0.72}` +
+        ` Q ${L * 0.22} ${w} 0 0 Z`
+      : `M 0 0 Q ${L * 0.45} ${-w * 1.05} ${L} 0 Q ${L * 0.45} ${w * 1.05} 0 0 Z`;
+    return (
+      <g transform={`translate(${x} ${y}) scale(${side} 1) rotate(${-angle})`}>
+        <path
+          d={d}
+          fill={PIP_COLOR.leaf}
+          stroke={kidTheme.ink}
+          strokeWidth={7}
+          strokeLinejoin="round"
+        />
+        <path
+          d={`M ${L * 0.06} 0 L ${L * 0.88} 0`}
+          stroke={PIP_COLOR.leafDark}
+          strokeWidth={5}
+          strokeLinecap="round"
+          opacity={0.8}
+          fill="none"
+        />
+      </g>
+    );
+  }
+  // Bent. The SAME profile — the same fractions of the length, the same
+  // multiples of the width, the same toothed bumps — laid along the spine
+  // instead of along the x axis, so it is one leaf with a bend in it rather
+  // than a second prop. The rotation is baked into the spine, which is why
+  // this branch's group has no `rotate()`.
+  const spine = elbowSpine(angle, L, bend);
+  const T = spine.total;
+  // **A raised leaf is a NARROWER leaf, and that is the one place the bend
+  // touches the blade rather than just its spine.** At rest the blade is 90
+  // across on a 150 spine; laid along a turn of radius ~87 at that width the
+  // outer edge balloons and the inner edge compresses, and the first pass drew
+  // a boxing glove. Slimmed 30% it is the same leaf cocked over — a plant
+  // lifting a blade turns it, so it is also what one looks like — and the
+  // direction the tip is aiming becomes legible, which is the whole gesture.
+  const bw = w * (1 - 0.3 * bend);
+  const p = (s: number, n: number): string => {
+    const q = spine.at(s, n);
+    return `${q.x.toFixed(2)} ${q.y.toFixed(2)}`;
+  };
   const d = toothed
-    ? `M 0 0 Q ${L * 0.22} ${-w} ${L * 0.42} ${-w * 0.72}` +
-      ` Q ${L * 0.5} ${-w * 1.15} ${L * 0.66} ${-w * 0.78}` +
-      ` Q ${L * 0.78} ${-w * 1.05} ${L} 0` +
-      ` Q ${L * 0.78} ${w * 1.05} ${L * 0.66} ${w * 0.78}` +
-      ` Q ${L * 0.5} ${w * 1.15} ${L * 0.42} ${w * 0.72}` +
-      ` Q ${L * 0.22} ${w} 0 0 Z`
-    : `M 0 0 Q ${L * 0.45} ${-w * 1.05} ${L} 0 Q ${L * 0.45} ${w * 1.05} 0 0 Z`;
+    ? `M ${p(0, 0)} Q ${p(T * 0.22, -bw)} ${p(T * 0.42, -bw * 0.72)}` +
+      ` Q ${p(T * 0.5, -bw * 1.15)} ${p(T * 0.66, -bw * 0.78)}` +
+      ` Q ${p(T * 0.78, -bw * 1.05)} ${p(T, 0)}` +
+      ` Q ${p(T * 0.78, bw * 1.05)} ${p(T * 0.66, bw * 0.78)}` +
+      ` Q ${p(T * 0.5, bw * 1.15)} ${p(T * 0.42, bw * 0.72)}` +
+      ` Q ${p(T * 0.22, bw)} ${p(0, 0)} Z`
+    : `M ${p(0, 0)} Q ${p(T * 0.45, -bw * 1.05)} ${p(T, 0)} Q ${p(T * 0.45, bw * 1.05)} ${p(0, 0)} Z`;
+  // The midrib follows the bend, sampled rather than solved: at stroke width 5
+  // an eight-segment polyline through a 46° turn is a curve.
+  const vein = Array.from({ length: 9 }, (_, i) =>
+    p(T * (0.06 + (0.82 * i) / 8), 0),
+  );
   return (
-    <g transform={`translate(${x} ${y}) scale(${side} 1) rotate(${-angle})`}>
+    <g transform={`translate(${x} ${y}) scale(${side} 1)`}>
       <path
         d={d}
         fill={PIP_COLOR.leaf}
@@ -536,10 +727,11 @@ const Leaf: React.FC<{
         strokeLinejoin="round"
       />
       <path
-        d={`M ${L * 0.06} 0 L ${L * 0.88} 0`}
+        d={`M ${vein.join(" L ")}`}
         stroke={PIP_COLOR.leafDark}
         strokeWidth={5}
         strokeLinecap="round"
+        strokeLinejoin="round"
         opacity={0.8}
         fill="none"
       />
@@ -607,6 +799,18 @@ export const Pip: React.FC<PipProps> = (props) => {
   const nodes = LEAF_NODES.slice(0, Math.ceil(shape.leaves));
   const pointing = props.point;
   const pointSide = props.pointSide === "left" ? -1 : 1;
+  // The elbow, and ONLY the pointer has one: a resting leaf, a cotyledon and a
+  // pointer held at or under `POINT_ELBOW_FROM` all take `Leaf`'s original
+  // branch. Blended continuously with the angle, so a ramp through the
+  // threshold bends rather than snapping.
+  const pointerBend =
+    pointing === undefined
+      ? 0
+      : clamp01((pointing - POINT_ELBOW_FROM) / (POINT_ELBOW_FULL - POINT_ELBOW_FROM));
+  const pointerNode = nodes.length > 0 ? nodes[nodes.length - 1] : undefined;
+  const pointerNodeY = pointerNode
+    ? lerp(GROUND - 24, stemTop + 14, pointerNode.u)
+    : 0;
 
   return (
     <CharacterFrame
@@ -643,6 +847,8 @@ export const Pip: React.FC<PipProps> = (props) => {
           if (nodeY > GROUND - 10) return null;
           const grow = clamp01((shape.leaves - i) * 1.4);
           const isPointer = i === nodes.length - 1;
+          // A RAISED pointer is drawn later, over the cotyledons — see below.
+          if (isPointer && pointerBend > 0) return null;
           const side: -1 | 1 = isPointer ? (pointSide as -1 | 1) : node.side;
           const rest = node.angle;
           const angle = isPointer && pointing !== undefined ? pointing : rest;
@@ -675,6 +881,27 @@ export const Pip: React.FC<PipProps> = (props) => {
               />
             ))
           : null}
+        {/* **The raised pointer, and it is the one leaf drawn over the seed
+            leaves.** A pointer lifted past 14° sweeps its tip up through
+            exactly where the camera-right cotyledon hangs, and painted under
+            it the gesture came out as one lumpy green mass with no direction
+            in it — the tip, which is the whole point of a point, was the part
+            underneath. Above them it has an outline. It is still behind the
+            POD: her face is never crossed by her own leaf.
+            At `pointerBend` 0 this branch does not exist and the leaf is back
+            in the map above, in its original z-order — which is what keeps
+            every pose at or under 14° the drawing it always was. */}
+        {pointerBend > 0 && pointerNode && pointerNodeY <= GROUND - 10 ? (
+          <Leaf
+            x={0}
+            y={pointerNodeY}
+            angle={pointing ?? 0}
+            side={pointSide as -1 | 1}
+            length={pointerNode.length}
+            grow={clamp01((shape.leaves - (nodes.length - 1)) * 1.4)}
+            elbow={pointerBend}
+          />
+        ) : null}
         <Pod cy={pod} shine={rig.trail.dy} />
         <Face
           rig={rig}

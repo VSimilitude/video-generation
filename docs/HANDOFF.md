@@ -120,11 +120,74 @@ five failed rolls: scenes 22/23/28 = `meadow_day` + comp warm grade
 table + per-plate grass palette = `PLATES` in scenes/common.tsx (skyline
 fraction, seat scale, grass hex; volcano seats at MEADOW.horizon=604 in
 every wide). Acceptance notes + value ladder at the bottom of
-backgrounds.mjs. B3 (acts in parallel, per-act scene-map files) is next;
-brief must carry: PLATES seating rule, golden-grade note, dusk-is-
-silhouette-card, morning cloud near bubble zone.
+backgrounds.mjs. Every-frame PipPlants validation re-run at the B2
+boundary: EXIT 0 (28085 frames, out/validate_pipplants_postB1.mp4).
+
+**B3 IN FLIGHT — reboot 3 (2026-08-08, session-limit kill took all four
+parallel act builders mid-batch; audit-not-trust recovery running):**
+The four act files (act1 s05–s10, act2 s11–s16, act3 s17–s26, recap
+s27–s29) were left substantially complete and UNCOMMITTED: all scene
+records full, tsc + lint:hooks clean, every-frame renders of all four
+ranges exit 0 (act3's re-run by the showrunner post-kill). New operating
+rules after two same-day kills: MAX 2 concurrent builders, quota gate
+(rewritten check-quota.mjs, weighted tokens, 24M ceiling) before EVERY
+spawn, checkpoint report to orchestrator after each accepted act.
+State: act1+act2 AUDITED (`scratchpad/ep4b3_audit_act12.md`, 85 confirmed
+/ 5 missing / 25 wrong — P0s: Ray −62° bank park in act2 s15/s16, Sunny
+staged frame-LEFT breaking the lean runner, act2 held beats unfrozen);
+repair builder running off `scratchpad/ep4b3_repair12_brief.md`
+(showrunner rulings logged in ep4-decision-log.md). act3+recap AUDITED
+(`scratchpad/ep4b3_audit_act3recap.md`, 74 confirmed / 8 missing / 26
+wrong — P0s: WaterLine over Pip through the break, emotion changes inside
+five held beats incl. s26's resolution, rule stamp over a bubble, recap's
+golden hour cooler than act3's, sprout-row continuity); second repair
+builder running off `scratchpad/ep4b3_repair3r_brief.md`. DEFERRED
+follow-up batch after both land: Pip.tsx pointer articulation
+(POINT_CEILING 14° doesn't read; audit M-A5) + targeted re-stills incl.
+act2 s16. Then: showrunner sampled still review per act, full-episode
+every-frame render, B3 commit boundary.
+
+**Reboot 4 (2026-08-09, second B3 kill took both repair builders
+mid-flight; fix state was unknown):** tree found tsc + lint:hooks CLEAN.
+Scene 13 CloudHotel negative-width bug VERIFIED FIXED (unmount at local
+frame 62, width still ~793 there; stills at globals 11090/11200/11600 show
+zero SVG-attribute errors; stir beat reads — showrunner eyeballed
+`scratchpad/ep4b3_s13_stir_f11090.png`). Repair verification DONE both halves:
+`scratchpad/ep4b3_verify_act12.md` (26/27 tasked items fixed, 0
+regressions, 4 new findings) + `ep4b3_verify_act3recap.md` (35 fixed /
+2 unfixed / 2 partial, 0 regressions, 7 new [C]s). Showrunner rulings
+logged in decision-log: s13 in-hold Drip decision STANDS (scripted),
+s16 Ray-over-cutaway RATIFIED (still f15060). Sampled still review
+act1+act2 PASS (6 stills, scratchpad/ep4b3_sr_f*.png — f13300 confirms
+both P0 fixes on screen). **ACT1 + ACT2 ACCEPTED (2026-08-09):** fixup builder landed N-01 (Ray
+mark 268→360 + bubble re-placed, arc 0.16→0.09 flagged+accepted; W-A2-12
+re-ratified at the lower mark on still f15300) and N-04 (act1 landing
+bank blended via BANK_CLAMP construction); both range renders exit 0
+(out/validate_fixup_s07.mp4, _s16.mp4); stills
+scratchpad/ep4b3_fixups/. Showrunner closed the s06 close-framing
+order-card tail (act1.tsx board() grew a tailSide param; verified on
+f3900 re-still). act1.tsx + act2.tsx COMMITTED d2841ef, pushed. **POINTER BATCH LANDED + ACCEPTED (2026-08-09):** Pip.tsx elbow morph
+(byte-identical <=14°, cmp-proven on 10 frames; rig aim limit now
+61.1°), act3 POINT_CEILING→56 with new POINT_HELD=14, all folded-in
+remainders closed (N-3 board exit, W-R1 SunWash — s28 measures warm
+R>G matching act3, N-1/2/5/6, W-23.2, N-7); both range renders exit 0.
+All 7 flagged deviations ratified (decision-log). Showrunner sampled
+review act3+recap PASS: s16 unlock + s23 aim stills, M-R1 closed on
+full-res f26209/26800/27282/27283 (scratchpad/ep4b3_recap_f*.png).
+Builder weak points logged for retro: leafAt ignores lean (aim reads
+anyway), s24|s25 4° step (legal time cut), young-state pointer node
+under pod (invisible today), golden/tree/sprout helpers now duplicated
+act3+recap → kit-cleanup backlog. RUNNING: full-episode every-frame
+validation render (out/validate_pipplants_postB3.mp4). Then: B3 commit
+boundary report. Wind-down rule this session:
+18M weighted = no new builder spawns, 21M = wrap to a clean checkpoint.
 
 ## Backlog (owned, not started)
+- **Bubbles kit gap (ep-4 B3 builder find):** the y>=170 centre clamp in
+  `Bubbles` (plants scenes/common.tsx) plus absolute-`left` shrink-to-fit
+  means any cutaway framing with a speaker above the midline couples
+  bubble WIDTH to x-position — no per-bubble `maxWidth` lever exists.
+  Worth adding when the kit next opens.
 - **Kit cleanup pass** (accumulated through eps 2–3): re-export `Freeze`
   from sky-blue/scenes/common.tsx (recap.tsx imports it straight from
   remotion); promote `SleepingVolcano` to lib (duplicated in wind/act3 and
