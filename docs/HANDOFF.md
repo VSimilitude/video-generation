@@ -212,6 +212,18 @@ the tweak round.
   the distinct-voice rule postdates it) — only after its family verdict.
 - Reading-match question (bubble text vs spoken words, Claire) — open.
 
+## Session shutdown note (2026-08-09)
+
+Mike powered down after the ep-4 ship. The orchestrator session's
+3h-recurring QUOTA WATCHDOG cron (auto-respawns a dead crew) was
+SESSION-ONLY and died with the shutdown — re-arm it in the new session if
+autonomous multi-wave work resumes. Offline phone versions of eps 1-3
+were delivered to Mike's chat (encodes remain in out/*_phone.mp4); the
+ep-4 phone render was killed mid-run at his request — re-run on ask
+(recipe in memory: phone-offline-delivery). Weighted quota gate
+(scripts/check-quota.mjs, 24M ceiling) + max-2-builders + wind-down at
+18M/21M are the standing spawn rules.
+
 ## Open loose ends in the tree
 - The technical session may have uncommitted src/site/ work. NEVER
   `git add -A`; commit by explicit path; deploy via clean worktree (recipe
