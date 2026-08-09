@@ -177,10 +177,21 @@ full-res f26209/26800/27282/27283 (scratchpad/ep4b3_recap_f*.png).
 Builder weak points logged for retro: leafAt ignores lean (aim reads
 anyway), s24|s25 4° step (legal time cut), young-state pointer node
 under pod (invisible today), golden/tree/sprout helpers now duplicated
-act3+recap → kit-cleanup backlog. RUNNING: full-episode every-frame
-validation render (out/validate_pipplants_postB3.mp4). Then: B3 commit
-boundary report. Wind-down rule this session:
+act3+recap → kit-cleanup backlog. Wind-down rule that session:
 18M weighted = no new builder spawns, 21M = wrap to a clean checkpoint.
+
+**B3 CLOSED + DEPLOYED (2026-08-09, orchestrator).** Full-episode
+every-frame validation render completed at full duration
+(out/validate_pipplants_postB3.mp4, 936.21s = 28085 frames, matches the
+post-B1 baseline exactly). B3 boundary committed 0a23e9c (act3, recap,
+Pip.tsx pointer articulation, docs, post-b3-worklist.md), pushed.
+Site DEPLOYED from clean origin/main worktree — PipPlants is LIVE on the
+gallery. **CAMPAIGN PARKED PENDING MIKE** — the tweak round works from
+ep4-decision-log.md top-down when his notes arrive; nothing else is gated
+on him, no crew should be running. Watchdog: do NOT respawn a showrunner
+for ep 4 until Mike's tweak notes arrive. Episode retro (LEARNINGS +
+BIBLE updates, list in post-b3-worklist.md "Retro reminders") runs with
+the tweak round.
 
 ## Backlog (owned, not started)
 - **Bubbles kit gap (ep-4 B3 builder find):** the y>=170 centre clamp in
