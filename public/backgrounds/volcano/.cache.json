@@ -1,0 +1,44 @@
+{
+  "coast_dawn": {
+    "hash": "9fe50dc0b6f995d9",
+    "outFile": "coast_dawn.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide calm empty seashore very early on a still clear morning seen from slightly above looking down across the beach, painted as flat simplified storybook shapes, the bottom third of the frame a broad plain sweep of pale warm sand seen from above as one smooth flat surface of colour with no pebbles, no shells, no seaweed, no footprints, no ripples and no detail in it at all, staying completely plain and smooth right down to the bottom edge of the frame, above it a wide calm band of soft pale teal water, one straight level horizon line placed a little above the middle of the frame with a completely bare empty sea horizon that has nothing standing on it anywhere along its whole length, and the sky filling the top half evenly coloured all the way across in soft pale peach fading up into gentle cool blue, the same brightness everywhere with no bright spot and no glare, two or three small soft clouds only in the top corners, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "coast_day": {
+    "hash": "8902048b53db058a",
+    "outFile": "coast_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide calm empty seashore in bright late morning seen from slightly above looking down across the beach, painted as flat simplified storybook shapes, the bottom third of the frame a broad plain sweep of warm golden sand seen from above as one smooth flat surface of colour with no pebbles, no shells, no seaweed, no footprints, no ripples and no detail in it at all, staying completely plain and smooth right down to the bottom edge of the frame, above it a wide band of deep saturated turquoise water, one straight level horizon line placed a little above the middle of the frame with a completely bare empty sea horizon that has nothing standing on it anywhere along its whole length, and the sky filling the top half evenly coloured all the way across in deep clear blue, the same brightness everywhere with no bright spot and no glare, two or three small soft white clouds only in the top corners, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "sea_horizon_dawn": {
+    "hash": "87ffabf4e8e1179f",
+    "outFile": "sea_horizon_dawn.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide expanse of completely calm open water under an enormous open early morning sky, painted as flat simplified storybook shapes, the bottom third of the frame one smooth plain band of soft dark teal water with no waves, no foam, no boats and no detail in it at all, one straight level horizon line placed low, about a third of the way up the frame, completely bare and empty along its whole length with nothing standing on it anywhere, and above it the sky filling the entire upper two thirds of the picture, evenly coloured all the way across in soft peach and rose low down fading up into deep cool blue, the same brightness everywhere with no bright spot and no glare, completely empty and open through the middle, a few small soft clouds only in the very top corners, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "sea_horizon_day": {
+    "hash": "48e8d7332f34ecc1",
+    "outFile": "sea_horizon_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide expanse of calm open water under an enormous open bright midday sky, painted as flat simplified storybook shapes, the bottom third of the frame one smooth plain band of deep saturated turquoise water with no waves, no foam, no boats and no detail in it at all, one straight level horizon line placed low, about a third of the way up the frame, completely bare and empty along its whole length with nothing standing on it anywhere, and above it the sky filling the entire upper two thirds of the picture, evenly coloured all the way across in clear saturated blue, the same brightness everywhere with no bright spot and no glare, completely empty and open through the middle, a few small soft white clouds only in the very top corners, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "strata_column": {
+    "hash": "6b43a341c12e1b75",
+    "outFile": "strata_column.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a flat straight-on diagram of layers of ground seen in cross-section, painted as flat simplified storybook shapes, filling the whole frame with perfectly level parallel horizontal stripes of colour running straight from the left edge to the right edge like a striped flag lying on its side, every stripe dead level with no slope and no curve anywhere, dark chocolate brown at the top, then dusty mauve, then warm grey, then deep ember red at the very bottom, each stripe one even soft colour with very gentle brush texture and nothing inside it, no stones, no roots, no cracks, no fossils, no plants, no tunnels, no hills, no landscape, completely flat and uniform, very low contrast, calm and warm, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "magma_chamber": {
+    "hash": "c639575df40a38ff",
+    "outFile": "magma_chamber.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the inside of an enormous warm rounded underground chamber seen straight on, painted as flat simplified storybook shapes, a high smooth arched ceiling of soft dark plum and warm brown stone across the top of the frame and smooth rounded stone walls curving down the left and right edges, the whole middle of the frame left completely open and plain and empty, the bottom third one broad flat pool of glowing molten orange and deep gold light lying perfectly level and still with no detail, no bubbles, no splashes and no ripples in it, a soft warm amber glow washing gently up the walls, cosy and inviting rather than frightening, very low contrast, no cracks, no stalactites, no crystals, no machinery, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "magma_shaft": {
+    "hash": "324192a9c2bfe784",
+    "outFile": "magma_shaft.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the inside of a tall narrow vertical rock chimney seen straight on from within, painted as flat simplified storybook shapes, smooth rounded walls of warm dark brown and plum stone running vertically up both sides of the frame, a wide plain open column of soft glowing amber and deep orange light filling the whole middle of the frame from top to bottom with nothing in it at all, no sparks, no bubbles, no rubble, no ledges, no detail, evenly lit all the way up with no bright spot, very low contrast, calm and warm, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  }
+}

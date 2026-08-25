@@ -171,6 +171,36 @@ are Mike's standing decisions, not re-logged.
   Drip/Puff/Pip. Pick stays PROVISIONAL for Mike's ear; recast after
   generation re-buys ~60 clips (cents). Reversal: one constant.
 
+## Skeleton-wave calls (showrunner review, 2026-08-25)
+
+- **Skeleton wave ACCEPTED after sampled still review** (8 riskiest
+  stills read; full report scratchpad/ep5/skeleton-wave-report.md).
+  One find, fixed on the spot: the volcano's portrait speech-bubble
+  tail anchored on his EYE, not his mouth — re-anchored for V1/V2 and
+  the pattern act agents inherit for V3–V7 (his first words in series
+  history must visibly come from the mouth).
+- **Ember rig has NO ARMS, by design** (builder call, ratified): two
+  orange bars at her staged size read as fins; her characterisation is
+  speed — gesture vocabulary is lean/squish/travel/staging. Reversal:
+  rig edit, hours not cents — flag early if the armless look fails
+  Mike's eye.
+- **MAGMA card gets a 24f held beat not in script.md** (builder
+  deviation, ratified): STYLE requires a visual punchline to land
+  alone and forbids the next line starting under a card; script.md's
+  Big Words table asked for the card without buying the beat.
+  Reversal: one number.
+- **Pip's body: PROMOTE plants' Pip.tsx to src/lib/kid/characters/**
+  for Scene 24 (needed twice = promotion earned per CLAUDE.md; the
+  ep-4 retro already leaned this way). Zero-diff gate on the plants
+  frame grid per PROCESS §7 — act-3 agent executes, showrunner
+  confirms. Rejected: a second per-video copy (kit-cleanup debt).
+- **KidSilhouette promotion DEFERRED to the retro/kit-cleanup pass**
+  (the volcano copy works; mid-campaign churn not worth it — it is
+  the third episode needing it, so the retro should do it).
+- **Volcano portrait bubbles stay hand-placed** (his crown exits the
+  frame so bubbleOver/Mark cannot serve him; the dummy-mark Cast hack
+  is accepted as the episode pattern, kit fix logged for cleanup).
+
 ## Script-round calls (showrunner edit pass, 2026-08-24)
 
 - **Script accepted at 189 spoken lines** (31 scenes; writer's trim order

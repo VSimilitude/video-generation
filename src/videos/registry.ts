@@ -64,6 +64,13 @@ import {
   HEIGHT as PLANTS_HEIGHT,
 } from "./plants/Video";
 import {
+  VolcanoVideo,
+  timeline as volcanoTimeline,
+  FPS as VOLCANO_FPS,
+  WIDTH as VOLCANO_WIDTH,
+  HEIGHT as VOLCANO_HEIGHT,
+} from "./volcano/Video";
+import {
   KidDemoVideo,
   timeline as kidDemoTimeline,
   FPS as KID_DEMO_FPS,
@@ -250,6 +257,17 @@ export const VIDEOS: VideoEntry[] = [
     width: PLANTS_WIDTH,
     height: PLANTS_HEIGHT,
     durationInFrames: plantsTimeline().durationInFrames,
+  },
+  {
+    id: "EmberVolcano",
+    title: "Ember and the Mountain That Said Good Morning",
+    description:
+      "The ground is not finished. A one-minute-old drop of lava wants out, and the mountain that has been scenery for four whole shows says good morning. Episode five of Little Big World.",
+    component: VolcanoVideo,
+    fps: VOLCANO_FPS,
+    width: VOLCANO_WIDTH,
+    height: VOLCANO_HEIGHT,
+    durationInFrames: volcanoTimeline().durationInFrames,
   },
   {
     id: "DripChooses",
