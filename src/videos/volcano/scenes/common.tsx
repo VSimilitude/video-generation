@@ -714,6 +714,45 @@ export const PLATES: Record<
   strata_column: { skyline: null, scale: 1.43, near: "#a8281f" },
   magma_chamber: { skyline: null, scale: 1.43, near: "#e8622a" },
   magma_shaft: { skyline: null, scale: 1.43, near: "#d8763d" },
+  // ACT 3 — the archipelago, and the first rows in this table that were
+  // MEASURED BY SCRIPT rather than by eye. The skeleton wave flagged that
+  // nothing on this box could decode a webp (node cannot, and Remotion's
+  // ffmpeg has no webp decoder); it can — **Pillow 12.2 is installed**, and
+  // `scratchpad/ep5/measure_act3.py` reads the skyline as the strongest
+  // row-to-row colour step in the upper 86% of the plate, plus the near-field
+  // mean over rows 78–94%. Re-measuring the delivered set with it agrees with
+  // the eyeballed `coast_dawn` to 0.003.
+  //
+  // `scale` is not taste either: it is the smallest number that covers the
+  // frame once the plate's own skyline is seated on the scene's seat line
+  // (`plateFit`). `black_beach_night`'s skyline is high in the plate, so it
+  // needs 1.55 to keep its top edge off the top of frame; `meadow_day` needs
+  // 1.60, which as a bonus crops off the blade fringe along its bottom edge
+  // that ep 4 spent six re-rolls failing to talk flux out of.
+  island_chain_dusk: { skyline: 0.57, scale: 1.43, near: "#184d59" },
+  black_beach_night: { skyline: 0.389, scale: 1.55, near: "#06283c" },
+  meadow_day: { skyline: 0.487, scale: 1.6, near: "#7e9616" },
+  // ACT 2 — the two plates that stand ON the mountain rather than looking at
+  // him. Measured by script as well (`scratchpad/ep5/measure-act2.mjs`, sharp,
+  // the strongest 6-row luminance drop); it agrees with the eyeballed
+  // `coast_dawn` to 0.004 and with `sea_horizon_day` to 0.006, which is the
+  // cross-check that says both measuring passes are reading the same thing.
+  //
+  // **`lava_slope_day`'s `skyline` is not a sea horizon, it is the far edge of
+  // a flat dark plain**, and it is seated at 400 rather than `COAST.horizon`
+  // for one reason: Scene 15 puts Sunny at maximum altitude above it and he is
+  // 460 units tall. 1.75 is the smallest scale that still covers the frame with
+  // that seat (the plate's own edge is only 0.302 of the way down it), and it
+  // is the biggest upscale in the episode — survivable only because this is the
+  // flattest, darkest, least detailed plate in the set, and the upscale
+  // actually helps by blurring the gravel texture flux insisted on.
+  //
+  // `coast_night` is seated at **360**, not 470: its horizon sits high in the
+  // plate (0.311), and seating that on `COAST.horizon` would need a 1.92×
+  // upscale. 360 also buys the shot what it needs — 720px of near field for
+  // the newest ground in the world, the arriving flow and the steam.
+  lava_slope_day: { skyline: 0.302, scale: 1.75, near: "#29252f" },
+  coast_night: { skyline: 0.311, scale: 1.52, near: "#032c47" },
 };
 
 /** Every plate is generated at this size (`scripts/generate-backgrounds.mjs`). */
@@ -1736,6 +1775,11 @@ export {
   CutFlash,
   Drip,
   KidBackdrop,
+  Pip,
+  PIP_BOX,
+  PIP_COLOR,
+  pipCrownLocal,
+  pipFaceLocal,
   Puff,
   Rock,
   SpeechBubble,

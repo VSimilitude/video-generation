@@ -171,7 +171,57 @@ are Mike's standing decisions, not re-logged.
   Drip/Puff/Pip. Pick stays PROVISIONAL for Mike's ear; recast after
   generation re-buys ~60 clips (cents). Reversal: one constant.
 
+## Act-wave salvage calls (successor showrunner #4, 2026-08-25)
+
+The ACT2 + ACT3 builders and showrunner #3 were killed ~11:47 ET by the
+session-limit boundary bug (transcripts lost, window since reset). Rulings
+on their uncommitted working tree:
+
+- **WIP SALVAGED, not discarded** (audit-not-trust pass, this session):
+  act2.tsx stages s10–s17 complete, act3.tsx stages s18–s26 complete,
+  scene maps exported and wired; smoke render of one mid-scene still per
+  inherited scene (17/17, scratchpad/ep5/smoke/) EXIT 0; sampled stills
+  (s15/s17/s19/s24/s26) all read at quality bar. Neither builder reached
+  self-review, gates, or reports — resumed as an "act-resume" wave below.
+- **Typecheck break repaired by hand**: act3 imports Pip/PIP_BOX/
+  PIP_COLOR/pipCrownLocal/pipFaceLocal from ./common; the dead builder
+  never added the re-exports. Added them to common.tsx's lib/kid
+  re-export block (the file's established hub pattern). tsc EXIT 0.
+- **Orphaned plates ADOPTED, not re-rolled**: black_beach_night +
+  meadow_day webps were on disk but the kill landed between download and
+  cache write. Cache entries reconstructed with the generator's own hash
+  ([MODEL, finalPrompt, aspectRatio]); `npm run backgrounds -- --video
+  volcano` then reports 12/12 cached, 0 generated, manifest regenerated
+  with all 5 new keys. Re-rolling was rejected: common.tsx's measured
+  skylines (0.389 / 0.487) bind to these exact pixels.
+- **Pip promotion zero-diff gate CONFIRMED** (showrunner confirmation the
+  worklist required): pip_before/pip_after/pip_control hashes.txt are
+  byte-identical. The promotion itself is committed (b2e350f).
+- **s17_surge belongs to ACT2** (ownership ruling): the act2/act3 briefs
+  disagreed at the boundary; ACT3's map correctly excludes s17, so
+  ACT2's staging stands and is NOT dead code. ACT2 resume builder
+  rewrites the collision-warning comment into a settled ownership note.
+- **Known repair items for the resume wave**: (1) a3_64-ish Ember bubble
+  "Now I am ten thousand years long." is 7 words — over the 6-word kit
+  limit (console warning at s23/s24); split into two beats per the kit's
+  own advice. (2) s26 "Started." bubble tail direction needs a look —
+  in the smoke still it points down-left toward the horizon rather than
+  at a speaker; verify against the staged speaker before THE BREAK.
+
 ## Skeleton-wave calls (showrunner review, 2026-08-25)
+
+- **Skeleton ACCEPTANCE PASS PASSED at c0940bb** (successor showrunner,
+  2026-08-25; the predecessor died before re-verifying the bubble-anchor
+  fix). Fresh 16-still set re-rendered from the committed code
+  (scratchpad/ep5/stills_accept/): the V1/V2 mouth-anchor fix holds
+  (tail lands at mouth height, clear of the eye, both frames), cold
+  open + act 1 + turn + title all read, and the `awakeHere` fix is
+  confirmed at the exact placeholder frames the builder's stale stills
+  showed wrong (12000, 22500 — volcano awake). Structural greps:
+  registry entry live, site registry untouched, volcanoFace/
+  volcanoBubble exported, mouth-anchor rule verbatim in all three act
+  briefs, 180f record in the timeline. ZERO repairs; no new commit
+  point needed. Act waves cleared to spawn.
 
 - **Skeleton wave ACCEPTED after sampled still review** (8 riskiest
   stills read; full report scratchpad/ep5/skeleton-wave-report.md).

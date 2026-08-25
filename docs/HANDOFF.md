@@ -159,8 +159,21 @@ Campaign state (showrunner keeps this current):
 - SKELETON WAVE CLOSED (committed c0940bb by orchestrator; successor
   showrunner acceptance pass 2026-08-25 PASSED — fresh 16-still
   re-render from committed code, stills_accept/, zero repairs; ruling
-  in the decision log). ACT WAVES IN FLIGHT: ACT2 (scenes 10–17) +
-  ACT3 (scenes 18–26) opus builders parallel, RECAP (27–31) after one
+  in the decision log). First ACT2+ACT3 builders and showrunner #3
+  killed ~11:47 ET at the session limit (transcripts lost).
+- ACT-WAVE SALVAGE (successor showrunner #4, 2026-08-25): the dead
+  builders' WIP audited and KEPT — act2 (s10–s17) + act3 (s18–s26)
+  structurally complete, 17/17 smoke stills render, sampled stills at
+  bar. Repairs by hand: Pip re-exports added to scenes/common.tsx
+  (typecheck now green), orphaned plates black_beach_night + meadow_day
+  adopted into the background cache with reconstructed hashes (no
+  re-roll; 12/12 cached, manifest regenerated). Rulings in
+  ep5-decision-log.md "Act-wave salvage calls". COMMIT POINT handed to
+  the orchestrator (salvage checkpoint, explicit paths in the report).
+- ACT-RESUME WAVE IN FLIGHT: ACT2 + ACT3 opus builders re-spawned in
+  audit-first resume mode (verify inherited file vs script/briefs →
+  still self-review loop → repairs incl. the 7-word s23 bubble split
+  and the s26 tail check → gates → report). RECAP (27–31) after one
   lands. Reports → scratchpad/ep5/act2-report.md / act3-report.md /
   recap-report.md.
 - Then: showrunner sampled still review, gates, site gallery entry
