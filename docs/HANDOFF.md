@@ -83,6 +83,32 @@ straight through, no sign-off stops; all creative calls LOGGED in an
 ep5 decision log for Mike's tweak round. Standing spawn rules: quota
 gate before EVERY spawn, max 2 concurrent builders, wind-down 18M/21M.
 
+Campaign state (showrunner keeps this current):
+- Slug `volcano`, dir src/videos/volcano/ live: ep5-decision-log.md
+  (boot + brief calls logged), ep5-brief.md (FINAL for treatments).
+- Ep-4 CANON folded into BIBLE.md (2026-08-24, canon only — PROVISIONAL
+  markers on everything Mike hasn't ratified; extraction record
+  scratchpad/ep5/ep4-canon-extract.md). Ep-4 taste/process retro still
+  belongs to Mike's ep-4 tweak round.
+- Treatment round DONE: ep5-treatment-A.md + ep5-treatment-B.md landed;
+  showrunner synthesis ep5-synthesis.md is the rule of record (B's
+  structure + A's spine gag; ceremony at the eruption; volcano speaks 7
+  lines; title "Ember and the Mountain That Said Good Morning"; ep-6
+  tease = thunder, TOP-logged for Mike).
+- script.md LANDED (31 scenes, 189 lines) + showrunner edit pass DONE
+  (rulings in script.md "Showrunner edit-pass rulings"; Scene-5 Sunny
+  pair promoted to load-bearing; all 12 writer deviations accepted).
+  script.md is the single source of truth for the cut.
+- NARRATION WAVE IN FLIGHT (opus builder): narration.mjs from script.md
+  → seed 4 cache migrations (sources verified on disk) → Ember voice
+  audition by measurement (candidates incl. free MiniMax pool + probe
+  IDs + pitch constructions; PROVISIONAL pick, Mike's ear pending;
+  clips + MEASUREMENTS.md in scratchpad/ep5_ember_audition/) → full
+  TTS gen + one-word-clip measurement pass → report in
+  scratchpad/ep5/narration-wave-report.md.
+- Then: skeleton wave (Video.tsx + timed placeholders + Root/registry),
+  act waves, still review, gates, deploy.
+
 ## Backlog (owned, not started)
 - **Bubbles kit gap (ep-4 B3 builder find):** the y>=170 centre clamp in
   `Bubbles` (plants scenes/common.tsx) plus absolute-`left` shrink-to-fit

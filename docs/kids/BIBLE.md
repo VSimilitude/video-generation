@@ -29,7 +29,17 @@ document disagrees with the tweak-round state, the tweak-round state wins.
 | 1 | `water-cycle` | Drip's Big Adventure | 9:33 | Drip the water drop rides the whole water cycle around the world and ends up exactly where she started. |
 | 2 | `wind` | Puff and the Kite That Wouldn't Fly | ~12:29 | Puff the invisible air puff discovers he is real stuff — and where wind comes from. |
 | 3 | `sky-blue` | Ray and the Sky Nobody Painted | 17:27.3 | Ray the sunbeam learns he was seven colours all along — why the sky is blue and a sunset is not. |
+| 4 | `plants` | Pip and the Sunshine Kitchen | 15:36.2 | Pip the dandelion seed — total ambition, zero legs — builds "the biggest thing in the world" from one spot by ordering light, water and air: photosynthesis, at Sunny's absolute peak. |
 | — | `drip-fork` | (CYOA demo) | ~90s | **Non-canon.** One-branch Drip mini-adventure built from ep-1 assets to prove the branching-player mechanic (`docs/CYOA.md`, phase 1). |
+
+**Ep-4 canon status.** Folded 2026-08-24 by the ep-5 showrunner (canon
+only — the ep-4 taste/process retro runs with Mike's ep-4 tweak round;
+extraction record: `scratchpad/ep5/ep4-canon-extract.md`). Anything below
+marked **PROVISIONAL** was decided in Mike's stead
+(`src/videos/plants/ep4-decision-log.md`, TOP items first) and may be
+overturned by his tweak round. Ep-4 = 28085 frames, 238 spoken lines
+(222 recordings), one Big Word card (PHOTOSYNTHESIS, five-voice syllable
+chant, reprised in the recap).
 
 Series shape constants: cold open → title → three acts → recap (chant,
 mind-blower, tease); Big Word cards; the next-time question on the end card.
@@ -54,7 +64,12 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
 - **Arc:** ep 1 loves Drip (and cameo-voiced the flower and moose — a
   pattern the distinct-voice rule has since retired); ep 2 concedes twice
   to Sunny and plants the long fuse; ep 3 runs the almanac metronome and
-  breaks her own pattern exactly once ("No, Ray, not yet.").
+  breaks her own pattern exactly once ("No, Ray, not yet."); ep 4
+  concedes Sunny's peak on the record ("Annoyingly." / 24f / "That is
+  completely true." — a split clip, the ep-1 echo) and owns the swerve's
+  second firing ("Who makes the wind that stirs him? Moving on."). New
+  ep-4 chain: *"It is the highest grade she gives."* (2 firings,
+  byte-identical, 0.9 — travels with Pip's stamp chain).
 
 ### Drip
 - **Casting, locked:** minimax `Lively_Girl`, emotion `happy` throughout,
@@ -69,7 +84,12 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
 - **Arc:** ep 1 hero (the cycle is a circle; might have been a dinosaur's
   puddle). Ep 2: one-line fan-service cameo waving from inside Cloudia.
   Ep 3: returns for the rainbow scenes and takes rain's half of the credit
-  ("Rain and light! That is you and me!").
+  ("Rain and light! That is you and me!"). Ep 4: ingredient WATER — "one
+  water" vs THE WEATHER, "I am the plumbing! Of the biggest thing in the
+  world!", "I have been mud. I was delicious." (`a2_44`), chant syllable
+  "Pho!". Her entrance line's **third identical firing** was
+  cache-migrated from sky-blue `a1_31_drip` (the audibly identical take
+  IS the joke). "Travel-sized": still 0 since ep 1.
 
 ### Puff
 - **Casting, locked:** minimax `Exuberant_Girl`, speed 1.0. Ep-3 cameo was
@@ -83,7 +103,14 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
   series-wide (3 in ep 2, once in ep 3); one per appearance is the rate.
 - **Arc:** ep 2 hero (air is real; wind is air in a hurry). Ep 3: five
   short lines doing real work — Puff is the air, and the air does the
-  scattering ("There are ZILLIONS of us. We are the whole sky.").
+  scattering ("There are ZILLIONS of us. We are the whole sky."). Ep 4:
+  ingredient AIR — alarm → commerce ("The leaf is eating me!" →
+  "I traded with a plant!" → "I am going to be a tree."), quiet closer
+  "A plant made that one. Pass it on." Catch-phrase fired once AS his
+  entrance (`a2_55`, cache-migrated from wind `a1_40_puff`) — now 5
+  series-wide (unverified; recount owed at ep-4 retro). His "Different
+  show" firing was deliberately SKIPPED (ruled: an invisible character
+  cannot be pointed at; his catch-phrase IS his entrance).
 
 ### Sunny
 - **Casting, locked:** kokoro `am_puck`, speed 1.0 — series voice since
@@ -104,8 +131,16 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
   is completely right"). Ep 2: makes all the wind, right again; the long
   fuse is planted. Ep 3: his sky-paint theory fails **in half** — the light
   is his, the painting is the air's; he concedes nothing louder than
-  "I DO have a point! I have LOADS of points!". He enters ep 4 at maximum
-  ego (plants = his one fully-legitimate claim; see forward arc pointer).
+  "I DO have a point! I have LOADS of points!". Ep 4: **his peak — every
+  claim fully true, zero wrongness fired**; Pip's admission arrives as a
+  promotion ("He was never the delivery service." / "He is the oven."),
+  the Narrator concedes on the record ("Annoyingly." / 24f / "That is
+  completely true."), and his peak-ego lines are on file ("Every apple is
+  MY apple!", "Sweetness is me, in a box."). Ep-4 firsts: he does NOT
+  interrupt Sc 23 ("for the first time in four whole shows"), quietest
+  line in four episodes ("I know.", 0.95), first silent beat (Sc 26).
+  **He exits ep 4 at maximum altitude for the ep-5 drop** — four episodes
+  of zero wrongness; the ceremony is next (see ledger).
 
 ### Ray
 - **Casting, locked:** minimax `Young_Knight`, speed 1.0 (Mike,
@@ -125,7 +160,57 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
   we'll see how the kids respond".
 - **Catch-phrase:** *"Look up. That's me."* — a pointing line a child can
   obey and be right (3 firings, ep 3, incl. sunset form "That's still
-  me"). The rig's `skeptical` face debuted on him (s10).
+  me"; ep 4: 1 firing pointed at the MOON + approved variant "Look down.
+  That is also me." at the sugar). The rig's `skeptical` face debuted on
+  him (s10).
+- **Ep 4 (ingredient LIGHT):** every correction he files lands in Sunny's
+  favor, which he finds structurally upsetting; resolved at peace inside
+  the aria. Collects his ep-3 terror: "And for the record, nobody is
+  eating me. I checked before I took the job." Deadpan bow: "Light. Also
+  me. Mostly him." **NEW tic, PROVISIONAL (needs Mike's ear):** *"That is
+  also true."* — 3 firings, 1 recording, capped at 3 (`a1_26` source);
+  one neutral take, three contexts — the context does the acting. His
+  `a3_36` "It is mostly him." is the credit-allocation device's 5th
+  firing (see ledger).
+
+### Pip
+
+- **Casting, PROVISIONAL (decision-log TOP, Mike's ear pending):**
+  minimax `Inspirational_girl`, speed 1.0 (`PIP_MINIMAX_VOICE`). **Zero
+  emotion fields, zero pause markers, by design** — her register IS the
+  casting: clipped, brisk, small-but-certain, DRY not loud, warm
+  underneath — "a six-year-old CEO." Deadpan floor 0.9 on her stamps.
+  Audition clips `scratchpad/ep4_pip_audition/` (rejected `Lovely_Girl`,
+  `Wise_Woman`).
+- **Personality + want:** hero of ep 4. Dandelion-seed site-manager/chef;
+  addresses everyone by job title, never name (the delivery service /
+  the light order / one water / the air order); wants to build the
+  biggest thing in the world, right here, without taking a single step
+  ("Good. Moving is for things that are too small to stay.").
+- **Body (PROVISIONAL with the sheet, `scratchpad/ep4_pip_sheet.png`):**
+  NO ARMS ever — leaf-point + heliotropism lean ARE her gesture rig
+  (`pipLean()` signed degrees + snap-back; pointer POINT_HELD=14 /
+  POINT_CEILING=56, honest aim tops out 61.1°); five staged growth
+  states (seed-in-air / planted / sprout / first-leaf / young plant) as
+  capability unlocks, never a time-lapse; pappus ruff kept after
+  planting; warm-oat palette (#f3ddb0, stem #5ccc63) dodging Sunny's
+  gold; `skeptical` as her RESTING face (extends the ep-3 shared face —
+  new use, flagged).
+- **Motion law (hard):** plants take no steps, not one, not ever — her
+  only travel is growth. Arrivals stoop to her mark; she never rises.
+- **Catch-phrases:** *"It will do."* — 5 firings, 1 recording
+  (`co_17` source), self-capped at 5 + the break *"It will not do."*
+  (separate recording ON PURPOSE, plot-causal) — her only grade, her
+  highest grade. Episode's last line: "Send it here. I will grade it."
+  (PROVISIONAL writer deviation).
+- **Arc (ep 4):** posts LIGHT/WATER/AIR (dirt conspicuously absent),
+  builds the kitchen, breaks at one crumb of sugar, hires the Sun ("He
+  was never the delivery service." / "He is the oven." / "The job is
+  yours. Shift starts at dawn."), stamps the Sun himself. Her lean goes
+  from corrected → voluntary → uncorrected → **permanent** (the
+  resolution IS the admission). Soil canon she owns: "Nobody eats
+  dirt." and "It's where I keep my feet." — the episode's complete
+  account of dirt (ep 5 pays off the origin).
 
 ### The seven colours
 
@@ -211,7 +296,13 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   **Multi-episode plant — DO NOT fire the payoff early.** Seed slots:
   ep-4 cameo (light still travels), ep 5. Ep-3 "first" firings on record:
   `a1_40b`/`a1_40d`, `a2_20b`, `a3_05b`, `a3_08b`/`a3_08d`, `a3_11d`,
-  `a3_13bb` ("I am winning UPWARDS!").
+  `a3_13bb` ("I am winning UPWARDS!"). **Ep-4 seed watered** (one dawn
+  cameo, Scene 8): "First! Sorry, dandelion! I am first!" / "Then I am
+  first today! Today counts! Sorry, fence!" / "First to leave! I am first
+  to leave!" — wrong twice (Ray arrived the night before via the moon;
+  Pip lives there), corrected as gifts, right about nothing; Narrator
+  button: "He was not first. He was very fast, though. Those are
+  different things." Payoff still NOT fired.
 - **Signature construction:** *"I just said that!"* — 4-firing `sameAs`
   chain, **capped at 4** (ep 3).
 - **The blue copies (name canon, Mike's pick, T4):** **Bluington,
@@ -249,7 +340,9 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   clips, zero runtime. Plant s10, fire s11, pay off s20 ("Sorry,
   Violet."), escalate s27b ("Six racers." / "Make that seven."), button
   s28 (exits highest, furthest, in total silence), wave from the recap
-  panel edge.
+  panel edge. Ep 4: one silent garnish firing (Scene 8 — far frame edge,
+  amplitude blur, same body, noticed by nobody, exits before scene end;
+  not in the recap — his ep-3 panel wave was his).
 
 ### Rock
 - **Casting, locked:** minimax `Deep_Voice_Man`, `happy`, speed 0.85.
@@ -271,12 +364,15 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 - **Arc:** ep 1: the hotel fills, condensation is her stress. Ep 2: two
   scenes, delivered across the sky like a parcel and could not be happier;
   Puff steals "darling" for an impression (`rc_11b`). Ep 3: absent.
+  Ep 4: one scene (rain delivery, "Gorgeous penmanship, darling." —
+  "darling" ×5, every composed line), marked CUTTABLE and kept
+  (PROVISIONAL).
 
 ### Cameos + minor bodies
 
 | Body | Episode(s) | Voice | Notes |
 |---|---|---|---|
-| The kid | 1, 2, 3 | silent, always | Silhouette; frames every cold open. Three episodes running; keeps the streak. |
+| The kid | 1, 2, 3, 4 | silent, always | Silhouette; frames every cold open. Four episodes running (five counting drip-fork); keeps the streak. Ep 4: opens (breath launches Pip) and closes (a plant hands the breath back). |
 | Beetle | 2 | minimax `Patient_Man`, `calm`, 0.92 | Genuinely cannot perceive Puff (not unkind). Two lines fired three times. |
 | Leaf | 2 | minimax `Calm_Woman`, `calm`, 0.92 | Same two lines, one scene later; the different voice IS the joke. Beetle+Leaf were recast off the Narrator after the six-year-old caught the shared voice — origin of the distinct-voice rule. |
 | Flower, Moose | 1 | Narrator cameo-voiced | Pre-dates the distinct-voice rule; if either returns with a line, it gets its own voice. |
@@ -284,6 +380,7 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 | The blue copies | 3 | none (bubbles off one Blue clip) | **Bluington, Bluesworth, Bluey**, fourth greeting "Hi... me!" — see Blue. |
 | Identical raindrops | 1 | none | Roll-call names: Drop, Droplet, Dripley, other Drop, Droppy, Drop the third. |
 | Identical puffs | 2 | none | Roll-call names: Puffy, Puffington, other Puff, Puff the third ("It is a very popular name."). |
+| The Pip siblings | 4 | none | Roll-call names: Pipsqueak, Pipley, other Pip, Pippa, Pip the third — same order both firings. Sprout row on Scene-15 marks is staging canon (plants cannot move). |
 | The volcano | 2, 3 (scenery) | **silent; voice RESERVED: `Elegant_Man`, pitch −6** | See ledger and world rules. Has never had a line; does not get one until it wakes. |
 | Blobby / BlobbyCrowd, AirBlob | kit | none | Unrigged background bodies (`src/lib/kid/characters/`). Rule of thumb: if it has a line it's a Drip; if it's scenery it's a Blobby. |
 
@@ -294,7 +391,20 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 ### The volcano (sleep escalation — get this exactly right)
 
 - **Ladder:** ep 2 asleep and unmentioned → **ep 3: one-eye beat + the
-  Yellow rest-attempt/warn-off** → ep 4 small stir → ep 5 wakes.
+  Yellow rest-attempt/warn-off** → **ep 4 small stir (FIRED, spent)** →
+  ep 5 wakes.
+- **Ep-4 state (shipped cut):** the stir was the episode's ENTIRE
+  volcano budget — Scene 13, wordless: as the rain sheet crosses the
+  summit, one thin curl of steam rises off the peak, holds ~60f, thins,
+  and is gone (physics-honest thermal tell, fully deniable). Nobody
+  looks, points, names, or stings it. Established on the horizon from
+  the first wide; continuously visible in every wide to the end card
+  (one ratified no-horizon exemption, s12a). End state ep 5 picks up
+  from: "The volcano holds the horizon, asleep, promising nothing." —
+  stir spent, unacknowledged; no character in-world knows anything.
+  Ep-4's end card arms ep 5: **"WHAT IS DIRT ACTUALLY MADE OF?"**
+  ("Next time. What is dirt actually made of?" / Pip: "Send it here.
+  I will grade it.").
 - **Ep-3 state (final cut):** the volcano's whole presence is two beats in
   the sunset race's sea leg (script scene 28b): Yellow lands for a sit-down
   and the Narrator warns *her* off ("That is not a rest stop." — addressed
@@ -305,10 +415,10 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   fully asleep at ep 3's close and promises nothing.** (Known stale text:
   sky-blue `script.md` :2071 and :3345 still say it "stirs in Scene 35" —
   pre-T10 leftovers. This file wins; don't "fix" the bible from them.)
-- **Consequently UNFIRED and available** (ep-4 tease or ep-5 cold open):
-  Sunny's reflexive wake-claim ("OH! That one is me as well! HA! HA!" —
-  direction note banked with it: full confidence, no doubt anywhere in it)
-  and the *"That is not me."* inversion.
+- **Still UNFIRED after ep 4** (deliberately saved; decision log leans
+  ep-5 cold open): Sunny's reflexive wake-claim ("OH! That one is me as
+  well! HA! HA!" — direction note banked with it: full confidence, no
+  doubt anywhere in it) and the *"That is not me."* inversion.
 - **Banked for ep 5:** the wrongness ceremony — *"I did that."* / *"No. He
   really didn't."* — Sunny's first true wrongness, reserved since ep 2.
 - **Voice reserved:** `Elegant_Man` at pitch −6.
@@ -321,14 +431,17 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 
 | Phrase | Owner | State |
 |---|---|---|
-| "You're welcome! HA! HA!" | Sunny | Ep 1: 3 (+ Drip's `a3_43` return); ep 2: 6; ep 3: **8 — ceiling 8** (raised 7→8 by Mike for `a3_31b`, 2026-08-04). No ninth; ceilings are per episode and hard. |
-| "GOOD MORNING, EVERYBODY!" → "I invented mornings!" | Sunny | Greeting+brag pairing, **three-for-three** (ep 1 `a1_09`/`a1_11`, ep 2 `a2_02`/`a2_05`, ep 3 `a1_03`+`a3_31` alias/`a3_31b`). Series constant, not an option. |
-| "That one is me as well!" | Sunny | Ep-2 card: fired. Ep 3: **zero** (T10). Banked — next firing belongs to the volcano thread. |
-| "You can't see me. But you can FEEL me." | Puff | 4 series-wide (3 + 1); one per appearance. |
-| "I am NOT small! I am travel-sized!" | Drip | Ep-1 gag (2 + speck visuals); revive only as fan service. |
-| "Look up. That's me." | Ray | 3 in ep 3 (incl. sunset form). His pointing line. |
-| "darling" | Cloudia | Hers; lending it out is the joke (Puff, once). |
-| "Different show. Same ___." | Narrator | 4 firings (sun, sky, rain, air), always 0.92 flat. One per returning-character entrance. |
+| "You're welcome! HA! HA!" | Sunny | Ep 1: 3 (+ Drip's `a3_43` return); ep 2: 6; ep 3: **8 — ceiling 8** (raised 7→8 by Mike for `a3_31b`, 2026-08-04); ep 4: 5 (1 recording + 4 aliases; headroom unspent). No firing past 8; ceilings are per episode and hard. |
+| "GOOD MORNING, EVERYBODY!" → "I invented mornings!" | Sunny | Greeting+brag pairing, **four-for-four** (ep 1 `a1_09`/`a1_11`, ep 2 `a2_02`/`a2_05`, ep 3 `a1_03`+`a3_31` alias/`a3_31b`, ep 4 `a1_02`/`a1_03`). Series constant, not an option. |
+| "That one is me as well!" | Sunny | Ep-2 card: fired. Eps 3–4: **zero** (saved on purpose twice). Banked — next firing belongs to the volcano thread. |
+| "You can't see me. But you can FEEL me." | Puff | 5 series-wide (unverified — ep-4 retro owes a recount); one per appearance. Ep-4 firing was cache-migrated from wind `a1_40_puff`. |
+| "I am NOT small! I am travel-sized!" | Drip | Ep-1 gag (2 + speck visuals); revive only as fan service. Eps 2–4: 0. |
+| "Look up. That's me." | Ray | 3 in ep 3 (incl. sunset form); ep 4: 1 at the moon + approved variant "Look down. That is also me." His pointing line. |
+| "darling" | Cloudia | Hers; lending it out is the joke (Puff, once). Ep 4: ×5, every composed line. |
+| "Different show. Same ___." | Narrator | 6 firings (sun, sky, rain, air, beam, weather), always 0.92 flat. One per returning-character entrance; skip is legal when the character cannot be pointed at (Puff, ep 4). |
+| "It will do." | Pip | Ep 4: 5 firings, 1 recording, self-capped at 5 + the break "It will not do." (separate recording, plot-causal). Companion Narrator chain "It is the highest grade she gives." ×2. |
+| "That is also true." | Ray | Ep 4: 3 firings, 1 recording, capped 3. **PROVISIONAL** — new canon pending Mike's ear. |
+| "Hi! It's me! I'm the weather!" | Drip | Standing entrance, third identical firing in ep 4 (cache-migrated take — audibly identical is the joke). |
 | "What Red said." | Orange | 3 firings, one recording (ep 3). May be his whole vocabulary forever. |
 | "This is a nice spot." | Green | 3 firings, one recording (ep 3). |
 | "I just said that!" | Blue | 4 firings, one recording — **capped at 4** (ep 3). |
@@ -339,8 +452,9 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 
 `a2_45`/`a2_45b` (wind, Narrator): *"One day Sunny will be wrong about
 something."* — 36f of real silence — *"It is not today."* Planted ep 2,
-**deliberately not collected in ep 3** (a longer fuse, not a forgotten
-one), still burning. It pays off with the wrongness ceremony in ep 5.
+**deliberately not collected in ep 3 or ep 4** (a longer fuse, not a
+forgotten one), still burning. It pays off with the wrongness ceremony
+in ep 5.
 
 ### Roll call — series signature
 
@@ -353,17 +467,26 @@ six-year-old's most-quoted joke); ep 2: the identical puffs ("Are they
 all called Puff?" / "Probably."); ep 3: Ray's seven-name greeting
 (movement replies only) and the race goodbye — plus the T4
 true-roll-call: Blue greeting his own copies, **Bluington / Bluesworth /
-Bluey / "Hi... me!"** (`a2_32b`, one clip, four bubbles).
+Bluey / "Hi... me!"** (`a2_32b`, one clip, four bubbles); ep 4: the Pip
+siblings (greeting mid-air "Hi Pipsqueak! Hi Pipley! Hi other Pip! Hi
+Pippa! Hi Pip the third!" / "Every seed in that packet is called Pip." /
+"Good crew."; goodbye at the recap with "Nobody was going anywhere." /
+"See you tomorrow." — two recordings by design, different sentences).
 
 ### Other running state
 
-- **Credit allocation** (ep 3): four firings, four speakers, one joke —
-  the last delivered by the character being cheated ("It is mostly me.").
-  Available as a series device.
+- **Credit allocation**: five firings series-wide — four in ep 3 (four
+  speakers, one joke, the last delivered by the character being cheated:
+  "It is mostly me.") + Ray's `a3_36` "It is mostly him." in ep 4
+  (un-ceilinged; count flagged at the ep-4 fold). Available as a series
+  device.
 - **Orange translates Red's silences**: six paired firings in ep 3;
   travels with the pair.
-- **Sunny is always right**: intact through three episodes; his ep-3
-  concession is exactly half. **No verdict until ep 5.**
+- **Sunny is always right**: intact through FOUR episodes; his ep-3
+  concession is exactly half, and ep 4 is his peak (every claim fully
+  true). **No verdict until ep 5.**
+- **Sunny interrupts a scene not about him**: ep 2 ×5, ep 4 ×3 — every
+  firing true. Ep-4 first: he does NOT interrupt Sc 23.
 - **Blue anti-Sunny arc**: seeded, unfired — see Blue's block. DO NOT fire
   the payoff early.
 - **Open ear items** (shipped in-cut, pending Mike's ear; fallbacks in
@@ -396,6 +519,11 @@ what a script may not break.
 5. **`sameAs` discipline.** Every repetition gag on MiniMax is ONE
    recording, aliased byte-identically — the generator resolves backwards,
    so the earliest firing must be the source. A re-record kills the joke.
+   Cross-video `sameAs` does not exist: the identical-take device across
+   episodes is a **cache migration** (copy the approved mp3 + seed the
+   cache — copies, never moves; ear-check migrated clips once in the new
+   mix; used twice in ep 4). Kokoro chains still write aliases to state
+   intent and lock wording, even though the engine is deterministic.
 6. **Catch-phrase ceilings are hard** (table above). Nothing adds a firing
    past a ceiling without Mike's explicit call.
 7. **The volcano rule** (ledger, above) binds every coastal scene in every
