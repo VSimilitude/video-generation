@@ -82,6 +82,25 @@ one, not free capacity.
   ~80%, finish only committed campaign work and defer fable-heavy optional
   work (bible write-ups, retros, punch-up rounds) past the weekly reset.
 
+## Operating modes: Mike-awake vs Mike-asleep (standing, 2026-08-24)
+
+Determine the mode at boot (ask if ambiguous). **Awake mode**: normal
+sign-off gates; wait on Mike's responses for his decision surface.
+**Asleep mode** (asleep or travelling): front-load the needed decisions in
+ONE question round while he's still reachable, then never block — best
+guess within the standing decision record, LOG every call (campaign
+decision log), and end the morning summary with the list of calls he can
+overturn. He'd rather judge finished work than have quota idle overnight.
+
+**Hourly wakeup watchdog (arm in every autonomous session):** a
+session-only recurring cron (~1h, off-minute) that checks crew health +
+`check-quota.mjs`. If the 5h window exhausted and stopped work, resume the
+crew (SendMessage resume; fresh spawn + auditor if the transcript is lost)
+once the window resets. If a mid-flight quota KILL happened, re-calibrate
+for the next session — adjust the check-quota ceiling / batch sizing /
+wind-down thresholds so run-outs get rarer, and log the recalibration in
+HANDOFF. The cron dies with the session — re-arm on every autonomous boot.
+
 ## Boot sequence for a fresh orchestrator
 
 1. Read this file + `docs/HANDOFF.md` (memory auto-loads). Do NOT read the
