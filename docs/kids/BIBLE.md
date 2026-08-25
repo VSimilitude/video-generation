@@ -416,8 +416,10 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   sky-blue `script.md` :2071 and :3345 still say it "stirs in Scene 35" —
   pre-T10 leftovers. This file wins; don't "fix" the bible from them.)
 - **Still UNFIRED after ep 4** (deliberately saved; decision log leans
-  ep-5 cold open): Sunny's reflexive wake-claim ("OH! That one is me as
-  well! HA! HA!" — direction note banked with it: full confidence, no
+  ep-5 cold open): Sunny's reflexive wake-claim ("OH, that one is me as
+  well! HA! HA!" — the RECORDED ep-1/ep-2 wording, comma not "OH!";
+  transcription corrected 2026-08-25 against water-cycle rc_12 / wind
+  rc_14 — direction note banked with it: full confidence, no
   doubt anywhere in it) and the *"That is not me."* inversion.
 - **Banked for ep 5:** the wrongness ceremony — *"I did that."* / *"No. He
   really didn't."* — Sunny's first true wrongness, reserved since ep 2.

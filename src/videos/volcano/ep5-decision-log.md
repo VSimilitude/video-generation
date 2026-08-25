@@ -9,6 +9,21 @@ are Mike's standing decisions, not re-logged.
 
 ## TOP — needs Mike's ear/eye in tweak round
 
+- **EMBER CAST: `Playful_Girl`, no pitch construction** (showrunner
+  ratified the measured audition, 2026-08-25; PROVISIONAL — Mike's ear
+  rules). Measured case: fastest real voice at her commanded 1.1
+  (17.9 chars/s), 270 Hz — clear of the Drip/Puff/Pip 320–380 Hz
+  band by +4.1 semitones (the recap fires Ember/Drip/Puff as
+  consecutive one-worders), and 6.55 st of gleeful-to-settled range
+  where the dead builder's unaudited `Lovely_Girl` measured 0.17 st
+  (it plays "Done!" and the break identically). Runner-up
+  `English_radiant_girl` (faster still, but its "Started." measures
+  breathy/deflated — the exact read the break forbids). Brightest
+  option `Cute_Elf` rejected on collision (<1.9 st from all three
+  cast girls). Ear shortlist with file paths:
+  scratchpad/ep5_ember_audition/MEASUREMENTS.md §8. Reversal: one
+  constant + re-buy 38 clips, cents.
+
 - **EP-6 TEASE = THE STORM: "WHY IS THUNDER ALWAYS LATE?"** (synthesis,
   2026-08-24). A tease is an audience promise — Mike should ratify or
   overturn EARLY (before the kids see the cut, ideally). Arguments: most
@@ -108,6 +123,53 @@ are Mike's standing decisions, not re-logged.
   additions): plate tectonics as a named mechanism, rock-class taxonomy
   (sedimentary/metamorphic), any destruction/catastrophe framing — the
   eruption is construction/birth. Reversal: brief edit, free.
+
+## Narration-wave calls (resumed showrunner, 2026-08-25)
+
+- **Audit verdict: narration.mjs accepted as spec-faithful** (auditor,
+  full findings scratchpad/ep5/narration-audit.md: 189/189 lines
+  verbatim, casting byte-exact, chains correct, migrations
+  hash-perfect). Repairs below are the audit's worklist, ruled and
+  applied by the showrunner.
+- **`rc_04_rock` aliased to `a3_27_rock`** (was two independent paid
+  draws of the same flat "Rock." — the Scene-19 namespace-gag landing
+  must be the identical take, and one-word MiniMax clips are the
+  episode's highest-variance class). Rejected: two fresh draws (only
+  defensible if the reads were meant to differ; script specifies both
+  flat). Reversal: delete one line, one extra draw, cents.
+- **Sunny's wake-claim wording = the RECORDED take**: "OH, that one is
+  me as well! HA! HA!" (comma, as shipped in eps 1 and 2) over the
+  bible's "OH!" transcription. The firing is banked-byte-exact and
+  kokoro is deterministic — identical text reproduces the exact take
+  the series has saved since ep 2. BIBLE.md, script.md, narration.mjs
+  all reconciled. Reversal: one-character edit, free (kokoro).
+- **4 cache migrations SEEDED** (public/narration/volcano/ + hand-written
+  .cache.json per the audit's verified table; all four hashes replayed
+  MATCH against the post-repair file). Generator must report all four
+  `(cached)` on first run — a paid draw on any of them means the seed
+  missed and the take is broken (esp. a3_36_puff "FEEL" letter-read
+  risk).
+- **Doc fixes**: script.md one-word fallback list `a3_29`→`a3_27`
+  ("Rock."); narration.mjs Ember clip-count comments corrected to 38.
+- **Casting findings for the bible retro** (audition, 2026-08-25):
+  (1) the bright-girl band is FULL — Drip/Puff/Pip all sit 320–380 Hz;
+  ep 6 cannot cast another bright girl without going below ~300 Hz;
+  (2) MiniMax `pitch` is a re-render, not a transform (+3 measured
+  +4.33 st on one voice, +1.88 on another, and it changes delivery
+  rate unpredictably) — the Indigo=Decent_Boy+3 precedent is not a
+  rule of thumb; (3) the `English_*` voice-id family is live on
+  speech-2.8-hd — 16 working ids confirmed, 6 dead ids recorded, an
+  unused casting pool (list in MEASUREMENTS.md §3).
+
+- **Ember audition candidate slate** (showrunner design; no prior list
+  survived the crash): Lovely_Girl (the dead builder's unbacked
+  incumbent — it cited a MEASUREMENTS.md that never existed) +
+  Wise_Woman + probe IDs (Cute_Elf, Sweet_Girl, Sassy_Girl,
+  Little_Girl, Lovely_Lady) + pitch constructions Sweet_Girl_2+2 and
+  Exuberant_Girl+2 (Indigo precedent). Tie-breaks: real system voice
+  over probe, no-construction over construction, max f0 distance from
+  Drip/Puff/Pip. Pick stays PROVISIONAL for Mike's ear; recast after
+  generation re-buys ~60 clips (cents). Reversal: one constant.
 
 ## Script-round calls (showrunner edit pass, 2026-08-24)
 

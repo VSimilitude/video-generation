@@ -151,7 +151,7 @@ Then Sunny, instantly, at full wattage — the wake-claim, banked since
 episode two, saved on purpose twice, fired at last **with its banked
 direction: full confidence, no doubt anywhere in it.**
 
-> **SUNNY:** OH! That one is me as well! HA! HA!
+> **SUNNY:** OH, that one is me as well! HA! HA!
 
 Banked verbatim, byte-exact. Not a "You're welcome!" firing — this is its
 own phrase, its own single firing, the volcano thread's property.
@@ -1240,7 +1240,7 @@ eighth line.
 | Phrase | Owner | This episode | Ceiling / rate | Keys |
 |---|---|---|---|---|
 | "You're welcome! HA! HA!" | Sunny | **4** (1 recording + 3 aliases) | **8, hard** — 4 of headroom unspent | `co_07` (SOURCE), `a3_47`, `a3_81`, `rc_14` |
-| "OH! That one is me as well! HA! HA!" | Sunny | **1 — THE BANKED FIRING, CASHED** at the knock, with its banked direction (full confidence, no doubt anywhere in it) | banked since ep 2, saved twice; this firing belonged to the volcano thread | `co_10` |
+| "OH, that one is me as well! HA! HA!" | Sunny | **1 — THE BANKED FIRING, CASHED** at the knock, with its banked direction (full confidence, no doubt anywhere in it) | banked since ep 2, saved twice; this firing belonged to the volcano thread | `co_10` |
 | "I did that." / "No. He really didn't." | Sunny / Narrator | 1 each — the ceremony, banked verbatims | reserved since ep 2 — **SPENT** | `a2_33`, `a2_34` |
 | The long fuse → "It is today." | Narrator | ep-2 sentence re-spoken byte-identically, 36f mirror gap, then the close | the series' longest-armed payoff — **CLOSED** | `a2_39` (byte-match of wind `a2_45`), `a2_40` |
 | "That is not me." | Sunny | 1, verbatim — **SPENT** (the inversion as precision) | banked since ep 2; **one-line cut restores the bank — top-logged** | `a3_79` |
@@ -1404,7 +1404,7 @@ Scene 5 if the CUTTABLE pair is cut (structural risk, named above).
 ### TTS-risk fallbacks (pre-written, per the ep-4 rule)
 
 - **One-word MiniMax clips** (`a2_16`/aliases "Started.", `a2_24` "No.",
-  `a3_29`/`rc_04` "Rock.", `a3_63` "Presently.", `a3_77` "Good.",
+  `a3_27`/`rc_04` "Rock.", `a3_63` "Presently.", `a3_77` "Good.",
   `a3_86` "Done?", `a3_87` "Started.", chant `rc_02`–`rc_06`) are the
   episode's highest-risk class. First fix is diagnosis: measure
   seconds-per-word; a bad draw gets a cache-bust re-roll with identical

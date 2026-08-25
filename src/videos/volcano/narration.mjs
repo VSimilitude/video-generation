@@ -85,7 +85,7 @@
 // EMBER IS PROVISIONALLY CAST. `EMBER_MINIMAX_VOICE` was picked by
 // measurement in an overnight audition (see the EMBER block); Mike's ear
 // ratifies in the tweak round. Recasting is ONE constant — but a recast after
-// generation re-buys ~60 clips including the chain source "Done!", so the
+// generation re-buys her 38 recordings including the chain source "Done!", so the
 // audition came first.
 //
 // SAMEAS DISCIPLINE (world rule 5). Aliases resolve BACKWARDS ONLY, so every
@@ -152,7 +152,7 @@
 //     their caps; clips go lowercase (a3_56 "FIRST!" is drawn, not spoken in
 //     caps; the chant bubbles shout, the clips do not).
 //   - Ember's emphasis is repetition and speed, never caps. Not one capital
-//     in any of her sixty-odd clips.
+//     in any of her thirty-eight clips.
 //   - ONE-WORD MINIMAX CLIPS ARE THIS EPISODE'S HIGHEST TTS RISK: a2_16
 //     "Started." (+3 aliases), a2_24 "No.", a3_27 "Rock.", a3_63
 //     "Presently.", a3_77 "Good.", a3_86 "Done?", a3_87 "Started.", and the
@@ -195,7 +195,13 @@ const NARRATOR = { voice: "af_heart", speed: 1.0 };
 // Register target (synthesis, verbatim): small, bright, quick, GLEEFUL —
 // indignation played inside delight, never whiny. 1.1 is the suite's fastest
 // default and the speed IS the want.
-const EMBER_MINIMAX_VOICE = "Lovely_Girl";
+// 2026-08-25 audition (16 voices measured, scratchpad/ep5_ember_audition/
+// MEASUREMENTS.md): Playful_Girl wins every axis of the register target —
+// fastest real voice (17.9 chars/s at 1.1), 270 Hz (small, and +4.1 st clear
+// of the Drip/Puff/Pip 320-380 Hz wall), 6.55 st of glee-to-settled range
+// where the prior unaudited pick (Lovely_Girl) measured 0.17 st. Runner-up:
+// English_radiant_girl (breathy "Started." risk, flagged).
+const EMBER_MINIMAX_VOICE = "Playful_Girl";
 const EMBER = {
   engine: "minimax",
   voiceId: EMBER_MINIMAX_VOICE,
@@ -301,7 +307,11 @@ export default {
     // purpose twice, and it belonged to the volcano thread all along. Its
     // banked direction: full confidence, no doubt anywhere in it. Not a
     // "You're welcome!" firing — its own phrase, its own single firing.
-    co_10_sunny: { text: "OH! That one is me as well! HA! HA!", ...SUNNY },
+    // "OH," with the comma — matching the RECORDED ep-1/ep-2 takes byte-for-
+    // byte (water-cycle rc_12, wind rc_14), not the bible's "OH!" transcription
+    // (fixed there too). Kokoro is deterministic: identical text + fields =
+    // the audience hears the exact take that has been banked since ep 2.
+    co_10_sunny: { text: "OH, that one is me as well! HA! HA!", ...SUNNY },
     // No verdict, no doubt cast — the claim just sits there, armed, for 36f.
     // The Narrator ALWAYS rules on him; the withheld ruling is the fuse
     // audibly hissing, and it closes at a2_40.
@@ -926,7 +936,10 @@ export default {
     rc_03_ember: { text: "Lava!", ...EMBER, speed: 1.0 },
     // Flat, no exclamation, and LATE — his 24f gap makes his own name arrive
     // a beat behind the relay. The Scene-19 namespace gag, landing.
-    rc_04_rock: { text: "Rock.", ...ROCK },
+    // sameAs a3_27 (showrunner repair, 2026-08-25 audit A3/W1): the Scene-19
+    // namespace gag LANDING is the same flat take arriving a beat late — one
+    // recording, and one fewer draw from the one-word highest-risk class.
+    rc_04_rock: { sameAs: "a3_27_rock" },
     rc_05_drip: { text: "Sand!", ...DRIP, emotion: "happy" },
     rc_06_puff: { text: "Soil!", ...PUFF },
     // Kokoro — the caps are legal here.
