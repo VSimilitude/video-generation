@@ -178,13 +178,26 @@ Campaign state (showrunner keeps this current):
   (s23 crop kept, a3_62 summary ratified, dusty-rose ratified, tail-aim
   kit promotion → backlog). COMMIT POINT handed to the orchestrator
   (act2.tsx, act3.tsx, decision log, HANDOFF).
-- RECAP WAVE IN FLIGHT (opus builder, brief scratchpad/ep5/
-  recap-brief.md; told mid-flight to apply the tail-aim pattern). Its
-  full-episode gate render is the authoritative union gate for the cut
-  (the two act renders each ran during the other's edits). Report →
-  scratchpad/ep5/recap-report.md.
-- Then: showrunner sampled recap review, deployable cut (site entry),
-  deploy, phone drop, retro + BIBLE fold.
+- RECAP WAVE CLOSED + EPISODE CUT COMPLETE (2026-08-25): all five recap
+  scenes staged, 10 builder finds fixed, authoritative full-union gate
+  render EXIT 0 with zero bubble warnings (scratchpad/ep5/
+  recap-render.log), showrunner sampled review ACCEPTED zero repairs.
+  Rulings + backlog adds (volcanoBubble seat gap, SeaWorld/aimTails
+  promotions, mix-blend-mode STYLE line) in ep5-decision-log.md
+  "Recap-wave calls". No site-registry diff needed (EmberVolcano
+  already public via src/videos/registry.ts). COMMIT + DEPLOY POINT
+  handed to the orchestrator: src/videos/volcano/scenes/recap.tsx,
+  src/videos/volcano/ep5-decision-log.md, docs/HANDOFF.md.
+- Phone drop rendering in background (full-scale render + 720p HEVC
+  hvc1 CRF 29 faststart → out/EmberVolcano_phone.mp4, log
+  scratchpad/ep5/phone-render.log); deliver to Mike when done, target
+  <30MiB.
+- Remaining (post-deploy, next session if quota kills this one): Mike's
+  FULL-CONTEXT ear/eye pass on the deployed episode (Ember casting
+  PROVISIONAL, rc_03 chant shout, a3_63 "Presently." pace, armless
+  Ember look), tweak round from his notes, then retro: LEARNINGS.md
+  entry + STYLE.md adds + BIBLE fold (ep-5 canon: volcano awake, new
+  island, Island the third named) + kit-cleanup backlog triage.
 - Then: showrunner sampled still review, gates, site gallery entry
   (deferred to the deployable cut), deploy.
 

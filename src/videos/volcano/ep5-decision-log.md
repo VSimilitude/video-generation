@@ -208,6 +208,38 @@ on their uncommitted working tree:
   in the smoke still it points down-left toward the horizon rather than
   at a speaker; verify against the staged speaker before THE BREAK.
 
+## Recap-wave calls (showrunner #4 sampled review, 2026-08-25)
+
+- **RECAP WAVE ACCEPTED** (all five scenes; builder ran 63 stills/7
+  rounds, 10 finds fixed; gates green incl. the authoritative
+  full-union every-frame render EXIT 0 with ZERO bubble-limit warnings
+  — log scratchpad/ep5/recap-render.log). Showrunner sampled 6 stills:
+  the s01/s29 castle-continuity pair (identical castle + kid marks;
+  the changed world — awake volcano, smoke, new island — carries the
+  payoff), s31 final frame (new canon exactly: awake at dusk, island
+  beside him, kid watching), s28 stamped card, s30 goodbye vs s18
+  greeting rhyme. ZERO repairs.
+- **s30 goodbye bubble KEPT in s18's sky square** (builder flag,
+  ruled): the greeting/goodbye rhyme is byte-exact in geometry and
+  attribution is consistent between the two firings — the rhyme IS the
+  joke; moving the tail closer to a speaker would break it.
+- **New island visible in s29, not held for s31 (KEPT)**: physical
+  honesty over a staged reveal — the reveal of the episode is the
+  volcano staying awake, not the island's existence.
+- **Ember silently on stage through s28 (KEPT)**: subdued at frame
+  edge under the dimmed card; she does not compete with the stamp.
+- **Backlog adds (retro/kit-cleanup)**: volcanoBubble breaks at
+  non-portrait seats (constant 311px eye clearance vs scale-dependent
+  face — clamp to eyeRx or accept maxWidth); promote act3's SeaWorld/
+  BasaltShore/NearSea/Island (~180 lines duplicated in recap) and
+  aimTails (now in three files); STYLE line — mix-blend-mode NEVER
+  works inside these worlds (overlay/cast layers are stacking
+  contexts; composites as normal and lightens).
+- **EPISODE CUT COMPLETE at this point**: all 31 scenes staged and
+  accepted, no site-registry diff needed (EmberVolcano already public
+  in src/videos/registry.ts). Phone drop (720p HEVC) rendering in
+  background at handoff.
+
 ## Act-resume-wave calls (showrunner #4 sampled review, 2026-08-25)
 
 - **ACT2 + ACT3 resume waves ACCEPTED** after sampled still review (6 of
