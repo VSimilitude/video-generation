@@ -57,7 +57,7 @@ import {
   type TimedTurn,
 } from "../../../lib/narration";
 import { NARRATION } from "../narrationManifest";
-import { PIP_BOX, Pip, pipCrownLocal, pipFaceLocal, type PipState } from "./Pip";
+import { PIP_BOX, Pip, pipCrownLocal, pipFaceLocal, type PipState } from "../../../lib/kid";
 
 // Shared kit for "Pip and the Sunshine Kitchen" — Little Big World, episode
 // four.
@@ -1410,8 +1410,8 @@ export {
   Face,
   useRig,
 };
-export { Pip, pipCrownLocal, pipFaceLocal, pipLean, PIP_COLOR, LEAN_FULL } from "./Pip";
-export type { PipState, LeanFiring } from "./Pip";
+export { Pip, pipCrownLocal, pipFaceLocal, pipLean, PIP_COLOR, LEAN_FULL } from "../../../lib/kid";
+export type { PipState, LeanFiring } from "../../../lib/kid";
 export {
   BigWordBeat,
   Cloudia,

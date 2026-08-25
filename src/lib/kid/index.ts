@@ -71,3 +71,20 @@ export {
 export { Sunny, type SunnyProps } from "./characters/Sunny";
 export { Cloudia, type CloudiaProps } from "./characters/Cloudia";
 export { Blobby, BlobbyCrowd, type BlobbyProps } from "./characters/Blobby";
+// Promoted out of `src/videos/plants/scenes/Pip.tsx` when episode five needed
+// her for the grading (Scene 24). Every name ep 4 imported is re-exported here,
+// so no scene file's import list changed shape — only its module path.
+export {
+  Pip,
+  PIP_BOX,
+  PIP_COLOR,
+  LEAN_DRIFT_FRAMES,
+  LEAN_SNAP_FRAMES,
+  LEAN_FULL,
+  pipCrownLocal,
+  pipFaceLocal,
+  pipLean,
+  type PipProps,
+  type PipState,
+  type LeanFiring,
+} from "./characters/Pip";

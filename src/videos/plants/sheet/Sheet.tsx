@@ -1,7 +1,14 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
-import { kidInkOutline, kidOutline, kidTheme, kidType } from "../../../lib/kid";
-import { PIP_COLOR, Pip, type PipState } from "../scenes/Pip";
+import {
+  PIP_COLOR,
+  Pip,
+  kidInkOutline,
+  kidOutline,
+  kidTheme,
+  kidType,
+  type PipState,
+} from "../../../lib/kid";
 
 // PIP — CHARACTER SHEET. Rendered by:
 //

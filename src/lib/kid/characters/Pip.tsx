@@ -1,21 +1,21 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
-import {
-  CharacterFrame,
-  Face,
-  kidEase,
-  kidTheme,
-  mixHex,
-  settleWave,
-  useRig,
-  type CharacterProps,
-} from "../../../lib/kid";
+import { CharacterFrame, Face, useRig, type CharacterProps } from "../Character";
+import { kidEase, settleWave } from "../rig";
+import { kidTheme, mixHex } from "../theme";
 
 // PIP — the hero of episode four, and the campaign's one new rig body.
 //
 // A dandelion seed who will never take a single step and intends to build the
-// biggest thing in the world anyway. She lives in the episode until a second
-// one needs her; then this file moves to `src/lib/kid/characters/`.
+// biggest thing in the world anyway. She lived in `src/videos/plants/scenes/`
+// until a second episode needed her; **episode five is that episode** (Scene
+// 24, the grading — the ep-4 order filled), so this file moved here, exactly
+// as its own header said it would. The promotion is a pure move: not one
+// number, path or drawing instruction below changed, `src/lib/kid` re-exports
+// every name ep 4 imported, and it was proved with the frame grid
+// (PROCESS §7) — six `PipPlants` frames across her five growth states, before
+// and after, **zero differing pixels**, against a same-code control run that
+// was also zero.
 //
 // ---------------------------------------------------------------------------
 // THE THREE DESIGN CONSTRAINTS, AND HOW EACH ONE IS PAID FOR
