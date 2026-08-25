@@ -25,6 +25,17 @@ from a live 1.24M ↔ 93% reading) and now sums cache tokens when sanity-
 checking. Gate between every batch; when a reading looks absurd, check the
 cache fields and ask Mike rather than overriding.
 
+**Reset-boundary recalibration (2026-08-25, mid-flight kill + Mike's
+ruling):** the real window anchors at the FIRST ACTION after the previous
+reset; ccusage floors block starts to the hour, so its predicted reset can
+run up to an hour early (observed: predicted 11:00 ET, real 11:50). A
+showrunner + ACT2 builder were killed at 11:47 after a false "fresh
+window" PROCEED at 11:04. check-quota now adds 60-min boundary slop to
+the reset estimate (QUOTA_RESET_SLOP_MIN) and prints a SLOP ZONE warning
+for readings taken just after a floored boundary — when the previous
+window died at the session limit, trust the API kill message's reset time
+over ccusage.
+
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).
 - Kids: DripWaterCycle (ep1), PuffWind (ep2 third cut, 12:29),
@@ -125,19 +136,35 @@ Campaign state (showrunner keeps this current):
   Ear-pending flags (Mike, PROVISIONAL): Ember=Playful_Girl casting
   (shortlist MEASUREMENTS.md §8), rc_03 "Lava!" softest chant shout,
   a3_63 "Presently." pace.
-- NARRATION WAVE CLOSED. Next: SKELETON WAVE — worklist written at
-  scratchpad/ep5/skeleton-wave-worklist.md (Video.tsx + timed SCRIPT
-  table + ScenePlaceholders + Ember rig + cold open + act 1 +
-  Root/registry entries; held-beat staging list and carry-forward
-  flags inside). Then act waves, still review, gates, deploy.
-- COMMIT POINT for the orchestrator (explicit paths, never add -A):
-  src/videos/volcano/narration.mjs, src/videos/volcano/script.md,
-  src/videos/volcano/ep5-decision-log.md,
-  src/videos/volcano/narrationManifest.ts,
-  public/narration/volcano/ (whole dir, new), docs/kids/BIBLE.md,
-  docs/HANDOFF.md.
-- Then: skeleton wave (Video.tsx + timed placeholders + Root/registry),
-  act waves, still review, gates, deploy.
+- NARRATION WAVE CLOSED + COMMITTED (orchestrator, 7634741; Ember
+  ear shortlist delivered to Mike's phone, PROVISIONAL, no reply
+  expected). SKELETON WAVE IN FLIGHT (opus builder, spawned
+  2026-08-25 from scratchpad/ep5/skeleton-wave-worklist.md):
+  Video.tsx + full timed 31-scene table + ScenePlaceholders + Ember
+  rig + cold open + act 1 (incl. the volcano wake staging) +
+  Root/registry entries + act-1 backgrounds; mandatory still
+  self-review; gates typecheck + full --scale=0.25 render + site
+  build; report → scratchpad/ep5/skeleton-wave-report.md. Wave
+  landed, all gates green (24,948f = 13:52 registered, 31 scenes
+  timed, all held beats machine-verified, Ember rig + volcano
+  character + cold open + act 1 built, 7 plates, registry entry).
+  Showrunner sampled review: ACCEPTED with one fix in flight
+  (volcano portrait bubble tail re-anchored eye→mouth for V1/V2 +
+  the inherited pattern; builder re-gating). Rulings logged in the
+  decision log (no-arms Ember ratified, MAGMA 24f beat ratified,
+  Pip promotion sanctioned for act 3, KidSilhouette promotion
+  deferred). Act-waves worklist written:
+  scratchpad/ep5/act-waves-worklist.md (ACT2+ACT3 parallel, RECAP
+  after one lands; max 2 concurrent).
+- SKELETON WAVE CLOSED (committed c0940bb by orchestrator; successor
+  showrunner acceptance pass 2026-08-25 PASSED — fresh 16-still
+  re-render from committed code, stills_accept/, zero repairs; ruling
+  in the decision log). ACT WAVES IN FLIGHT: ACT2 (scenes 10–17) +
+  ACT3 (scenes 18–26) opus builders parallel, RECAP (27–31) after one
+  lands. Reports → scratchpad/ep5/act2-report.md / act3-report.md /
+  recap-report.md.
+- Then: showrunner sampled still review, gates, site gallery entry
+  (deferred to the deployable cut), deploy.
 
 ## Backlog (owned, not started)
 - **Bubbles kit gap (ep-4 B3 builder find):** the y>=170 centre clamp in
