@@ -170,12 +170,21 @@ Campaign state (showrunner keeps this current):
   re-roll; 12/12 cached, manifest regenerated). Rulings in
   ep5-decision-log.md "Act-wave salvage calls". COMMIT POINT handed to
   the orchestrator (salvage checkpoint, explicit paths in the report).
-- ACT-RESUME WAVE IN FLIGHT: ACT2 + ACT3 opus builders re-spawned in
-  audit-first resume mode (verify inherited file vs script/briefs →
-  still self-review loop → repairs incl. the 7-word s23 bubble split
-  and the s26 tail check → gates → report). RECAP (27–31) after one
-  lands. Reports → scratchpad/ep5/act2-report.md / act3-report.md /
-  recap-report.md.
+- ACT-RESUME WAVE CLOSED (2026-08-25): ACT2 + ACT3 resumed audit-first,
+  21 repairs between them (bubble tails act-wide, over-limit bubbles,
+  evening wash, crest slab, held-beat intrusions...), all gates green
+  incl. full renders EXIT 0, showrunner sampled review ACCEPTED zero
+  repairs. Rulings in ep5-decision-log.md "Act-resume-wave calls"
+  (s23 crop kept, a3_62 summary ratified, dusty-rose ratified, tail-aim
+  kit promotion → backlog). COMMIT POINT handed to the orchestrator
+  (act2.tsx, act3.tsx, decision log, HANDOFF).
+- RECAP WAVE IN FLIGHT (opus builder, brief scratchpad/ep5/
+  recap-brief.md; told mid-flight to apply the tail-aim pattern). Its
+  full-episode gate render is the authoritative union gate for the cut
+  (the two act renders each ran during the other's edits). Report →
+  scratchpad/ep5/recap-report.md.
+- Then: showrunner sampled recap review, deployable cut (site entry),
+  deploy, phone drop, retro + BIBLE fold.
 - Then: showrunner sampled still review, gates, site gallery entry
   (deferred to the deployable cut), deploy.
 

@@ -150,6 +150,16 @@ import {
 //      him; there is no legal bubble above him, so his sits beside him and the
 //      tail is an arrow rather than a straw. Same geometric limit the volcano
 //      helper documents, same answer.
+//   4. **The tail cannot stretch, so the OFFSET is the only real lever.**
+//      `SpeechBubble`'s tail is a fixed 104×78 shape and `tailAt` only slides
+//      it *within* the bubble (`tailPlacement` clamps it to the inset). A mark
+//      with `offset: 380` therefore lands its tail ~340px from the speaker with
+//      about a hundred pixels of vertical clearance, and the tip points at
+//      whatever happens to be under it — which on this slope is the lava flow.
+//      The one-word chain firings are the worst case, because a narrow bubble
+//      keeps its tail near its own middle: the first pass had "Started." tailed
+//      into the river. Every mark here is offset to put the bubble's near EDGE
+//      over its speaker, and `aimTails` then pins the tail to that edge.
 //
 // ---------------------------------------------------------------------------
 // Two Big Words live here: ERUPTION (`a2_01`) and LAVA (`a2_05`). LAVA is NOT a
@@ -166,6 +176,33 @@ import {
 
 /** Her resting face for the whole act: gleeful, never whiny. */
 const EMBER_RESTING = "excited";
+
+/**
+ * **Point every bubble's tail at the body that said it.**
+ *
+ * `Bubbles` places a bubble from its speaker's mark and then parks the tail at
+ * a fixed inset from the bubble's edge, which is right only while the speaker
+ * is roughly under that corner. On this slope nobody is: Rock has to sit well
+ * left of his own bubble so it clears Ember, and Ember well left of hers so it
+ * clears Sunny. `tailAt` is the kit's documented answer — it slides the tail to
+ * the near edge — and this builds the whole `at` map from the marks the scene
+ * already has, so the tails follow a body that moves (Ember rides the front)
+ * and can never drift out of sync with it.
+ *
+ * A key with no body in the cast is skipped, so a scene can hand it the same
+ * bubble map it hands `Bubbles` and let hand-placed speakers (Sunny, the
+ * volcano) keep their own overrides.
+ */
+const aimTails = (
+  text: Record<string, string>,
+  cast: Cast,
+): Record<string, { tailAt: number }> =>
+  Object.fromEntries(
+    Object.keys(text).flatMap((key) => {
+      const mark = cast[key.slice(key.lastIndexOf("_") + 1) as keyof Cast];
+      return mark ? [[key, { tailAt: mark.x }] as const] : [];
+    }),
+  );
 
 /**
  * **The vent framing.** Same x, same base, same plate seat as `VOLCANO_SEAT`;
@@ -216,7 +253,14 @@ const ROCK_SLOPE_MARK: Mark = {
   // LEFT, and it is not a preference: at `side: "right"` his bubble lands on
   // top of Ember, who is parked on the stalled front just up-slope of him.
   side: "left",
-  offset: 380,
+  // 220, not the kit's 330 and not the first pass's 380. The number is set by
+  // the tail rather than by the layout: at 380 his widest bubble still cleared
+  // Ember, but "Started." — a bubble barely three hundred pixels across — put
+  // its tail nearly three hundred pixels from him, over the lava. At 220 the
+  // bubble's right edge sits over his crown, `aimTails` pins the tail there,
+  // and even his three-line "You are not going somewhere." stops 170px short of
+  // Ember's left edge.
+  offset: 220,
 };
 
 /** Where Ember ends up, and stays, for three whole scenes. */
@@ -431,11 +475,34 @@ const NightShore: React.FC = () => {
  */
 const CrewFountain: React.FC<{ t: number; strength: number }> = ({ t, strength }) => {
   if (strength <= 0.01) return null;
-  const n = 9;
+  const n = 13;
   return (
     <WideLayer>
+      {/* **THE SPRAY.** The rig's own `Fountain` is drawn in the volcano's local
+          units and tops out around 58 of them — at this act's 2.4 that is 139px
+          of fountain under 460px of sky the framing bought specifically for it,
+          and on its own it reads as a sparkler rather than as the doors opening.
+          These are the fine stuff going up with the crew: two dozen specks on
+          the same deterministic ladder, thrown three times as high as the rig's
+          and falling back into the crater. Nothing is thrown outward — the tone
+          gate is that this is a fountain, not an explosion. */}
+      {Array.from({ length: 24 }, (_, i) => {
+        const u = ((t * 0.34 + (i * 5) / 24) % 1);
+        const spread = ((i * 37) % 13) - 6;
+        const lift = (240 + ((i * 53) % 190)) * strength;
+        return (
+          <circle
+            key={`spark-${i}`}
+            cx={ERUPT.x + spread * 11 * (0.4 + u)}
+            cy={CRATER_Y - Math.sin(u * Math.PI) * lift}
+            r={(3 + (i % 3) * 2.2) * (0.7 + 0.5 * strength)}
+            fill={i % 4 === 0 ? "#ffd86a" : EMBER_COLOR.hot}
+            opacity={0.85 * strength * Math.sin(u * Math.PI) ** 0.35}
+          />
+        );
+      })}
       {Array.from({ length: n }, (_, i) => {
-        // Two coprime strides so nine drops do not leave on a metronome.
+        // Two coprime strides so the crew does not leave on a metronome.
         const u = ((t * 0.19 + (i * 7) / n) % 1);
         const live = Math.min(1, u * 12) * Math.min(1, (1 - u) * 3.2);
         if (live <= 0.01) return null;
@@ -690,7 +757,56 @@ const EruptionSky: React.FC<{ t: number; strength: number }> = ({ t, strength })
 };
 
 /**
- * Steam where the lava meets the sea. Big, soft, pale and slow — "all that
+ * **The ceremony's light, carried into the portrait.**
+ *
+ * Scene 15 cuts away to him for V4 and back, and the first pass cut from an
+ * orange sky at full glory to the untinted blue-day plate and out again: two
+ * seconds of cheerful noon in the middle of the biggest scene in five episodes,
+ * on the most important line the scenery has ever spoken.
+ *
+ * This is the slope's own wash — the same `255,126,40` on the same three stops
+ * — plus the ceremony's embers, so the cut carries the hour AND its motion
+ * across. It goes in the `children` layer, in FRONT of him: it is light lying
+ * on the mountain, not a filter behind him.
+ *
+ * The strength is 0.54 where the slope runs 0.36, and the extra is arithmetic
+ * rather than taste: the slope lies on a plate that is already dark and brown,
+ * and this one lies on the bluest, most saturated plate in the episode, where
+ * the same alpha desaturates the sea instead of warming the sky. Matched by
+ * eye against `a2r2/s15c.png`, which is the frame the audience sees eight
+ * seconds earlier.
+ */
+const CeremonyLight: React.FC<{ t: number; strength?: number }> = ({ t, strength = 0.54 }) => (
+  <>
+    <AbsoluteFill
+      style={{
+        pointerEvents: "none",
+        background:
+          `linear-gradient(to bottom, rgba(255,126,40,${(strength * 1.15).toFixed(3)}) 0%,` +
+          ` rgba(255,126,40,${(strength * 0.72).toFixed(3)}) 38%,` +
+          ` rgba(255,126,40,${(strength * 0.95).toFixed(3)}) 100%)`,
+      }}
+    />
+    <WideLayer>
+      {Array.from({ length: 26 }, (_, i) => {
+        const u = ((t * 0.08 + (i * 11) / 26) % 1);
+        return (
+          <circle
+            key={i}
+            cx={-80 + ((i * 397) % 2100) + Math.sin(u * 6.2 + i) * 34}
+            cy={1120 - u * 1180}
+            r={2.6 + (i % 3) * 1.6}
+            fill={i % 3 === 0 ? "#ffd86a" : EMBER_COLOR.hot}
+            opacity={0.7 * Math.sin(u * Math.PI) ** 0.6}
+          />
+        );
+      })}
+    </WideLayer>
+  </>
+);
+
+/**
+ * Steam where the lava meets the sea. Soft, pale and slow — "all that
  * steam is the lava's heat, moving into the sea", which is the one fact in this
  * episode nobody is allowed to claim credit for.
  */
@@ -702,22 +818,41 @@ const SteamPlumes: React.FC<{ t: number; x: number; y: number; strength: number 
 }) => {
   const s = Math.max(0, Math.min(1, strength));
   if (s <= 0.01) return null;
+  const fill = mixHex("#cfe6ee", kidTheme.paper, 0.35);
   return (
     <WideLayer>
-      {Array.from({ length: 14 }, (_, i) => {
-        const u = ((t * 0.16 + (i * 5) / 14) % 1);
-        const r = (34 + u * 168) * (0.55 + 0.5 * s);
-        const drift = (((i * 37) % 11) - 5) * 26;
+      {/* MORE, SMALLER, FAINTER — and each puff is three offset discs rather
+          than one. The first pass drew fourteen big ellipses at 0.42 on the
+          darkest plate in the episode, and a hard-edged pale disc at that size
+          reads as an OBJECT: six-year-olds were being shown grey balls rolling
+          out of the sea. Steam is a texture, so it is built out of overlapping
+          parts that never resolve into a shape, none of them opaque enough to
+          own an outline. */}
+      {Array.from({ length: 22 }, (_, i) => {
+        const u = ((t * 0.16 + (i * 7) / 22) % 1);
+        const r = (26 + u * 96) * (0.6 + 0.45 * s);
+        const drift = (((i * 37) % 11) - 5) * 24;
+        const cx = x + drift * (0.4 + u) + Math.sin(u * 3.1 + i) * 22;
+        const cy = y - u * 470;
+        const alpha = 0.17 * s * Math.min(1, u * 7) * (1 - u) ** 1.2;
         return (
-          <ellipse
-            key={i}
-            cx={x + drift * (0.4 + u) + Math.sin(u * 3.1 + i) * 22}
-            cy={y - u * 470}
-            rx={r}
-            ry={r * 0.86}
-            fill={mixHex("#cfe6ee", kidTheme.paper, 0.35)}
-            opacity={0.42 * s * Math.min(1, u * 7) * (1 - u) ** 1.15}
-          />
+          <g key={i} opacity={alpha}>
+            <ellipse cx={cx} cy={cy} rx={r} ry={r * 0.86} fill={fill} />
+            <ellipse
+              cx={cx - r * 0.52}
+              cy={cy + r * 0.3}
+              rx={r * 0.72}
+              ry={r * 0.62}
+              fill={fill}
+            />
+            <ellipse
+              cx={cx + r * 0.46}
+              cy={cy + r * 0.36}
+              rx={r * 0.64}
+              ry={r * 0.55}
+              fill={fill}
+            />
+          </g>
         );
       })}
     </WideLayer>
@@ -748,7 +883,6 @@ const CardPair: React.FC<{
   y: number;
 }> = ({ magmaFrom, arrowFrom, lavaFrom, until, y }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const gone = Math.max(0, Math.min(1, (frame - until) / 10));
   if (frame < magmaFrom || gone >= 1) return null;
   const pop = (at: number): number =>
@@ -870,7 +1004,6 @@ const EruptionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stage = useStage(scene);
 
   const [, doorsTo] = lineWindow(scene, "a2_01_narrator");
-  const [v3From, v3To] = lineWindow(scene, "a2_02_volcano");
   const [buildFrom] = lineWindow(scene, "a2_03_narrator");
 
   // THE DOORS OPEN. "All of them. At once." — so the fountain does not creep
@@ -899,14 +1032,25 @@ const EruptionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const cardFrom = doorsTo - 24;
   const cardUntil = doorsTo + 26;
 
-  // THE CREW, clocking on. They start under "He was not exploding. He was
-  // building." and are still going at the cut, because the shift has only just
-  // started. See `CrewFountain` for why they are the tone gate.
-  const crew = interpolate(frame, [buildFrom - 24, buildFrom + 70], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: kidEase.easeInOutSine,
-  });
+  // THE CREW, clocking on. **They ride out with the doors, not with the third
+  // line.** The first pass held them back to `buildFrom`, which left the first
+  // seven and a half seconds of the eruption — the doors opening, the Big Word,
+  // the mountain's apology — playing over the rig's bare fountain; script.md
+  // asks for "fountains, glow, glory, staged as construction FROM THE FIRST
+  // FRAME", and the crew *is* the construction. So they come up with `erupt`
+  // and then thicken under "He was not exploding. He was building.", which is
+  // the line that names what the audience has been watching for six seconds.
+  const crew =
+    interpolate(frame, [8, doorsTo], [0, 0.68], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: kidEase.easeOutCubic,
+    }) +
+    interpolate(frame, [buildFrom - 24, buildFrom + 70], [0, 0.32], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: kidEase.easeInOutSine,
+    });
 
   // **NEVER TYPE AN X OR A Y FOR ONE OF HIS BUBBLES.** Computed at this act's
   // seat rather than at `VOLCANO_SEAT`, so the anchor follows the framing.
@@ -958,7 +1102,6 @@ const EruptionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       <CrewFountain t={t} strength={crew} />
       {/* The vent's own light on the sky around it, up as the fountain does. */}
       <VentGlow strength={erupt} />
-      {frame >= v3From && frame < v3To ? null : null}
     </MountainWorld>
   );
 };
@@ -1025,8 +1168,14 @@ const LavaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     extrapolateRight: "clamp",
     easing: kidEase.easeInCubic,
   });
-  const x = ERUPT.x + 250 * rise + 310 * drift + 360 * fall;
-  const y = CRATER_Y + (EMBER_APEX - CRATER_Y) * rise + 280 * drift + 390 * fall;
+  // She leaves the picture, and she leaves it COMPLETELY. The first pass ended
+  // the dive with her clipped by the right edge on the last frame of the scene,
+  // which reads as a crop rather than as an exit. 620/520 puts her whole body
+  // past the corner about twenty frames early, so the Narrator's driest line in
+  // the act — "There was no paperwork. There never is." — buttons out over an
+  // empty sky and a mountain, which is where that joke belongs.
+  const x = ERUPT.x + 250 * rise + 310 * drift + 620 * fall;
+  const y = CRATER_Y + (EMBER_APEX - CRATER_Y) * rise + 280 * drift + 520 * fall;
   const scale = 0.72 + 0.14 * fall;
   // She banks into her own path — a drop of lava at speed leans, and it is the
   // only pointing finger she has. Stretched on the launch, stretched again in
@@ -1116,7 +1265,6 @@ const LavaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
  */
 const SlopeCast: React.FC<{
   scene: TimedScene;
-  t: number;
   front: number;
   emberEmotion: Parameters<typeof Ember>[0]["emotion"];
   emberLook: Parameters<typeof Ember>[0]["look"];
@@ -1128,7 +1276,6 @@ const SlopeCast: React.FC<{
   sunnyScale: number;
   speaking: (who: "ember" | "rock" | "sunny") => boolean;
 }> = ({
-  t,
   front,
   emberEmotion,
   emberLook,
@@ -1176,17 +1323,14 @@ const SlopeCast: React.FC<{
         phase={PHASE.rock}
         speaking={speaking("rock")}
       />
-      {/* Ember's own halo lands on Rock's shoulder rather than being drawn
-          behind him — see `FlowGlow`. `t` is unused here on purpose: the glow
-          is a position, not an animation. */}
+      {/* The flow's light lands on Rock's shoulder rather than being drawn
+          behind him — see `FlowGlow`. It takes no `t`: the glow is a position,
+          not an animation, and the only thing that changes it is how close the
+          front has got. */}
       <FlowGlow x={ROCK_SLOPE.x + 40} y={SLOPE.ground - 150} strength={Math.min(1, Math.max(0, (front - 700) / 450))} />
-      <ShadeOfT t={t} />
     </>
   );
 };
-
-/** A no-op that keeps `t` honest in `SlopeCast`'s signature. */
-const ShadeOfT: React.FC<{ t: number }> = () => null;
 
 /** Ember's mark on the parked front — the one every bubble in 13–16 uses. */
 const emberSlopeMark = (front: number): Mark => {
@@ -1197,7 +1341,10 @@ const emberSlopeMark = (front: number): Mark => {
     scale: EMBER_SLOPE_SCALE,
     who: "ember",
     side: "left",
-    offset: 380,
+    // 260 is the far end of the same argument as Rock's 220: it is the biggest
+    // offset whose tail still lands on her, and the smallest whose widest
+    // bubble still stops short of Sunny's outermost ray at 1286.
+    offset: 260,
   };
 };
 
@@ -1265,7 +1412,11 @@ const TrafficScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     easing: kidEase.easeOutCubic,
   });
 
-  const mark = emberSlopeMark(front);
+  const cast = {
+    ember: emberSlopeMark(front),
+    rock: ROCK_SLOPE_MARK,
+    sunny: SUNNY_SLOPE_MARK,
+  } as Cast;
 
   return (
     <SlopeWorld
@@ -1274,16 +1425,14 @@ const TrafficScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       overlay={
         <Bubbles
           scene={scene}
-          cast={
-            { ember: mark, rock: ROCK_SLOPE_MARK, sunny: SUNNY_SLOPE_MARK } as Cast
-          }
+          cast={cast}
           text={S12_BUBBLES}
+          at={aimTails(S12_BUBBLES, cast)}
         />
       }
     >
       <SlopeCast
         scene={scene}
-        t={t}
         front={front}
         emberEmotion={useEmotion(
           scene,
@@ -1371,6 +1520,12 @@ const CrustScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     extrapolateRight: "clamp",
   });
 
+  const cast = {
+    ember: emberSlopeMark(FLOW_STALL),
+    rock: ROCK_SLOPE_MARK,
+    sunny: SUNNY_SLOPE_MARK,
+  } as Cast;
+
   return (
     <SlopeWorld
       phase={6.1}
@@ -1379,20 +1534,14 @@ const CrustScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       overlay={
         <Bubbles
           scene={scene}
-          cast={
-            {
-              ember: emberSlopeMark(FLOW_STALL),
-              rock: ROCK_SLOPE_MARK,
-              sunny: SUNNY_SLOPE_MARK,
-            } as Cast
-          }
+          cast={cast}
           text={S13_BUBBLES}
+          at={aimTails(S13_BUBBLES, cast)}
         />
       }
     >
       <SlopeCast
         scene={scene}
-        t={t}
         front={FLOW_STALL}
         // NO_LEAD: this scene owns a trailing held beat and the chain's own
         // 24f, and the kit's eight-frame lead would put her reaction to
@@ -1425,14 +1574,28 @@ const CrustScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 // Scene 14 — The unmoving countdown
 // ---------------------------------------------------------------------------
 
+/**
+ * **All three of her questions open with "How long", and that is the scene.**
+ * The countdown is one joke told three times at a body who will not move, so
+ * the bubbles have to rhyme on the page the way the clips rhyme in the ear.
+ *
+ * Two of them are summaries rather than transcripts, because the clips are
+ * seven words and the kit's limit is six (it warns, and the first pass shipped
+ * the warning): `a2_21`'s "How long until I am a mountain?" draws as "How long
+ * to be a mountain?", and `a2_29`'s "How long have you been sitting here?" as
+ * "How long have you sat here?". Both keep the opening two words, the object,
+ * and the question mark — which is everything a six-year-old reads off a
+ * bubble — and neither touches the recorded line.
+ */
 const S14_BUBBLES: Record<string, string> = {
-  a2_21_ember: "How long until I am a mountain?",
+  a2_21_ember: "How long to be a mountain?",
   a2_22_rock: "Ten thousand years.",
   a2_23_ember: "How long if I hurry?",
   a2_24_rock: "No.",
   a2_26_rock: "I came out of there.",
   a2_27_ember: "You were lava?",
   a2_28_rock: "I was fast once.",
+  a2_29_ember: "How long have you sat here?",
   a2_30_rock: "Since I stopped.",
 };
 
@@ -1472,27 +1635,36 @@ const CountdownScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // `neutral` under the first clause and simply stays there — the calmest thing
   // this character has ever been asked to do, and the last frame of it is the
   // one the act break cuts away from.
-  const emberMark = emberSlopeMark(FLOW_STALL);
   const looking = frame >= lookFrom;
+
+  const cast = {
+    ember: emberSlopeMark(FLOW_STALL),
+    rock: ROCK_SLOPE_MARK,
+    sunny: SUNNY_SLOPE_MARK,
+  } as Cast;
 
   return (
     <SlopeWorld
       phase={6.8}
-      wash={{ color: "72,44,104", strength: 0.5 + 0.5 * (0.78 - heat) * 4 }}
+      // **THE HOUR, NOT A CURTAIN.** The first pass ran this to 0.94, which the
+      // gradient's own 1.15 top stop turns into an opaque purple sheet over the
+      // plate AND the cast: at the act's quietest moment Ember lost her colour,
+      // Rock went flat grey and the sun desaturated. Evening is a *value* change
+      // — 0.14 → 0.30 picks up exactly where Scene 13's ramp left off (0.11) and
+      // hands Scene 15 a sky the eruption can then set on fire.
+      wash={{ color: "72,44,104", strength: 0.14 + (0.78 - heat) * 0.73 }}
       flow={<LavaFlow t={t} front={FLOW_STALL} crust={0.74} heat={heat} />}
       overlay={
         <Bubbles
           scene={scene}
-          cast={
-            { ember: emberMark, rock: ROCK_SLOPE_MARK, sunny: SUNNY_SLOPE_MARK } as Cast
-          }
+          cast={cast}
           text={S14_BUBBLES}
+          at={aimTails(S14_BUBBLES, cast)}
         />
       }
     >
       <SlopeCast
         scene={scene}
-        t={t}
         front={FLOW_STALL}
         emberEmotion={useEmotion(
           scene,
@@ -1533,7 +1705,7 @@ const CeremonyClaimScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stage = useStage(scene);
 
   const [skyFrom, skyTo] = lineWindow(scene, "a2_32_narrator");
-  const [claimFrom, claimTo] = lineWindow(scene, "a2_33_sunny");
+  const [claimFrom] = lineWindow(scene, "a2_33_sunny");
   const [v4From, v4To] = lineWindow(scene, "a2_35_volcano");
 
   // **HOISTED ON PURPOSE.** This scene returns two completely different trees —
@@ -1600,6 +1772,7 @@ const CeremonyClaimScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       >
         <CrewFountain t={t} strength={1} />
         <VentGlow strength={1} />
+        <CeremonyLight t={t} />
       </MountainWorld>
     );
   }
@@ -1621,7 +1794,6 @@ const CeremonyClaimScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     >
       <SlopeCast
         scene={scene}
-        t={t}
         front={FLOW_STALL}
         emberEmotion={emberEmotion}
         // Nobody answers. She does not look at him, she does not react, and
@@ -1635,7 +1807,13 @@ const CeremonyClaimScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         // at full confidence and the silence after it changes nothing on his
         // face — that is the fuse hissing, not the fuse going off.
         sunnyEmotion="proud"
-        sunnyLook={frame >= claimTo ? "camera" : { x: -0.9, y: -0.4 }}
+        // He turns to the lens WHILE he claims it, not after. `lookOffset` has
+        // no easing — a look change is a one-frame pupil cut — and the sixty
+        // frames after "I did that." are a hold whose entire content is that
+        // nobody moves. Landing the turn on the second word of his own line
+        // spends it where it reads as swagger; landing it on `claimTo` would
+        // put the only moving thing in the frame inside the silence.
+        sunnyLook={frame >= claimFrom + 12 ? "camera" : { x: -0.9, y: -0.4 }}
         sunnyScale={SUNNY_SLOPE.scale + 0.08 * swell}
         speaking={stage.speaking}
       />
@@ -1749,7 +1927,6 @@ const FuseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     >
       <SlopeCast
         scene={scene}
-        t={t}
         front={FLOW_STALL}
         // Held. Her face at the act break is the one Scene 14 left on it, and
         // it does not move once in this scene — including for the record.
@@ -1856,13 +2033,17 @@ const SurgeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const ex = Math.min(1300, front - 120);
   const emberY = stand("ember", nightFlowTop(Math.min(WIDTH, Math.max(0, ex))));
+  // Offsets on the slope's argument, mirrored: hers left because the sea is
+  // that way and the steam column is not, his right because he arrives from
+  // off frame left. See the tail note in the header — at 380 the chain's
+  // "Started." tailed into open water.
   const emberMark: Mark = {
     x: ex,
     y: emberY,
     scale: 0.95,
     who: "ember",
     side: "left",
-    offset: 380,
+    offset: 260,
   };
   const rockMark: Mark = {
     x: rockX,
@@ -1870,7 +2051,27 @@ const SurgeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     scale: 0.9,
     who: "rock",
     side: "right",
-    offset: 380,
+    offset: 220,
+  };
+  const cast = { ember: emberMark, rock: rockMark } as Cast;
+  // Her first line rides the surge from x≈570 to x≈1300, and a bubble on her
+  // LEFT for that whole trip starts out parked across the volcano's face at
+  // frame left — the one shot in the episode that has the whole chain in one
+  // picture, with his eye behind a speech bubble. So this one line, and only
+  // this one, sits on her sea side. The side is pinned rather than left to the
+  // kit's `x < WIDTH/2` default because she crosses the midline *inside* the
+  // line: the default would teleport the bubble across her mid-sentence.
+  //
+  // The `x` is capped at 1300 for the other half of the same problem: pushed
+  // past about 1400 the bubble stops moving and starts SHRINKING (the kit gap
+  // in the header — an absolutely-positioned box runs out of room before its
+  // `maxWidth`), and six words re-wrapped into four lines is a different
+  // bubble. Capped, it walks out with her and then waits for her to catch up,
+  // which is where she ends the line anyway.
+  const at = aimTails(S17_BUBBLES, cast);
+  const s17At = {
+    ...at,
+    a3_02_ember: { tailAt: ex, side: "right" as const, x: Math.min(1300, ex + 260) },
   };
 
   return (
@@ -1880,8 +2081,9 @@ const SurgeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       overlay={
         <Bubbles
           scene={scene}
-          cast={{ ember: emberMark, rock: rockMark } as Cast}
+          cast={cast}
           text={S17_BUBBLES}
+          at={s17At}
         />
       }
     >
@@ -1917,7 +2119,18 @@ const SurgeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               : { x: 1, y: 0 }
         }
       />
-      {blow > 0.02 ? <Blow x={ex + 150} y={emberY + 40} strength={blow} /> : null}
+      {/* The puff lands ON the lava, not in the sky. Drawn at her own height it
+          floats over open water at night and reads as a seagull; put on the
+          flow's surface just downstream of her it reads as what it is — the
+          only help a character with no arms can offer, aimed at the one speck
+          of ground she is personally responsible for. */}
+      {blow > 0.02 ? (
+        <Blow
+          x={ex + 90}
+          y={nightFlowTop(Math.min(WIDTH, Math.max(0, ex + 150))) - 24}
+          strength={blow}
+        />
+      ) : null}
       <Rock
         x={rockX}
         y={rockMark.y}
@@ -2063,11 +2276,17 @@ export const ACT2_SCENES: Record<string, React.FC<{ scene: TimedScene }>> = {
   s14_countdown: CountdownScene,
   s15_ceremony_claim: CeremonyClaimScene,
   s16_ceremony_fuse: FuseScene,
-  // **SCENE 17 IS IN THIS MAP DELIBERATELY, AND IT IS A COLLISION RISK.**
-  // The worklist gives act 2 "scenes 10–17" and the brief at the top of
-  // `act3.tsx` says "s17_surge … s26_break". `Video.tsx` spreads ACT3 after
-  // ACT2, so if the act-3 agent also stages `s17_surge` theirs silently wins
-  // and this one is dead code. Flagged at handback rather than resolved here:
-  // deleting a scene another agent may not have written is the worse failure.
+  // **SCENE 17 IS ACT TWO'S — SETTLED, NOT A COLLISION.**
+  // The two act briefs disagreed at this boundary (the worklist gives act 2
+  // "scenes 10–17"; the header of `act3.tsx` opened at "s17_surge"), and the
+  // showrunner ruled it: act 3's map correctly excludes `s17_surge`, so the
+  // staging below is the one that plays and there is nothing here to
+  // de-duplicate. The ruling is on the record in `ep5-decision-log.md`,
+  // "Act-wave salvage calls". Scene 17 opens act three in script.md and is
+  // built here, which is only odd on paper: it is the last shot of the flow
+  // this file has been staging since Scene 12, and the two frames of it that
+  // matter — the chain's second firing and Rock's "I moved." — are the ones
+  // Scene 13 planted. Whoever splits the acts differently next time should
+  // move the whole shot, not the map entry.
   s17_surge: SurgeScene,
 };

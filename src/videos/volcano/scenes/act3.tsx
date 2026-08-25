@@ -3,6 +3,7 @@ import type { TimedScene } from "./common";
 import {
   AbsoluteFill,
   Bubbles,
+  CHAR_BOX,
   COAST,
   Cast,
   Drip,
@@ -30,6 +31,8 @@ import {
   Z,
   blueRicochet,
   blueTrail,
+  bubbleOver,
+  crownOf,
   interpolate,
   kidEase,
   kidInkOutline,
@@ -50,6 +53,7 @@ import {
   volcanoBubble,
   volcanoFace,
   NO_LEAD,
+  type Body,
   type Box,
   type Cam,
   type Emotion,
@@ -187,6 +191,21 @@ import {
 //   - script.md asks for the EROSION card without buying a held beat for it,
 //     exactly as it did for MAGMA. The card is landed inside `a3_42` (the
 //     sentence that defines the word) and is out before `a3_43` starts.
+//
+// ---------------------------------------------------------------------------
+// AND WHAT THE RESUME WAVE'S STILL LOOP CHANGED (141 stills, five passes,
+// `scratchpad/ep5/a3v1…a3v5/`; full findings in act3-audit.md / act3-report.md)
+//
+// The staging above was structurally complete and had never been LOOKED at.
+// Nine things were wrong in the picture and invisible in the diff, and the two
+// biggest were both the same mistake: **a bubble that is not over its speaker
+// points at whatever else is under it.** The roll call read as the island
+// greeting itself; THE BREAK read as the volcano saying "Started." Both are
+// fixed by `aimTails` plus moving two bubbles, and the general rules that came
+// out of it — `BUBBLE_X_MAX`, `aimTails`, `plant`, `headTop`, `TwoBeatBubble` —
+// are documented at their definitions above. Three bubbles were over the kit's
+// six-word limit (nine, eight and the seven the salvage pass flagged); none is
+// now, and no clip, line or firing count moved to get there.
 
 // ---------------------------------------------------------------------------
 // The act's world
@@ -213,6 +232,144 @@ const EMBER_RESTING: Emotion = "excited";
  * physics the script states twice and it is also the whole of her arc.
  */
 const EMBER_COOLED = { crust: 0.5, wisps: 0.32, glow: 0.62 } as const;
+
+/**
+ * **How far above its own box bottom each body is actually DRAWN**, in the
+ * body's natural units — measured off the components, not guessed.
+ *
+ * `stand()` puts a body's *box* bottom on the ground line, and every kit body
+ * scales about `50% 100%`, so the box bottom is on the ground at any scale.
+ * What `stand` cannot know is that the drawing does not reach the bottom of its
+ * own box: Ember's drop ends at local +102 in a ±160 box (`BALL_Y + BALL_R *
+ * 0.9` in `Ember.tsx`), so she hangs **58 units above her own feet**.
+ *
+ * On act one's beach that hides in the sand. On act three's black shelf it is a
+ * band of *sea* under a character who is supposed to be standing on the newest
+ * rock in the world, and it read as floating in every first-pass still.
+ * `plant()` closes it. Rock (his contact shadow reaches local +158 of ±170) and
+ * Drip (feet at +170 of ±190) are inside the noise and are seated plainly.
+ */
+const DRAWN_SLACK: Partial<Record<Body, number>> = { ember: 58 };
+
+/**
+ * `stand()`, with the drawing's own slack taken out. Returns a mark's `y`.
+ *
+ * It makes contact exact, so the ad-hoc `SHORE + 22 / + 34 / + 40` fudges the
+ * first pass carried on three of Ember's marks are gone: every shot in the act
+ * now seats her the same way, on the same line, and the shelf curve (±20 either
+ * side of `SHORE`) is the only variation left.
+ */
+function plant(who: Body, ground: number, scale = 1): number {
+  return stand(who, ground + (DRAWN_SLACK[who] ?? 0) * scale);
+}
+
+/**
+ * **The widest a bubble can be at a given x**, and the reason marks in this act
+ * keep their bubbles left of ~1260.
+ *
+ * `SpeechBubble` is an absolutely-positioned div at `left: x`, so its available
+ * width is `WIDTH − x` before `maxWidth` ever applies: a bubble centred past
+ * 1260 **narrows instead of moving**. That is the ep-4 kit gap the weak-points
+ * list predicted would bite act three, measured. First pass put Rock's bubble
+ * at x 1520 and "Ohh yeah. That is the stuff." came out as a four-line column
+ * 380px wide.
+ *
+ * Not a helper anybody calls — a number to stage against, and the reason
+ * `S19_ROCK` and `S26_ROCK` put their bubbles on the *inside* of the frame.
+ */
+const BUBBLE_X_MAX = 1260;
+
+/**
+ * How far the outgoing bubble leaves ahead of the incoming one when one line
+ * carries two bubbles. `SpeechBubble` shrinks out over seven frames; without a
+ * head start the two share the frame and the swap reads as a stutter.
+ */
+const BUBBLE_HANDOVER = 5;
+
+/**
+ * **Point every bubble's tail at the body that said it.**
+ *
+ * `SpeechBubble`'s default parks the tail at a fixed 56px inset from one corner
+ * of the bubble, which is correct when the bubble is roughly over its speaker
+ * and wrong the moment it is not — and a *short* bubble is never over its
+ * speaker, because it is only 200px wide and the mark's offset is 300. Still
+ * `a3v1/s19i`: Rock's one-word "Rock." pointed at 240px of empty sea.
+ *
+ * `tailAt` is clamped to inside the bubble, so this can never produce a tail
+ * floating in space — it moves the tip as far toward the speaker as the bubble
+ * allows and stops. Speaker comes off the line key's own suffix, the same
+ * convention `speakerOf` uses.
+ */
+function aimTails(
+  text: Record<string, string>,
+  marks: Record<string, Mark>,
+): Record<string, { tailAt: number }> {
+  const at: Record<string, { tailAt: number }> = {};
+  for (const key of Object.keys(text)) {
+    const mark = marks[key.slice(key.lastIndexOf("_") + 1)];
+    if (mark) at[key] = { tailAt: mark.x };
+  }
+  return at;
+}
+
+/**
+ * **One line, two bubbles.** The kit's limit is six words and it warns rather
+ * than truncating; three lines in this act are over it, and a seven- or
+ * nine-word bubble wraps into a column of words that a six-year-old reads as a
+ * paragraph in the sky (still `a3v1/s23f`: four lines).
+ *
+ * The split is the kit's own advice — "split it into two beats" — and it is a
+ * *staging* change only: the clip is untouched, and the swap lands in the
+ * MEASURED silence between the take's two sentences (`silencedetect` on the
+ * mp3, the same method `ROLLCALL_STARTS` uses), so no bubble ever changes while
+ * a word is being said. `at` is a fraction of the take, not a frame, so a
+ * re-roll of the clip re-times the swap for free.
+ *
+ * Placement is `Bubbles`' own derivation, kept in step with it deliberately:
+ * side from the mark, offset from the mark, x clamped to the same 400 margins,
+ * y from `bubbleOver`.
+ */
+const TwoBeatBubble: React.FC<{
+  mark: Mark;
+  from: number;
+  until: number;
+  /** Fraction of the take the second beat starts at. MEASURED, never guessed. */
+  at: number;
+  first: string;
+  second: string;
+}> = ({ mark, from, until, at, first, second }) => {
+  const side = mark.side ?? (mark.x < WIDTH / 2 ? "right" : "left");
+  const offset = mark.offset ?? 330;
+  const x = Math.max(
+    400,
+    Math.min(BUBBLE_X_MAX, mark.x + (side === "right" ? offset : -offset)),
+  );
+  const y = Math.max(170, Math.min(HEIGHT - 280, bubbleOver(mark)));
+  const tail = side === "right" ? "left" : "right";
+  const swap = from + Math.round((until - from) * at);
+  return (
+    <>
+      <SpeechBubble
+        x={x}
+        y={y}
+        text={first}
+        tail={tail}
+        tailAt={mark.x}
+        from={from}
+        until={swap - BUBBLE_HANDOVER}
+      />
+      <SpeechBubble
+        x={x}
+        y={y}
+        text={second}
+        tail={tail}
+        tailAt={mark.x}
+        from={swap}
+        until={until}
+      />
+    </>
+  );
+};
 
 type SeaPlate =
   | "island_chain_dusk"
@@ -430,16 +587,26 @@ const BasaltShore: React.FC<{
           fill={mixHex(rock, kidTheme.ink, 0.18)}
         />
       ) : null}
+      {/* THE RIM LIGHT ON THE RIDGE, and it is a STROKE of the silhouette
+          rather than a filled shape.
+          First pass filled a separate quad and closed it on a straight
+          `L 900 …` — which at any crest over about 150 drew a flat grey slab
+          lying across the black hill with a hard bottom edge, visible in eight
+          of this act's nine scenes. Stroking the *same two cubics* the
+          silhouette above is built from cannot come apart from it: the
+          highlight is the ridge, by construction, at every crest height. */}
       {crest > 4 ? (
         <path
           d={
-            `M ${640} ${hillY + crest * 0.1}` +
-            ` C ${800} ${hillY + crest * 0.02} ${900} ${hillY} ${1010} ${hillY}` +
-            ` C ${1180} ${hillY - crest * 0.03} ${1300} ${hillY + crest * 0.1} ${1420} ${hillY + crest * 0.22}` +
-            ` L ${900} ${hillY + crest * 0.3} Z`
+            `M -420 ${SHORE + 40}` +
+            ` C ${180} ${SHORE - crest * 0.18} ${640} ${hillY + crest * 0.1} ${1010} ${hillY}` +
+            ` C ${1360} ${hillY - crest * 0.06} ${1720} ${SHORE - crest * 0.34} ${2340} ${SHORE + 40}`
           }
-          fill={lit}
-          opacity={0.5}
+          stroke={lit}
+          strokeWidth={Math.max(9, crest * 0.045)}
+          strokeLinecap="round"
+          fill="none"
+          opacity={0.4}
         />
       ) : null}
 
@@ -689,17 +856,18 @@ const PappusSeed: React.FC<{ x: number; y: number; scale?: number; rot?: number;
     transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot.toFixed(1)}) scale(${scale})`}
     opacity={opacity}
   >
+    {/* Each spoke is drawn twice: a soft ink underlay, then the fluff on top.
+        A pale pappus against a pale dawn sky (Scene 25) or a bright meadow
+        (Scene 24) had nothing to read against — and this seed is the loop
+        closing, not set dressing. */}
     {Array.from({ length: 9 }, (_, i) => {
       const a = -Math.PI / 2 + (i - 4) * 0.3;
+      const d = `M 0 -14 L ${(Math.cos(a) * 46).toFixed(1)} ${(Math.sin(a) * 46 - 14).toFixed(1)}`;
       return (
-        <path
-          key={i}
-          d={`M 0 -14 L ${(Math.cos(a) * 46).toFixed(1)} ${(Math.sin(a) * 46 - 14).toFixed(1)}`}
-          stroke={PIP_COLOR.fluff}
-          strokeWidth={5}
-          strokeLinecap="round"
-          opacity={0.9}
-        />
+        <g key={i}>
+          <path d={d} stroke={kidTheme.ink} strokeWidth={9} strokeLinecap="round" opacity={0.16} />
+          <path d={d} stroke={PIP_COLOR.fluff} strokeWidth={5} strokeLinecap="round" opacity={0.95} />
+        </g>
       );
     })}
     <ellipse cx={0} cy={4} rx={12} ry={9} fill={PIP_COLOR.seed} stroke={PIP_COLOR.seedDeep} strokeWidth={3} />
@@ -728,14 +896,16 @@ const PappusSeed: React.FC<{ x: number; y: number; scale?: number; rot?: number;
 const ROLLCALL_STARTS = [0, 0.211, 0.394, 0.653] as const;
 
 /**
- * How far the outgoing bubble leaves ahead of the incoming one.
- * `SpeechBubble` shrinks out over seven frames; without a head start two names
- * share the square of sky and the swap reads as a stutter.
+ * **The square of sky the greeting happens in.** Every name lands here.
+ *
+ * x is 800 and not 940, and the 140px matter: a bubble's tail is clamped to
+ * inside its own bubble, so at 940 the tip landed at x≈700 — **on the black
+ * island's slope** (island 0 spans 662–1014), and stills `a3v1/s18b`/`s18e`
+ * read as the island greeting itself rather than as Ember greeting it. At 800
+ * the widest name still clamps its tail to a tip inside her silhouette, and the
+ * square of sky is still clear of the chain.
  */
-const ROLLCALL_HANDOVER = 5;
-
-/** The square of sky the greeting happens in. Every name lands here. */
-const ROLLCALL_AT = { x: 940, y: 268 } as const;
+const ROLLCALL_AT = { x: 800, y: 268 } as const;
 
 const S18_EMBER = { x: 548, scale: 0.98 } as const;
 
@@ -754,7 +924,7 @@ const RollCall: React.FC<{ at: number[]; until: number; tailAt: number }> = ({
         tail="left"
         tailAt={tailAt}
         from={at[i]}
-        until={i + 1 < at.length ? at[i + 1] - ROLLCALL_HANDOVER : until}
+        until={i + 1 < at.length ? at[i + 1] - BUBBLE_HANDOVER : until}
         zIndex={44}
       />
     ))}
@@ -772,7 +942,7 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const mark: Mark = {
     x: S18_EMBER.x,
-    y: stand("ember", SHORE),
+    y: plant("ember", SHORE, S18_EMBER.scale),
     scale: S18_EMBER.scale,
     who: "ember",
     side: "right",
@@ -806,8 +976,15 @@ const RollCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     extrapolateRight: "clamp",
     easing: kidEase.easeInOutSine,
   });
+  // **AND HE DOES NOT SNAP BACK.** First pass returned his look to `"camera"`
+  // at `everyTo` — which is the FIRST FRAME of the scripted 36f hold, so a pair
+  // of five-hundred-pixel pupils hard-cut inside the silence. `look` is a
+  // direction, not a spring; there is no morph to hide it. He keeps his eyes at
+  // the far end of his own coastline for the rest of the scene, which is also
+  // the better read: Ember's button lands on a mountain still looking at the
+  // last island he made.
   const volcanoLook: LookDirection =
-    frame >= everyFrom && frame < everyTo ? { x: 0.15 + cvU * 0.85, y: 0.25 } : "camera";
+    frame >= everyFrom ? { x: 0.15 + cvU * 0.85, y: 0.25 } : "camera";
 
   return (
     <SeaWorld
@@ -924,19 +1101,27 @@ const IslandGrowsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const emberMark: Mark = {
     x: S19_EMBER.x,
-    y: stand("ember", SHORE),
+    y: plant("ember", SHORE, S19_EMBER.scale),
     scale: S19_EMBER.scale,
     who: "ember",
+    // 260, not 330: this scene's shortest bubbles are one word ("Done!"), and
+    // a 200px bubble at 330 leaves its tail a fifth of the frame from her even
+    // after `aimTails` pushes it as far over as the bubble allows.
     side: "right",
-    offset: 330,
+    offset: 260,
   };
+  // **ROCK'S BUBBLE OPENS INWARD**, and that is `BUBBLE_X_MAX`, not taste. On
+  // his right it landed at x 1520 with 400px of frame left to be wide in, and
+  // "Ohh yeah. That is the stuff." came out as a four-line column (still
+  // `a3v1/s19g`). On his left it has the whole middle of the frame, and the
+  // tail still leaves from the edge nearest him.
   const rockMark: Mark = {
     x: S19_ROCK.x,
     y: stand("rock", SHORE + 8),
     scale: S19_ROCK.scale,
     who: "rock",
-    side: "right",
-    offset: 340,
+    side: "left",
+    offset: 240,
   };
 
   // She is impatient with a mountain; her lean is aimed at it, and it drops to
@@ -969,6 +1154,7 @@ const IslandGrowsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             scene={scene}
             cast={{ ember: emberMark, rock: rockMark } as Cast}
             text={S19_BUBBLES}
+            at={aimTails(S19_BUBBLES, { ember: emberMark, rock: rockMark })}
           />
         </>
       }
@@ -1021,7 +1207,9 @@ const S20_CLIFF = { x: 1450, top: 372, foot: 830 } as const;
 
 const S20_BUBBLES: Record<string, string> = {
   a3_35_drip: "Hi! It's me! I'm the weather!",
-  a3_36_puff: "You can't see me. But you can FEEL me.",
+  // `a3_36_puff` is NOT here: his catch-phrase is nine words, and it is staged
+  // as two beats below. The migrated take's "FEEL" capital survives the split —
+  // it is the approved recording's own emphasis, drawn.
   a3_37_drip: "We are taking this mountain down!",
   a3_39_ember: "How long to break a mountain?",
   a3_40_rock: "Ten thousand years.",
@@ -1082,9 +1270,12 @@ const Weather: React.FC<{ strength: number; t: number }> = ({ strength, t }) => 
   if (strength <= 0.02) return null;
   return (
     <WideLayer zIndex={Z.cast - 1}>
-      {Array.from({ length: 16 }, (_, i) => {
-        const u = ((t * 1.25 + i / 16) % 1);
-        const x = 1080 + ((i * 331) % 900) - u * 90;
+      {/* The rain band starts at 620, not 1080. Drip announces "I'm the
+          weather" standing at 900, and the first pass left the whole left half
+          of frame — and Drip himself — dry. */}
+      {Array.from({ length: 22 }, (_, i) => {
+        const u = ((t * 1.25 + i / 22) % 1);
+        const x = 620 + ((i * 331) % 1330) - u * 90;
         const y = 120 + u * 760;
         return (
           <path
@@ -1136,12 +1327,15 @@ const DemolitionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const [workFrom] = lineWindow(scene, "a3_38_narrator");
   const [breakFrom, breakTo] = lineWindow(scene, "a3_42_narrator");
   const [sunnyFrom] = lineWindow(scene, "a3_46_sunny");
+  const [feelFrom, feelTo] = lineWindow(scene, "a3_36_puff");
 
-  const emberMark: Mark = { x: 300, y: stand("ember", SHORE), scale: 0.74, who: "ember", side: "right", offset: 300 };
+  const emberMark: Mark = { x: 300, y: plant("ember", SHORE, 0.74), scale: 0.74, who: "ember", side: "right", offset: 300 };
   const rockMark: Mark = { x: 620, y: stand("rock", SHORE + 6), scale: 0.5, who: "rock", side: "right", offset: 300 };
   const dripMark: Mark = { x: 900, y: stand("drip", SHORE - 4), scale: 0.72, who: "drip", side: "left", offset: 330 };
   const puffMark: Mark = { x: 1170, y: hover("puff", 560, 0.86), scale: 0.86, who: "puff", side: "left", offset: 330 };
-  const sunnyMark: Mark = { x: 1596, y: hover("sunny", 208, 0.98), scale: 0.98, who: "sunny", side: "left", offset: 360 };
+  // 240 rather than 208: at 208 his box top is above the frame and the rays on
+  // his crown are sliced off by the top edge.
+  const sunnyMark: Mark = { x: 1596, y: hover("sunny", 240, 0.98), scale: 0.98, who: "sunny", side: "left", offset: 360 };
 
   // THE PUSH, AND WHERE IT STOPS. It runs under the windup and is parked six
   // frames before the line ends, so the grain leaves the cliff into a still
@@ -1232,8 +1426,8 @@ const DemolitionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               produces one grain of sand before lunch. Puff's floats, because
               there is nothing under it to hold it up. */}
           <WideLayer zIndex={Z.cast + 2}>
-            <HardHat x={dripMark.x} y={dripMark.y - CHAR_HALF.drip * 0.72 - 18} scale={0.56} tilt={-6} />
-            <HardHat x={puffMark.x + 6} y={puffMark.y - CHAR_HALF.puff * 0.86 - 12} scale={0.5} tilt={7} />
+            <HardHat x={dripMark.x} y={headTop(dripMark, "drip") + 10} scale={0.56} tilt={-6} />
+            <HardHat x={puffMark.x + 6} y={headTop(puffMark, "puff") - 4} scale={0.5} tilt={7} />
           </WideLayer>
           {frame >= sunnyFrom ? (
             <Sunny
@@ -1250,8 +1444,12 @@ const DemolitionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               size that makes the number funny. */}
           {grain ? (
             <WideLayer zIndex={Z.cast + 3}>
+              {/* 13×10 with a 4px outline, not 9×7 with 3: this is the payoff
+                  of the scene's biggest windup and at the 1.42 push it was six
+                  pixels of pale yellow on a pale cliff. Still small enough that
+                  the number is the joke. */}
               <g transform={`translate(${grain.x.toFixed(1)} ${grain.y.toFixed(1)}) rotate(${grain.spin.toFixed(0)})`}>
-                <ellipse cx={0} cy={0} rx={9} ry={7} fill="#e6d3a4" stroke="#8a7145" strokeWidth={3} />
+                <ellipse cx={0} cy={0} rx={13} ry={10} fill="#f0e0b4" stroke="#6f5a33" strokeWidth={4} />
               </g>
             </WideLayer>
           ) : null}
@@ -1284,6 +1482,26 @@ const DemolitionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             } as Cast
           }
           text={S20_BUBBLES}
+          at={aimTails(S20_BUBBLES, {
+            ember: projected(cam, emberMark, pushed),
+            rock: projected(cam, rockMark, pushed),
+            drip: projected(cam, dripMark, pushed),
+            puff: projected(cam, puffMark, pushed),
+            sunny: projected(cam, sunnyMark, pushed),
+          })}
+        />
+        {/* PUFF'S CATCH-PHRASE, IN TWO BEATS. Nine words in one bubble is a
+            paragraph in the sky; the swap sits in the 0.83s the take itself
+            leaves between its two sentences (silencedetect: 0.816→1.644 of
+            2.916), so it lands in real silence. The line, the clip and the
+            firing count are untouched. */}
+        <TwoBeatBubble
+          mark={projected(cam, puffMark, pushed)}
+          from={feelFrom}
+          until={feelTo}
+          at={0.422}
+          first="You can't see me."
+          second="But you can FEEL me."
         />
       </AbsoluteFill>
     </KidBackdrop>
@@ -1291,11 +1509,21 @@ const DemolitionScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /**
- * Half the natural box of the bodies this act hangs props on. `crownOf` in
- * `common.tsx` answers the same question through a mark; this is the two rows
- * a hard hat needs without building one.
+ * **How far below the top of its scaled BOX each of these two is actually
+ * drawn**, in natural units, measured off the components: Drip's tip is local
+ * −140 in a ±190 box, Puff's body radius is 96 in a ±170 box.
+ *
+ * The first pass hung the hats off half-box constants and never scaled the
+ * offset, so both floated 100–220px clear of the crew's heads (stills
+ * `a3v1/s20b`, `s20j`) — the one prop in the episode, in mid-air.
  */
-const CHAR_HALF = { drip: 190, puff: 170 } as const;
+const CROWN_SLACK = { drip: 50, puff: 74 } as const;
+
+/** The screen y a body's DRAWING starts at, for anything worn on its head. */
+function headTop(mark: Mark, who: keyof typeof CROWN_SLACK): number {
+  const scale = mark.scale ?? 1;
+  return crownOf(who, mark.y, scale) + CROWN_SLACK[who] * scale;
+}
 
 /**
  * A mark as the bubble layer sees it. Bubbles live OUTSIDE the camera (a
@@ -1325,19 +1553,34 @@ function projected(cam: Cam, mark: Mark, active: boolean): Mark {
 // and Puff claiming the recipe they *are*, and Ember's flat verdict on a
 // crumb.
 
+/**
+ * Which island each word labels, by index into `CHAIN` — so a label cannot
+ * drift off its island the day one of them moves, and so the label's HEIGHT
+ * comes from the island's own height.
+ */
 const S21_LABELS = [
-  { text: "BLACK ROCK", at: 0.16, x: 838 },
-  { text: "SAND", at: 0.42, x: 1364 },
-  { text: "GREEN", at: 0.66, x: 1580 },
+  { text: "BLACK ROCK", at: 0.16, island: 0 },
+  { text: "SAND", at: 0.42, island: 2 },
+  { text: "GREEN", at: 0.66, island: 3 },
 ] as const;
 
-const ChainLabel: React.FC<{ text: string; x: number; from: number; until: number }> = ({
-  text,
-  x,
-  from,
-  until,
-}) => {
+/**
+ * A diagram label, sitting **above** its island.
+ *
+ * First pass parked every label at `SEAT + 34` — 34px *below* the waterline the
+ * islands stand on — so "SAND" floated on the open sea under its island and
+ * across Puff (still `a3v1/s21c`). A label under the water is not labelling
+ * anything. The chain is a diagram in this scene; the labels sit on it.
+ */
+const ChainLabel: React.FC<{
+  island: ChainIsland;
+  text: string;
+  from: number;
+  until: number;
+}> = ({ island, text, from, until }) => {
   const frame = useCurrentFrame();
+  const x = island.x;
+  const top = SEAT - island.h - 64;
   if (frame < from || frame > until) return null;
   const u = interpolate(frame, [from, from + 7, until - 7, until], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
@@ -1349,7 +1592,7 @@ const ChainLabel: React.FC<{ text: string; x: number; from: number; until: numbe
       style={{
         position: "absolute",
         left: x,
-        top: SEAT + 34,
+        top,
         transform: `translateX(-50%) scale(${(0.8 + u * 0.2).toFixed(3)})`,
         opacity: u,
         padding: "8px 20px",
@@ -1391,11 +1634,15 @@ const DirtScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     easing: kidEase.easeInOutSine,
   });
   const pushed = frame >= pinchFrom + 14;
+  // The push holds BOTH the pinch and the inspector. Centred on the crumb
+  // itself (806) Ember was sliced in half by the left edge at 1.85 — a flat
+  // verdict delivered by half a face (still `a3v1/s21h`). 700 keeps her whole
+  // and still lands the crumb comfortably inside the frame.
   const cam: Cam = pushed
-    ? { x: SOIL_AT.x, y: SOIL_AT.y - 40, zoom }
+    ? { x: 700, y: SOIL_AT.y - 40, zoom }
     : { x: WIDTH / 2, y: HEIGHT / 2 };
 
-  const emberMark: Mark = { x: 470, y: stand("ember", SHORE), scale: 0.9, who: "ember", side: "right", offset: 320 };
+  const emberMark: Mark = { x: 470, y: plant("ember", SHORE, 0.9), scale: 0.9, who: "ember", side: "right", offset: 320 };
   const dripMark: Mark = { x: 1030, y: stand("drip", SHORE - 2), scale: 0.6, who: "drip", side: "left", offset: 320 };
   const puffMark: Mark = { x: 1290, y: hover("puff", 640, 0.7), scale: 0.7, who: "puff", side: "left", offset: 320 };
 
@@ -1455,7 +1702,7 @@ const DirtScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               <ChainLabel
                 key={l.text}
                 text={l.text}
-                x={l.x}
+                island={CHAIN[l.island]}
                 from={rowFrom + Math.round((rowTo - rowFrom) * l.at)}
                 until={i + 1 < S21_LABELS.length ? rowFrom + Math.round((rowTo - rowFrom) * S21_LABELS[i + 1].at) - 4 : rowTo + 20}
               />
@@ -1471,6 +1718,11 @@ const DirtScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             } as Cast
           }
           text={S21_BUBBLES}
+          at={aimTails(S21_BUBBLES, {
+            ember: projected(cam, emberMark, pushed),
+            drip: projected(cam, dripMark, pushed),
+            puff: projected(cam, puffMark, pushed),
+          })}
         />
       </AbsoluteFill>
     </KidBackdrop>
@@ -1520,8 +1772,10 @@ const BlueScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const p = blueRicochet(blueFrame, BLUE_BOX, 5);
   const frozen = blueFrame !== frame;
 
-  const emberMark: Mark = { x: 486, y: stand("ember", SHORE), scale: 0.98, who: "ember", side: "right", offset: 330 };
-  const blueMark: Mark = { x: p.x, y: p.y, scale: 0.66, who: "shard", side: p.x > WIDTH / 2 ? "left" : "right", offset: 320 };
+  const emberMark: Mark = { x: 486, y: plant("ember", SHORE, 0.98), scale: 0.98, who: "ember", side: "right", offset: 330 };
+  // 300, so that a bubble on the right of a shard at the middle of his box
+  // still centres inside `BUBBLE_X_MAX` and keeps its full width.
+  const blueMark: Mark = { x: p.x, y: p.y, scale: 0.66, who: "shard", side: p.x > WIDTH / 2 ? "left" : "right", offset: 300 };
 
   // Violet exits before the scene ends, in total silence, noticed by nobody.
   const violetOut = interpolate(frame, [outFrom, outFrom + 40], [0, 1], {
@@ -1537,7 +1791,12 @@ const BlueScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       crest={116}
       volcano={{ x: 286, scale: 1.5, smoke: 0.38, look: "camera" }}
       overlay={
-        <Bubbles scene={scene} cast={{ ember: emberMark, blue: blueMark } as Cast} text={S22_BUBBLES} />
+        <Bubbles
+          scene={scene}
+          cast={{ ember: emberMark, blue: blueMark } as Cast}
+          text={S22_BUBBLES}
+          at={aimTails(S22_BUBBLES, { ember: emberMark, blue: blueMark })}
+        />
       }
     >
       <Ember
@@ -1570,7 +1829,9 @@ const BlueScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       {violetOut < 0.98 ? (
         <Shard
           who="violet"
-          x={1836 + violetOut * 260}
+          // 1790, not 1836: "far frame edge" is the direction, half out of
+          // frame is an accident. He is fully drawn until he leaves.
+          x={1790 + violetOut * 306}
           y={604 - violetOut * 120 + Math.sin(t * 0.7) * 8}
           scale={0.46}
           opacity={1 - violetOut}
@@ -1598,9 +1859,12 @@ const BlueScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 const S23_VOLCANO = { x: 916, base: SEAT, scale: 4.05 } as const;
 
 const S23_BUBBLES: Record<string, string> = {
-  a3_62_ember: "When will I be as big as you?",
+  // A summary, not a transcript, and six words rather than eight: she is at his
+  // foot with her eyes up his slope, so "that big" IS the mountain — the shot
+  // is doing the comparison the four cut words were doing.
+  a3_62_ember: "When will I be that big?",
   a3_65_ember: "Everything fast was over fast.",
-  a3_66_ember: "Now I am ten thousand years long.",
+  // `a3_66_ember` is NOT here — seven words, staged as two beats below.
   a3_67_rock: "Fast things are small.",
   a3_68_rock: "Slow things are big.",
   a3_69_rock: "You are going to be enormous.",
@@ -1613,11 +1877,12 @@ const TurnScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const [askFrom] = lineWindow(scene, "a3_62_ember");
   const [, v5To] = lineWindow(scene, "a3_63_volcano");
+  const [longFrom, longTo] = lineWindow(scene, "a3_66_ember");
 
   const vb = volcanoBubble({ ...S23_VOLCANO, awake: 1, side: "left" });
   const face = volcanoFace({ ...S23_VOLCANO, awake: 1 });
 
-  const emberMark: Mark = { x: 372, y: stand("ember", SHORE + 34), scale: 1.02, who: "ember", side: "right", offset: 300 };
+  const emberMark: Mark = { x: 372, y: plant("ember", SHORE, 1.02), scale: 1.02, who: "ember", side: "right", offset: 300 };
   const rockMark: Mark = { x: 1516, y: stand("rock", SHORE + 20), scale: 0.6, who: "rock", side: "left", offset: 330 };
 
   return (
@@ -1642,12 +1907,39 @@ const TurnScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       }}
       overlay={
         <>
+          {/* **TWO `Bubbles`, NOT ONE, AND THIS IS A RULE.** `maxWidth` is a
+              component-level prop, so passing the volcano's helper number
+              (520 — sized for the clearance beside his eye) through one shared
+              `Bubbles` squeezed every OTHER bubble in the scene to 520 as well.
+              That, plus the word count, is what turned Ember's line into a
+              four-line column in the first pass. His bubbles get their own
+              instance; everybody else keeps the kit's 660. */}
           <Bubbles
             scene={scene}
-            cast={{ ember: emberMark, rock: rockMark, volcano: vb.mark } as Cast}
-            text={{ ...S23_BUBBLES, a3_63_volcano: "Presently." }}
+            cast={{ ember: emberMark, rock: rockMark } as Cast}
+            text={S23_BUBBLES}
+            at={aimTails(S23_BUBBLES, { ember: emberMark, rock: rockMark })}
+          />
+          <Bubbles
+            scene={scene}
+            cast={{ volcano: vb.mark } as Cast}
+            text={{ a3_63_volcano: "Presently." }}
             at={{ a3_63_volcano: vb.at }}
             maxWidth={vb.maxWidth}
+          />
+          {/* THE SELF-ACCOUNT, IN TWO BEATS. Seven words in one bubble wrapped
+              to four lines. The clip is one sentence about being fast and one
+              about being long, and the swap lands in the 0.44s the take leaves
+              between them (silencedetect: 1.338→1.783 of 4.068) — so the
+              second half of the arc's most important line arrives on its own,
+              which is what the beat wanted anyway. */}
+          <TwoBeatBubble
+            mark={emberMark}
+            from={longFrom}
+            until={longTo}
+            at={0.384}
+            first="I used to be fast."
+            second="Ten thousand years long."
           />
         </>
       }
@@ -1745,8 +2037,12 @@ const GradingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     extrapolateRight: "clamp",
     easing: kidEase.gravity,
   });
+  // 168 in front of him, not 78: his drawn body radius is 96 at scale 0.8, and
+  // at 78 the pinch spent his whole line *behind* him — the parcel in a
+  // delivery scene, invisible (still `a3v2/s24b`). Bodies are `Z.cast`, the
+  // ground layer he carries it in is not, so clearance has to be geometric.
   const pinch = {
-    x: puffX - 78 + (MEADOW.pip.x + 128 - (puffX - 78)) * drop,
+    x: puffX - 168 + (MEADOW.pip.x + 128 - (puffX - 168)) * drop,
     y: puffY + 34 + (MEADOW.ground - 16 - (puffY + 34)) * drop,
   };
 
@@ -1857,7 +2153,12 @@ const GradingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         ) : null}
       </div>
       <AbsoluteFill style={{ zIndex: Z.overlay, pointerEvents: "none" }}>
-        <Bubbles scene={scene} cast={{ pip: pipMark, puff: puffMark } as Cast} text={S24_BUBBLES} />
+        <Bubbles
+          scene={scene}
+          cast={{ pip: pipMark, puff: puffMark } as Cast}
+          text={S24_BUBBLES}
+          at={aimTails(S24_BUBBLES, { pip: pipMark, puff: puffMark })}
+        />
       </AbsoluteFill>
     </KidBackdrop>
   );
@@ -1897,11 +2198,13 @@ const GardenScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const vb = volcanoBubble({ ...S25_VOLCANO, awake: 1, side: "right" });
 
-  const emberMark: Mark = { x: 476, y: stand("ember", SHORE + 22), scale: 0.94, who: "ember", side: "right", offset: 320 };
+  const emberMark: Mark = { x: 476, y: plant("ember", SHORE, 0.94), scale: 0.94, who: "ember", side: "right", offset: 320 };
   const sunnyMark: Mark = { x: 1404, y: hover("sunny", 238, 1.0), scale: 1.0, who: "sunny", side: "left", offset: 360 };
 
-  // Pipsqueak sails in ON his line and settles into the pinch.
-  const ride = interpolate(frame, [v6From - 6, v6To + 26], [0, 1], {
+  // Pipsqueak sails in ON his line — from `v6From`, not six frames before it.
+  // The six frames were inside V6's staged 48f approach gap, which is a held
+  // beat like any other: nothing enters it, including a seed.
+  const ride = interpolate(frame, [v6From, v6To + 26], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: kidEase.easeInOutSine,
@@ -1927,13 +2230,22 @@ const GardenScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         look: "camera",
       }}
       overlay={
-        <Bubbles
-          scene={scene}
-          cast={{ ember: emberMark, sunny: sunnyMark, volcano: vb.mark } as Cast}
-          text={{ ...S25_BUBBLES, a3_83_volcano: "I believe the garden is ready." }}
-          at={{ a3_83_volcano: vb.at }}
-          maxWidth={vb.maxWidth}
-        />
+        <>
+          {/* His own `Bubbles`, for the `maxWidth` reason in Scene 23. */}
+          <Bubbles
+            scene={scene}
+            cast={{ ember: emberMark, sunny: sunnyMark } as Cast}
+            text={S25_BUBBLES}
+            at={aimTails(S25_BUBBLES, { ember: emberMark, sunny: sunnyMark })}
+          />
+          <Bubbles
+            scene={scene}
+            cast={{ volcano: vb.mark } as Cast}
+            text={{ a3_83_volcano: "I believe the garden is ready." }}
+            at={{ a3_83_volcano: vb.at }}
+            maxWidth={vb.maxWidth}
+          />
+        </>
       }
     >
       <Ember
@@ -1988,16 +2300,35 @@ const GardenScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 const S26_EMBER = { x: 690, scale: 1.24 } as const;
 const S26_ROCK = { x: 1244, scale: 0.82 } as const;
 
+/** Two words. Fifteen minutes of setup behind them. */
+const S26_BUBBLES: Record<string, string> = {
+  a3_86_rock: "Done?",
+  a3_87_ember: "Started.",
+};
+
 const BreakScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stage = useStage(scene);
 
+  // **HER BUBBLE OPENS TO HER RIGHT, INTO THE GAP BETWEEN THE TWO OF THEM.**
+  //
+  // This is the fix the salvage pass asked for, and it is the whole beat. On
+  // her LEFT the bubble's x came out at 360, clamped to the 400 margin, and the
+  // tail — clamped to inside its own bubble — pointed down-left at x≈500, over
+  // open water, with the bubble body sitting **on the distant volcano's face**
+  // (still `a3v1/s26d`). The single most important word in the episode read as
+  // the mountain saying it.
+  //
+  // Right, at 300, puts it in the empty sky between her and Rock, inside
+  // `BUBBLE_X_MAX`, and `tailAt` drops the tip inside her own silhouette. Rock
+  // keeps the other side of the frame, so the two one-word bubbles land in two
+  // different places and the swap of who-says-what is legible at a glance.
   const emberMark: Mark = {
     x: S26_EMBER.x,
-    y: stand("ember", SHORE + 40),
+    y: plant("ember", SHORE, S26_EMBER.scale),
     scale: S26_EMBER.scale,
     who: "ember",
-    side: "left",
-    offset: 330,
+    side: "right",
+    offset: 300,
   };
   const rockMark: Mark = {
     x: S26_ROCK.x,
@@ -2021,7 +2352,13 @@ const BreakScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         <Bubbles
           scene={scene}
           cast={{ ember: emberMark, rock: rockMark } as Cast}
-          text={{ a3_86_rock: "Done?", a3_87_ember: "Started." }}
+          text={S26_BUBBLES}
+          // Both tails aimed at their own speaker rather than parked at a
+          // corner. A one-word bubble is small, so the default corner inset is
+          // most of its width away from the body that said it — and in a
+          // two-hander built entirely out of who-said-which-word, the tail is
+          // the whole of the staging.
+          at={aimTails(S26_BUBBLES, { ember: emberMark, rock: rockMark })}
         />
       }
     >

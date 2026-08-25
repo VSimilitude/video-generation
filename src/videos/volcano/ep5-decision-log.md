@@ -208,6 +208,33 @@ on their uncommitted working tree:
   in the smoke still it points down-left toward the horizon rather than
   at a speaker; verify against the staged speaker before THE BREAK.
 
+## Act-resume-wave calls (showrunner #4 sampled review, 2026-08-25)
+
+- **ACT2 + ACT3 resume waves ACCEPTED** after sampled still review (6 of
+  the 16 shortlisted: a3v3/s26d, a3v2/s23f+s23f2, a2r2/s13c, a2r2/s16b,
+  a2r2/s14i). Zero repairs from the showrunner pass. Both builders: full
+  audit → still loop (135 + 141 stills) → gates all green including
+  full every-frame renders EXIT 0. Reports: scratchpad/ep5/
+  act2-report.md, act3-report.md. NOTE: the two full renders each ran
+  while the other act was possibly mid-edit — the RECAP builder's gate
+  render is the authoritative full-union gate for the cut.
+- **s23 crater crop KEPT at scale 4.05** (builder taste-call escalation,
+  ruled): the crater sliced by the frame top reads as too-big-to-fit,
+  which IS the scene's subject ("When will I be that big?" / the turn).
+  Not a defect; do not shrink to 3.8.
+- **a3_62 bubble as 6-word summary RATIFIED** ("When will I be that
+  big?"): the take has no internal sentence boundary to split on, the
+  clip is untouched, and the shot carries the comparison.
+- **s14 dusty-rose evening RATIFIED** over the header's "purple
+  evening": the inherited 0.94 purple wash flooded plate AND cast;
+  legibility of the cast outranks the color note.
+- **Bubble tails were an act-wide latent defect** (both builders found
+  it independently: the kit tail cannot stretch and tailAt only slides
+  within the bubble, so distant speaker marks leave tails pointing at
+  nobody). ACT2's aimTails helper + mark re-offsets is the pattern;
+  RECAP instructed mid-flight to apply it. KIT PROMOTION of a tail-aim
+  primitive goes on the retro/kit-cleanup backlog with the y>=170 gap.
+
 ## Skeleton-wave calls (showrunner review, 2026-08-25)
 
 - **Skeleton ACCEPTANCE PASS PASSED at c0940bb** (successor showrunner,
