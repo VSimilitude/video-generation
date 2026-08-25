@@ -188,10 +188,10 @@ Campaign state (showrunner keeps this current):
   already public via src/videos/registry.ts). COMMIT + DEPLOY POINT
   handed to the orchestrator: src/videos/volcano/scenes/recap.tsx,
   src/videos/volcano/ep5-decision-log.md, docs/HANDOFF.md.
-- Phone drop rendering in background (full-scale render + 720p HEVC
-  hvc1 CRF 29 faststart → out/EmberVolcano_phone.mp4, log
-  scratchpad/ep5/phone-render.log); deliver to Mike when done, target
-  <30MiB.
+- Phone drop DONE: out/EmberVolcano_phone.mp4 (25.2MiB, 720p HEVC hvc1
+  CRF 29 +faststart, encoded via `npx remotion ffmpeg` — system ffmpeg
+  is not installed). Full-scale master at out/EmberVolcano.mp4 (274MB,
+  not for chat). Handed to the orchestrator for delivery to Mike.
 - Remaining (post-deploy, next session if quota kills this one): Mike's
   FULL-CONTEXT ear/eye pass on the deployed episode (Ember casting
   PROVISIONAL, rc_03 chant shout, a3_63 "Presently." pace, armless
