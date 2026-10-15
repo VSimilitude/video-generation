@@ -318,7 +318,9 @@ export const EndCard: React.FC<{
   onDifferent: () => void;
   /** False when the spec has no choice point to rewind to. */
   canTryDifferent: boolean;
-}> = ({ picks, onAgain, onDifferent, canTryDifferent }) => {
+  /** Leaves the video for the family hub. */
+  onHome?: () => void;
+}> = ({ picks, onAgain, onDifferent, canTryDifferent, onHome }) => {
   const [ref, scale] = useCardScale();
   const entered = useEntrance();
 
@@ -326,6 +328,7 @@ export const EndCard: React.FC<{
     label: string,
     accent: string,
     onClick: () => void,
+    ink: string = kidTheme.ink,
   ): React.ReactElement => (
     <button
       type="button"
@@ -339,7 +342,7 @@ export const EndCard: React.FC<{
         border: "none",
         borderRadius: kidRadius.pill,
         boxShadow: kidShadow(0.8),
-        color: kidTheme.ink,
+        color: ink,
         fontFamily: kidTheme.fontFamily,
         fontSize: Math.round(24 * scale),
         fontWeight: 800,
@@ -414,6 +417,8 @@ export const EndCard: React.FC<{
           {canTryDifferent
             ? button("Try a different way", kidTheme.sun, onDifferent)
             : null}
+          {/* The hub's own colour, so this reads as the hub's button. */}
+          {onHome ? button("🏠 Back to the hub", "#5b6cff", onHome, "#ffffff") : null}
         </div>
       </div>
     </div>

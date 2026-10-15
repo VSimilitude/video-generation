@@ -1,15 +1,18 @@
-// The site shell: a gallery of every video in the suite plus a player screen.
+// The site shell: a player screen per video, reached from the family hub.
 //
-// Routing is the URL hash (#/ for the gallery, #/<id> for a video) so the
-// build stays a single static index.html — no server rewrites, and the phone
-// back button works. Styling comes from src/lib/theme.ts so the page reads as
-// part of the same suite as the videos.
+// Routing is the URL hash (#/<id> for a video, #/all for the review gallery)
+// so the build stays a single static index.html — no server rewrites, and the
+// phone back button works. The bare #/ is no longer a front door: it sends
+// people to the hub (kthanks.com), which is where videos are picked from now.
+// Chrome styling comes from siteTheme.ts so the page looks like the hub.
 
 import React from "react";
-import { Player } from "@remotion/player";
-import { theme } from "../lib/theme";
+import { Player, type PlayerRef } from "@remotion/player";
 import { BranchingPlayer } from "./BranchingPlayer";
+import { EndCard } from "./ChoiceCard";
 import { FullscreenStage } from "./FullscreenStage";
+import { hubHome, returnToHub } from "./hub";
+import { site } from "./siteTheme";
 import {
   PUBLIC_VIDEOS,
   findVideo,
@@ -35,23 +38,58 @@ function useHashRoute(): string | null {
 const page: React.CSSProperties = {
   minHeight: "100vh",
   margin: "0 auto",
-  maxWidth: 1100,
-  padding: "20px 16px 48px",
-  color: theme.text,
-  fontFamily: theme.fontFamily,
+  maxWidth: 720,
+  padding: "calc(16px + env(safe-area-inset-top)) 16px 48px",
+  color: site.text,
+  fontFamily: site.fontFamily,
   boxSizing: "border-box",
 };
 
 const cardStyle: React.CSSProperties = {
   display: "block",
   textDecoration: "none",
-  color: theme.text,
-  background: theme.panel,
-  border: `1px solid ${theme.panelBorder}`,
-  borderRadius: 16,
-  padding: 18,
-  marginBottom: 14,
+  color: site.text,
+  background: site.surface,
+  border: `2px solid ${site.border}`,
+  borderRadius: site.radius,
+  padding: 16,
+  marginBottom: 12,
+  boxShadow: site.shadow,
 };
+
+// The hub's buttons, so "Back to the hub" here is the same button it is there.
+const pillButton = (primary: boolean): React.CSSProperties => ({
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 6,
+  minHeight: 48,
+  padding: "0 18px",
+  borderRadius: 999,
+  border: `2px solid ${primary ? "transparent" : site.border}`,
+  background: primary ? site.primary : site.surface,
+  color: primary ? "#fff" : site.text,
+  fontFamily: site.fontFamily,
+  fontSize: 17,
+  fontWeight: 700,
+  cursor: "pointer",
+  touchAction: "manipulation",
+  boxShadow: primary ? "0 4px 0 rgba(0, 0, 0, 0.12)" : "none",
+  textDecoration: "none",
+});
+
+const HubButton: React.FC<{ big?: boolean }> = ({ big }) => (
+  <button
+    type="button"
+    onClick={returnToHub}
+    style={{
+      ...pillButton(true),
+      ...(big ? { width: "100%", minHeight: 60, fontSize: 20 } : {}),
+    }}
+  >
+    🏠 Back to the hub
+  </button>
+);
 
 // --- Crash containment -----------------------------------------------------
 //
@@ -69,37 +107,25 @@ const cardStyle: React.CSSProperties = {
 const Hiccup: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
   <div
     style={{
-      background: theme.panel,
-      border: `1px solid ${theme.panelBorder}`,
-      borderRadius: 16,
+      background: site.surface,
+      border: `2px solid ${site.border}`,
+      borderRadius: site.radius,
       padding: "36px 24px",
       textAlign: "center",
       width: "100%",
       boxSizing: "border-box",
+      color: site.text,
+      fontFamily: site.fontFamily,
     }}
   >
     <div style={{ fontSize: 46, lineHeight: 1, marginBottom: 12 }}>🫧</div>
-    <p style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 700 }}>
+    <p style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 800 }}>
       Something hiccuped!
     </p>
-    <p style={{ margin: "0 0 18px", color: theme.textMuted, fontSize: 15 }}>
+    <p style={{ margin: "0 0 18px", color: site.textSoft, fontSize: 15 }}>
       The video tripped over its own feet. Tap to try again.
     </p>
-    <button
-      type="button"
-      onClick={onRetry}
-      style={{
-        fontFamily: theme.fontFamily,
-        fontSize: 17,
-        fontWeight: 700,
-        color: theme.outline,
-        background: theme.accent,
-        border: "none",
-        borderRadius: 999,
-        padding: "12px 30px",
-        cursor: "pointer",
-      }}
-    >
+    <button type="button" onClick={onRetry} style={pillButton(true)}>
       Try again
     </button>
   </div>
@@ -145,8 +171,8 @@ const BranchingChip: React.FC = () => (
     style={{
       display: "inline-block",
       flexShrink: 0,
-      color: theme.outline,
-      background: theme.accent,
+      color: "#fff",
+      background: site.primary,
       borderRadius: 999,
       padding: "3px 10px",
       fontSize: 12,
@@ -159,18 +185,24 @@ const BranchingChip: React.FC = () => (
 );
 
 const Header: React.FC<{ subtitle: string }> = ({ subtitle }) => (
-  <header style={{ marginBottom: 22 }}>
-    <h1 style={{ fontSize: 26, fontWeight: 800, margin: "0 0 6px" }}>
-      video_generation
-      <span style={{ color: theme.accent }}>.</span>
+  <header style={{ marginBottom: 18 }}>
+    <h1 style={{ fontSize: 32, fontWeight: 800, margin: "0 0 4px", lineHeight: 1.1 }}>
+      All videos
     </h1>
-    <p style={{ margin: 0, color: theme.textMuted, fontSize: 15 }}>{subtitle}</p>
+    <p style={{ margin: 0, color: site.textSoft, fontSize: 16, fontWeight: 500 }}>
+      {subtitle}
+    </p>
   </header>
 );
 
+// #/all — every registered video, kids' and otherwise, for reviewing an
+// episode on a phone. Not linked from anywhere a kid goes.
 const Gallery: React.FC = () => (
   <main style={page}>
-    <Header subtitle="Remotion + Kokoro TTS videos, playing live in the browser." />
+    <div style={{ marginBottom: 14 }}>
+      <HubButton />
+    </div>
+    <Header subtitle="The whole suite, for review. Kids get theirs from the hub." />
     {PUBLIC_VIDEOS.map((video) => (
       <a key={video.id} href={`#/${video.id}`} style={cardStyle}>
         <div
@@ -181,25 +213,24 @@ const Gallery: React.FC = () => (
             gap: 12,
           }}
         >
-          <h2 style={{ fontSize: 19, fontWeight: 700, margin: 0 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0, lineHeight: 1.15 }}>
             {video.title}
           </h2>
           {video.branching ? (
             <BranchingChip />
           ) : (
-            <span
-              style={{ color: theme.accentSoft, fontSize: 14, flexShrink: 0 }}
-            >
+            <span style={{ color: site.textSoft, fontSize: 14, fontWeight: 700, flexShrink: 0 }}>
               {formatDuration(video.durationInFrames, video.fps)}
             </span>
           )}
         </div>
         <p
           style={{
-            margin: "8px 0 0",
-            color: theme.textMuted,
+            margin: "6px 0 0",
+            color: site.textSoft,
             fontSize: 15,
-            lineHeight: 1.45,
+            fontWeight: 500,
+            lineHeight: 1.4,
           }}
         >
           {video.description}
@@ -207,10 +238,24 @@ const Gallery: React.FC = () => (
       </a>
     ))}
     {PUBLIC_VIDEOS.length === 0 ? (
-      <p style={{ color: theme.textMuted }}>No videos registered yet.</p>
+      <p style={{ color: site.textSoft }}>No videos registered yet.</p>
     ) : null}
   </main>
 );
+
+// #/ — the old gallery address. The hub is the front door now, so go there.
+const GoToHub: React.FC = () => {
+  React.useEffect(() => {
+    window.location.replace(hubHome());
+  }, []);
+  return (
+    <main style={{ ...page, textAlign: "center", paddingTop: "40vh" }}>
+      <p style={{ margin: 0, color: site.textSoft, fontWeight: 700 }}>
+        Taking you to the hub…
+      </p>
+    </main>
+  );
+};
 
 // Letterbox: the player fills the viewport width and keeps the composition's
 // aspect ratio, on a flat dark field. `display: flex` (not `lineHeight: 0`)
@@ -218,11 +263,90 @@ const Gallery: React.FC = () => (
 // cascade into the composition itself, since the Player does not reset
 // inherited typography.
 const letterbox: React.CSSProperties = {
-  background: theme.outline,
-  border: `1px solid ${theme.panelBorder}`,
+  background: "#0a0e18",
+  border: `2px solid ${site.border}`,
   borderRadius: 12,
   overflow: "hidden",
   display: "flex",
+};
+
+// A linear video's last frame used to be a paused picture and silence. Kids
+// who have just finished are the audience the hub most wants to hear from, so
+// the end shows the same card the branching player ends on — watch again, or
+// back to the hub, where the "how was it?" card is waiting.
+function useEndedOverlay(player: PlayerRef | null): {
+  ended: boolean;
+  watchAgain: () => void;
+} {
+  const [ended, setEnded] = React.useState(false);
+  React.useEffect(() => {
+    if (!player) return;
+    const onEnded = () => setEnded(true);
+    const onPlay = () => setEnded(false);
+    player.addEventListener("ended", onEnded);
+    player.addEventListener("play", onPlay);
+    return () => {
+      player.removeEventListener("ended", onEnded);
+      player.removeEventListener("play", onPlay);
+    };
+  }, [player]);
+  const watchAgain = React.useCallback(() => {
+    setEnded(false);
+    player?.seekTo(0);
+    player?.play();
+  }, [player]);
+  return { ended, watchAgain };
+}
+
+const LinearPlayer: React.FC<{
+  video: SiteVideo;
+  errorFallback: () => React.ReactElement;
+}> = ({ video, errorFallback }) => {
+  // State, not a ref: the ended-subscription effect must re-run once the
+  // Player instance actually attaches.
+  const [player, setPlayer] = React.useState<PlayerRef | null>(null);
+  const { ended, watchAgain } = useEndedOverlay(player);
+  return (
+    // The stage owns the letterbox so the fullscreen button, and the
+    // portrait-phone rotation, work the same here as in the branching
+    // player. Remotion's own fullscreen stays on for mouse users (there
+    // is no overlay to leave behind on a linear video) and off on touch,
+    // where two fullscreen buttons would just fight.
+    <FullscreenStage letterboxStyle={letterbox} label={video.title}>
+      {(stage) => (
+        <>
+          <Player
+            ref={setPlayer}
+            component={video.component}
+            durationInFrames={video.durationInFrames}
+            compositionWidth={video.width}
+            compositionHeight={video.height}
+            fps={video.fps}
+            controls
+            clickToPlay
+            doubleClickToFullscreen={stage.allowPlayerFullscreen}
+            allowFullscreen={stage.allowPlayerFullscreen}
+            // Mobile Safari only reliably plays audio elements unlocked by
+            // a user gesture; the shared pool is warmed on first tap and
+            // reused, instead of minting a fresh <audio> per line mid-play.
+            numberOfSharedAudioTags={10}
+            acknowledgeRemotionLicense
+            errorFallback={errorFallback}
+            style={stage.playerStyle}
+          />
+          {ended ? (
+            <EndCard
+              picks={[]}
+              onAgain={watchAgain}
+              onDifferent={watchAgain}
+              canTryDifferent={false}
+              onHome={returnToHub}
+            />
+          ) : null}
+        </>
+      )}
+    </FullscreenStage>
+  );
 };
 
 const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
@@ -230,21 +354,15 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
   // from a clean mount rather than a re-render of the state that just threw.
   const [attempt, setAttempt] = React.useState(0);
   const retry = React.useCallback(() => setAttempt((n) => n + 1), []);
+  const hiccup = React.useCallback(() => <Hiccup onRetry={retry} />, [retry]);
 
   return (
     <main style={page}>
-      <a
-        href="#/"
-        style={{
-          display: "inline-block",
-          marginBottom: 14,
-          color: theme.accent,
-          textDecoration: "none",
-          fontSize: 15,
-        }}
-      >
-        ← All videos
-      </a>
+      <div style={{ marginBottom: 14 }}>
+        <button type="button" onClick={returnToHub} style={pillButton(false)}>
+          ← Back to the hub
+        </button>
+      </div>
       <ErrorBoundary onRetry={retry}>
         {video.branching ? (
           // Same containment, different screen: the branching player wraps the
@@ -255,85 +373,52 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
             video={video}
             spec={video.branching}
             letterboxStyle={letterbox}
-            errorFallback={() => <Hiccup onRetry={retry} />}
+            errorFallback={hiccup}
           />
         ) : (
-          // The stage owns the letterbox so the fullscreen button, and the
-          // portrait-phone rotation, work the same here as in the branching
-          // player. Remotion's own fullscreen stays on for mouse users (there
-          // is no overlay to leave behind on a linear video) and off on touch,
-          // where two fullscreen buttons would just fight.
-          <FullscreenStage
-            key={attempt}
-            letterboxStyle={letterbox}
-            label={video.title}
-          >
-            {(stage) => (
-              <Player
-                component={video.component}
-                durationInFrames={video.durationInFrames}
-                compositionWidth={video.width}
-                compositionHeight={video.height}
-                fps={video.fps}
-                controls
-                clickToPlay
-                doubleClickToFullscreen={stage.allowPlayerFullscreen}
-                allowFullscreen={stage.allowPlayerFullscreen}
-                // Mobile Safari only reliably plays audio elements unlocked by
-                // a user gesture; the shared pool is warmed on first tap and
-                // reused, instead of minting a fresh <audio> per line mid-play.
-                numberOfSharedAudioTags={10}
-                acknowledgeRemotionLicense
-                errorFallback={() => <Hiccup onRetry={retry} />}
-                style={stage.playerStyle}
-              />
-            )}
-          </FullscreenStage>
+          <LinearPlayer key={attempt} video={video} errorFallback={hiccup} />
         )}
       </ErrorBoundary>
-      <h2 style={{ fontSize: 20, fontWeight: 700, margin: "18px 0 6px" }}>
+      <h2 style={{ fontSize: 24, fontWeight: 800, margin: "18px 0 4px", lineHeight: 1.15 }}>
         {video.title}
       </h2>
       <p
         style={{
           margin: 0,
-          color: theme.textMuted,
-          fontSize: 15,
-          lineHeight: 1.45,
+          color: site.textSoft,
+          fontSize: 16,
+          fontWeight: 500,
+          lineHeight: 1.4,
         }}
       >
         {video.description}
       </p>
-      {video.branching ? (
-        <>
-          <p style={{ marginTop: 10, color: theme.textMuted, fontSize: 14 }}>
-            This one has a choice in it — when the cards appear, tap one.
-          </p>
-          <p
-            style={{
-              marginTop: 10,
-              color: theme.textMuted,
-              fontSize: 13,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              flexWrap: "wrap",
-            }}
-          >
+      <p
+        style={{
+          margin: "10px 0 0",
+          color: site.textSoft,
+          fontSize: 14,
+          fontWeight: 600,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          flexWrap: "wrap",
+        }}
+      >
+        {video.branching ? (
+          <>
             <BranchingChip />
-            <span>
-              ~1–2 min · {video.width}×{video.height} @ {video.fps} fps · has
-              narration — unmute or raise the volume.
-            </span>
-          </p>
-        </>
-      ) : (
-        <p style={{ marginTop: 10, color: theme.textMuted, fontSize: 13 }}>
-          {formatDuration(video.durationInFrames, video.fps)} ·{" "}
-          {video.width}×{video.height} @ {video.fps} fps · has narration — unmute or
-          raise the volume.
-        </p>
-      )}
+            <span>When the cards appear, tap one. Turn the sound up!</span>
+          </>
+        ) : (
+          <span>
+            {formatDuration(video.durationInFrames, video.fps)} · Turn the sound up!
+          </span>
+        )}
+      </p>
+      <div style={{ marginTop: 24 }}>
+        <HubButton big />
+      </div>
     </main>
   );
 };
@@ -341,16 +426,15 @@ const PlayerScreen: React.FC<{ video: SiteVideo }> = ({ video }) => {
 const NotFound: React.FC<{ id: string }> = ({ id }) => (
   <main style={page}>
     <Header subtitle={`No video registered with the id "${id}".`} />
-    <a href="#/" style={{ color: theme.accent }}>
-      ← All videos
-    </a>
+    <HubButton />
   </main>
 );
 
 export const App: React.FC = () => {
   const id = useHashRoute();
+  if (!id) return <GoToHub />;
+  if (id === "all") return <Gallery />;
   const video = findVideo(id);
-  if (!id) return <Gallery />;
   if (!video) return <NotFound id={id} />;
   return <PlayerScreen video={video} />;
 };

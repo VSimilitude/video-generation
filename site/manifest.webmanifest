@@ -1,14 +1,14 @@
 {
-  "name": "video_generation",
+  "name": "Little Big World",
   "short_name": "Videos",
-  "description": "The video_generation suite — Remotion compositions playing live in the browser.",
+  "description": "Little Big World and the rest of our videos, playing live in the browser.",
   "start_url": "./",
   "scope": "./",
   "id": "./",
   "display": "standalone",
   "orientation": "landscape",
-  "background_color": "#10141d",
-  "theme_color": "#10141d",
+  "background_color": "#f4f6ff",
+  "theme_color": "#5b6cff",
   "icons": [
     {
       "src": "./icons/icon-192.png",

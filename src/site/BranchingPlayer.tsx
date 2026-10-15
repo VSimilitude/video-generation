@@ -18,6 +18,7 @@ import React from "react";
 import { Player, type CallbackListener, type PlayerRef } from "@remotion/player";
 import { prefetch, staticFile } from "remotion";
 import { ChoiceCard, EndCard } from "./ChoiceCard";
+import { returnToHub } from "./hub";
 import { FullscreenStage } from "./FullscreenStage";
 import {
   choiceHoldFrame,
@@ -353,6 +354,7 @@ export const BranchingPlayer: React.FC<BranchingPlayerProps> = ({
       onAgain={watchAgain}
       onDifferent={tryDifferent}
       canTryDifferent={rewindTarget !== null}
+      onHome={returnToHub}
     />
   ) : null;
 
