@@ -36,7 +36,7 @@ for readings taken just after a floored boundary — when the previous
 window died at the session limit, trust the API kill message's reset time
 over ccusage.
 
-## 2026-10-18 — DripAgain, the sequel CYOA (UNCOMMITTED on main, awaiting Mike's "push it")
+## 2026-10-18 — DripAgain, the sequel CYOA (SHIPPED: commit 87f9b37, deployed to gh-pages; hub tile live)
 Source: the hub's second feedback round — Math (8) re-rated the expanded
 DripChooses 🙂 Fun! and pitched a sequel (Drip goes up again; Cloudia away
 on important business; a beaver's dam or a mountain that is really a
@@ -59,12 +59,13 @@ rides the falling trunk. Nits left for Mike: lava front reads as a crystal;
 heat shimmer faint; "two specks" gag unfindable; path length well over
 the brief's 3¾ min (copy cuts, mainly the intro, if wanted). NOTHING
 HEARD YET (Beaver = kokoro am_michael 1.05; one-word "Dam."/"Busy." clips).
-Working tree: `src/videos/registry.ts` (M), `src/videos/drip-again/`,
-`public/narration/drip-again/` (94 mp3s), `scratchpad/drip-again/`
-(reports, stills, still scripts). kids-hub: catalog item `vid-DripAgain`
-added, uncommitted there. Ship order once Mike says push it: commit here
-(explicit paths, never `git add -A`) → push → deploy from a clean
-worktree → commit + `npm run deploy` in kids-hub.
+Mike said "push it" the same evening: committed by explicit path (87f9b37),
+pushed, deployed from a clean worktree; kids-hub tile `vid-DripAgain`
+committed (1c7f39e, local-only repo) and deployed. Awaiting the kids'
+verdict via `npm run feedback` in kids-hub, and Mike's own pass on the
+overturn list above. Note: the hub's `/videos` proxy serves GitHub Pages
+through Cloudflare's cache, so a fresh gh-pages deploy can take ~10 min to
+show at kthanks.com, and the proxied cache-control says max-age=14400.
 
 ## 2026-10-17 — the hub feedback round (UNCOMMITTED on main, awaiting Mike's "push it")
 Source: the family hub's first feedback round (Math, 8). Retro entry at the
