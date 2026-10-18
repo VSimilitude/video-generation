@@ -36,6 +36,36 @@ for readings taken just after a floored boundary — when the previous
 window died at the session limit, trust the API kill message's reset time
 over ccusage.
 
+## 2026-10-18 — DripAgain, the sequel CYOA (UNCOMMITTED on main, awaiting Mike's "push it")
+Source: the hub's second feedback round — Math (8) re-rated the expanded
+DripChooses 🙂 Fun! and pitched a sequel (Drip goes up again; Cloudia away
+on important business; a beaver's dam or a mountain that is really a
+volcano); Mike added obsidian forming when the lava reaches the dam's lake,
+asked for a SEPARATE video, and then for a "left or right" half-choice in
+each first branch. Built as **`DripAgain` — "Drip Goes Up Again"**,
+`src/videos/drip-again/`: nine segments, four choice points per watch
+(`where`, `valleyWay`|`mountainWay`, `wayOut`), eight paths 5:11–5:55.
+Design + every line + the builders' Build calls: `src/videos/drip-again/brief.md`.
+New pattern: a **half-choice** is a real card whose two options both go to
+the same next segment, which swaps variant lines/pictures (`VariantLine`
+is now `{ keys, pick(choices) }`; `hm_04` keys on two choices). No
+src/site changes. Gates green: typecheck, lint:hooks,
+`node scripts/check-branching.mjs DripAgain`, full-scale render (one path)
++ quarter-scale renders, `npm run site`. Still review by forks: ACCEPT
+WITH NOTES → fix pass (dam wide and low, lodge in water, valley scaled up
+in the intro wide, CRACK clear) → re-check pass. Post-build copy change:
+`da_03a` lengthened to fill its variant slot. Sign fix in dam.tsx: Drip
+rides the falling trunk. Nits left for Mike: lava front reads as a crystal;
+heat shimmer faint; "two specks" gag unfindable; path length well over
+the brief's 3¾ min (copy cuts, mainly the intro, if wanted). NOTHING
+HEARD YET (Beaver = kokoro am_michael 1.05; one-word "Dam."/"Busy." clips).
+Working tree: `src/videos/registry.ts` (M), `src/videos/drip-again/`,
+`public/narration/drip-again/` (94 mp3s), `scratchpad/drip-again/`
+(reports, stills, still scripts). kids-hub: catalog item `vid-DripAgain`
+added, uncommitted there. Ship order once Mike says push it: commit here
+(explicit paths, never `git add -A`) → push → deploy from a clean
+worktree → commit + `npm run deploy` in kids-hub.
+
 ## 2026-10-17 — the hub feedback round (UNCOMMITTED on main, awaiting Mike's "push it")
 Source: the family hub's first feedback round (Math, 8). Retro entry at the
 top of docs/LEARNINGS.md; bible world rules 15–16 added. Four changes sit

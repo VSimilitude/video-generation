@@ -86,6 +86,14 @@ import {
   HEIGHT as DRIP_FORK_HEIGHT,
 } from "./drip-fork/Video";
 import {
+  DripAgainVideo,
+  branching as dripAgainBranching,
+  timeline as dripAgainTimeline,
+  FPS as DRIP_AGAIN_FPS,
+  WIDTH as DRIP_AGAIN_WIDTH,
+  HEIGHT as DRIP_AGAIN_HEIGHT,
+} from "./drip-again/Video";
+import {
   AppIconVideo,
   AppIconMaskableVideo,
   DURATION_IN_FRAMES as APP_ICON_DURATION,
@@ -280,6 +288,18 @@ export const VIDEOS: VideoEntry[] = [
     height: DRIP_FORK_HEIGHT,
     durationInFrames: dripForkTimeline().durationInFrames,
     branching: dripForkBranching(),
+  },
+  {
+    id: "DripAgain",
+    title: "Drip Goes Up Again",
+    description:
+      "Drip is home for about a minute, then wants to go up again. The Cloud Hotel is closed, so you decide where the wind takes him, and then how he gets out of a beaver's pond. A Little Big World choose-your-own-adventure.",
+    component: DripAgainVideo,
+    fps: DRIP_AGAIN_FPS,
+    width: DRIP_AGAIN_WIDTH,
+    height: DRIP_AGAIN_HEIGHT,
+    durationInFrames: dripAgainTimeline().durationInFrames,
+    branching: dripAgainBranching(),
   },
   {
     id: "KidDemo",
