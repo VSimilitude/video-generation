@@ -70,16 +70,48 @@ export function turnsOf(
   });
 }
 
-/** The viewer's choice at the one branch point. Default outside the site. */
-export type WayUp = "sunbeam" | "float";
-export const DEFAULT_WAY_UP: WayUp = "sunbeam";
+/**
+ * The three choice points, by their stable path ids (recorded in localStorage
+ * by the site player — never rename one once shipped), and each one's options
+ * in card order. The FIRST option is the default outside the site (Studio,
+ * `remotion render`), which is also what the site's auto-pick chooses.
+ */
+export const CHOICES = {
+  wayUp: ["sunbeam", "float"],
+  wayDown: ["rain", "snow"],
+  whereTo: ["river", "underground"],
+} as const;
 
-export function wayUpFrom(path?: Record<string, string>): WayUp {
-  return path?.wayUp === "float" ? "float" : DEFAULT_WAY_UP;
+export type ChoiceId = keyof typeof CHOICES;
+export type WayUp = (typeof CHOICES)["wayUp"][number];
+export type WayDown = (typeof CHOICES)["wayDown"][number];
+export type WhereTo = (typeof CHOICES)["whereTo"][number];
+/** The viewer's path, resolved: every choice has an answer, defaulted if unmade. */
+export type Choices = { wayUp: WayUp; wayDown: WayDown; whereTo: WhereTo };
+
+function pick<C extends ChoiceId>(id: C, path?: Record<string, string>) {
+  const options = CHOICES[id] as readonly string[];
+  const chosen = path?.[id];
+  return (chosen && options.includes(chosen) ? chosen : options[0]) as (typeof CHOICES)[C][number];
 }
 
-/** Every scene in this video takes the same two props. */
-export type SceneProps = { scene: TimedScene; wayUp: WayUp };
+/** Player inputProps `path` -> a fully-answered `Choices`. Pure data. */
+export function choicesFrom(path?: Record<string, string>): Choices {
+  return {
+    wayUp: pick("wayUp", path),
+    wayDown: pick("wayDown", path),
+    whereTo: pick("whereTo", path),
+  };
+}
+
+/**
+ * Every scene in this video takes the same two props. `scene` already has the
+ * viewer's variant clips swapped in (Video.tsx resolves them before mounting),
+ * so a scene that only stages lines never needs to read `choices` at all; it is
+ * there for the variant *pictures* (an icon in Sunny's credits, a snowflake
+ * frame) that a clip swap cannot carry.
+ */
+export type SceneProps = { scene: TimedScene; choices: Choices };
 
 // ---------------------------------------------------------------------------
 // Props this demo needs and episode one keeps private
@@ -308,6 +340,24 @@ export const SpeedStreaks: React.FC<{ strength: number; frame: number; color?: s
   );
 };
 
+/** A six-point snowflake, for signs and icons. */
+export const SnowGlyph: React.FC<{ r: number; color?: string }> = ({ r, color = kidTheme.waterDark }) => (
+  <g>
+    {Array.from({ length: 6 }, (_, i) => (
+      <g key={i} transform={`rotate(${i * 60})`}>
+        <path d={`M 0 0 L 0 ${-r}`} stroke={color} strokeWidth={r * 0.2} strokeLinecap="round" />
+        <path
+          d={`M ${-r * 0.3} ${-r * 0.72} L 0 ${-r * 0.5} L ${r * 0.3} ${-r * 0.72}`}
+          stroke={color}
+          strokeWidth={r * 0.16}
+          strokeLinecap="round"
+          fill="none"
+        />
+      </g>
+    ))}
+  </g>
+);
+
 // Re-exported so a scene file needs one import for the whole kit. Everything
 // below is episode one's, unchanged.
 export {
@@ -317,6 +367,7 @@ export {
   CaptionCard,
   CutFlash,
   PHASE,
+  ScenePlaceholder,
   SkyBlend,
   SteamWisps,
   Vignette,

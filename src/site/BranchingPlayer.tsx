@@ -23,6 +23,7 @@ import { FullscreenStage } from "./FullscreenStage";
 import {
   choiceHoldFrame,
   firstChoiceSegment,
+  lastChoiceSegment,
   seamAction,
   segmentAtFrame,
 } from "./branchingEngine";
@@ -325,6 +326,22 @@ export const BranchingPlayer: React.FC<BranchingPlayerProps> = ({
     instance?.seekTo(choiceHoldFrame(segment));
   }, [applyPath, goToSegment, rewindTarget, showOverlay]);
 
+  // "Change my last choice": back to the LAST choice on this viewer's path,
+  // with what was chosen there (and after it) forgotten — so a three-choice
+  // story can be re-forked at the end without re-watching the whole tree. The
+  // card comes back over the same held frames, exactly as `tryDifferent`.
+  const lastChoice = React.useMemo(() => lastChoiceSegment(spec, path), [spec, path]);
+  const changeLast = React.useCallback(() => {
+    const target = lastChoice;
+    if (!target) return;
+    applyPath(target.path);
+    goToSegment(target.segment.id);
+    showOverlay({ kind: "choice", segmentId: target.segment.id });
+    const instance = playerRef.current;
+    instance?.pause();
+    instance?.seekTo(choiceHoldFrame(target.segment));
+  }, [applyPath, goToSegment, lastChoice, showOverlay]);
+
   // What the end card reads back: every choice they made, in story order.
   const picks = React.useMemo(() => {
     const made: { emoji: string; label: string }[] = [];
@@ -354,6 +371,11 @@ export const BranchingPlayer: React.FC<BranchingPlayerProps> = ({
       onAgain={watchAgain}
       onDifferent={tryDifferent}
       canTryDifferent={rewindTarget !== null}
+      // Only when it is a different rewind from "try a different way": on a
+      // one-choice story the two buttons would do the same thing.
+      onChangeLast={
+        lastChoice && lastChoice.segment.id !== rewindTarget?.id ? changeLast : undefined
+      }
       onHome={returnToHub}
     />
   ) : null;

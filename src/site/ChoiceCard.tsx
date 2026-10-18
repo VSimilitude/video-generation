@@ -47,15 +47,21 @@ const OPTION_COLORS = [
  * readable for a new reader even on a phone held in portrait, and the overlay
  * scrolls rather than clipping if the maths runs out of room.
  */
-function useCardScale(): [React.RefObject<HTMLDivElement>, number] {
+function useCardScale(): [React.RefObject<HTMLDivElement>, number, boolean] {
   const ref = React.useRef<HTMLDivElement>(null);
   const [scale, setScale] = React.useState(1);
+  const [cramped, setCramped] = React.useState(false);
   React.useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Measure the STAGE (our parent), never ourselves: once the overlay goes
+    // viewport-fixed its own box is the viewport, and measuring that would
+    // flip it straight back — an oscillation, not a layout.
+    const stage = el.parentElement ?? el;
     const update = () => {
-      const width = el.clientWidth || 900;
+      const width = stage.clientWidth || 900;
       setScale(Math.max(0.85, Math.min(1.3, width / 900)));
+      setCramped((stage.clientHeight || 9999) < CRAMPED_STAGE_HEIGHT);
     };
     update();
     if (typeof ResizeObserver === "undefined") {
@@ -63,11 +69,31 @@ function useCardScale(): [React.RefObject<HTMLDivElement>, number] {
       return () => window.removeEventListener("resize", update);
     }
     const observer = new ResizeObserver(update);
-    observer.observe(el);
+    observer.observe(stage);
     return () => observer.disconnect();
   }, []);
-  return [ref, scale];
+  return [ref, scale, cramped];
 }
+
+/**
+ * Below this stage height the card leaves the picture and covers the
+ * viewport instead.
+ *
+ * Found by the 2026-10-17 phone check: an iPhone in portrait, windowed, gives
+ * a 16:9 stage about 354×199. The choice card is ~380 tall at the floor scale
+ * and the end card ~520, so the overlay — which sits `inset: 0` on the stage
+ * and scrolls — showed the question and half of ONE option; the second option
+ * and every end-card button were below the fold of a scroll box inside the
+ * video, which no child will ever find (and the 10 s auto-pick then chose for
+ * them). 360 is the stage height of a 640-wide player: everything narrower
+ * is a phone in portrait, everything wider (an iPad at 820 gives 461) laid
+ * out fine in the same check. Fullscreen stages are viewport-sized and never
+ * trip it, rotated or not.
+ */
+const CRAMPED_STAGE_HEIGHT = 360;
+
+/** The viewport-covering form of the overlay; see CRAMPED_STAGE_HEIGHT. */
+const crampedOverlay: React.CSSProperties = { position: "fixed" };
 
 /** Flips to true one frame after mount, so a CSS transition can play in. */
 function useEntrance(): boolean {
@@ -157,7 +183,7 @@ export const ChoiceCard: React.FC<{
   /** Site-relative asset path -> URL the browser can fetch. */
   resolveAsset: (path: string) => string;
 }> = ({ choice, autoSeconds, onPick, resolveAsset }) => {
-  const [ref, scale] = useCardScale();
+  const [ref, scale, cramped] = useCardScale();
   const entered = useEntrance();
   const [pressed, setPressed] = React.useState<string | null>(null);
 
@@ -185,7 +211,7 @@ export const ChoiceCard: React.FC<{
   const pad = Math.round(16 * scale);
 
   return (
-    <div ref={ref} style={{ ...overlayBase, padding: pad }}>
+    <div ref={ref} style={{ ...overlayBase, ...(cramped ? crampedOverlay : null), padding: pad }}>
       <div
         style={{
           width: "100%",
@@ -318,10 +344,13 @@ export const EndCard: React.FC<{
   onDifferent: () => void;
   /** False when the spec has no choice point to rewind to. */
   canTryDifferent: boolean;
+  /** Rewinds to the LAST choice on the path; omitted when that would be the
+   * same rewind as "Try a different way". */
+  onChangeLast?: () => void;
   /** Leaves the video for the family hub. */
   onHome?: () => void;
-}> = ({ picks, onAgain, onDifferent, canTryDifferent, onHome }) => {
-  const [ref, scale] = useCardScale();
+}> = ({ picks, onAgain, onDifferent, canTryDifferent, onChangeLast, onHome }) => {
+  const [ref, scale, cramped] = useCardScale();
   const entered = useEntrance();
 
   const button = (
@@ -356,7 +385,7 @@ export const EndCard: React.FC<{
   );
 
   return (
-    <div ref={ref} style={{ ...overlayBase, padding: Math.round(16 * scale) }}>
+    <div ref={ref} style={{ ...overlayBase, ...(cramped ? crampedOverlay : null), padding: Math.round(16 * scale) }}>
       <div
         style={{
           width: "100%",
@@ -417,6 +446,7 @@ export const EndCard: React.FC<{
           {canTryDifferent
             ? button("Try a different way", kidTheme.sun, onDifferent)
             : null}
+          {onChangeLast ? button("Change my last choice", kidTheme.pink, onChangeLast) : null}
           {/* The hub's own colour, so this reads as the hub's button. */}
           {onHome ? button("🏠 Back to the hub", "#5b6cff", onHome, "#ffffff") : null}
         </div>

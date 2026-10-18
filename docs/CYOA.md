@@ -77,6 +77,53 @@ failure mode 1 — unless merges carry memory:
   branches re-merging at act boundaries, 4–8 distinct paths, cost roughly
   **1.5–2× a linear episode**, not 4–8×.
 
+## Spec amendments from the Phase-2 pilot (folded in 2026-10-17)
+
+The text pilot (docs/cyoa-pilot/, verdict in `findings.md`) hit six places
+where this spec was ambiguous, and every one of them mattered to an auditor.
+These resolutions are now part of the spec; where they conflict with the
+wording above, these win.
+
+1. **Merges reconcile on the skeleton-critical cast, not on everyone.** "Same
+   cast on stage" and "a character present or absent is a variant insert"
+   cannot both be absolute. A merge requires identity of location, time (and
+   every derived clock value), protagonist state, and every character whose
+   presence the shared skeleton's *blocking depends on* — the
+   **skeleton-critical cast**, named per merge in the tree plan. A
+   ledger-licensed *extra* presence is a variant insert, and the skeleton must
+   read correctly without it.
+2. **Exhaustive choices get two tagged variants.** A shared skeleton has one
+   baseline text (what runs when no ledger entry licenses anything else). When
+   a choice is exhaustive — every path took A or B, so there is no unmarked
+   default — the insert is written as **two tagged variants**, each carrying
+   the id of the ledger entry that licenses it. Untagged divergence is a
+   finding either way. This applies to *every* segment that plays under more
+   than one history, including branch segments downstream of a second choice:
+   the architect budgets variants (sized as **beats**, not lines) for each
+   such segment, and a budget of zero is a ruling, not an omission.
+3. **Ledger entries have ids.** `L-<choice><option><n>` (e.g. `L-A1`), full
+   text written once in the tree plan, quoted verbatim downstream. Every
+   variant insert and every state-doc difference cites one; the child's ledger
+   is the parent's plus exactly the taken option's entries.
+4. **Every tree publishes a computable clock.** At least one published
+   timetable or formula (the pilot's tide `11 − ⌊min/30⌋`) so continuity is
+   checked by recomputation rather than memory. The clock is per *tree*: a
+   tree may deliberately bend it on one path, provided the bend is a ledger
+   entry and the merge pays it with a variant insert (see the CYOA demo's
+   `season: spring` on snow paths, src/videos/drip-fork/expansion-brief.md).
+5. **Promise lists are path-scoped.** Promises opened by a ledger entry exist
+   only on the paths whose ledger opened them, and state docs list them only
+   there. Shared segments carry one state doc **per incoming path**, not one
+   per segment.
+6. **Open promises at the end are named, per path, in advance.** Exactly the
+   promises the tree plan names may remain open in a final state doc, and only
+   on the paths it names (the pilot's P4 on the two wall paths — the reason to
+   watch again). Any other open promise at an ending is a finding.
+
+Audit-process corollaries from the same pilot: run the full sibling-doc diff
+at **every** merge, not only the first; keep seeding planted violations so the
+auditors are known to be awake; re-audit after a fix round.
+
 ## Generation architecture
 
 Maps onto the wave-and-review machinery proven on the two kids' episodes
@@ -150,11 +197,17 @@ an interaction-layer feature, no Remotion changes needed:
 
 ## Open questions (decide during prototyping)
 
-1. Auto-default at choice points (pre-readers) vs wait-forever — test with
-   the actual 6-year-old.
-2. Choice-card narration: does a voice read the options aloud? (Probably
-   yes for pre-readers; keys into the reading-match question in
-   docs/LEARNINGS.md.)
+1. ~~Auto-default at choice points (pre-readers) vs wait-forever.~~
+   **Answered by the phase-1 demo: auto-default kept, 10s**, with a visible
+   countdown on the first option (`AUTO_CHOICE_SECONDS` in
+   src/site/BranchingPlayer.tsx).
+2. ~~Choice-card narration: does a voice read the options aloud?~~
+   **Answered: yes.** The prompt and each option are read aloud by the
+   narrator voice when the card appears (`ch_*` clips, played by the site).
 3. How much path state should surface visually ("story so far" recap map)?
+   *Partly answered:* the end card lists every choice in story order and
+   offers "Try a different way" (rewind to the first choice) and "Change my
+   last choice" (rewind to the last choice on the viewer's path). A drawn
+   recap map is still open.
 4. Whether merged-trunk variant inserts need their own continuity audit
    pass (cheap; probably yes).

@@ -273,7 +273,7 @@ export const VIDEOS: VideoEntry[] = [
     id: "DripChooses",
     title: "Drip Chooses the Way Up",
     description:
-      "Drip needs to get to the Cloud Hotel, and you decide how: a sunbeam at high speed, or the slow gentle float. A Little Big World choose-your-own-adventure demo.",
+      "Drip needs to get to the Cloud Hotel, and you decide how: a sunbeam at high speed, or the slow gentle float — and how he comes back down, and which way he goes home. A Little Big World choose-your-own-adventure demo.",
     component: DripForkVideo,
     fps: DRIP_FORK_FPS,
     width: DRIP_FORK_WIDTH,

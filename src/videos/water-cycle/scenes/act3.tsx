@@ -66,6 +66,10 @@ import {
 // `CycleRing` (Scene 30's journey ring is Scene 33's narrator panel) and
 // `BathTubPanel` (Scene 28's bathtub is literally the bath in Scene 35). Both
 // callbacks depend on it being visibly the same picture.
+//
+// Most of the act's props are exported too, unchanged, because the CYOA demo
+// (src/videos/drip-fork) restages these scenes from this kit rather than
+// keeping a copy that would drift from the show.
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
@@ -74,7 +78,7 @@ const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 // ---------------------------------------------------------------------------
 
 /** The hotel floor line. Everything in the scene is measured off it. */
-const S22_FLOOR = 812;
+export const S22_FLOOR = 812;
 const S22_DRIP = { x: 700, y: stand("drip", S22_FLOOR) };
 const S22_DRIP_SCALE = 1;
 const S22_CLOUDIA = { x: 1380, y: stand("cloudia", S22_FLOOR) };
@@ -197,7 +201,7 @@ const CheckoutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** The lobby: a ceiling, a back wall, and a sign, so the sky reads as indoors. */
-const HotelCeiling: React.FC = () => (
+export const HotelCeiling: React.FC = () => (
   <g>
     {/* Back wall — only the top half of the room, so the hole in the floor can
         still show open sky and a very long way down. */}
@@ -249,7 +253,7 @@ const HotelCeiling: React.FC = () => (
  * segments beyond `S22_HOLE` never go — Cloudia keeps her footing, which is
  * what makes the hole read as *under Drip* rather than as the end of the set.
  */
-const HotelFloor: React.FC<{ vanishAt: number; holeX: number }> = ({ vanishAt, holeX }) => {
+export const HotelFloor: React.FC<{ vanishAt: number; holeX: number }> = ({ vanishAt, holeX }) => {
   const frame = useCurrentFrame();
   const segs = 34;
   const w = 132;
@@ -287,7 +291,7 @@ const HotelFloor: React.FC<{ vanishAt: number; holeX: number }> = ({ vanishAt, h
 };
 
 /** The CHECK OUT lever. `pull` 0..1 hauls it from up to down. */
-const CheckOutLever: React.FC<{ x: number; y: number; pull: number }> = ({ x, y, pull }) => {
+export const CheckOutLever: React.FC<{ x: number; y: number; pull: number }> = ({ x, y, pull }) => {
   const angle = interpolate(pull, [0, 1], [-42, 52], { easing: Easing.inOut(Easing.quad) });
   return (
     <div style={{ position: "absolute", left: x, top: y, fontFamily: kidTheme.fontFamily }}>
@@ -325,7 +329,7 @@ const CheckOutLever: React.FC<{ x: number; y: number; pull: number }> = ({ x, y,
 };
 
 /** Speed lines under a character who has just stopped being supported. */
-const DropStreaks: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
+export const DropStreaks: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
   const frame = useCurrentFrame();
   const u = frame - from;
   return (
@@ -439,7 +443,7 @@ const WaterslideScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** The waterslide itself: streaked rain, the hotel receding, drops everywhere. */
-const PlungeWorld: React.FC = () => {
+export const PlungeWorld: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
@@ -648,7 +652,7 @@ const PrecipGlyph: React.FC<{ kind: (typeof PRECIP_KINDS)[number] }> = ({ kind }
 // ---------------------------------------------------------------------------
 
 /** Top surface of the mossy rock he lands on. */
-const S24_GROUND = 800;
+export const S24_GROUND = 800;
 const S24_DRIP = { x: 880, y: stand("drip", S24_GROUND) };
 const S24_DRIP_SCALE = 0.95;
 
@@ -731,7 +735,7 @@ const LandingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** The same peak twice: `winter` 0 is moss and rock, 1 is snow. */
-const MountainPeak: React.FC<{ winter: number }> = ({ winter }) => {
+export const MountainPeak: React.FC<{ winter: number }> = ({ winter }) => {
   const rock = winter ? "#cfd9e4" : "#8e8a86";
   const rockDark = winter ? "#a9b8c9" : "#6d6a67";
   const moss = winter ? "#e9f2fb" : kidTheme.grassDark;
@@ -784,7 +788,7 @@ const MountainPeak: React.FC<{ winter: number }> = ({ winter }) => {
   );
 };
 
-const Snowfall: React.FC = () => {
+export const Snowfall: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <WideLayer>
@@ -797,7 +801,7 @@ const Snowfall: React.FC = () => {
   );
 };
 
-const Splash: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
+export const Splash: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
   const frame = useCurrentFrame();
   const u = clamp01((frame - from) / 34);
   return (
@@ -830,7 +834,7 @@ const Splash: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }
   );
 };
 
-const TinyFlag: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
+export const TinyFlag: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const s = spring({ frame: frame - from, fps, config: { damping: 11, mass: 0.6 } });
@@ -864,7 +868,7 @@ const TinyFlag: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from
  * 3200×1800 of world, so a camera any further along the river would run off the
  * edge of the scenery and show bare sky. (It did, on the first pass.)
  */
-function riverCentre(x: number): number {
+export function riverCentre(x: number): number {
   return 240 + x * 0.38 + 46 * Math.sin(x / 420);
 }
 
@@ -872,7 +876,7 @@ function riverCentre(x: number): number {
  * Half-width of the flow. The two steps are the two merges — the river gets
  * wider *because* something joined it, which is the scene's whole claim.
  */
-function riverHalf(x: number): number {
+export function riverHalf(x: number): number {
   return interpolate(x, [0, 300, 400, 740, 860, 1600], [15, 30, 66, 92, 172, 258], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -967,7 +971,7 @@ const DownhillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** Grass, hills and the mountain he came off, all in world coordinates. */
-const Valley: React.FC = () => (
+export const Valley: React.FC = () => (
   <g>
     <rect x={-1200} y={-500} width={4400} height={2200} fill={kidTheme.grass} />
     <path d="M -1200 -500 L 3200 -500 L 3200 120 Q 2000 260 900 140 Q -200 20 -1200 180 Z" fill={kidTheme.grassDark} opacity={0.5} />
@@ -1004,7 +1008,7 @@ const Valley: React.FC = () => (
 );
 
 /** The flow itself: one polygon whose half-width is `riverHalf`. */
-const RiverBand: React.FC = () => {
+export const RiverBand: React.FC = () => {
   const frame = useCurrentFrame();
   const xs: number[] = [];
   for (let x = -400; x <= 3000; x += 50) xs.push(x);
@@ -1047,7 +1051,7 @@ const RiverBand: React.FC = () => {
 };
 
 /** A stream joining the main flow at `at`, with its own crowd riding in. */
-const Tributary: React.FC<{ at: number; from: number; below?: boolean }> = ({ at, from, below }) => {
+export const Tributary: React.FC<{ at: number; from: number; below?: boolean }> = ({ at, from, below }) => {
   const cy = riverCentre(at);
   const side = below ? 1 : -1;
   const startY = cy + side * 620;
@@ -1082,7 +1086,7 @@ const Tributary: React.FC<{ at: number; from: number; below?: boolean }> = ({ at
 };
 
 /** Waving drops riding the flow between two world x positions. */
-const RiverCrowd: React.FC<{ fromX: number; toX: number; rows: number }> = ({ fromX, toX, rows }) => {
+export const RiverCrowd: React.FC<{ fromX: number; toX: number; rows: number }> = ({ fromX, toX, rows }) => {
   const frame = useCurrentFrame();
   const cells: React.ReactNode[] = [];
   for (let r = 0; r < rows; r++) {
@@ -1220,7 +1224,7 @@ const FlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** A daisy leaning over the bank, with roots that glow while they drink. */
-const Daisy: React.FC<{
+export const Daisy: React.FC<{
   x: number;
   /** Grass line the stem grows out of. */
   top: number;
@@ -1459,7 +1463,7 @@ const MooseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
  * Nothing here reads the frame: total stillness is the joke, and a breathing
  * moose would be a different, worse joke.
  */
-const TheMoose: React.FC = () => {
+export const TheMoose: React.FC = () => {
   const hide = "#8a6242";
   const hideDark = "#6d4a30";
   const muzzle = "#c9a37c";
@@ -1533,7 +1537,7 @@ const MooseShapes: React.FC = () => (
   </>
 );
 
-const Bonk: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
+export const Bonk: React.FC<{ x: number; y: number; from: number }> = ({ x, y, from }) => {
   const frame = useCurrentFrame();
   const u = clamp01((frame - from) / 16);
   return (
@@ -1632,7 +1636,7 @@ const EverybodyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** Four iconic places, in the same shapes-and-a-glow language as Scene 8. */
-const UsePanel: React.FC<{ index: number }> = ({ index }) => (
+export const UsePanel: React.FC<{ index: number }> = ({ index }) => (
   <AbsoluteFill>
     <KidBackdrop variant="day" clouds={2} waves={false} ground={index === 0 || index === 1} />
     <WideLayer>
@@ -1915,7 +1919,7 @@ const HomeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** The last corner of the river, and then all of the water there is. */
-const HeadlandWorld: React.FC<{ cam: { x: number; y: number; zoom?: number; dx?: number; dy?: number } }> = ({
+export const HeadlandWorld: React.FC<{ cam: { x: number; y: number; zoom?: number; dx?: number; dy?: number } }> = ({
   cam,
 }) => {
   const frame = useCurrentFrame();
@@ -1984,7 +1988,7 @@ const HeadlandWorld: React.FC<{ cam: { x: number; y: number; zoom?: number; dx?:
 };
 
 /** Scene 3's ocean-sized family, closing in on him. */
-const SiblingMob: React.FC<{ from: number; anchor: { x: number; y: number } }> = ({ from, anchor }) => {
+export const SiblingMob: React.FC<{ from: number; anchor: { x: number; y: number } }> = ({ from, anchor }) => {
   const frame = useCurrentFrame();
   const u = clamp01((frame - from) / 34);
   return (
@@ -2084,7 +2088,7 @@ const TwistScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** A stylized world, because the journey is a world-sized one. */
-const WorldMap: React.FC = () => (
+export const WorldMap: React.FC = () => (
   <AbsoluteFill>
     <AbsoluteFill style={{ background: `linear-gradient(180deg, ${kidTheme.waterDark} 0%, ${kidTheme.water} 58%, ${kidTheme.waterLight} 100%)` }} />
     <WideLayer opacity={0.62}>

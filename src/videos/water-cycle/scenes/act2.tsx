@@ -85,7 +85,7 @@ function cloudPaint(grey: number) {
  *
  * `droop` hangs the underside lobes lower — Scene 21's sagging hotel.
  */
-const CloudBlob: React.FC<{
+export const CloudBlob: React.FC<{
   x: number;
   y: number;
   w: number;
@@ -176,7 +176,7 @@ const CloudBlob: React.FC<{
  * neighbours — packed tighter than a drop is wide, because "shoulder to
  * shoulder" is the whole point by Scene 20.
  */
-const DropSwarm: React.FC<{
+export const DropSwarm: React.FC<{
   cx: number;
   cy: number;
   halfW: number;
@@ -221,7 +221,7 @@ const DropSwarm: React.FC<{
  * `floors` is a whole number so Scene 19 can *sprout* one (each new band springs
  * in), and `guests` fills the windows with the drops that arrived.
  */
-const CloudHotel: React.FC<{
+export const CloudHotel: React.FC<{
   x: number;
   groundY: number;
   w: number;
@@ -1447,7 +1447,7 @@ const DustRuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** A bowl of dust specks by the door, like complimentary mints. */
-const Pedestal: React.FC<{ x: number; groundY: number; bowlY: number }> = ({
+export const Pedestal: React.FC<{ x: number; groundY: number; bowlY: number }> = ({
   x,
   groundY,
   bowlY,
@@ -1513,7 +1513,7 @@ const VelvetRope: React.FC<{ x0: number; x1: number; y: number }> = ({ x0, x1, y
 );
 
 /** One speck of dust. Kevin, later. */
-const Speck: React.FC<{ x: number; y: number; r: number; glow?: number }> = ({
+export const Speck: React.FC<{ x: number; y: number; r: number; glow?: number }> = ({
   x,
   y,
   r,
@@ -1915,7 +1915,7 @@ const HotelFillsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 };
 
 /** Guests arriving, one drop at a time, forever. */
-const ArrivingColumn: React.FC<{ x: number; topY: number }> = ({ x, topY }) => {
+export const ArrivingColumn: React.FC<{ x: number; topY: number }> = ({ x, topY }) => {
   const frame = useCurrentFrame();
   const span = 1400;
   return (
@@ -1941,7 +1941,7 @@ const ArrivingColumn: React.FC<{ x: number; topY: number }> = ({ x, topY }) => {
 };
 
 /** Cloudia's guest list, filling with check-marks. */
-const GuestList: React.FC<{ x: number; y: number; ticks: number }> = ({ x, y, ticks }) => (
+export const GuestList: React.FC<{ x: number; y: number; ticks: number }> = ({ x, y, ticks }) => (
   <svg
     width={1}
     height={1}
@@ -2322,7 +2322,7 @@ const StoppedBeams: React.FC<{
 };
 
 /** Drops gathering on the underside. Not falling yet — that is Act Three. */
-const PreDrips: React.FC<{ x: number; y: number; w: number; u: number }> = ({ x, y, w, u }) => {
+export const PreDrips: React.FC<{ x: number; y: number; w: number; u: number }> = ({ x, y, w, u }) => {
   const frame = useCurrentFrame();
   if (u <= 0.02) return null;
   return (

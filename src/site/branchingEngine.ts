@@ -5,7 +5,7 @@
 // frame N of segment S — what now?". Pure in, pure out, so it can be reasoned
 // about (and tested) without a browser, a Player instance or a composition.
 
-import type { BranchSegment, BranchingSpec } from "./registry";
+import type { BranchNext, BranchSegment, BranchingSpec } from "./registry";
 
 /**
  * How close to a segment's last frame counts as "reached the end".
@@ -87,4 +87,47 @@ export function seamAction(
 /** The first choice point in the story — what "try a different way" rewinds to. */
 export function firstChoiceSegment(spec: BranchingSpec): BranchSegment | null {
   return spec.segments.find((segment) => segment.next.kind === "choice") ?? null;
+}
+
+/**
+ * The LAST choice point on the viewer's path — what "change my last choice"
+ * rewinds to — plus the path truncated to everything chosen BEFORE it.
+ *
+ * Walks the graph from `spec.start` following `path`, exactly as playback
+ * would: choices take the recorded option, jumps and continues follow the
+ * layout. The last choice segment reached whose choice has an answer in
+ * `path` wins. `null` when the path holds no answered choice (nothing to
+ * change) or the walk leaves the graph. Pure; a cycle stops the walk.
+ */
+export function lastChoiceSegment(
+  spec: BranchingSpec,
+  path: Record<string, string>,
+): { segment: BranchSegment; path: Record<string, string> } | null {
+  const segments = spec.segments;
+  const byId = new Map(segments.map((segment) => [segment.id, segment]));
+  const seen = new Set<string>();
+  const before: Record<string, string> = {};
+  let last: { segment: BranchSegment; path: Record<string, string> } | null = null;
+  let current = byId.get(spec.start);
+  while (current && !seen.has(current.id)) {
+    seen.add(current.id);
+    const next: BranchNext = current.next;
+    if (next.kind === "end") break;
+    if (next.kind === "choice") {
+      const chosen = path[next.id];
+      const option = chosen ? next.options.find((o) => o.id === chosen) : undefined;
+      if (!option) break;
+      last = { segment: current, path: { ...before } };
+      before[next.id] = option.id;
+      current = byId.get(option.to);
+      continue;
+    }
+    if (next.kind === "jump") {
+      current = byId.get(next.to);
+      continue;
+    }
+    const index = segments.indexOf(current);
+    current = segments[index + 1];
+  }
+  return last;
 }
