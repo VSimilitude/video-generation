@@ -40,15 +40,15 @@ line is MiniMax speech-2.8-hd (via Replicate), which is paid but can act: it
 takes an `emotion` and honours pause markers. There are **no pause markers in
 this episode** — every silence is a held beat between lines, in `Video.tsx` —
 and emotions are seasoning: Drip and Blue carry their locked cast emotion
-(`happy`) on every line, Puff carries nine seasoned lines that are his arc
-(alarm → commerce), Ray carries exactly one (`happy`, the chant), and Pip and
-Cloudia carry none at all.
+(`happy`) on every line, Puff carries eight seasoned lines that are his arc
+(alarm → commerce), and Ray, Pip and Cloudia carry none at all (Ray's one
+`happy` was his chant syllable, which the Narrator says since 2026-10-17).
 
 ## The Big Word
 
 | Word | Act | Line keys | Treatment |
 |---|---|---|---|
-| **PHOTOSYNTHESIS** | Three | `a3_65`–`a3_69` (five-voice syllable chant), `a3_70`, reprised `rc_07`–`rc_11` (aliases) + `rc_12` | `WordCard`, assembled one syllable per hero: PHO (Drip) / TO (Puff) / SYN (Ray) / THE (Pip) / SIS (Sunny). One card in the whole episode — it is a five-syllable monster and that is the fun. |
+| **PHOTOSYNTHESIS** | Three | `a3_65`–`a3_69_narrator` (the Narrator chants the five syllables, one clip each — ruling 2026-10-17), `a3_70`, reprised `rc_07`–`rc_11_narrator` (aliases) + `rc_12` | `WordCard`, assembled one block per hero: PHO (Drip) / TO (Puff) / SYN (Ray) / THE (Pip) / SIS (Sunny), each slammed on by its owner as the Narrator says it. One card in the whole episode — it is a five-syllable monster and that is the fun. |
 | **A TREE IS MADE OF AIR** | Three | `a3_21`–`a3_25` | **Rule stamp, not a `WordCard`** (ep-2 "WARM AIR RISES" precedent). |
 
 Carbon dioxide is named once in speech (`a3_11`) and never carded.
@@ -1007,25 +1007,28 @@ floods the field; the sprout surges — leaves unrolling, stem thickening, a
 visible growth spurt past the sprout row (growth = her only travel, spent
 lavishly). The kitchen at full roar.
 **Lines:** `a3_61_narrator`, `a3_62_sunny`, `a3_63_pip`, `a3_64_narrator`,
-`a3_65_drip`, `a3_66_puff`, `a3_67_ray`, `a3_68_pip`, `a3_69_sunny`,
-`a3_70_narrator`, `a3_71_ray`, `a3_72_narrator`
+`a3_65_narrator`, `a3_66_narrator`, `a3_67_narrator`, `a3_68_narrator`,
+`a3_69_narrator`, `a3_70_narrator`, `a3_71_ray`, `a3_72_narrator`
 
 > **NARRATOR:** At dawn, the oven clocked in.
 > **SUNNY:** ONE WHOLE SUN! DELIVERED!
 > **PIP:** More leaves! More pans! Cook everything!
 > **NARRATOR:** And this whole trick has a name. It is a monster of a name. Ready?
 
-**BIG WORD — PHOTOSYNTHESIS.** The `WordCard` assembles one syllable at a
-time, each syllable slammed on by its owner (five clips + card sync;
-synthesis-approved, Narrator-led fallback pre-written in `narration.mjs` if
-production fights it). Everyone cheers their syllable — except Pip, who
-files hers, which is the joke:
+**BIG WORD — PHOTOSYNTHESIS.** The `WordCard` assembles one block at a
+time, and the **Narrator chants it**: one syllable per clip, slow and flat
+(0.92), about ten frames of silence between syllables and a slightly longer
+beat (≈14f) before he says the whole word. Each block is slammed on by its
+owner on the frame its syllable is heard — PHO Drip, TO Puff, SYN Ray, THE
+Pip, SIS Sunny. Nobody on stage says a syllable (mouths shut); everyone
+cheers their own block as it lands — except Pip, who files hers, which is
+the joke:
 
-> **DRIP:** Pho!
-> **PUFF:** To!
-> **RAY:** Syn!
-> **PIP:** The.
-> **SUNNY:** SIS!
+> **NARRATOR:** Pho.
+> **NARRATOR:** To.
+> **NARRATOR:** Syn.
+> **NARRATOR:** The.
+> **NARRATOR:** Sis.
 > **NARRATOR:** Photosynthesis. Light, water and air, cooking food inside a leaf.
 > **RAY:** Photosynthesis. First try.
 > **NARRATOR:** Ray said it perfectly. Nobody clapped.
@@ -1034,8 +1037,22 @@ files hers, which is the joke:
 said it perfectly, unclapped-for.
 
 **Pedagogy:** The Big Word, planted at the moment the mechanism is on
-screen at full power. The chant order is the reunion engine made audible —
+screen at full power. The block order is the reunion engine made visible —
 one hero per syllable, the boss on the last one.
+
+**Why the Narrator chants it (showrunner ruling, 2026-10-17).** The first
+cut had each hero SAY their syllable — five voices, four MiniMax, one
+syllable each a second apart — and the kids' hub flagged it (Math, 8:
+"Thing that broke was the word photosynthesis"; Mike: the sound-out "sounds
+weird"). Five timbres cannot read as one word; one voice can. The
+pre-written single-line fallback ("Pho. To. Syn. The. Sis.
+Photosynthesis!" as ONE kokoro clip) failed production: kokoro does not
+pause between one-syllable sentences, so the chant came out as ~1.5s of
+continuous speech with at most two silencedetect onsets for five slams, and
+Whisper heard it as just "Photosynthesis." on every wording and speed tried.
+Five separate Narrator clips, spaced by `gaps`, pass: the rendered scene
+transcribes as "Faux, to, sin, the, cis, photosynthesis, light, …".
+Measurements: `scratchpad/feedback-2026-10-17/ep4-chant-report.md`.
 
 ---
 
@@ -1117,8 +1134,9 @@ their ingredient. Violet does not appear (his ep-3 panel wave was his; this
 is not his episode). The PHOTOSYNTHESIS card returns for the reprise and
 the syllables light up in owner order.
 **Lines:** `rc_01_narrator`, `rc_02_drip`, `rc_03_puff`, `rc_04_ray`,
-`rc_05_sunny`, `rc_06_sunny`, `rc_07_drip`, `rc_08_puff`, `rc_09_ray`,
-`rc_10_pip`, `rc_11_sunny`, `rc_12_narrator`, `rc_13_pip`
+`rc_05_sunny`, `rc_06_sunny`, `rc_07_narrator`, `rc_08_narrator`,
+`rc_09_narrator`, `rc_10_narrator`, `rc_11_narrator`, `rc_12_narrator`,
+`rc_13_pip`
 
 > **NARRATOR:** Let's say the big words together. Ready?
 > **DRIP:** Water! That was me! I took the uphill waterslide!
@@ -1134,15 +1152,17 @@ Deadpan bow — his whole episode in six words. Unseasoned, 0.95.
 synthesis). Ledger closed at five; the three of headroom under the ceiling
 of eight belong to the showrunner.
 
-**The reprise** — the five chant syllables re-fire byte-identical
-(`rc_07`–`rc_11`, all `sameAs` of the Scene-24 clips) as the card's
-syllables light up in turn:
+**The reprise** — the Narrator's five chant syllables re-fire
+byte-identical (`rc_07`–`rc_11_narrator`, all `sameAs` of the Scene-24
+clips, same spacing) as the card's blocks light up in owner order, each
+owner hopping as theirs lights (mouths shut — Narrator-led since
+2026-10-17, see Scene 24):
 
-> **DRIP:** Pho!
-> **PUFF:** To!
-> **RAY:** Syn!
-> **PIP:** The.
-> **SUNNY:** SIS!
+> **NARRATOR:** Pho.
+> **NARRATOR:** To.
+> **NARRATOR:** Syn.
+> **NARRATOR:** The.
+> **NARRATOR:** Sis.
 > **NARRATOR:** Photosynthesis. Plants make their own food. Out of light, water and air.
 > **PIP:** Three deliveries. One kitchen. No dirt was eaten.
 
@@ -1277,7 +1297,7 @@ three firings — `a1_12`, `a1_56`, `a2_37` — every one of them true.
 | "That is also true." | **`a1_26_ray`** | `a2_39_ray`, `a3_57_ray` | One neutral take, three contexts (upset → upset → at peace); the context does the acting. |
 | "You're welcome! HA! HA!" | **`a1_13_sunny`** | `a1_57_sunny`, `a2_38_sunny`, `a3_55_sunny`, `rc_06_sunny` | Kokoro (deterministic — the aliases state intent and lock the wording). Flat-identical by design; the escalation is placement, never the read. |
 | "It is the highest grade she gives." | **`a2_29_narrator`** | `a3_80_narrator` | Kokoro; same reasoning. |
-| Chant reprise | **`a3_65_drip`**, **`a3_66_puff`**, **`a3_67_ray`**, **`a3_68_pip`**, **`a3_69_sunny`** | `rc_07_drip`, `rc_08_puff`, `rc_09_ray`, `rc_10_pip`, `rc_11_sunny` | Five one-syllable clips, each reprised once, byte-identical. |
+| Chant reprise | **`a3_65_narrator`** … **`a3_69_narrator`** | `rc_07_narrator` … `rc_11_narrator` | Five one-syllable Narrator clips (kokoro, since 2026-10-17), each reprised once, byte-identical. |
 
 ### The roll call — two firings
 
@@ -1369,10 +1389,12 @@ held-beat frame counts in Scene 23, not new jokes inside it.
    audition targets are in the cast table. `co_17_pip` (the stamp SOURCE)
    is the single most load-bearing clip in the episode: five firings hang
    off one take.
-2. **The five chant syllables** (`a3_65`–`a3_69`) — one-syllable MiniMax
-   clips are the episode's highest TTS risk ("Pho" may read as a word,
-   "The" may read "thee" instead of "thuh"). Fallbacks pre-written in
-   `narration.mjs` (phonetic respellings + the Narrator-led chant).
+2. **The five chant syllables** (`a3_65`–`a3_69_narrator`) — RESOLVED
+   2026-10-17: the five-voice chant failed with a real audience (kids'
+   hub) and is now five kokoro Narrator clips (see Scene 24). Remaining
+   ear-check: alone, Whisper hears "The." as "thy"; in the rendered scene
+   it hears "Faux, to, sin, the, cis, photosynthesis" — listen once in
+   context.
 3. **"That is also true."** (`a1_26_ray`) against all three contexts.
 4. **Pip's roll-call runs** (`co_07`, `rc_20`) — five names at 0.92; do
    they separate? Buttons must not be sold.

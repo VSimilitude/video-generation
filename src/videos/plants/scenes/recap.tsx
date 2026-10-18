@@ -9,6 +9,7 @@ import { BACKGROUNDS } from "../backgroundManifest";
 import {
   AbsoluteFill,
   Bubbles,
+  CHANT_SYLLABLES,
   CHAR_BOX,
   Camera,
   CutFlash,
@@ -49,6 +50,7 @@ import {
   spring,
   stand,
   useCurrentFrame,
+  emotionAt,
   useEmotion,
   useStage,
   useVideoConfig,
@@ -455,14 +457,25 @@ const S27_SHUNT = 40;
 const S27_SHOVE_PX = 380;
 const S27_SHOVE_FRAMES = 8;
 
-/** The five syllables, in owner order — the card, and the cast list. */
-const CHANT: { syllable: string; line: string; who: "drip" | "puff" | "ray" | "pip" | "sunny" }[] = [
-  { syllable: "PHO", line: "rc_07_drip", who: "drip" },
-  { syllable: "TO", line: "rc_08_puff", who: "puff" },
-  { syllable: "SYN", line: "rc_09_ray", who: "ray" },
-  { syllable: "THE", line: "rc_10_pip", who: "pip" },
-  { syllable: "SIS", line: "rc_11_sunny", who: "sunny" },
-];
+/**
+ * The five syllables, in owner order — the card, and the cast list. Since the
+ * 2026-10-17 ruling the Narrator says them (`rc_07..rc_11_narrator`, aliases
+ * of Scene 24's clips); `who` is the block's OWNER, who hops and is never
+ * mouthing it.
+ */
+const CHANT = CHANT_SYLLABLES.map((syl) => ({ syllable: syl.text, line: syl.reprise, who: syl.who, onset: syl.onset, out: syl.out }));
+type ChantOwner = (typeof CHANT)[number]["who"];
+
+/**
+ * `[start, end)` of the syllable actually being heard inside its clip — the
+ * measured speech in/out, not the turn window. The kokoro clips are padded
+ * and laid out overlapping (negative `gaps`), so a turn window is mostly
+ * silence and runs into the next syllable's.
+ */
+function sayWindow(scene: TimedScene, block: (typeof CHANT)[number], fps: number): [number, number] {
+  const [from] = lineWindow(scene, block.line);
+  return [from + Math.round(block.onset * fps), from + Math.round(block.out * fps)];
+}
 
 /**
  * The line-up, after the flash.
@@ -536,8 +549,17 @@ const CurtainCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // Blocks rise into place across the flash, dim, and light one at a time.
   const blocksFrom = cut + 2;
 
-  const dripEmotion = useEmotion(scene, "drip", { rc_02_drip: "excited", rc_07_drip: "happy" }, "happy");
-  const puffEmotion = useEmotion(scene, "puff", { rc_03_puff: "proud", rc_08_puff: "happy" }, "happy");
+  // Drip and Puff settle to `happy` on their own block. That used to be keyed
+  // on their syllable clips; the Narrator says those now, so it is keyed on
+  // the block's measured onset instead (`useEmotion` only follows a body's
+  // own lines). Both hooks always run — the frame only picks which one shows.
+  const slamOf = (who: ChantOwner): number => sayWindow(scene, CHANT.find((b) => b.who === who)!, fps)[0];
+  const dripBow = useEmotion(scene, "drip", { rc_02_drip: "excited" }, "happy");
+  const puffBow = useEmotion(scene, "puff", { rc_03_puff: "proud" }, "happy");
+  const dripEmotion =
+    frame >= slamOf("drip") ? emotionAt(frame, [{ at: slamOf("drip"), emotion: "happy" }], "excited") : dripBow;
+  const puffEmotion =
+    frame >= slamOf("puff") ? emotionAt(frame, [{ at: slamOf("puff"), emotion: "happy" }], "proud") : puffBow;
   // The deadpan bow, and he keeps the face after Sunny takes the panel off him:
   // he is not upset, he is *correct*, and being correct is what upsets him.
   const rayEmotion = useEmotion(scene, "ray", { rc_04_ray: "skeptical" }, "happy");
@@ -546,8 +568,9 @@ const CurtainCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   // Each owner pops a little as their own syllable lights. It is the only thing
   // joining a centred row of blocks to five bodies who are not under them.
-  const hopOf = (line: string): number => {
-    const [from, to] = lineWindow(scene, line);
+  // Keyed on the syllable as heard (`sayWindow`), not the padded clip.
+  const hopOf = (who: ChantOwner): number => {
+    const [from, to] = sayWindow(scene, CHANT.find((b) => b.who === who)!, fps);
     const u = (frame - from) / Math.max(1, to - from);
     return u >= 0 && u <= 1.2 ? Math.sin(Math.min(1, u) * Math.PI) : 0;
   };
@@ -686,7 +709,7 @@ const CurtainCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           <CurtainStage />
           <Drip
             x={LINEUP.drip.x}
-            y={LINEUP.drip.y - hopOf("rc_07_drip") * 26}
+            y={LINEUP.drip.y - hopOf("drip") * 26}
             scale={LINEUP.drip.scale}
             phase={PHASE.drip}
             emotion={dripEmotion}
@@ -696,7 +719,7 @@ const CurtainCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           />
           <Puff
             x={LINEUP.puff.x}
-            y={LINEUP.puff.y - hopOf("rc_08_puff") * 26}
+            y={LINEUP.puff.y - hopOf("puff") * 26}
             scale={LINEUP.puff.scale}
             opacity={0.72}
             phase={PHASE.puff}
@@ -708,7 +731,7 @@ const CurtainCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           />
           <Ray
             x={LINEUP.ray.x}
-            y={LINEUP.ray.y - hopOf("rc_09_ray") * 26}
+            y={LINEUP.ray.y - hopOf("ray") * 26}
             scale={LINEUP.ray.scale}
             brightness={RAY_LIGHT}
             phase={PHASE.ray}
@@ -720,7 +743,7 @@ const CurtainCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           />
           <Pip
             x={LINEUP.pip.x}
-            y={LINEUP.pip.y - hopOf("rc_10_pip") * 18}
+            y={LINEUP.pip.y - hopOf("pip") * 18}
             scale={LINEUP.pip.scale}
             state="young"
             // The runner, resolved. Scene 26 let the lean stay — "fully, and she
@@ -735,7 +758,7 @@ const CurtainCallScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           />
           <Sunny
             x={LINEUP.sunny.x}
-            y={LINEUP.sunny.y - hopOf("rc_11_sunny") * 26}
+            y={LINEUP.sunny.y - hopOf("sunny") * 26}
             scale={LINEUP.sunny.scale}
             phase={PHASE.sunny}
             emotion={sunnyEmotion}
@@ -1084,7 +1107,8 @@ const CurtainStage: React.FC = () => {
  * with hooks exist, and `SpeechBubble`/`spring` are hooks).
  *
  * A block is dim in the ingredient-neutral card colour until its syllable is
- * said, then it takes its owner's own colour and hops. By `rc_11_sunny` the
+ * said (by the Narrator, since 2026-10-17), then it takes its owner's own
+ * colour and hops. By `rc_11_narrator` the
  * whole word is lit, which is the picture the Narrator's summary plays over.
  */
 /** Pip's leaf green, from her own palette — the row is made of her family. */
@@ -1130,14 +1154,15 @@ const SyllableReprise: React.FC<{
       }}
     >
       {CHANT.map((block, i) => {
-        const [saidFrom, saidTo] = lineWindow(scene, block.line);
+        const [saidFrom, saidTo] = sayWindow(scene, block, fps);
         const land = spring({
           frame: frame - from - i * 3,
           fps,
           config: { damping: 11, mass: 0.6 },
         });
-        // The hop is the syllable being SAID: it runs over that clip's own
-        // window, which is why the reprise cannot be an even split of one clip.
+        // The hop is the syllable being SAID: it runs over that syllable's
+        // measured speech in/out inside its own clip (`sayWindow`), not the
+        // padded turn window and not an even split.
         const u = (frame - saidFrom) / Math.max(1, saidTo - saidFrom);
         const hop = u >= 0 && u <= 1 ? Math.sin(u * Math.PI) : 0;
         const lit = frame >= saidFrom;

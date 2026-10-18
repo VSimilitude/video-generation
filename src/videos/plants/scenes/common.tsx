@@ -227,6 +227,93 @@ export function turnsOf(
 }
 
 // ---------------------------------------------------------------------------
+// THE CHANT — PHOTOSYNTHESIS, Narrator-led (showrunner ruling 2026-10-17)
+// ---------------------------------------------------------------------------
+
+/**
+ * The five chant syllables, measured. Shared by Scene 24 (`ChantCard`), the
+ * recap reprise (`SyllableReprise`) and the timeline's `gaps` (`chantGaps`),
+ * so the slams, the hops and the spacing all come off one table.
+ *
+ * Since 2026-10-17 the Narrator says all five, one kokoro clip each; the heroes
+ * slam their own blocks on and cheer them with their mouths shut (`who` is the
+ * block's owner, not the speaker). Every kokoro clip carries ~0.45s of
+ * leading and ~0.5s of trailing silence, so the syllables are laid out with
+ * NEGATIVE gaps — the silent tail of one clip overlaps the silent head of the
+ * next — and each block slams on its own clip's measured onset:
+ *
+ *   key          speech in   speech out     (silencedetect on the mp3)
+ *   a3_65 Pho    0.454s      0.902s
+ *   a3_66 To     0.453s      0.925s
+ *   a3_67 Syn    0.450s      0.921s
+ *   a3_68 The    0.448s      0.876s
+ *   a3_69 Sis    0.453s      0.946s
+ *   (rc_07..rc_11 are byte-identical `sameAs` aliases of the same five)
+ *
+ *   npx remotion ffmpeg -i public/narration/plants/a3_65_narrator.mp3 \
+ *     -af silencedetect=noise=-32dB:d=0.08 -f null -
+ *
+ * Re-measure if a syllable is ever re-synthesized.
+ */
+export const CHANT_SYLLABLES: {
+  text: string;
+  /** Scene 24 key. */
+  key: string;
+  /** Recap alias key. */
+  reprise: string;
+  /** Owner of the block — the hero who slams it, NOT the voice. */
+  who: "drip" | "puff" | "ray" | "pip" | "sunny";
+  /** Seconds of leading silence in the clip, measured. */
+  onset: number;
+  /** Seconds into the clip where the syllable stops, measured. */
+  out: number;
+}[] = [
+  { text: "PHO", key: "a3_65_narrator", reprise: "rc_07_narrator", who: "drip", onset: 0.454, out: 0.902 },
+  { text: "TO", key: "a3_66_narrator", reprise: "rc_08_narrator", who: "puff", onset: 0.453, out: 0.925 },
+  { text: "SYN", key: "a3_67_narrator", reprise: "rc_09_narrator", who: "ray", onset: 0.45, out: 0.921 },
+  { text: "THE", key: "a3_68_narrator", reprise: "rc_10_narrator", who: "pip", onset: 0.448, out: 0.876 },
+  { text: "SIS", key: "a3_69_narrator", reprise: "rc_11_narrator", who: "sunny", onset: 0.453, out: 0.946 },
+];
+
+/** Audible silence between two syllables (showrunner: ≈10f, ≈0.35s). */
+export const CHANT_BEAT_FRAMES = 10;
+/** Audible silence before the whole word lands as the reveal (≈14f). */
+export const CHANT_REVEAL_FRAMES = 14;
+
+/**
+ * The `gaps` entries that space the chant: each one is computed from the real
+ * clip lengths in the manifest and the measured speech in/out, so the AUDIBLE
+ * silence between syllables is `CHANT_BEAT_FRAMES` (and `CHANT_REVEAL_FRAMES`
+ * before the word), whatever kokoro's padding is. The numbers come out
+ * negative — see `CHANT_SYLLABLES`.
+ *
+ * `which` picks the Scene-24 keys or the recap aliases; `wordKey` /
+ * `wordOnset` are the line that says the whole word next and its measured
+ * leading silence.
+ */
+export function chantGaps(
+  which: "key" | "reprise",
+  wordKey: string,
+  wordOnset: number,
+): Record<string, number> {
+  const gaps: Record<string, number> = {};
+  CHANT_SYLLABLES.forEach((syl, i) => {
+    const key = syl[which];
+    const clip = NARRATION[key];
+    if (!clip) throw new Error(`[plants] no narration clip for "${key}"`);
+    const next = CHANT_SYLLABLES[i + 1];
+    const nextOnset = next ? next.onset : wordOnset;
+    const silence = next ? CHANT_BEAT_FRAMES : CHANT_REVEAL_FRAMES;
+    // next.from = this.from + clipFrames + gap, and we want
+    // next.from + nextOnset = this.from + out + silence.
+    const clipFrames = Math.ceil(clip.durationSeconds * FPS);
+    gaps[key] = Math.round((syl.out - nextOnset) * FPS) + silence - clipFrames;
+  });
+  if (!NARRATION[wordKey]) throw new Error(`[plants] no narration clip for "${wordKey}"`);
+  return gaps;
+}
+
+// ---------------------------------------------------------------------------
 // API 2 — staging: who stands where, who is talking, who looks at whom
 // ---------------------------------------------------------------------------
 

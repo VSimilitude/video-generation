@@ -6,6 +6,40 @@ in the bible / arc canon are not re-logged.
 
 ## TOP — needs Mike's ear/eye in tweak round
 
+- **PHOTOSYNTHESIS CHANT GOES NARRATOR-LED, FIVE KEYS** (2026-10-17,
+  showrunner ruling, Fable). Source: kids' hub, Math (8), *Something
+  broke*: "Thing that broke was the word photosynthesis". Mike: the
+  phonetic sound-out "sounds weird". Ruling: one voice chants it, in BOTH
+  firings (Sc 24 card + Sc 27 reprise). Five voices with five timbres
+  saying one syllable each a second apart cannot read as a word; one voice
+  can. The visual joke is untouched: blocks slam on one per hero in owner
+  order, owners cheer their own block with mouths shut, Pip files hers.
+  `a3_71` "Photosynthesis. First try." and `a3_72` "Nobody clapped." are
+  unchanged. Now `a3_65`–`a3_69_narrator` "Pho." "To." "Syn." "The."
+  "Sis." (kokoro af_heart, 0.92, free), aliased by `rc_07`–`rc_11_narrator`;
+  no whole-word clip (`a3_70` opens with "Photosynthesis."). Spacing: about
+  10f of audible silence between syllables and 14f before the word,
+  computed from the manifest (`chantGaps`). The gaps are negative because
+  the kokoro clips' padded silence overlaps.
+  **Rejected: the pre-written ONE-line fallback** ("Pho. To. Syn. The. Sis.
+  Photosynthesis!"). Kokoro does not pause between one-syllable sentences:
+  about 1.5 s of continuous speech and at most two silencedetect onsets for
+  five slams. Whisper (temperature 0) on the candidates:
+  - A, one line at 0.92 and 1.0: "Photosynthesis."
+  - B, respelled "Fo. Toe. Sin. Thuh.": "Photosyn, Thysis Photosynthesis"
+  - C, commas: "Photosynthesis"
+  - D, plus "Photo. Synthesis." at 0.92: "Photosyn, thysys, photo,
+    synthesis, photosynthesis." (onsets still failed)
+  - E, "Thee": "Photosynthesis."
+  - Extra tries ("!", em dashes, 0.80) also failed.
+  - **Shipped, the rendered scene:** "Faux, to, sin, the, cis,
+    photosynthesis, light,"
+  - **Shipped, the rendered reprise:** "Faux, to, sin, the, cis,
+    photosynthesis. Plants make their own food."
+  Every slam lands within one frame of its measured onset. Full
+  measurements: `scratchpad/feedback-2026-10-17/ep4-chant-report.md`.
+  Reversal: restore the five hero keys from git (their mp3s are in
+  history), about an hour.
 - **PIP VOICE CAST: MiniMax `Inspirational_girl`** (2026-08-08, shipped
   in-cut). 3-voice audition on her three hardest lines (stamp `co_17`,
   shouted order `a1_09`, admission `a3_53`), 9 clips ~$0.02, in

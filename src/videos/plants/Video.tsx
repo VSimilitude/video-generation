@@ -1,7 +1,7 @@
 import React from "react";
 import { Series } from "remotion";
 import { DialogueAudio, buildTimeline, type TimedScene } from "../../lib/narration";
-import { FPS, HEIGHT, WIDTH, ScenePlaceholder, turnsOf } from "./scenes/common";
+import { FPS, HEIGHT, WIDTH, ScenePlaceholder, chantGaps, turnsOf } from "./scenes/common";
 import { COLD_OPEN_SCENES } from "./scenes/coldOpen";
 import { ACT1_SCENES } from "./scenes/act1";
 import { ACT2_SCENES } from "./scenes/act2";
@@ -550,20 +550,26 @@ const SCRIPT: SceneSpec[] = [
       "a3_62_sunny",
       "a3_63_pip",
       "a3_64_narrator",
-      // THE BIG WORD — PHOTOSYNTHESIS, one syllable per hero, each slammed on
-      // by its owner. Everyone cheers their syllable except Pip, who files
-      // hers, which is the joke. **Measure the real clip midpoints
-      // (`silencedetect`) for the card's `beats`; do not split evenly.**
-      "a3_65_drip",
-      "a3_66_puff",
-      "a3_67_ray",
-      "a3_68_pip",
-      "a3_69_sunny",
+      // THE BIG WORD — PHOTOSYNTHESIS, one block per hero, each slammed on by
+      // its owner while the NARRATOR chants the syllables (showrunner ruling
+      // 2026-10-17: five voices could not read as one word; one voice can).
+      // Everyone cheers their block except Pip, who files hers. The card's
+      // slams are the measured onsets in `CHANT_SYLLABLES`, not even splits.
+      "a3_65_narrator",
+      "a3_66_narrator",
+      "a3_67_narrator",
+      "a3_68_narrator",
+      "a3_69_narrator",
       "a3_70_narrator",
       "a3_71_ray",
       "a3_72_narrator",
     ],
     gaps: {
+      // The chant's spacing: ≈10f of audible silence between syllables and
+      // ≈14f before "Photosynthesis." lands as the reveal. Computed from the
+      // manifest + measured speech in/out (negative: the clips' kokoro padding
+      // overlaps) — see `chantGaps`. a3_70's speech starts 0.426s in.
+      ...chantGaps("key", "a3_70_narrator", 0.426),
       // 36f, trailing — "Ray stands there, having said it perfectly,
       // unclapped-for."
       a3_72_narrator: 36,
@@ -618,16 +624,19 @@ const SCRIPT: SceneSpec[] = [
       "rc_04_ray",
       "rc_05_sunny",
       "rc_06_sunny",
-      // The reprise: the five chant syllables re-fire byte-identical as the
-      // card's syllables light up in owner order.
-      "rc_07_drip",
-      "rc_08_puff",
-      "rc_09_ray",
-      "rc_10_pip",
-      "rc_11_sunny",
+      // The reprise: the Narrator's five chant syllables re-fire byte-identical
+      // as the card's blocks light up in owner order.
+      "rc_07_narrator",
+      "rc_08_narrator",
+      "rc_09_narrator",
+      "rc_10_narrator",
+      "rc_11_narrator",
       "rc_12_narrator",
       "rc_13_pip",
     ],
+    // Same spacing as Scene 24 (see `chantGaps`); rc_12's speech starts
+    // 0.405s in.
+    gaps: chantGaps("reprise", "rc_12_narrator", 0.405),
     tailFrames: 32,
   },
   {

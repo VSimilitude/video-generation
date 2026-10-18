@@ -3,6 +3,7 @@ import { Img, staticFile } from "remotion";
 import {
   AbsoluteFill,
   Bubbles,
+  CHANT_SYLLABLES,
   CHAR_BOX,
   Camera,
   Cast,
@@ -1057,43 +1058,38 @@ const RiseArrow: React.FC<{ color: string; frame: number }> = ({ color, frame })
  *
  * `BigWordBeat` is the house signature and STYLE says build one only with it.
  * This one cannot be: `BigWordBeat` takes ONE chant clip and splits it, and
- * this chant is five separate recordings, one per character, each of which has
- * to slam its own block on. Mounting all five blocks up front (which is what
- * `BigWordBeat` does at `split`) throws away the entire joke — the word is
- * supposed to be *assembled*, and the assembly order is the reunion engine
- * made audible.
+ * this chant is five separate recordings, one per syllable, each of which a
+ * hero slams on as its own block. Mounting all five blocks up front (which is
+ * what `BigWordBeat` does at `split`) throws away the entire joke — the word
+ * is supposed to be *assembled*, and the assembly order is the reunion engine
+ * made visible.
+ *
+ * **The Narrator chants it; the heroes slam it** (showrunner ruling
+ * 2026-10-17, from the kids' hub: "Thing that broke was the word
+ * photosynthesis"). It used to be five voices, one syllable each, and five
+ * timbres a second apart never read as one word. Now one voice says all five
+ * — five kokoro clips, because kokoro runs a one-line "Pho. To. Syn. The. Sis."
+ * together with no onsets to slam on — and each owner still slams, rings and
+ * cheers their block with their mouth shut (Pip files hers).
  *
  * Everything that makes it read as the signature is kept: kid type at 116,
  * `kidInkOutline`, the ink border, the ring on impact, the hop. What is added
  * is the owner's colour on each block, which is the only place in the episode
  * the five leads are drawn as one object.
  *
- * **The beats are measured onsets, not even fifths.** Every syllable clip
- * carries 0.17–0.28s of leading silence, and the turns are already 31–35
- * frames apart, so an even split lands the last block a third of a second
- * after Sunny has already shouted it:
- *
- *   a3_65 Pho  speech 0.171s in     a3_68 The  0.211s in
- *   a3_66 To   0.179s in            a3_69 SIS  0.282s in
- *   a3_67 Syn  0.191s in
- *
- *   npx remotion ffmpeg -i public/narration/plants/a3_65_drip.mp3 \
- *     -af silencedetect=noise=-32dB:d=0.08 -f null -
+ * **The beats are measured onsets, not even fifths.** Every kokoro syllable
+ * clip carries ~0.45s of leading silence (table and recipe on
+ * `CHANT_SYLLABLES` in common.tsx), so each block slams on its own turn's
+ * start plus that clip's measured onset.
  */
-const CHANT: {
-  key: string;
-  text: string;
-  /** Seconds of leading silence in that clip, measured. */
-  onset: number;
-  bg: string;
-  fg: string;
-}[] = [
-  { key: "a3_65_drip", text: "PHO", onset: 0.171, bg: kidTheme.waterDark, fg: kidTheme.paper },
-  { key: "a3_66_puff", text: "TO", onset: 0.179, bg: kidTheme.airEdge, fg: kidTheme.paper },
-  { key: "a3_67_ray", text: "SYN", onset: 0.191, bg: kidTheme.mint, fg: kidTheme.ink },
-  { key: "a3_68_pip", text: "THE", onset: 0.211, bg: PIP_COLOR.seedDeep, fg: kidTheme.paper },
-  { key: "a3_69_sunny", text: "SIS", onset: 0.282, bg: kidTheme.sunDark, fg: kidTheme.paper },
-];
+const CHANT_COLOR: Record<(typeof CHANT_SYLLABLES)[number]["who"], { bg: string; fg: string }> = {
+  drip: { bg: kidTheme.waterDark, fg: kidTheme.paper },
+  puff: { bg: kidTheme.airEdge, fg: kidTheme.paper },
+  ray: { bg: kidTheme.mint, fg: kidTheme.ink },
+  pip: { bg: PIP_COLOR.seedDeep, fg: kidTheme.paper },
+  sunny: { bg: kidTheme.sunDark, fg: kidTheme.paper },
+};
+const CHANT = CHANT_SYLLABLES.map((syl) => ({ ...syl, ...CHANT_COLOR[syl.who] }));
 
 const ChantCard: React.FC<{
   /** Scene-local frame each block slams on, in order. */
@@ -1107,8 +1103,9 @@ const ChantCard: React.FC<{
    * Vertical centre of the whole card group.
    *
    * **142, and three faces set it** (showrunner ruling, repair pass). At 262
-   * the THE and SIS blocks sat across Sunny's eyes and mouth on the frame he
-   * shouts his own syllable — the one character who must be seen saying it,
+   * the THE and SIS blocks sat across Sunny's eyes and mouth on the frame his
+   * own syllable lands — the one character who must be seen claiming it
+   * (shouting it, until the 2026-10-17 Narrator-led chant; cheering it now),
    * buried by the graphic saying it. The card group is 96px type (row ≈ 139
    * tall) plus the sub-line, so a centre of 142 puts its lowest ink at ≈ 243,
    * which clears Ray's forehead (253) and, with Sunny lowered to y 300 in
@@ -2840,7 +2837,7 @@ const FullPowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const ray = rayMark({ x: 372, y: 356, scale: 0.78 });
   // **Lower and a shade smaller than the act's usual Sunny, and the chant card
   // is why** (showrunner ruling, repair pass): the card's THE and SIS blocks sat
-  // across his eyes and mouth on the frame he shouts SIS. He cannot go much
+  // across his eyes and mouth on the frame SIS lands. He cannot go much
   // lower than this — a floater's box may not cross `MEADOW.horizon`, and at
   // 1.04 swelling to 1.09 his lowest edge is 602 against the horizon's 604 —
   // so the rest of the clearance comes out of the card (see `ChantCard`'s `y`).
@@ -2862,6 +2859,30 @@ const FullPowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     const [from] = lineWindow(scene, syl.key);
     return from + Math.round(syl.onset * fps);
   });
+  // **Mouths shut, faces on.** The Narrator says the syllables (ruling
+  // 2026-10-17), so nobody's mouth moves on them — `stage.speaking` reads the
+  // narrator keys as no one. What sells "slammed on by its owner" is the
+  // owner: a hop and a cheer on the frame their own block lands. Pip does
+  // neither — she files hers, flat, and is back in the kitchen roar once the
+  // Narrator says the whole word.
+  type Owner = (typeof CHANT)[number]["who"];
+  const slamOf = (who: Owner): number => chantAt[CHANT.findIndex((syl) => syl.who === who)];
+  const cheerHop = (who: Owner): number => {
+    const f = frame - slamOf(who);
+    return f >= 0 && f <= 14 ? Math.sin((f / 14) * Math.PI) : 0;
+  };
+  const rayFace = emotionAt(frame, [{ at: slamOf("ray"), emotion: "excited" }], "happy", 6);
+  const sunnyFace = emotionAt(frame, [{ at: slamOf("sunny"), emotion: "excited" }], "proud", 6);
+  const pipFace = emotionAt(
+    frame,
+    [
+      { at: growFrom, emotion: "excited" },
+      { at: slamOf("pip"), emotion: "neutral" },
+      { at: wordFrom, emotion: "excited" },
+    ],
+    "neutral",
+    6,
+  );
 
   return (
     <PlateWorld
@@ -2904,7 +2925,7 @@ const FullPowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       <SproutRow pipHeight={pipHeightPx("young", PIP_SCALE)} tone={rowTone} t={t} />
       <Drip
         x={drip.x}
-        y={drip.y}
+        y={drip.y - cheerHop("drip") * 26}
         scale={DRIP_AT.scale}
         phase={PHASE.drip}
         emotion="excited"
@@ -2922,7 +2943,7 @@ const FullPowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         // The kitchen at full roar, on the character it is running inside.
         tremble={surge * 0.5}
         phase={PHASE.pip}
-        emotion={frame >= growFrom ? "excited" : "neutral"}
+        emotion={pipFace}
         speaking={stage.speaking("pip")}
         point={pointRamp(
           interpolate(frame, [growFrom, growFrom + 20], [0, 1], {
@@ -2936,7 +2957,7 @@ const FullPowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       />
       <Puff
         x={puff.x}
-        y={puff.y}
+        y={puff.y - cheerHop("puff") * 26}
         scale={PUFF_AT.scale}
         opacity={PUFF_SEEN}
         phase={PHASE.puff}
@@ -2949,12 +2970,12 @@ const FullPowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       />
       <Ray
         x={ray.x}
-        y={ray.y}
+        y={ray.y - cheerHop("ray") * 22}
         scale={0.78}
         brightness={RAY_LIGHT}
         spectrum={0.6}
         phase={PHASE.ray}
-        emotion="happy"
+        emotion={rayFace}
         speaking={stage.speaking("ray")}
         // "Ray said it perfectly. Nobody clapped." He is looking at the camera
         // for the whole of the last beat, which is the joke.
@@ -2963,10 +2984,12 @@ const FullPowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       />
       <Sunny
         x={sunny.x}
+        // No hop: he has no room to go up toward the card (see `sunnyMark`
+        // above), so his cheer on SIS is a swell and a face.
         y={sunny.y}
-        scale={1.04 * (1 + 0.05 * flood)}
+        scale={1.04 * (1 + 0.05 * flood) * (1 + 0.03 * cheerHop("sunny"))}
         phase={PHASE.sunny}
-        emotion="proud"
+        emotion={sunnyFace}
         speaking={stage.speaking("sunny")}
         look={{ x: -0.5, y: 0.5 }}
         raySpeed={0.16 + 0.2 * flood}

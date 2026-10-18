@@ -55,11 +55,12 @@
 // `script.md` asks for it, and the comment on the line names the direction.
 // The stats of this file: Drip and Blue carry their locked cast emotion
 // (`happy`) on every recording — that is casting, not seasoning, same
-// contract as ep-3's colours. Puff carries ten seasoned lines and they are
+// contract as ep-3's colours. Puff carries eight seasoned lines and they are
 // his arc (two `surprised` where the trade lands on him, `happy` from the
-// flip onward — nine lines). Ray carries exactly ONE (`happy`, his chant
-// syllable) out of
-// thirty recordings — his deadpans and disclosures are all `auto`, because
+// flip onward — six, counting the migrated a2_55; his chant syllable's
+// `happy` went with the 2026-10-17 Narrator-led chant). Ray carries ZERO since the chant went
+// Narrator-led (2026-10-17; his one `happy` was his chant syllable) — his
+// deadpans and disclosures are all `auto`, because
 // the pedantry is in the words. PIP CARRIES ZERO, deliberately: her register
 // (clipped, dry, certain) IS the casting target, her stamps are deadpan
 // buttons, and a seasoned deadpan is a sold one. Cloudia carries zero (grand
@@ -99,7 +100,8 @@
 //                                 aliases state intent and lock the wording)
 //   "It is the highest grade she gives."
 //                                 SOURCE a2_29_narrator -> a3_80
-//   The chant syllables           SOURCES a3_65..a3_69 -> rc_07..rc_11
+//   The chant syllables           SOURCES a3_65..a3_69_narrator -> rc_07..rc_11
+//                                 (kokoro; Narrator-led since 2026-10-17)
 //
 // CACHE MIGRATION — TWO CLIPS ARE NOT NEW PURCHASES. Cross-video `sameAs`
 // does not exist, so these are cache migrations (copy the mp3 + seed the
@@ -130,17 +132,14 @@
 //     ear-approved clip (see above). Bubbles keep their caps; clips go
 //     lowercase (a1_35 "I am first!", a1_54 "away", a3_15 "I traded with a
 //     plant!" — the drawn bubbles shout, the clips do not).
-//   - THE FIVE CHANT SYLLABLES (a3_65..a3_69) ARE THE HIGHEST TTS RISK IN
-//     THE EPISODE: four are MiniMax one-syllable clips. Fallback respellings,
-//     known-safe shapes, if a syllable reads wrong:
-//       a3_65_drip  "Pho!"  ->  "Fo!"
-//       a3_66_puff  "To!"   ->  "Toe!"
-//       a3_67_ray   "Syn!"  ->  "Sin!"
-//       a3_68_pip   "The."  ->  "Thuh."
-//     And the Narrator-led fallback if the five-voice chant fights
-//     production (synthesis-approved): ONE kokoro line replaces all five —
-//       "Pho. To. Syn. The. Sis. PHOTOSYNTHESIS!"
-//     with the cast on the reprise only.
+//   - THE CHANT SYLLABLES (a3_65..a3_69) WERE THE HIGHEST TTS RISK IN THE
+//     EPISODE, as five one-syllable clips in five voices (four of them
+//     MiniMax). The kids' hub caught it (2026-10-17, Math, 8: "Thing that
+//     broke was the word photosynthesis"; Mike: the sound-out "sounds
+//     weird"). Showrunner ruling: Narrator-led in BOTH firings — but as FIVE
+//     kokoro Narrator clips, not the pre-written single-line fallback
+//     ("Pho. To. Syn. The. Sis. PHOTOSYNTHESIS!"), because kokoro does not
+//     pause between one-syllable sentences. See the chant block below.
 //
 // COMEDY PACING — per-line speed overrides. Every list, roll call and
 // repeated straight-line carries a slower `speed` with a comment saying why.
@@ -173,7 +172,7 @@ const RAY = { engine: "minimax", voiceId: RAY_MINIMAX_VOICE, speed: 1.0 };
 // Returning ep-1 hero. `happy` on every recording — locked casting since
 // ep 2, not seasoning.
 const DRIP = { engine: "minimax", voiceId: "Lively_Girl", speed: 1.0 };
-// Returning ep-2 hero. Default `auto`; his ten seasoned lines are this
+// Returning ep-2 hero. Default `auto`; his eight seasoned lines are this
 // episode's arc (alarm -> commerce), each citing its stage direction.
 const PUFF = { engine: "minimax", voiceId: "Exuberant_Girl", speed: 1.0 };
 // One cameo. The suite's first >1.0 speed is the character and the physics.
@@ -975,19 +974,34 @@ export default {
       ...NARRATOR,
       speed: 0.95,
     },
-    // THE FIVE-VOICE CHANT (synthesis-approved; PHO Drip / TO Puff / SYN Ray
-    // / THE Pip / SIS Sunny). HIGHEST TTS RISK IN THE EPISODE — fallback
-    // respellings and the Narrator-led fallback are in the header. Each
-    // syllable is a SOURCE for its rc reprise alias. Stage direction
-    // (script Scene 24): everyone cheers their syllable — except Pip, who
-    // files hers, which is the joke.
-    a3_65_drip: { text: "Pho!", ...DRIP, emotion: "happy" },
-    a3_66_puff: { text: "To!", ...PUFF, emotion: "happy" },
-    // Ray's ONE seasoned line in the episode — the chant is a cheer.
-    a3_67_ray: { text: "Syn!", ...RAY, emotion: "happy" },
-    // Unseasoned and flat on purpose; hers is the only filed syllable.
-    a3_68_pip: { text: "The.", ...PIP, speed: 0.95 },
-    a3_69_sunny: { text: "SIS!", ...SUNNY },
+    // THE CHANT — NARRATOR-LED: ONE VOICE, FIVE KEYS (showrunner ruling,
+    // 2026-10-17, from the kids' hub note "Thing that broke was the word
+    // photosynthesis"). Five voices with five timbres saying one syllable each
+    // a second apart cannot read as a word; one voice chanting it can. The
+    // heroes still slam their blocks on in owner order (PHO Drip / TO Puff /
+    // SYN Ray / THE Pip / SIS Sunny) and cheer them — Pip files hers, which is
+    // the joke — but nobody on stage says them. No whole-word clip: a3_70
+    // already opens with "Photosynthesis." and is the reveal. The spacing is
+    // `gaps` in Video.tsx (≈10f between syllables, ≈14f before a3_70).
+    //
+    // WHY NOT THE PRE-WRITTEN ONE-LINE FALLBACK ("Pho. To. Syn. The. Sis.
+    // Photosynthesis!"): kokoro does not pause between one-syllable
+    // sentences. It came out as ~1.5s of continuous speech (0.25–0.3s a
+    // syllable, dips only to about -30 dBFS), so silencedetect found at most
+    // two onsets for five slams, and Whisper heard the run-together chant as
+    // just "Photosynthesis." Same on every wording and speed tried (commas,
+    // "!", em dashes, respellings, 0.80–1.0). Five separate clips passed:
+    // butted together at 0.35s gaps plus the word, Whisper heard "Faux. To.
+    // Sin. The. Exist. Photosynthesis." Measurements and every transcript:
+    // scratchpad/feedback-2026-10-17/ep4-chant-report.md.
+    //
+    // Each syllable is a SOURCE for its rc reprise alias. 0.92 is the house
+    // flat read — a slow deadpan build.
+    a3_65_narrator: { text: "Pho.", ...NARRATOR, speed: 0.92 },
+    a3_66_narrator: { text: "To.", ...NARRATOR, speed: 0.92 },
+    a3_67_narrator: { text: "Syn.", ...NARRATOR, speed: 0.92 },
+    a3_68_narrator: { text: "The.", ...NARRATOR, speed: 0.92 },
+    a3_69_narrator: { text: "Sis.", ...NARRATOR, speed: 0.92 },
     a3_70_narrator: {
       text: "Photosynthesis. Light, water and air, cooking food inside a leaf.",
       ...NARRATOR,
@@ -1068,13 +1082,14 @@ export default {
     // closed at five; the three of headroom under the ceiling of eight
     // belong to the showrunner, not this file.
     rc_06_sunny: { sameAs: "a1_13_sunny" },
-    // The reprise — five byte-identical aliases as the card syllables light
-    // up in owner order.
-    rc_07_drip: { sameAs: "a3_65_drip" },
-    rc_08_puff: { sameAs: "a3_66_puff" },
-    rc_09_ray: { sameAs: "a3_67_ray" },
-    rc_10_pip: { sameAs: "a3_68_pip" },
-    rc_11_sunny: { sameAs: "a3_69_sunny" },
+    // The reprise — five byte-identical aliases of the Narrator's chant
+    // syllables (Narrator-led since 2026-10-17) as the card's blocks light up
+    // in owner order.
+    rc_07_narrator: { sameAs: "a3_65_narrator" },
+    rc_08_narrator: { sameAs: "a3_66_narrator" },
+    rc_09_narrator: { sameAs: "a3_67_narrator" },
+    rc_10_narrator: { sameAs: "a3_68_narrator" },
+    rc_11_narrator: { sameAs: "a3_69_narrator" },
     rc_12_narrator: {
       text: "Photosynthesis. Plants make their own food. Out of light, water and air.",
       ...NARRATOR,
