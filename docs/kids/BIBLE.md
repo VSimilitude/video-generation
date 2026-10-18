@@ -436,7 +436,7 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 | "You're welcome! HA! HA!" | Sunny | Ep 1: 3 (+ Drip's `a3_43` return); ep 2: 6; ep 3: **8 — ceiling 8** (raised 7→8 by Mike for `a3_31b`, 2026-08-04); ep 4: 5 (1 recording + 4 aliases; headroom unspent). No firing past 8; ceilings are per episode and hard. |
 | "GOOD MORNING, EVERYBODY!" → "I invented mornings!" | Sunny | Greeting+brag pairing, **four-for-four** (ep 1 `a1_09`/`a1_11`, ep 2 `a2_02`/`a2_05`, ep 3 `a1_03`+`a3_31` alias/`a3_31b`, ep 4 `a1_02`/`a1_03`). Series constant, not an option. |
 | "That one is me as well!" | Sunny | Ep-2 card: fired. Eps 3–4: **zero** (saved on purpose twice). Banked — next firing belongs to the volcano thread. |
-| "You can't see me. But you can FEEL me." | Puff | 5 series-wide (unverified — ep-4 retro owes a recount); one per appearance. Ep-4 firing was cache-migrated from wind `a1_40_puff`. |
+| "You can't see me. But you can FEEL me." | Puff | 5 series-wide (unverified — ep-4 retro owes a recount); one per appearance. Ep-4 firing was cache-migrated from wind `a1_40_puff`. Quoted from memory by the 8-year-old (hub, 2026-10-17) — it has stuck. |
 | "I am NOT small! I am travel-sized!" | Drip | Ep-1 gag (2 + speck visuals); revive only as fan service. Eps 2–4: 0. |
 | "Look up. That's me." | Ray | 3 in ep 3 (incl. sunset form); ep 4: 1 at the moon + approved variant "Look down. That is also me." His pointing line. |
 | "darling" | Cloudia | Hers; lending it out is the joke (Puff, once). Ep 4: ×5, every composed line. |
@@ -448,7 +448,7 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 | "This is a nice spot." | Green | 3 firings, one recording (ep 3). |
 | "I just said that!" | Blue | 4 firings, one recording — **capped at 4** (ep 3). |
 | "Great ___, ___!" | Yellow | 7 firings in ep 3, buttoned with "Great bounce, me!". |
-| "Are we there yet?" | Ray | Ep-3 gag: 5 identical firings (one recording) + 1 truncated; escalating silences 45/75/105/135/165f. Spent. |
+| "Are we there yet?" | Ray | Ep-3 gag: 5 identical firings (one recording) + 1 truncated; escalating silences 45/75/105/135/165f. Spent. Named by the 8-year-old as ep 3's funny part (hub, 2026-10-17). |
 
 ### The long fuse (ep-2 banked material — untouched)
 
@@ -491,6 +491,12 @@ Pippa! Hi Pip the third!" / "Every seed in that packet is called Pip." /
   firing true. Ep-4 first: he does NOT interrupt Sc 23.
 - **Blue anti-Sunny arc**: seeded, unfired — see Blue's block. DO NOT fire
   the payoff early.
+- **The island chain is a timeline** (ep 5, PROVISIONAL until the ep-5
+  fold): the volcano has built many islands, one at a time; newest is
+  black rock at the front, oldest is green at the back, so the row reads
+  as one island ageing. Stated out loud by the Narrator in Scene 21
+  (`a3_49b`, 2026-10-17 tweak) after the 8-year-old asked which it was.
+  Both answers are true and the line says so.
 - **Open ear items** (shipped in-cut, pending Mike's ear; fallbacks in
   `src/videos/sky-blue/tweak1-worklist.md`): `a2_32b_blue` (the Bluington
   roll call), `rc_14_ray` ("air" lowercase re-take), `a3_22b_red` ("Very
@@ -557,6 +563,15 @@ what a script may not break.
     beats under another character's claim.
 14. **Runtime rule** (Mike, 2026-08-04): 10–30 minutes is all fine — hit
     the right beats, never target a duration.
+15. **One voice chants a Big Word.** The syllable chant is the Narrator's
+    (kokoro, one clip); the ensemble owns the visual slams — one block per
+    hero, in owner order — never the syllables. Five timbres a second
+    apart cannot assemble a word (ep-4 chant, the 8-year-old's "something
+    broke", 2026-10-17).
+16. **Say the lesson once, plainly.** When the diagram is the lesson, the
+    Narrator states it in one sentence of plain words; an implied
+    conclusion ("It is the whole story, standing in a row.") is a riddle
+    to an attentive 8-year-old, not a lesson (ep-5 Scene 21, 2026-10-17).
 
 ---
 

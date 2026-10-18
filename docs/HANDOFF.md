@@ -36,6 +36,41 @@ for readings taken just after a floored boundary — when the previous
 window died at the session limit, trust the API kill message's reset time
 over ccusage.
 
+## 2026-10-17 — the hub feedback round (UNCOMMITTED on main, awaiting Mike's "push it")
+Source: the family hub's first feedback round (Math, 8). Retro entry at the
+top of docs/LEARNINGS.md; bible world rules 15–16 added. Four changes sit
+in the working tree, all gated (typecheck, lint:hooks, site build, full
+every-frame renders), none committed, none deployed:
+- **Ep 4 chant** (src/videos/plants): the five hero syllable clips are
+  replaced by five Narrator kokoro clips `a3_65`–`a3_69_narrator` (0.92),
+  spaced by computed `chantGaps()`; recap `rc_07`–`rc_11` alias them;
+  visual slams unchanged. Ten hero mp3s DELETED, ten Narrator mp3s added
+  (stage the deletions). Ruling + Whisper table in ep4-decision-log.md TOP.
+  Ear-pending: "The." alone transcribes as "thy"; chant feel at 0.78s/syllable.
+- **Ep 5 Scene 21** (src/videos/volcano): new `a3_49b_narrator` ("Lots of
+  islands, and one volcano...") + a travelling RowPointer highlight; episode
+  24948→25284f. ep5-decision-log.md TOP. Ear-pending: "long, long ago".
+- **DripChooses expansion** (src/videos/drip-fork, CYOA phase 1.5): three
+  choices (wayUp/wayDown/whereTo), ten segments, eight paths 4:41–5:20.
+  Design + Build calls in src/videos/drip-fork/expansion-brief.md. Player:
+  `lastChoiceSegment` + "Change my last choice" end-card button;
+  `npm run check:branching` self-check. docs/CYOA.md has the pilot's six
+  resolutions folded in. 68 new kokoro mp3s, 4 deleted. NOTHING HEARD YET.
+  Browser check at phone size: see scratchpad/feedback-2026-10-17/.
+- **Player fix (src/site/ChoiceCard.tsx):** on a stage shorter than 360px
+  (iPhone portrait, windowed) the choice/end cards now cover the viewport
+  (`position: fixed`) instead of scrolling inside the 199px-tall player box
+  where the second option and every end-card button were hidden. Found by
+  the 2026-10-17 phone check (pre-existing since phase 1). Re-check log:
+  scratchpad (session) fixcheck/log-390.txt.
+- kids-hub catalog blurb for vid-DripChooses updated (that repo, uncommitted).
+Reports + stills: scratchpad/feedback-2026-10-17/. Still reviews (forks):
+ep-5 ACCEPT, ep-4 ACCEPT; pre-existing notes for Mike's passes: Puff's
+bubble covers part of the island row (ep 5 s21); recap reprise block
+colours differ from Scene 24's; the definition sub-line crosses Sunny's disc.
+Commit plan: three commits by explicit path (plants / volcano / drip-fork+site+CYOA.md)
+plus one docs commit; then deploy from a clean worktree per CLAUDE.md.
+
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).
 - Kids: DripWaterCycle (ep1), PuffWind (ep2 third cut, 12:29),

@@ -12,6 +12,55 @@ and abandoned. Newest entries at the top.
 
 ---
 
+## 2026-10-17 — the hub's first feedback round (Math, 8, via the family hub)
+
+The first notes to arrive through the family hub (kthanks.com, four faces +
+tap-chips + a free-text box per item) rather than over a shoulder. Six
+entries in four minutes, every one of them actionable, and they came from
+a kid reviewing alone on a phone. The loop is closed: what he types lands
+in D1 and `npm run feedback` prints it. The round, and what it leaves:
+
+- **"Thing that broke was the word photosynthesis."** (ep 4, tagged
+  *Something broke*; Mike: "when it's trying to sound it out phonetically,
+  it sounds weird"). The five-voice syllable chant — one clip per hero,
+  four MiniMax one-syllable recordings and one kokoro, 31–35 frames apart.
+  narration.mjs had flagged it as the episode's highest TTS risk and
+  carried a Narrator-led fallback, and nobody ear-checked the five clips
+  before the cut shipped; the eight-year-old did. **The ep-2 lesson again,
+  verbatim: a pre-written fallback is only insurance if somebody actually
+  ear-checks the thing it insures.** Ruling: the fallback, in both
+  firings — ONE voice chants the word, the heroes keep the visual slams.
+  Promoted to a world rule: five timbres a second apart cannot assemble a
+  word; one voice can; the ensemble owns the blocks, never the syllables.
+- **"Are there multiple islands or just one island going through
+  different times?"** (ep 5, top marks, *Funny, Fun!*). The honest answer
+  is BOTH, and that is the whole lesson of Scene 21 — but the cut only
+  implied it ("It is the whole story, standing in a row."). An attentive
+  eight-year-old could not resolve it, which means the line was a riddle,
+  not a lesson. Ruling: one plain narrator sentence between `a3_49` and
+  `a3_50` says it — lots of islands, one volcano, newest yesterday,
+  oldest long ago, walking the row is watching one island grow up. **When
+  the diagram IS the lesson, the Narrator states the lesson once in plain
+  words; an implied conclusion is not a conclusion.** (The question
+  itself is the eight-year-old's hook working as designed — a checkable
+  mind-blower; Hawaii is the real one, and it is worth telling him.)
+- **Praise is data too.** He named Ray's "Are we there yet?" escalation
+  (five identical firings with growing silences) as the funny part of ep
+  3, and quoted Puff's "You can't see me, but you can feel me" from
+  memory, signed "From puff". Both are repetition gags that were given
+  room. The pacing rule has now been confirmed by both kids, twice.
+- **"I think it was too short and there should be more choices."** (the
+  CYOA demo, the round's only flat face). The first audience vote for
+  phase 3 — a 90-second one-branch mechanic demo read as an episode and
+  was judged as one. Scope decision pending Mike (small expansion of the
+  demo vs. the full pilot episode).
+
+Process note: this is the first round where every note arrived with a
+rating, chips and a timestamp. It is a better retro input than the
+over-the-shoulder notes were — keep routing the kids through the hub.
+
+---
+
 ## 2026-07-25 — swap-basics (build notes)
 
 _Financial series #2, and the first video built entirely on the machinery
