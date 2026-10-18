@@ -122,6 +122,7 @@ export const NARRATION: Record<string, NarrationClip> = {
   "a3_47_sunny": { file: "narration/volcano/a3_47_sunny.mp3", durationSeconds: 1.925 },
   "a3_48_narrator": { file: "narration/volcano/a3_48_narrator.mp3", durationSeconds: 2.375 },
   "a3_49_narrator": { file: "narration/volcano/a3_49_narrator.mp3", durationSeconds: 4.825 },
+  "a3_49b_narrator": { file: "narration/volcano/a3_49b_narrator.mp3", durationSeconds: 10.925 },
   "a3_50_narrator": { file: "narration/volcano/a3_50_narrator.mp3", durationSeconds: 9.5 },
   "a3_51_drip": { file: "narration/volcano/a3_51_drip.mp3", durationSeconds: 1.044 },
   "a3_52_puff": { file: "narration/volcano/a3_52_puff.mp3", durationSeconds: 1.764 },

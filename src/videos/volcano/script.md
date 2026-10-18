@@ -6,8 +6,9 @@
 **Target:** the beats, not a number (runtime rule). Expect roughly fifteen to
 eighteen minutes — fewer lines than episode four, far more held air.
 **Shape:** cold open, three acts, recap. Thirty-one scenes, one hundred and
-eighty-nine spoken lines (one hundred and seventy-seven recordings; twelve
-`sameAs` aliases; four cache-migrated clips).
+ninety spoken lines (one hundred and seventy-eight recordings; twelve
+`sameAs` aliases; four cache-migrated clips). Line 190 is `a3_49b_narrator`,
+added in the 2026-10-17 tweak (Scene 21; `ep5-decision-log.md`, top entry).
 
 > **Ruling of record.** This script is the synthesis (`ep5-synthesis.md`)
 > executed: Treatment B's act architecture with Treatment A's spine gag
@@ -843,10 +844,21 @@ screen, the number does the size.
 **Visual:** The island chain as the diagram, made of scenery the show
 already owns: newest island black rock, older ones sandier, the older ones
 GREEN (older volcanic islands are the lush ones), the oldest a beach.
-**Lines:** `a3_49_narrator`, `a3_50_narrator`, `a3_51_drip`, `a3_52_puff`,
-`a3_53_narrator`, `a3_54_ember`, `a3_55_narrator`
+**Lines:** `a3_49_narrator`, `a3_49b_narrator`, `a3_50_narrator`,
+`a3_51_drip`, `a3_52_puff`, `a3_53_narrator`, `a3_54_ember`,
+`a3_55_narrator`
 
 > **NARRATOR:** Look down the chain of islands. It is the whole story, standing in a row.
+> **NARRATOR:** Lots of islands, and one volcano. He made the newest one yesterday, and the oldest one long, long ago. So walking down the row is like watching one island grow up.
+
+`a3_49b` — 2026-10-17 tweak (showrunner ruling, `ep5-decision-log.md` top
+entry): a kids'-hub viewer (8) asked whether this was many islands or one
+island at different times. The answer is both, and now the Narrator says
+so. Speed 1.0, matching its neighbours. "Yesterday" plants
+`a3_55`'s "So was the island. Yesterday." While it plays, a halo and
+chevron point at the newest island, glide to the oldest, then walk the row
+newest→oldest.
+
 > **NARRATOR:** New islands are black rock. Older islands are sand. And the oldest islands are green. Because sand, mixed with old dead leaves, is soil.
 > **DRIP:** We ground it!
 > **PUFF:** I stirred in the leaves!

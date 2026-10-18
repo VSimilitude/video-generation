@@ -9,6 +9,29 @@ are Mike's standing decisions, not re-logged.
 
 ## TOP — needs Mike's ear/eye in tweak round
 
+- **SCENE 21 GAINS `a3_49b_narrator` — "many islands, one timeline" said
+  out loud** (showrunner ruling, Fable, 2026-10-17; worklist
+  scratchpad/feedback-2026-10-17/ep5-island-worklist.md). Source: kids'
+  hub feedback — Math (8) rated the episode top marks and asked "Are there
+  multiple islands or just one island going through different times". The
+  honest answer is BOTH and the cut only implied it. New line, between
+  `a3_49` and `a3_50`, wording final: "Lots of islands, and one volcano.
+  He made the newest one yesterday, and the oldest one long, long ago. So
+  walking down the row is like watching one island grow up." **Speed 1.0,
+  not the 0.92 flat**: both neighbours (`a3_49`, `a3_50`) run at the house
+  1.0, so per the ruling it matches them. Kokoro, one fresh draw (10.93s,
+  328f), zero MiniMax spend. Scene 21 grows 941f → 1277f (+336f = clip + 8f
+  turn gap); everything after it shifts by that, episode 24948f → 25284f.
+  Visual: a halo + chevron, keyed to the clip's sentence breaks, parks on
+  the newest island ("newest one yesterday"), glides to the far end ("oldest
+  one long, long ago"), then walks the row newest→oldest ("walking down the
+  row"); the chain itself is on screen all scene; the a3_50 labels are
+  unchanged. Laugh clock: the Sc 20→21 interval (`a3_47` → `a3_51`) grows
+  to 30.2s, under the 50s MAX. Rejected alternative: re-wording `a3_49`
+  in place (the ruling forbids touching the rest of the scene). Reversal:
+  delete one line from narration.mjs + Video.tsx + script.md, and the
+  `RowPointer` mount in act3.tsx; free.
+
 - **EMBER CAST: `Playful_Girl`, no pitch construction** (showrunner
   ratified the measured audition, 2026-08-25; PROVISIONAL — Mike's ear
   rules). Measured case: fastest real voice at her commanded 1.1

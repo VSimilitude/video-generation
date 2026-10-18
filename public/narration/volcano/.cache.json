@@ -654,6 +654,11 @@
     "outFile": "a3_49_narrator.mp3",
     "durationSeconds": 4.825
   },
+  "a3_49b_narrator": {
+    "hash": "ed12bdf58f46871f",
+    "outFile": "a3_49b_narrator.mp3",
+    "durationSeconds": 10.925
+  },
   "a3_50_narrator": {
     "hash": "7ef4f6f995e73b69",
     "outFile": "a3_50_narrator.mp3",

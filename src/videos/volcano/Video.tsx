@@ -482,6 +482,9 @@ const SCRIPT: SceneSpec[] = [
     id: "s21_dirt",
     lines: [
       "a3_49_narrator",
+      // 2026-10-17 island tweak (ep5-decision-log.md, top entry): "many
+      // islands, one volcano, one timeline" said out loud.
+      "a3_49b_narrator",
       "a3_50_narrator",
       "a3_51_drip",
       "a3_52_puff",

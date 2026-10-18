@@ -1611,6 +1611,82 @@ const ChainLabel: React.FC<{
   );
 };
 
+/**
+ * **THE ROW POINTER** (2026-10-17 island tweak; ep5-decision-log.md, top
+ * entry). A kids'-hub viewer (8) asked whether this was many islands or one
+ * island at different times; the honest answer is both, and `a3_49b` now says
+ * so. While it plays, a halo and a chevron point at what the line names, keyed
+ * to the clip's own sentence breaks (silencedetect on the 10.99s take: 2.50 /
+ * 3.10 / 4.74 / 5.07 / 6.93 / 7.44 / 10.50s):
+ *
+ *   "He made the newest one yesterday,"      -> parked on CHAIN[0]
+ *   "and the oldest one long, long ago."     -> glides to the far end
+ *   "So walking down the row is like ..."    -> back to CHAIN[0], walks the row
+ *
+ * Fractions of the line, not frames, so a re-draw of the take moves with it.
+ * The row itself (the chain) is on screen for the whole scene; the a3_50
+ * labels stay keyed to a3_50 because they name a3_50's words.
+ */
+function chainAt(index: number): { x: number; w: number; h: number } {
+  const i = Math.max(0, Math.min(CHAIN.length - 1, index));
+  const a = CHAIN[Math.floor(i)];
+  const b = CHAIN[Math.ceil(i)];
+  const f = i - Math.floor(i);
+  return { x: a.x + (b.x - a.x) * f, w: a.w + (b.w - a.w) * f, h: a.h + (b.h - a.h) * f };
+}
+
+const RowPointer: React.FC<{ from: number; to: number }> = ({ from, to }) => {
+  const frame = useCurrentFrame();
+  const len = Math.max(1, to - from);
+  const u = (frame - from) / len;
+  // Pass 1 (parked on the newest, then gliding to the oldest) ends at 0.62;
+  // pass 2 starts fresh at the newest at 0.67 and outlives the line by 10f.
+  const second = u >= 0.645;
+  const [u0, u1] = second ? [0.67, 1.0] : [0.27, 0.62];
+  const glideFrom = second ? 0.72 : 0.46;
+  const glideTo = second ? 0.97 : 0.6;
+  const start = from + Math.round(len * u0);
+  const end = from + Math.round(len * u1) + (second ? 10 : 0);
+  if (frame < start || frame > end) return null;
+  const opacity = interpolate(frame, [start, start + 6, end - 6, end], [0, 1, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const idx = interpolate(
+    frame,
+    [from + len * glideFrom, from + len * glideTo],
+    [0, CHAIN.length - 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: kidEase.easeInOutSine },
+  );
+  const { x, w, h } = chainAt(idx);
+  const bob = Math.sin(frame / 6) * 4;
+  return (
+    <svg
+      width={WIDTH}
+      height={HEIGHT}
+      style={{ position: "absolute", left: 0, top: 0, opacity, overflow: "visible" }}
+    >
+      <ellipse
+        cx={x}
+        cy={SEAT - h * 0.45}
+        rx={w + 22}
+        ry={h * 0.55 + 22}
+        fill="none"
+        stroke={kidTheme.paper}
+        strokeWidth={6}
+        opacity={0.85}
+      />
+      <path
+        d={`M ${x - 22} ${SEAT - h - 70 + bob} L ${x + 22} ${SEAT - h - 70 + bob} L ${x} ${SEAT - h - 40 + bob} Z`}
+        fill={kidTheme.paper}
+        stroke={kidTheme.ink}
+        strokeWidth={4}
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 const S21_BUBBLES: Record<string, string> = {
   a3_51_drip: "We ground it!",
   a3_52_puff: "I stirred in the leaves!",
@@ -1622,6 +1698,7 @@ const DirtScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stage = useStage(scene);
 
   const [rowFrom, rowTo] = lineWindow(scene, "a3_50_narrator");
+  const [growFrom, growTo] = lineWindow(scene, "a3_49b_narrator");
   const [pinchFrom, pinchTo] = lineWindow(scene, "a3_53_narrator");
   const [smallFrom] = lineWindow(scene, "a3_54_ember");
 
@@ -1697,6 +1774,10 @@ const DirtScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         </div>
       </Camera>
       <AbsoluteFill style={{ zIndex: Z.overlay, pointerEvents: "none" }}>
+        {/* The camera is not pushed until a3_53, so screen space is chain
+            space while the pointer plays. Always mounted: it returns null
+            outside its window after its one hook. */}
+        <RowPointer from={growFrom} to={growTo} />
         {!pushed
           ? S21_LABELS.map((l, i) => (
               <ChainLabel

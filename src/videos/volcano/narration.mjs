@@ -138,8 +138,8 @@
 // open, `a1` downstairs, `a2` the loud part, `a3` the newest place in the
 // world, `rc` recap. The screenplay in `script.md` lists which keys each of
 // the thirty-one scenes consumes; the two files must be edited together.
-// 189 spoken lines: 177 recordings, 12 `sameAs` aliases, 4 of the recordings
-// cache-migrated.
+// 190 spoken lines: 178 recordings, 12 `sameAs` aliases, 4 of the recordings
+// cache-migrated. (a3_49b_narrator added 2026-10-17, the island tweak.)
 //
 // TEXT-TO-SPEECH RULES OBSERVED HERE
 //   - No digits, no percent signs, no ellipses, no stretched vowels, no
@@ -788,6 +788,16 @@ export default {
     // EROSION, earned.
     a3_49_narrator: {
       text: "Look down the chain of islands. It is the whole story, standing in a row.",
+      ...NARRATOR,
+    },
+    // 2026-10-17 tweak, showrunner ruling (Fable; ep5-decision-log.md, top
+    // entry). Kids' hub feedback: Math (8) asked "Are there multiple islands
+    // or just one island going through different times" — the honest answer
+    // is BOTH, and the cut only implied it. Wording final. Speed 1.0, not the
+    // 0.92 flat: both neighbours (a3_49, a3_50) run at the house 1.0, so it
+    // matches them. "Yesterday" is deliberate — it sets up a3_55.
+    a3_49b_narrator: {
+      text: "Lots of islands, and one volcano. He made the newest one yesterday, and the oldest one long, long ago. So walking down the row is like watching one island grow up.",
       ...NARRATOR,
     },
     a3_50_narrator: {
