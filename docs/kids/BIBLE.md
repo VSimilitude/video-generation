@@ -602,3 +602,11 @@ photosynthesis (Sunny's peak), ep 5 = volcano wakes (Claire's
 commissioned episode)** — and its guardrails (hero-arc separation, the
 soil bridge, Rock's return, the volcano voice) live in
 `docs/roles/audience.md`, "Series arc canon". Read it with this file.
+
+**Kid pitch, unratified (Math, 8, via the hub, 2026-10-19), on
+DripAgain's race:** "the lava drip races should be a new character that
+looks like [Ember], but is a bit smaller … the name is a little [Ember] and
+then little [Ember] will turn into little obsidian." The dictation said
+"Amber"; Ember is ep 5's hero, whose canon is not folded into this file yet.
+Pitch, not canon: a Little Ember who becomes Little Obsidian when the lava
+hits the pond. Mike has not ruled; do not build it unasked.

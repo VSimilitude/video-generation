@@ -36,6 +36,22 @@ for readings taken just after a floored boundary — when the previous
 window died at the session limit, trust the API kill message's reset time
 over ccusage.
 
+## 2026-10-19 — hub feedback round 3: ep-2 bug pass (IN FLIGHT)
+Source: `npm run feedback` in kids-hub, 2026-10-19 00:48–01:22, all Math
+(8): eight notes on `PuffWind` (bubble tails pointing wrong episode-wide,
+dandelion seeds unanchored, birds drawn under background / static on the
+beach, Puff jittering at Cloudia's first entrance, dandelion floating
+before her second, Sunny's roll-call "Wait. What?" with no setup), one on
+DripChooses' rain exit (`ra_02_drip`), one 🤩 pitch on DripAgain (Little
+Ember → Little Obsidian; logged in BIBLE.md §5, unratified). Brief with the
+verbatim notes: **src/videos/wind/bugpass-brief.md**. Showrunner spawned
+by the orchestrator; reports + decision log land in
+scratchpad/feedback-2026-10-19/. Orchestrator commits by explicit path on
+landing, then deploys from a clean worktree and updates the hub if needed.
+
+Campaign state (showrunner keeps this current):
+- (not started)
+
 ## 2026-10-18 — DripAgain, the sequel CYOA (SHIPPED: commit 87f9b37, deployed to gh-pages; hub tile live)
 Source: the hub's second feedback round — Math (8) re-rated the expanded
 DripChooses 🙂 Fun! and pitched a sequel (Drip goes up again; Cloudia away
@@ -67,11 +83,11 @@ overturn list above. Note: the hub's `/videos` proxy serves GitHub Pages
 through Cloudflare's cache, so a fresh gh-pages deploy can take ~10 min to
 show at kthanks.com, and the proxied cache-control says max-age=14400.
 
-## 2026-10-17 — the hub feedback round (UNCOMMITTED on main, awaiting Mike's "push it")
+## 2026-10-17 — the hub feedback round (COMMITTED 53a9bdc…d677f95, deployed 2026-10-18)
 Source: the family hub's first feedback round (Math, 8). Retro entry at the
-top of docs/LEARNINGS.md; bible world rules 15–16 added. Four changes sit
-in the working tree, all gated (typecheck, lint:hooks, site build, full
-every-frame renders), none committed, none deployed:
+top of docs/LEARNINGS.md; bible world rules 15–16 added. Four changes,
+all gated (typecheck, lint:hooks, site build, full every-frame renders),
+committed and live; ear checks still pending:
 - **Ep 4 chant** (src/videos/plants): the five hero syllable clips are
   replaced by five Narrator kokoro clips `a3_65`–`a3_69_narrator` (0.92),
   spaced by computed `chantGaps()`; recap `rc_07`–`rc_11` alias them;
