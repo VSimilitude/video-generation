@@ -11,6 +11,9 @@ family screening.
 - **Math (8)**: mind-blower channel. Sahara→Amazon fact sent him researching;
   true/checkable facts pay off. Gives precise notes ("Probably" > "Yes." —
   adopted, credited).
+  2026-10-18 (via Mike, who agrees): wants the fun-fact/mind-blower in
+  EVERY episode (CYOA shorts exempt) and more myth-busts — now bible world
+  rules 17 and 18.
 - **Mike**: full-context reviewer; catches physics-intuition breaks (Indigo
   pitch must go UP — bouncier = higher), visual-grammar problems (single
   motion trails read as sperm → always two offset lines), arc pacing (Sunny's

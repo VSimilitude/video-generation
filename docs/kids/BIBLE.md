@@ -572,6 +572,26 @@ what a script may not break.
     Narrator states it in one sentence of plain words; an implied
     conclusion ("It is the whole story, standing in a row.") is a riddle
     to an attentive 8-year-old, not a lesson (ep-5 Scene 21, 2026-10-17).
+17. **The fun fact is mandatory** (Math via Mike, 2026-10-18). Every canon
+    episode's recap keeps the mind-blower slot, and that slot must hold at
+    least one true, checkable, real-world fact at the Sahara→Amazon standard
+    (ep 2 Sc 35): about the world outside the room, big in scale, something
+    the kid can go and look up. The Narrator states it plainly; awe is held
+    in silence before any button. A fact about the viewer ("your bath",
+    "your next breath") is a fine second beat but does not discharge the
+    rule on its own. House opener: "Now here is the amazing part." (eps 2,
+    3). CYOA shorts are exempt. Ledger: ep 1 dinosaur puddle; ep 2
+    Sahara→Amazon; ep 3 black midday sky on the Moon; ep 4 oxygen in your
+    next breath + tree mass from air; ep 5 ground-up mountains + the K
+    island. All five already comply — no retrofit.
+18. **Aim for one myth-bust per episode** (Math via Mike, 2026-10-18). The
+    MYTH stamp (born ep 1 Sc 14 "clouds are not pillows"; fired twice in
+    ep 3 Sc 15–16 "it is not the sea" / "show us the paint") is a house
+    device the 8-year-old asked for more of. Eps 2, 4 and 5 have none.
+    Every episode brief names the real kid misconception its subject
+    invites and busts it on the stamp — a genuine misconception, never a
+    straw man, and the correction stays a gift (rule 11). Forward-only:
+    shipped episodes are not retrofitted.
 
 ---
 
