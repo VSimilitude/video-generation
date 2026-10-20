@@ -48,15 +48,23 @@ const S1_CLOUDIA = { x: 1380, y: stand("cloudia", S22_FLOOR) };
 const S1_CLOUDIA_SCALE = 0.95;
 const S1_LEVER = { x: 1660, y: S22_FLOOR };
 
+/** Where in `ra_02_drip` ("Oh, no. Yippee!") the fall starts: just before "Yippee". */
+const DROP_AT_PROGRESS = 0.53;
+
 const S1_BUBBLES: Record<string, string> = {
   ra_01_cloudia: "Everybody OUT! There is no floor.",
-  ra_02_drip: "Ohhhh nooooo. WHEEE!",
+  ra_02_drip: "Ohhh nooo. YIPPEE!",
 };
 
 const DropScene: React.FC<SceneProps> = ({ scene }) => {
   const frame = useCurrentFrame();
   const [outFrom, outTo] = lineWindow(scene, "ra_01_cloudia");
-  const [dropAt] = lineWindow(scene, "ra_02_drip");
+  // He hangs over the hole through "Oh, no." and drops on "Yippee": the take's
+  // second word starts ~57% in, so the fall starts just ahead of it and the
+  // delighted word lands while he is still in frame, mid-drop. Audio-driven —
+  // a recut of ra_02 moves the drop with it.
+  const [shoutFrom, shoutTo] = lineWindow(scene, "ra_02_drip");
+  const dropAt = Math.round(shoutFrom + (shoutTo - shoutFrom) * DROP_AT_PROGRESS);
 
   // She hauls on "Mind the gap", and the floor goes on "There is no floor."
   const pull = clamp01((lineProgress(scene, "ra_01_cloudia", frame) - 0.3) / 0.4);
@@ -118,8 +126,9 @@ const DropScene: React.FC<SceneProps> = ({ scene }) => {
         scene={scene}
         cast={cast}
         text={S1_BUBBLES}
-        // Shouted on the way down: the bubble stays over the hole.
-        at={{ ra_02_drip: { x: 700, y: 470, tail: "right", tailAt: S1_DRIP.x } }}
+        // Shouted while he hangs over the hole, then on the way down: parked
+        // up and to his right, clear of his head, tail aimed back at the hole.
+        at={{ ra_02_drip: { x: 1150, y: 405, tail: "left", tailAt: S1_DRIP.x } }}
       />
     </AbsoluteFill>
   );

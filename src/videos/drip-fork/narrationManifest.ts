@@ -50,7 +50,7 @@ export const NARRATION: Record<string, NarrationClip> = {
   "in_06_drip": { file: "narration/drip-fork/in_06_drip.mp3", durationSeconds: 3.25 },
   "in_07_narrator": { file: "narration/drip-fork/in_07_narrator.mp3", durationSeconds: 2.65 },
   "ra_01_cloudia": { file: "narration/drip-fork/ra_01_cloudia.mp3", durationSeconds: 4.375 },
-  "ra_02_drip": { file: "narration/drip-fork/ra_02_drip.mp3", durationSeconds: 1.925 },
+  "ra_02_drip": { file: "narration/drip-fork/ra_02_drip.mp3", durationSeconds: 2.025 },
   "ra_03_narrator": { file: "narration/drip-fork/ra_03_narrator.mp3", durationSeconds: 7.975 },
   "ra_04_drip": { file: "narration/drip-fork/ra_04_drip.mp3", durationSeconds: 5 },
   "ra_05_narrator": { file: "narration/drip-fork/ra_05_narrator.mp3", durationSeconds: 3.125 },

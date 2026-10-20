@@ -68,8 +68,11 @@
 //     six sentences of build.
 //   - `ho_06_cloudia` "And, oh my." — a two-syllable aside between commas;
 //     check bf_emma gives it a beat rather than running it into "We are FULL".
-//   - `ra_02_drip` "Ohhhh nooooo. WHEEE!" — stretched vowels; check kokoro
-//     holds them rather than spelling the letters.
+//   - `ra_02_drip` was "Ohhhh nooooo. WHEEE!": kokoro af_bella does not
+//     stretch, and every spelling of "whee" came out as a flat "we" (Whisper:
+//     "Oh, no, we." — an 8-year-old heard "oh Noah, weE"). Recut 2026-10-19 as
+//     "Oh, no. Yippee!", which transcribes clean; the bubble keeps the print
+//     stretch. Old take: scratchpad/feedback-2026-10-19/ra_02_drip.OLD.mp3.
 //   - Each variant pair (`ho_01a/b`, `st_02a/b`, `en_04a/b`, `en_05a/b`,
 //     `en_06a/b`) must feel like the SAME beat in two flavours. They are heard
 //     in the same slot on different watches, so compare them back to back for
@@ -206,7 +209,7 @@ export default {
       text: "Everybody OUT! Mind the gap, darling. There is no floor.",
       ...CLOUDIA,
     },
-    ra_02_drip: { text: "Ohhhh nooooo. WHEEE!", ...DRIP },
+    ra_02_drip: { text: "Oh, no. Yippee!", ...DRIP },
     ra_03_narrator: {
       text: "Down he went. Rain is the fast way. The best waterslide ever built, and it goes all the way from the sky to the ground.",
       ...NARRATOR,
