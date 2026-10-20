@@ -370,8 +370,12 @@ const SunnyAgainScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cast={cast}
         text={S12_BUBBLES}
         at={{
-          a2_02_sunny: { x: 470, y: 250, tail: "right" },
-          a2_05_sunny: { x: 470, y: 250, tail: "right" },
+          // Up level with his face, as high as a bubble goes, and pushed in
+          // against his rays so the tail's tip lands *on* him. It used to sit
+          // lower in the corner with its tail pointing down into empty sky —
+          // hub round 3, note #2, "Good morning … pointing to the wrong place".
+          a2_02_sunny: { x: 580, y: 170, tail: "right", tailAt: 860 },
+          a2_05_sunny: { x: 580, y: 170, tail: "right", tailAt: 860 },
         }}
       />
     </AbsoluteFill>
@@ -562,7 +566,15 @@ const RockScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       </Camera>
       {/* The rock gets no bubble. Its bubble would still be shrinking six
           frames into the silence, and after that line the rock is furniture. */}
-      <Bubbles scene={scene} cast={{ puff: projectMark(cam, puffMark) }} text={S13_BUBBLES} />
+      <Bubbles
+        scene={scene}
+        cast={{ puff: projectMark(cam, puffMark) }}
+        text={S13_BUBBLES}
+        // The bubble sits up and to his left; its tail leaves the corner nearest
+        // him and points down at his crown. The default tail (the far corner,
+        // pointing right) aimed at the rock — hub round 3, note #3.
+        at={{ a2_09_puff: { tail: "left", tailAt: projectMark(cam, puffMark).x + 50 } }}
+      />
     </AbsoluteFill>
   );
 };
@@ -890,8 +902,12 @@ const GroundHeatsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // pointed at by one; proximity and the moving crayon mouth do the
           // pointing instead. Both of his lines sit on the same mark, so the
           // second reads as the same speaker carrying on.
-          a2_11b_sunny: { x: 640, y: 468, tail: "none" },
-          a2_12b_sunny: { x: 640, y: 468, tail: "none" },
+          //
+          // REVISED 2026-10-19 (hub round 3, note #3): a tailless bubble under
+          // him read as nobody's. It now sits beside him, as high as a bubble
+          // goes, with its tail's tip on his lower-right rays.
+          a2_11b_sunny: { x: 760, y: 170, tail: "left", tailAt: 450 },
+          a2_12b_sunny: { x: 760, y: 170, tail: "left", tailAt: 450 },
         }}
       />
     </AbsoluteFill>
@@ -1004,7 +1020,37 @@ function riseAt(f: number): number {
  * rather than guessing; a stale number here shows up as the world jumping at
  * the cut into Scene 16.
  */
-const S15_RISE_END = riseAt(874);
+const S15_FRAMES = 874;
+const S15_RISE_END = riseAt(S15_FRAMES);
+
+/**
+ * Puff's own path through Scene 15 — position (pre-`hover`) and bank — as a
+ * pure function of the scene frame, so Scene 16 can pick him up exactly where
+ * Scene 15 cuts away from him (`upPuffPose(S15_FRAMES)`). The two scenes used
+ * to disagree by ~200px and 0.4 of scale at the cut, which is half of the
+ * "teleports backwards" note (hub round 3, 2026-10-19).
+ */
+function upPuffPose(frame: number): { x: number; y: number; bank: number } {
+  // Wobble, then bob, then off.
+  const wobble = frame > 40 && frame < LIFT_AT ? Math.sin((frame - 40) * 0.42) * (frame - 40) * 0.5 : 0;
+  const bob = frame >= 70 && frame < LIFT_AT ? kidEase.easeInOutSine((frame - 70) / 38) * 46 : 0;
+  // His own path through the frame: away up and to the right on an arc, then a
+  // slow weave. `moveAlong` gives the heading as well, and the horizontal part
+  // of that heading is what he banks into.
+  const climb = moveAlong(
+    { x: 900, y: 760 },
+    { x: 1030, y: 430 },
+    (frame - LIFT_AT) / 150,
+    { arc: 0.22, ease: kidEase.easeOutSine },
+  );
+  const weave = Math.sin((frame - LIFT_AT) / 40) * 70;
+  if (frame < LIFT_AT) return { x: 900 + wobble, y: 760 - bob, bank: wobble * 0.3 };
+  return {
+    x: climb.x + weave * 0.4,
+    y: climb.y,
+    bank: (climb.angle + 90) * 0.4 + Math.sin((frame - LIFT_AT) / 40) * 5,
+  };
+}
 
 const WARM_PUFFS = 42;
 
@@ -1088,12 +1134,19 @@ const RisingWorld: React.FC<{
           <path d="M 1560 240 l 0 1300 M 1660 300 l 0 1200" stroke="#8f6538" strokeWidth={9} opacity={0.7} />
         </WideLayer>
       </div>
-      {/* Birds, higher up: we go past them too. */}
-      <div style={{ position: "absolute", inset: 0, transform: `translateY(${rise * 0.42}px)` }}>
+      {/* Birds, higher up: we go past them too.
+          FIXED 2026-10-19 (hub round 3, note #4 — birds "partly there and
+          partly not"). They were drawn at y≈-520…-660, right on and past the
+          top edge of the wide layer's box (WIDE.y = -600): an <svg> clips to
+          its own viewport, so one bird never rendered at all and another lost
+          its wing tips on every flap. Same trick as the high cloud band below:
+          draw them BIRD_LIFT lower, inside the box, and lift the layer back up
+          by the same amount, so they land on screen exactly where they did. */}
+      <div style={{ position: "absolute", inset: 0, transform: `translateY(${rise * 0.42 - BIRD_LIFT}px)` }}>
         <WideLayer>
           {[0, 1, 2, 3].map((i) => {
             const x = 240 + i * 430 + Math.sin(t * 0.5 + i) * 40;
-            const y = -520 - ((i * 137) % 200);
+            const y = BIRD_LIFT - 520 - ((i * 137) % 200);
             const flap = Math.sin(t * 6 + i * 1.4) * 22;
             return (
               <path
@@ -1252,26 +1305,13 @@ const UpScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
   const rise = riseAt(frame);
 
-  // Wobble, then bob, then off. The grass is blown down and away underneath
-  // him on the way out, and settles once he is clear.
-  const wobble = frame > 40 && frame < LIFT_AT ? Math.sin((frame - 40) * 0.42) * (frame - 40) * 0.5 : 0;
-  const bob = frame >= 70 && frame < LIFT_AT ? kidEase.easeInOutSine((frame - 70) / 38) * 46 : 0;
+  // The grass is blown down and away underneath him on the way out, and
+  // settles once he is clear.
   const lift = Math.max(0, frame - LIFT_AT);
   const grassWind = STILL_AIR + 0.85 * Math.max(0, 1 - Math.abs(lift - 6) / 34);
 
-  // His own path through the frame: away up and to the right on an arc, then a
-  // slow weave. `moveAlong` gives the heading as well, and the horizontal part
-  // of that heading is what he banks into.
-  const climb = moveAlong(
-    { x: 900, y: 760 },
-    { x: 1030, y: 430 },
-    (frame - LIFT_AT) / 150,
-    { arc: 0.22, ease: kidEase.easeOutSine },
-  );
-  const weave = Math.sin((frame - LIFT_AT) / 40) * 70;
-  const px = frame < LIFT_AT ? 900 + wobble : climb.x + Math.max(0, frame - LIFT_AT - 150) * 0 + weave * 0.4;
-  const py = frame < LIFT_AT ? 760 - bob : climb.y;
-  const bank = frame < LIFT_AT ? wobble * 0.3 : (climb.angle + 90) * 0.4 + Math.sin((frame - LIFT_AT) / 40) * 5;
+  // Wobble, then bob, then off — see `upPuffPose`.
+  const { x: px, y: py, bank } = upPuffPose(frame);
 
   // Frightened for a second, and then delighted for the rest of the episode.
   // The turn is staged in the *gaps*: `scared` lands while he is silent (the
@@ -1448,6 +1488,27 @@ function hotelYAt(f: number, speaksAt: number): number {
 // not working.
 const HOTEL_Z = 44;
 
+/** Scene 15's birds are drawn this far down the wide layer (see RisingWorld). */
+const BIRD_LIFT = 400;
+
+/**
+ * Puff's mark, under the right-hand end of the banner (see RuleScene).
+ *
+ * MOVED 2026-10-19 (hub round 3, round 2 of note #5): it used to be on the
+ * arrow's shaft at x=952, which is exactly where Cloudia's two bubbles ride
+ * down beside her hotel — "No vacancies, darling!" sat on top of him for the
+ * whole line, and to the kid a hero who vanishes is another teleport. Out
+ * here he is clear of every bubble, the banner and the hotel on every frame.
+ */
+const S16_RIDE = { x: 1560, y: 620, scale: 0.62 };
+/**
+ * Frames to glide from Scene 15's last position onto that mark. Long on
+ * purpose: the mark is ~190px lower on screen than where Scene 15 leaves him,
+ * and over 70 frames that is about the speed the scenery is already falling
+ * past, so he reads as keeping pace with the climb rather than sinking.
+ */
+const S16_SETTLE = 70;
+
 const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const stage = useStage(scene);
@@ -1459,17 +1520,26 @@ const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const stampAt = Math.round(ruleFrom + (ruleTo - ruleFrom) * 0.28);
   const rise = S15_RISE_END + RISE_SPEED * frame;
 
-  // He rides the arrow: the same 60-frame climb the stamp's own arrows run on,
-  // hand-tuned against a still of the landed stamp.
-  // He rides the shaft of the arrow *below* the banner, on the same
-  // sixty-frame climb the stamp's own arrows run on. Hand-tuned against a
+  // He rides the shaft of the arrow *below* the banner. Hand-tuned against a
   // still: any higher and the banner is sitting across his face.
-  const loop = ((frame / 60) % 1 + 1) % 1;
-  const rideY = 760 - loop * 250;
-  const rideFade = Math.sin(loop * Math.PI);
-  const px = 952;
-  const scale = 0.62;
-  const puffY = hover("puff", frame >= stampAt ? rideY : 640, scale);
+  //
+  // FIXED 2026-10-19 (hub round 3, note #5 — "Puff starts to teleport
+  // backwards a bunch of times"). He used to ride a 60-frame *sawtooth* (760 up
+  // to 510, then snap back to 760, with only a 0.72 opacity dip to hide the
+  // wrap), so every two seconds he jumped 250px back down the arrow; he also
+  // jumped from 640 onto the sawtooth when the stamp landed, and the cut in
+  // from Scene 15 moved him ~200px and shrank him from 1.05 to 0.62 in one
+  // frame. Now: he starts exactly where Scene 15 left him, glides onto the
+  // ride mark before the stamp lands, and then holds it with a gentle bob on
+  // the arrow's own 60-frame rhythm. The world still climbs past him
+  // (`RisingWorld`), so he is still visibly going up.
+  const handoff = upPuffPose(S15_FRAMES);
+  const settle = kidEase.easeInOutSine(Math.min(1, frame / S16_SETTLE));
+  const rideBob = Math.sin((frame / 60) * Math.PI * 2) * 12 * settle;
+  const px = handoff.x + (S16_RIDE.x - handoff.x) * settle;
+  const scale = 1.05 + (S16_RIDE.scale - 1.05) * settle;
+  const bank = handoff.bank * (1 - settle);
+  const puffY = hover("puff", handoff.y + (S16_RIDE.y - handoff.y) * settle + rideBob, scale);
 
   const emotion = useEmotion(
     scene,
@@ -1533,10 +1603,11 @@ const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         x={px}
         y={puffY}
         scale={scale}
-        opacity={PUFF_OPACITY.afterAir * (frame >= stampAt ? 0.72 + 0.28 * rideFade : 1)}
+        opacity={PUFF_OPACITY.afterAir}
         phase={PHASE.puff}
         emotion={emotion}
         speaking={stage.speaking("puff")}
+        bank={bank}
         look={watching && hotelLive ? lookAt({ x: px, y: puffY }, { x: HOTEL_X, y: hotelY }) : "camera"}
         idle={1.1}
         wisps={2}
@@ -1553,13 +1624,18 @@ const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         // has a full-width banner parked across the frame for its whole length.
         zIndex={60}
         at={{
-          a2_21_puff: { x: 1330, y: 810, tail: "left" },
-          a2_21c_puff: { x: 1400, y: 560, tail: "right", tailAt: px },
+          // Up and to his left, tail tip at his side. (Was below him with the
+          // tail pointing away, and `a2_21c` had a right-hand tail aimed
+          // left — hub round 3, note #3.) Up-left rather than up-right because
+          // his mark is near the right edge, where a bubble has no room.
+          a2_21_puff: { x: px - 360, y: 505, tail: "right", tailAt: px - 150 },
+          a2_21c_puff: { x: px - 360, y: 505, tail: "right", tailAt: px - 150 },
           // Her bubbles ride down with her rather than sitting at a fixed mark:
           // she is a moving layer, and a bubble that stayed put while its
           // speaker descended past it would read as somebody else's.
           a2_21b_cloudia: {
-            x: 1120,
+            // 1060 (was 1120) so its right edge clears Puff's mark (round 2).
+            x: 1060,
             // Beside her rather than over her: the banner is parked where her
             // headroom would be, so the bubble rides at her own height and the
             // tail reaches back down-left to find her.
@@ -1568,7 +1644,8 @@ const RuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             tailAt: HOTEL_X + 40,
           },
           a2_21d_cloudia: {
-            x: 1120,
+            // 1060 (was 1120) so its right edge clears Puff's mark (round 2).
+            x: 1060,
             // Beside her rather than over her: the banner is parked where her
             // headroom would be, so the bubble rides at her own height and the
             // tail reaches back down-left to find her.
@@ -1881,7 +1958,9 @@ const BigEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   // beat: the only thing on screen inside the 24f is the hole not answering.
   const dropIn = kidEase.easeOutCubic((frame - (gapFrom + 74)) / 34);
   const puffScale = 0.34;
-  const puffY = hover("puff", -180 + dropIn * 350, puffScale);
+  // Drops to 290 (was 170): low enough that a bubble level with him fits
+  // under the top of frame, so its tail can reach him (hub round 3, note #3).
+  const puffY = hover("puff", -180 + dropIn * 470, puffScale);
   // Round to face the hole: he comes in facing out of frame and turns back.
   const turn = kidEase.easeInOutSine((frame - (sorryFrom - 22)) / 26);
   const calling = frame >= sorryFrom - 10 && frame < sorryTo + 4;
@@ -1967,7 +2046,17 @@ const BigEmptyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // Beside him rather than above: he is at the top of frame and there
           // is no headroom left. The tail is aimed back at his own x so it is
           // unmistakably his, not the Narrator's.
-          a2_25_puff: { x: 1010, y: Math.max(180, puffY - 40), tail: "right", tailAt: puffMark.x },
+          //
+          // REVISED 2026-10-19 (hub round 3, note #3): the mark is projected
+          // through the camera now (it was not, so the tail aimed ~80px wide of
+          // him), and the bubble sits level with him so the tail's tip lands
+          // on his left side instead of in the grass under him.
+          a2_25_puff: {
+            x: projectMark(cam, puffMark).x - 330,
+            y: projectMark(cam, puffMark).y - 80,
+            tail: "right",
+            tailAt: projectMark(cam, puffMark).x - 110,
+          },
         }}
       />
       {/* Nothing else is on screen between beatFrom and the next line. That is
@@ -2035,7 +2124,10 @@ const FwooshScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         scene={scene}
         cast={{ puff: puffMark }}
         text={S18_BUBBLES}
-        at={{ a2_29_puff: { x: 1064, y: 190, tail: "right" } }}
+        // One line, level with him, tail tip at his left side: he is at the
+        // top of frame, so "above" is not available (hub round 3, note #3).
+        maxWidth={1100}
+        at={{ a2_29_puff: { x: 900, y: 170, tail: "right", tailAt: puffMark.x - 110 } }}
       />
       {/* A hair of speed on the frame as the wall of air goes through. */}
       {rushU > 0 && rushU < 1.4 ? (

@@ -1390,9 +1390,14 @@ fall until the beat is nearly over, or the reaction pre-empts the joke.
 realising he had been contradicted; it is now a man unable to work out whether
 he has just been complimented.
 
-> **SUNNY:** Wait. What?
+> ~~**SUNNY:** Wait. What?~~
 
-**HELD BEAT — 30f (1.0s) after `rc_16_sunny`.**
+> **CUT 2026-10-19 (hub round 3, note #8; showrunner ruling).** `rc_16_sunny`
+> and the 45f beat in front of it are gone: an eight-year-old heard Sunny say
+> "what" for no reason — the silence was carrying the whole dawning and did not
+> read. Sunny stays proud through the sign-off; a 30f breath after
+> `rc_15_narrator` replaces the two beats. Old take kept at
+> `scratchpad/feedback-2026-10-19/rc_16_sunny.mp3`.
 
 > **PUFF:** Bye! You can't see me. But you can FEEL me.
 

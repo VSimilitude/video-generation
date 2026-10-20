@@ -1195,18 +1195,16 @@ export default {
     // non-verdict: a returning viewer can read it either way, which is exactly
     // the state episode three wants them in. Kokoro, so it is free and re-times
     // the episode by about a second and a half.
-    // `rc_16_sunny` ("Wait. What?") is UNCHANGED and gets funnier: he cannot
-    // tell whether that was a compliment.
+    // (`rc_16_sunny`, "Wait. What?", was CUT 2026-10-19 — see below.)
     rc_15_narrator: {
       text: "Sunny has a theory. It is a very Sunny theory.",
       ...NARRATOR,
       speed: 0.9,
     },
-    // Scene 36: "Sunny holds his pose while the sentence catches up with him."
-    // The whole joke is the delay and then the dawning — the one line in two
-    // episodes where he is not sure of himself. Kokoro carries no emotion, so
-    // the dawning is entirely the 45f beat in front of it and his face.
-    rc_16_sunny: { text: "Wait. What?", ...SUNNY },
+    // `rc_16_sunny` ("Wait. What?") CUT 2026-10-19, with the 45f beat in
+    // front of it (hub round 3, note #8 — the kid heard Sunny say "what" for
+    // no reason; the beat was carrying the whole dawning and did not). The old
+    // take is at scratchpad/feedback-2026-10-19/rc_16_sunny.mp3.
     // Scene 36: the catchphrase's third and last firing, waving from the corner
     // of the episode-three card. The sign-off, and he is at full opacity.
     rc_17_puff: {

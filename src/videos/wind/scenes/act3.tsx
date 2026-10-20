@@ -231,7 +231,16 @@ const BeachWorld: React.FC<{ swell?: number; foam?: number }> = ({
   );
 };
 
-/** Gulls, hanging motionless — there is no wind here until Puff arrives. */
+/**
+ * Gulls, lazily flapping over the bay.
+ *
+ * REVISED 2026-10-19 (hub round 3, note #6 — "the birds are not moving and
+ * that just kind of looks weird"). They used to hang dead still with a 6px
+ * bob, as a "no wind yet" note; to an eight-year-old that read as a frozen
+ * picture. They now get the same scenery-grade life as Scene 15's birds — a
+ * slow wingbeat and a lazy drift either side of their spot — at a gentler
+ * rate, so they still don't say "wind".
+ */
 const Gulls: React.FC<{ lift?: number }> = ({ lift = 0 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -243,12 +252,15 @@ const Gulls: React.FC<{ lift?: number }> = ({ lift = 0 }) => {
         [640, 130, 0.8],
         [1520, 226, 0.9],
       ].map(([x, y, s], i) => {
-        const bob = Math.sin(t * 0.7 + i) * 6 + lift * -40;
+        const bob = Math.sin(t * 0.7 + i) * 10 + lift * -40;
+        const drift = Math.sin(t * 0.35 + i * 2.1) * 36;
+        // Wing tips up and down, about one beat a second; the body stays put.
+        const flap = Math.sin(t * 6.5 + i * 1.9) * 14;
         return (
           <path
             key={i}
-            transform={`translate(${x} ${(y as number) + bob}) scale(${s})`}
-            d="M -46 0 q 24 -22 46 0 q 22 -22 46 0"
+            transform={`translate(${(x as number) + drift} ${(y as number) + bob}) scale(${s})`}
+            d={`M -46 ${flap} q 24 -22 46 0 q 22 -22 46 ${flap}`}
             stroke={kidTheme.inkSoft}
             strokeWidth={7}
             strokeLinecap="round"
@@ -616,7 +628,11 @@ const HotSandCoolSeaScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           // Low enough to clear his mouth at full lean — a bubble across the
           // one thing on screen that is moving in sync with the clip is the
           // mouth-sync cue lost.
-          a3_09b_sunny: { x: 960, y: 596, tail: "none" },
+          //
+          // REVISED 2026-10-19 (hub round 3, note #3): tailless read as
+          // nobody's. Now up beside him on the sea side, clear of his mouth,
+          // with the tail's tip on his rays.
+          a3_09b_sunny: { x: 1250, y: 250, tail: "left", tailAt: 1080 },
         }}
       />
     </AbsoluteFill>
@@ -1063,13 +1079,22 @@ const BigWordSeaBreezeScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           a3_19_sunny: "I make the beach windy!",
         }}
         at={{
-          a3_18_puff: { x: 760, y: 730, tail: "left" },
+          // Raised to sit above him now the bubbles are one line each (see
+          // maxWidth below), tail tip on his crown.
+          a3_18_puff: { x: 760, y: 620, tail: "left", tailAt: 460 },
           // Tailless, and directly under him. A bubble tail leaves the bottom
           // edge, so a character leaning in from the *top* of frame cannot be
           // pointed at by one — and a tail aimed anywhere else would read as
           // Puff's line, which is the only other bubble in the scene.
-          a3_19_sunny: { x: 1400, y: 630, tail: "none" },
+          //
+          // REVISED 2026-10-19 (hub round 3, note #3): now level with him,
+          // above the card, tail tip on his left rays.
+          a3_19_sunny: { x: 990, y: 170, tail: "right", tailAt: 1380 },
         }}
+        // One line each, so Sunny's bubble fits above the card rather than
+        // across its lettering, and stacked over the card's own layer.
+        maxWidth={1000}
+        zIndex={60}
       />
     </AbsoluteFill>
   );
@@ -2014,13 +2039,19 @@ const DandelionHillside: React.FC<{ from: number; beat: [number, number] }> = ({
           {Array.from({ length: 15 }, (_, row) =>
             Array.from({ length: 26 }, (_, col) => {
               const depth = row / 14;
-              const y = 660 + depth * 620 + ((col * 37) % 26);
+              // FIXED 2026-10-19 (hub round 3, note #7 — dandelions "in weird
+              // spots like on air"). The back rows used to start at y=660,
+              // which put tiny flowers on the painted *far* fields, hedges and
+              // tree tops across the valley, where they read as floating. The
+              // meadow now starts on the near slope (y≈830 on the plate) and
+              // stops there; the far rows are a touch bigger to match.
+              const y = 830 + depth * 530 + ((col * 37) % 26);
               // Jitter per cell, not per row: an offset that only varies with
               // the row turns a meadow into a set of diagonal stripes, which is
               // exactly what the first pass looked like.
               const x =
                 -900 + col * 150 + ((row * 91 + col * 173) % 130) + depth * 40 + ((row * col * 53) % 47);
-              const s = 0.3 + depth * 1.1;
+              const s = 0.42 + depth * 0.98;
               const nod = Math.sin(t * 0.9 + row * 0.7 + col * 0.35) * 5 * s;
               return (
                 <g key={`${row}-${col}`} transform={`translate(${x + nod} ${y}) scale(${s})`}>

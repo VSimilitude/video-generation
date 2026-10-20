@@ -199,6 +199,12 @@ const CreatureBeat: React.FC<{
     side: "left",
   };
   const cast: Cast = { puff: puffMark, [creature]: creatureMark };
+  const creatureBubble = {
+    x: 1250,
+    y: creature === "leaf" ? 170 : 230,
+    tail: "right" as const,
+    tailAt: CREATURE_X - 20,
+  };
 
   // --- the gag, staged.
   //
@@ -314,7 +320,18 @@ const CreatureBeat: React.FC<{
           ]}
         />
       </Camera>
-      <Bubbles scene={scene} cast={cast} text={bubbles} visual={visual} />
+      <Bubbles
+        scene={scene}
+        cast={cast}
+        text={bubbles}
+        visual={visual}
+        // The creature's two lines sit *above* it, between it and Puff, with
+        // the tail's tip on its crown. The default placement was squeezed
+        // against the right edge of frame (an absolutely-placed bubble shrinks
+        // to the room it has), grew to three lines and sat on the creature's
+        // face with the tail in its eye — hub round 3, note #3.
+        at={{ [keys.ask]: creatureBubble, [keys.dismiss]: creatureBubble }}
+      />
     </AbsoluteFill>
   );
 };
@@ -588,9 +605,12 @@ const Dandelion: React.FC<{ x: number; y: number; blow: number }> = ({ x, y, blo
   const headR = 190;
   return (
     <WideLayer>
-      {/* Stem and leaves. */}
+      {/* The stem runs all the way up into the receptacle. It used to stop
+          170px short (at the bottom edge of the seed ball, which hid the gap),
+          so once the seeds blew off the bare head floated over the end of its
+          own stem — hub round 3, note #1, "not connected to anything". */}
       <path
-        d={`M ${x - 10} ${GROUND + 40} Q ${x + 60} ${y + 400} ${x} ${y + headR - 20}`}
+        d={`M ${x - 10} ${GROUND + 40} Q ${x + 60} ${y + 400} ${x} ${y + 20}`}
         stroke={kidTheme.grassDark}
         strokeWidth={26}
         strokeLinecap="round"

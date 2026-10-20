@@ -861,15 +861,9 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const wave = Math.sin(frame / 5) * 10;
 
   const stage = useStage(scene);
-  // Emotion lead 0, as scripted: his face must not fall until "Wait. What?"
-  // itself, or the reaction pre-empts the joke inside the 45-frame beat.
-  const sunnyEmotion = useEmotion(
-    scene,
-    "sunny",
-    { rc_14_sunny: "proud", rc_16_sunny: "amazed" },
-    "proud",
-    NO_LEAD,
-  );
+  // Proud through the sign-off. ("Wait. What?" and its face-fall were cut
+  // 2026-10-19 — hub round 3, note #8.)
+  const sunnyEmotion = useEmotion(scene, "sunny", { rc_14_sunny: "proud" }, "proud", NO_LEAD);
 
   const puffY = hover("puff", S36_PUFF.y, S36_PUFF.scale);
   const cast: Cast = {
@@ -1006,12 +1000,10 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cast={cast}
         text={{
           rc_14_sunny: "That one is me as well!",
-          rc_16_sunny: "Wait. What?",
           rc_17_puff: "Bye! You can't see me.",
         }}
         at={{
           rc_14_sunny: { x: 620, y: 300, tail: "right" },
-          rc_16_sunny: { x: 780, y: 300, tail: "right" },
           rc_17_puff: { x: 560, y: 620, tail: "left" },
         }}
       />

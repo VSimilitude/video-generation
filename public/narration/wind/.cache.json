@@ -944,11 +944,6 @@
     "outFile": "rc_15_narrator.mp3",
     "durationSeconds": 3.675
   },
-  "rc_16_sunny": {
-    "hash": "8c5822e7aa27d571",
-    "outFile": "rc_16_sunny.mp3",
-    "durationSeconds": 1.325
-  },
   "rc_17_puff": {
     "hash": "07687a0b7cfadb7e",
     "outFile": "rc_17_puff.mp3",

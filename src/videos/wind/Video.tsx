@@ -528,13 +528,17 @@ const SCRIPT: SceneSpec[] = [
   },
   {
     id: "s36_tease",
-    lines: ["rc_13_narrator", "rc_14_sunny", "rc_15_narrator", "rc_16_sunny", "rc_17_puff"],
+    // `rc_16_sunny` ("Wait. What?") and the 45f beat in front of it were CUT
+    // 2026-10-19 (hub round 3, note #8: an eight-year-old heard Sunny say
+    // "what" for no reason — the beat could not carry the dawning on its own).
+    // Showrunner ruling; the clip is kept at
+    // scratchpad/feedback-2026-10-19/rc_16_sunny.mp3. Sunny now stays proud
+    // through the sign-off.
+    lines: ["rc_13_narrator", "rc_14_sunny", "rc_15_narrator", "rc_17_puff"],
     gaps: {
-      // 45f — Sunny holds his pose while the sentence catches up with him.
-      // Emotion lead 0: his face must not fall until the beat is nearly over.
-      rc_15_narrator: 45,
-      // 30f.
-      rc_16_sunny: 30,
+      // 30f — the old post-"Wait. What?" breath, kept: the very-Sunny-theory
+      // line lands, and the sign-off gets a second before Puff waves.
+      rc_15_narrator: 30,
     },
     tailFrames: 60,
   },
