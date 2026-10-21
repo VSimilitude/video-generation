@@ -36,39 +36,19 @@ for readings taken just after a floored boundary — when the previous
 window died at the session limit, trust the API kill message's reset time
 over ccusage.
 
-## 2026-10-19 — hub feedback round 3: ep-2 bug pass (IN FLIGHT)
-Source: `npm run feedback` in kids-hub, 2026-10-19 00:48–01:22, all Math
-(8): eight notes on `PuffWind` (bubble tails pointing wrong episode-wide,
-dandelion seeds unanchored, birds drawn under background / static on the
-beach, Puff jittering at Cloudia's first entrance, dandelion floating
-before her second, Sunny's roll-call "Wait. What?" with no setup), one on
-DripChooses' rain exit (`ra_02_drip`), one 🤩 pitch on DripAgain (Little
-Ember → Little Obsidian; logged in BIBLE.md §5, unratified). Brief with the
-verbatim notes: **src/videos/wind/bugpass-brief.md**. Showrunner spawned
-by the orchestrator; reports + decision log land in
-scratchpad/feedback-2026-10-19/. Orchestrator commits by explicit path on
-landing, then deploys from a clean worktree and updates the hub if needed.
-
-Campaign state (showrunner keeps this current):
-- Showrunner booted; ruling on #8 = CUT `rc_16_sunny` + its beat (TOP of
-  scratchpad/feedback-2026-10-19/decision-log.md). Two builders spawned
-  on main in place, disjoint files: A = src/videos/wind (notes 1–8, brief
-  scratchpad/feedback-2026-10-19/builder-A-brief.md), B = src/videos/drip-fork
-  rain exit + Whisper gate (builder-B-brief.md). B DONE round 1: audio was the bug (Whisper 'Oh, no, we'); shipped 'Oh, no. Yippee!', gates green; round 2 (hover held through 'Oh, no.', bubble moved clear) DONE, gates green, showrunner still review ACCEPT. B's changed files: src/videos/drip-fork/{narration.mjs,narrationManifest.ts,scenes/rain.tsx}, public/narration/drip-fork/{ra_02_drip.mp3,.cache.json}. Reports land as
-  ep2-bugpass-report.md / dripfork-rain-report.md in the same dir.
-- A round 1 DONE: all eight notes fixed (report ep2-bugpass-report.md; 18
-  bubbles re-placed, birds unclipped, Scene 16 sawtooth removed, gulls
-  animated, hillside meadow pinned, rc_16 CUT — public/narration/wind/
-  rc_16_sunny.mp3 DELETED by the generator, copy in the scratchpad dir).
-  Showrunner gates run on A's tree: typecheck 0, lint:hooks 0 findings,
-  `npm run site` exit 0. Showrunner still review ACCEPT except W1 →
-  A round 2: Scene 16 Cloudia bubble hiding Puff (decision-log TOP).
-- A round 2 (W1) DONE: Puff's Scene 16 ride mark moved to x 1560, bubbles
-  re-placed; showrunner review ACCEPT; typecheck/lint green; `npm run
-  site` re-run green on the final tree. Quarter-scale every-frame
-  PuffWind render EXIT=0 (22353f). ROUND COMPLETE, awaiting orchestrator
-  commit by explicit path (files listed in the showrunner's hand-back and
-  in the two report files) + deploy + Mike's ear checks.
+## 2026-10-19 — hub feedback round 3: ep-2 bug pass (SHIPPED, RATIFIED 2026-10-21)
+Math (8) filed eight notes on `PuffWind` and one on DripChooses' rain exit
+via the hub. All fixed (commits 78ff475, fcc7218; brief with the verbatim
+notes src/videos/wind/bugpass-brief.md; reports + decision log in
+scratchpad/feedback-2026-10-19/), deployed and verified through the hub
+proxy. **Mike's rulings 2026-10-21:** every clip call stands (`rc_16_sunny`
+"Wait. What?" stays CUT; `ra_02_drip` = "Oh, no. Yippee!"); `sa_02_drip`'s
+"Wheee" is fine as is, do not touch; Puff's Scene 16 ride mark is fine.
+Still open, low priority: src/lib/kid bubble kit limits (y-clamp 170,
+right-edge shrink-to-fit) caused most tail misses; hotel exits board says
+"BALCONY ↓" for a vanishing-floor exit; STYLE.md should note af_bella does
+not honour letter-stretch; ep-2 cosmetics W2–W6 in ep2-bugpass-report.md.
+Little Ember → Little Obsidian pitch logged in BIBLE.md §5, unratified.
 
 ## 2026-10-18 — DripAgain, the sequel CYOA (SHIPPED: commit 87f9b37, deployed to gh-pages; hub tile live)
 Source: the hub's second feedback round — Math (8) re-rated the expanded
