@@ -61,6 +61,8 @@ export type KidAtWindowProps = {
 export const HAND_SPREAD = 270;
 /** Hand size against the body — big, because the hands are the count. */
 export const HAND_SIZE = 1.35;
+// Finger width 18·s against a finger pitch of ~23.5·s: raised fingers must
+// SEPARATE (at 24·s they fused into a slab at phone size — act-wave repair).
 
 export const KidAtWindow: React.FC<KidAtWindowProps> = ({
   x,
@@ -212,11 +214,11 @@ const Hand: React.FC<{
         return (
           <rect
             key={i}
-            x={fx - 12 * s}
+            x={fx - 9 * s}
             y={top - len + 14 * s}
-            width={24 * s}
+            width={18 * s}
             height={len + 10 * s}
-            rx={12 * s}
+            rx={9 * s}
           />
         );
       })}

@@ -9,6 +9,23 @@ marks where he has not ruled.
 
 ## TOP — needs Mike's ear/eye after watching
 
+- **THE HALF MOON'S LIT SIDE FACES THE SUNSET** (recap builder call 1,
+  2026-10-26 — it corrected the showrunner's brief, which said "away"):
+  the Moon's lit half always faces the Sun, so an evening half moon is lit
+  on the sunset side; the terminator is tilted by the true angle to
+  Sunny's set point (lit limb down-right). A kid who checks this week
+  gets a first-quarter moon lit toward where the Sun went down — the
+  brief's version would have failed the check. Reversal: one sweep flag
+  in `HalfMoon`. (Also the BIBLE fold: moon canon for ep 7.)
+- **THE CHANT CARDS LAND ON THEIR WORDS; BOOM'S SLAM IS 26f LATE** (recap
+  builder call 4): a card that misses its word reads as a glitch, so the
+  THUNDER card lands on "Thunder!" and his ring-burst jolts it a beat
+  later, in the silence before "Thunder is not late." Rejected: holding
+  the card for him. Reversal: one constant (`BOOM_LATE`).
+- **S24 IS A PLAIN SUNSET CARD STACK** (recap builder call 3): the three
+  pictures are reprised by their owners' bodies (the five penthouse hail,
+  Flash's own six frames, Boom) on the cards, not by re-staging the
+  penthouse/lobby. Reversal: one scene.
 - **S12 COUNT HONESTY — flash→"Present!" is ~6.3s under a three-count**
   (act-2 builder find, 2026-10-26). Blue's 88f line `a2_21` sits between
   the flash and "One." in the ratified script order, so from the flash to
@@ -176,6 +193,14 @@ marks where he has not ruled.
 
 ## Act-wave calls (showrunner + act builders, 2026-10-26)
 
+- **KID RIG: FINGER WIDTH 24·s → 18·s** (showrunner repair after the acts
+  landed; act-3 builder's shared-change request 1): the finger pitch is
+  ~23.5·s, so raised fingers fused into a slab at phone size — every count
+  in the episode. Verified on the cold open, S11 and S21. Reversal: one
+  number.
+- **Act-1 bubbles `a1_41` / `a1_50` trimmed to six words** ("UP. DOWN. UP.
+  A HOTEL." / "I AM BOOM. THE NOISE.") — the only two bubble warnings in
+  the act renders; clips untouched.
 - **Anchored insertions**: the act builders' only sanctioned edits outside
   their act files were their two prompt entries (backgrounds.mjs, under
   per-act anchor comments) and their two measured `PLATES` rows
@@ -207,6 +232,23 @@ marks where he has not ruled.
 - **Act-3 roll call firing 2**: Drip (on the step beside Stony) speaks the
   goodbyes; each named stone finishes melting just after its name; Stony
   last, still on the step, crownless, at scene end.
+
+## Recap-wave calls (2026-10-26)
+
+- Sunny sets frame-RIGHT (S22's exit side); the moon rises frame-left above
+  the island, ~90° from him, as a half moon must. S25 Sunny at scale 0.58
+  (bigger drops him below the horizon or into the curtain).
+- Boom enters S25 only on "I know. I am busy." (distance 1, huge, soft, by
+  the far storm) — nobody new in the awe. The kid lifts one finger on
+  "Count that one." and drops it on "You will not need any fingers."
+- The tease card (`NextTimeCard`, ONE string `NEXT_TIME`) leaves after
+  `rc_18` so the 120f last picture is the window alone: far silent Flash,
+  ten fingers, the wave, summit lit, island, half moon.
+- S25's dusk is lighter than S23's end (tint 0.08 vs 0.35): the recap is
+  outside story time and Sunny is up; plate/horizon/room/kid are S23's.
+- The awe hold is still bar the kit idles (volcano smoke, mug steam,
+  breathing) — same standard as act 3's turn; a `still` prop on the shared
+  rigs is logged as a polish item, not done.
 
 ## Narration-wave calls (2026-10-26)
 

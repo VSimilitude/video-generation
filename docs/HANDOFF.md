@@ -112,6 +112,47 @@ Wave 1 state (2026-10-26):
   full --scale=0.25 render EXIT 0 + zero bubble warnings, `npm run site`.
   Then the intermediate commit point; RECAP builder from
   `scratchpad/ep6/recap-brief-addendum.md` only after the quota reset.
+  RESUMED after the reset (2026-10-26 evening): intermediate point
+  COMMITTED 1632f1b + deployed (recap placeholder). Finger repair applied
+  (Kid.tsx width 18·s, verified on three counts) + act-1 bubble trims
+  a1_41/a1_50 to six words (bubble text only); typecheck 0, lint 0.
+  RECAP builder SPAWNED (opus) from `scratchpad/ep6/recap-brief-addendum.md`;
+  report `scratchpad/ep6/recap-report.md`, stills `stills/recap/`,
+  render log `validate-recap.log`. After it lands: sampled review (S24
+  slams, S25 awe, S26 moon), repairs, authoritative full render + site +
+  bible check, then the COMMIT + DEPLOY point.
+  RECAP STATE (showrunner run ended by the harness while the recap
+  builder's full render was in flight): recap.tsx staged (S24–26);
+  builder typecheck 0, lint 0, site EXIT 0; render log
+  `scratchpad/ep6/validate-recap.log` (check its EXIT + `grep -c bubble`).
+  Showrunner sampled review of S24/S25/S26 sheets: no blocking find; the
+  builder CORRECTED the brief (moon's lit side faces the sunset — TOP
+  logged). ONE queued polish: recap.tsx line ~645 `MOON r: 46` → ~64 (the
+  phase must read on a phone), then one still (`s26%0.9`), typecheck,
+  lint:hooks, the AUTHORITATIVE full render `npx remotion render BoomStorm
+  /tmp/validate.mp4 --scale=0.25` EXIT 0 + zero bubble warnings, `npm run
+  site` EXIT 0, then COMMIT + DEPLOY. Bible pre-checks already pass
+  (narration unchanged since wave 1; MYTH stamp S17; three Big Word cards;
+  rule 15 one-voice chant; rule 17 awe held 60f; Sunny 4/8).
+- **CUT COMPLETE — AT THE COMMIT + DEPLOY POINT (2026-10-26, evening).**
+  Recap landed (`scratchpad/ep6/recap-report.md`; builder gates: typecheck
+  0, lint 0, full render EXIT 0 with 0 bubble warnings, site 0). Showrunner
+  sampled review S24/S25/S26: no blocking find; moon r 46→64 applied and
+  verified (`scratchpad/ep6/stills/sr/moon.png`). Final gates by the
+  showrunner on the finished tree: typecheck 0, lint:hooks 0, site EXIT 0
+  (`scratchpad/ep6/site-final.log`), AUTHORITATIVE full every-frame
+  `--scale=0.25` render → `scratchpad/ep6/validate-final.log` (ends with
+  its EXIT line + bubble count; must read EXIT 0 / bubble: 0). Bible check
+  PASS (narration unchanged since wave 1; Sunny 4/8; MYTH S17; rule 15/17).
+  Commit by explicit path: src/videos/storm/scenes/{Kid,act1,recap}.tsx,
+  src/videos/storm/ep6-decision-log.md, docs/HANDOFF.md (+ scratchpad/ep6
+  recap artefacts, optional). Then deploy from a clean worktree.
+- NEXT WAVE (after deploy): phone drop (720p HEVC hvc1 CRF 28–31 +
+  faststart via `npx remotion ffmpeg`), Mike's full-context watch (TOP
+  list in ep6-decision-log.md, newest first), then the retro
+  (LEARNINGS/STYLE/BIBLE fold — items listed in the showrunner's report;
+  BIBLE: Boom/Flash/Cloudia-hotel canon, the "Present!" chain spent, moon
+  canon for ep 7, catch-phrase counts). Sound pass (wave 4) NOT ratified.
 
 ## 2026-10-19 — hub feedback round 3: ep-2 bug pass (SHIPPED, RATIFIED 2026-10-21)
 Math (8) filed eight notes on `PuffWind` and one on DripChooses' rain exit
