@@ -5,7 +5,7 @@ work), then this (where we are). Memory auto-loads the decision record.
 Everything below is committed and pushed on `main` unless marked otherwise.
 This file is CURRENT STATE, not a journal — git log holds the history.
 
-## MODE: EP-6 CAMPAIGN RUNNING (booted 2026-10-26, Mike AWAKE, "straight to a cut")
+## MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
 
 Mike's boot rulings 2026-10-26 (FINAL, do not re-ask): **ep 6 = the storm,
 "WHY IS THUNDER ALWAYS LATE?"** (the ep-5 tease, ratified; the kids have
@@ -23,136 +23,30 @@ reset and ccusage floors block starts to the hour, so check-quota adds
 60-min slop and prints SLOP ZONE near boundaries; a session-limit kill
 message's reset time beats ccusage. Never talk yourself out of a PAUSE.
 
-## EP 6 — IN FLIGHT (showrunner owns this section)
-Slug `storm`, comp id `BoomStorm` (working). Hero = Boom, the thunder
-(new voice, audition pending); Flash the lightning is silent. Design of
-record: `src/videos/storm/ep6-brief.md`; every call in
-`src/videos/storm/ep6-decision-log.md` (TOP-first; Blue's payoff FIRES
-here — showrunner call).
-Wave 1 state (2026-10-26):
-- DONE, uncommitted: ep-5 canon fold (docs/kids/BIBLE.md), ep-5 retro
-  (docs/LEARNINGS.md top entry), 2 STYLE rules, audience.md arc note,
-  ep6-brief.md, ep6-decision-log.md.
-- DONE: treatments A + B (`ep6-treatment-A.md` / `-B.md`), synthesis
-  (`ep6-synthesis.md` — B's structure + A's hotel; tease = the MOON,
-  title "Boom and the One, Two, Three").
-- DONE: `src/videos/storm/script.md` (26 scenes, 198 spoken + 52 count
-  firings), showrunner edit pass applied (rulings at the end of the file).
-- DONE: narration wave — `narration.mjs` (250 keys), 192 recordings +
-  58 aliases generated, gates green (report
-  `scratchpad/ep6/narration-wave-report.md`); Boom PROVISIONALLY
-  `English_magnetic_voiced_man` (shortlist for Mike's ear:
-  `scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8). Runtime ~15:15 from
-  narration + gaps.
-- DONE (showrunner by hand after the 09:54 ET kill): Scenes 7/8 re-keyed
-  by cache migration (zero re-buys), Blue `a2_32` re-rolled (take 1 kept),
-  all gates re-confirmed, cadence 15:15, STATIC→LIGHTNING 53.3s.
-- **WAVE 1 COMPLETE — COMMIT POINT.** Report `scratchpad/ep6/wave1-report.md`.
-  Commit by explicit path: docs/kids/BIBLE.md, docs/LEARNINGS.md,
-  docs/STYLE.md, docs/roles/audience.md, docs/HANDOFF.md,
-  src/videos/storm/{ep6-brief,ep6-decision-log,ep6-synthesis,
-  ep6-treatment-A,ep6-treatment-B,script}.md, src/videos/storm/narration.mjs,
-  src/videos/storm/narrationManifest.ts, public/narration/storm/ (250 mp3 +
-  .cache.json). No registry/site/Video.tsx yet — the composition does not
-  exist until the skeleton wave.
-- **SKELETON WAVE COMPLETE — COMMIT POINT (2026-10-26).** One opus
-  builder from `scratchpad/ep6/skeleton-worklist.md` +
-  `scratchpad/ep6/skeleton-brief-addendum.md`; report
-  `scratchpad/ep6/skeleton-wave-report.md` (rig vocabularies, plate set,
-  52-firing count-grid table, volumes, zero-diff outputs, builder calls,
-  weak points, repairs). Landed: Video.tsx (250 keys, held beats, ONSET
-  count grid computed from the manifest with load-time asserts, per-key
-  volumes; 28,049f = 15:35), scenes/{common,coldOpen,act1,Boom,Flash,
-  Kid}.tsx + briefed empty act2/act3/recap.tsx, backgrounds.mjs + 6 plates
-  (4 act keys named only), Volcano PROMOTED to src/lib/kid/characters/
-  (zero-diff PASS, 0 frames vs control; volcano scene imports unchanged),
-  optional `volume` on TimedTurn (src/lib/narration.ts, additive),
-  registry `BoomStorm`. Showrunner sampled review → 2 repairs (S6
-  roll-call tails to Drip; outside-the-glass layer clipped + under the
-  kid) applied and re-gated. Gates confirmed by the showrunner: typecheck
-  0, lint:hooks 0 findings, full --scale=0.25 render EXIT 0 (post-repair,
-  `scratchpad/ep6/validate-render2.log`), `npm run site` EXIT 0. New
-  decision-log TOP items: picture-only SFX (rumble/CRACK), volume ladder,
-  Cloudia-is-the-hotel-outside, HailBall hail, finger onset, two-line
-  title, 4-vs-6 floors.
-  Commit by explicit path: src/videos/storm/{Video.tsx, backgrounds.mjs,
-  backgroundManifest.ts, ep6-decision-log.md, scenes/}, public/backgrounds/
-  storm/, src/lib/kid/characters/Volcano.tsx, src/lib/kid/index.ts,
-  src/videos/volcano/scenes/Volcano.tsx, src/lib/narration.ts,
-  src/videos/registry.ts, docs/HANDOFF.md. Deploy is optional at this
-  point (acts are placeholders playing real dialogue).
-- NEXT WAVE: ACT2 + ACT3 in parallel (disjoint act2.tsx / act3.tsx; max 2
-  builders; quota check before each spawn), RECAP after one lands, then an
-  optional SOUND PASS pending Mike's SFX ruling — all from
-  `scratchpad/ep6/act-waves-worklist.md` (complete; boot order inside).
-- Mike's ear pending: Boom's voice (`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8).
-- **ACT WAVE IN FLIGHT (2026-10-26, act-waves showrunner).** Two opus
-  builders spawned in parallel on disjoint files from
-  `scratchpad/ep6/act-waves-worklist.md` + `scratchpad/ep6/act-builder-addendum.md`
-  (binding ops rules: report-first PROGRESS, anchored insertions only in
-  backgrounds.mjs / common.tsx PLATES, flock on backgrounds + site, stills
-  tool, full-render gate). Reports (disk-first): `scratchpad/ep6/act2-report.md`,
-  `scratchpad/ep6/act3-report.md`; stills under `scratchpad/ep6/stills/act{2,3}/`.
-  RECAP builder spawns after one act lands (never a third concurrent).
-  Mike's rulings for this wave: straight to a deployed cut, no sign-off stops;
-  acts PICTURE-ONLY (sound pass wave 4 NOT ratified); Boom casting stays
-  provisional. If this session dies: inventory on-disk act files + reports,
-  route unverified work through an auditor before trusting it, then resume
-  at "Showrunner steps after the acts land" in the worklist.
-  STATE AT THE QUOTA PAUSE (2026-10-26, ~16:00 ET): both act builders had
-  finished staging + stills + typecheck/lint and were on their full-render
-  gates (`scratchpad/ep6/validate-act2.log`, `validate-act3.log`); report
-  bodies on disk (act2-report.md / act3-report.md). Showrunner sampled
-  review of both acts: no blocking visual find; decision-log TOP + an
-  "Act-wave calls" section written. Generator dry-run bug FIXED in
-  `scripts/generate-backgrounds.mjs` (verified; 10 storm plates on disk).
-  PENDING small repair (showrunner, after both builders report): Kid.tsx
-  `Hand` finger width 24·s → 18·s (x−9·s, rx 9·s) so raised fingers
-  separate; then verify one count still per act, typecheck, lint:hooks,
-  full --scale=0.25 render EXIT 0 + zero bubble warnings, `npm run site`.
-  Then the intermediate commit point; RECAP builder from
-  `scratchpad/ep6/recap-brief-addendum.md` only after the quota reset.
-  RESUMED after the reset (2026-10-26 evening): intermediate point
-  COMMITTED 1632f1b + deployed (recap placeholder). Finger repair applied
-  (Kid.tsx width 18·s, verified on three counts) + act-1 bubble trims
-  a1_41/a1_50 to six words (bubble text only); typecheck 0, lint 0.
-  RECAP builder SPAWNED (opus) from `scratchpad/ep6/recap-brief-addendum.md`;
-  report `scratchpad/ep6/recap-report.md`, stills `stills/recap/`,
-  render log `validate-recap.log`. After it lands: sampled review (S24
-  slams, S25 awe, S26 moon), repairs, authoritative full render + site +
-  bible check, then the COMMIT + DEPLOY point.
-  RECAP STATE (showrunner run ended by the harness while the recap
-  builder's full render was in flight): recap.tsx staged (S24–26);
-  builder typecheck 0, lint 0, site EXIT 0; render log
-  `scratchpad/ep6/validate-recap.log` (check its EXIT + `grep -c bubble`).
-  Showrunner sampled review of S24/S25/S26 sheets: no blocking find; the
-  builder CORRECTED the brief (moon's lit side faces the sunset — TOP
-  logged). ONE queued polish: recap.tsx line ~645 `MOON r: 46` → ~64 (the
-  phase must read on a phone), then one still (`s26%0.9`), typecheck,
-  lint:hooks, the AUTHORITATIVE full render `npx remotion render BoomStorm
-  /tmp/validate.mp4 --scale=0.25` EXIT 0 + zero bubble warnings, `npm run
-  site` EXIT 0, then COMMIT + DEPLOY. Bible pre-checks already pass
-  (narration unchanged since wave 1; MYTH stamp S17; three Big Word cards;
-  rule 15 one-voice chant; rule 17 awe held 60f; Sunny 4/8).
-- **CUT COMPLETE — AT THE COMMIT + DEPLOY POINT (2026-10-26, evening).**
-  Recap landed (`scratchpad/ep6/recap-report.md`; builder gates: typecheck
-  0, lint 0, full render EXIT 0 with 0 bubble warnings, site 0). Showrunner
-  sampled review S24/S25/S26: no blocking find; moon r 46→64 applied and
-  verified (`scratchpad/ep6/stills/sr/moon.png`). Final gates by the
-  showrunner on the finished tree: typecheck 0, lint:hooks 0, site EXIT 0
-  (`scratchpad/ep6/site-final.log`), AUTHORITATIVE full every-frame
-  `--scale=0.25` render → `scratchpad/ep6/validate-final.log` (ends with
-  its EXIT line + bubble count; must read EXIT 0 / bubble: 0). Bible check
-  PASS (narration unchanged since wave 1; Sunny 4/8; MYTH S17; rule 15/17).
-  Commit by explicit path: src/videos/storm/scenes/{Kid,act1,recap}.tsx,
-  src/videos/storm/ep6-decision-log.md, docs/HANDOFF.md (+ scratchpad/ep6
-  recap artefacts, optional). Then deploy from a clean worktree.
-- NEXT WAVE (after deploy): phone drop (720p HEVC hvc1 CRF 28–31 +
-  faststart via `npx remotion ffmpeg`), Mike's full-context watch (TOP
-  list in ep6-decision-log.md, newest first), then the retro
-  (LEARNINGS/STYLE/BIBLE fold — items listed in the showrunner's report;
-  BIBLE: Boom/Flash/Cloudia-hotel canon, the "Present!" chain spent, moon
-  canon for ep 7, catch-phrase counts). Sound pass (wave 4) NOT ratified.
+## EP 6 — CUT COMPLETE, DEPLOYED (2026-10-26); retro + Mike's pass PENDING
+"Boom and the One, Two, Three" (`BoomStorm`, src/videos/storm, 28,049f =
+15:35), live on the gallery and the family hub (kids-hub 515d08e, tile
+`vid-BoomStorm` + changelog). Commits 6841034 (story + narration) →
+92a7c6f (skeleton) → 1632f1b (acts 2+3) → 13b1e90 (recap). script.md is
+the source of truth; `ep6-decision-log.md` holds every call TOP-first.
+Final gates on the shipped tree: typecheck 0, lint:hooks 0, authoritative
+full --scale=0.25 render EXIT 0 with zero bubble warnings
+(scratchpad/ep6/validate-final.log), site build 0, bible check PASS.
+Audience-facing TOP items for Mike: S12 count honesty (Blue's line sits
+between the flash and "One." — one-line reorder in Video.tsx if he rules),
+ep-7 tease = THE MOON ("WHY DOES THE MOON CHANGE SHAPE?"), Blue's
+anti-Sunny payoff FIRED, Boom casting PROVISIONAL
+(`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8), half moon lit toward
+the sunset, picture-only (NO sound pass — wave 4 unratified).
+Remaining: phone drop (master render in flight → out/BoomStorm.mp4, then
+720p HEVC hvc1 encode); retro wave (LEARNINGS entry, STYLE rules: dry-run
+must touch nothing, finger width < pitch, anchored-insertion + flock for
+parallel builders, script-stage count-honesty check; BIBLE fold: ep-6
+canon, moon canon, catch-phrase counts; kit promotions earned: MythStamp,
+perspectiveWalk/Chase, FarStorm/FrontHorizon, MistFloor/WallHole,
+HalfMoon, NextTimeCard); then Mike's tweak round from his notes.
+Mode note: the showrunner's runs were cut by the harness around 15–25
+tool calls each; resume via SendMessage worked every time.
 
 ## 2026-10-19 — hub feedback round 3: ep-2 bug pass (SHIPPED, RATIFIED 2026-10-21)
 Math (8) filed eight notes on `PuffWind` and one on DripChooses' rain exit
@@ -237,7 +131,7 @@ plus one docs commit; then deploy from a clean worktree per CLAUDE.md.
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).
 - Kids: DripWaterCycle (ep1), PuffWind (ep2), RaySkyBlue (ep3), PipPlants
-  (ep4), EmberVolcano (ep5), DripChooses + DripAgain (CYOA).
+  (ep4), EmberVolcano (ep5), BoomStorm (ep6), DripChooses + DripAgain (CYOA).
 
 ## EP 3 — SHIPPED (campaign closed 2026-08-05)
 "Ray and the Sky Nobody Painted", src/videos/sky-blue. Comedy rewrite
