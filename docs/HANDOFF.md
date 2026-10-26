@@ -24,10 +24,45 @@ reset and ccusage floors block starts to the hour, so check-quota adds
 message's reset time beats ccusage. Never talk yourself out of a PAUSE.
 
 ## EP 6 — IN FLIGHT (showrunner owns this section)
-Wave 1 spawned 2026-10-26: ep-5 canon fold into BIBLE.md → brief (names
-the fun fact + the myth per bible rules 17/18) → treatments → script →
-showrunner edit pass → narration (casting audition, TTS). Commit point
-after the wave; staging waves follow.
+Slug `storm`, comp id `BoomStorm` (working). Hero = Boom, the thunder
+(new voice, audition pending); Flash the lightning is silent. Design of
+record: `src/videos/storm/ep6-brief.md`; every call in
+`src/videos/storm/ep6-decision-log.md` (TOP-first; Blue's payoff FIRES
+here — showrunner call).
+Wave 1 state (2026-10-26):
+- DONE, uncommitted: ep-5 canon fold (docs/kids/BIBLE.md), ep-5 retro
+  (docs/LEARNINGS.md top entry), 2 STYLE rules, audience.md arc note,
+  ep6-brief.md, ep6-decision-log.md.
+- DONE: treatments A + B (`ep6-treatment-A.md` / `-B.md`), synthesis
+  (`ep6-synthesis.md` — B's structure + A's hotel; tease = the MOON,
+  title "Boom and the One, Two, Three").
+- DONE: `src/videos/storm/script.md` (26 scenes, 198 spoken + 52 count
+  firings), showrunner edit pass applied (rulings at the end of the file).
+- DONE: narration wave — `narration.mjs` (250 keys), 192 recordings +
+  58 aliases generated, gates green (report
+  `scratchpad/ep6/narration-wave-report.md`); Boom PROVISIONALLY
+  `English_magnetic_voiced_man` (shortlist for Mike's ear:
+  `scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8). Runtime ~15:15 from
+  narration + gaps.
+- DONE (showrunner by hand after the 09:54 ET kill): Scenes 7/8 re-keyed
+  by cache migration (zero re-buys), Blue `a2_32` re-rolled (take 1 kept),
+  all gates re-confirmed, cadence 15:15, STATIC→LIGHTNING 53.3s.
+- **WAVE 1 COMPLETE — COMMIT POINT.** Report `scratchpad/ep6/wave1-report.md`.
+  Commit by explicit path: docs/kids/BIBLE.md, docs/LEARNINGS.md,
+  docs/STYLE.md, docs/roles/audience.md, docs/HANDOFF.md,
+  src/videos/storm/{ep6-brief,ep6-decision-log,ep6-synthesis,
+  ep6-treatment-A,ep6-treatment-B,script}.md, src/videos/storm/narration.mjs,
+  src/videos/storm/narrationManifest.ts, public/narration/storm/ (250 mp3 +
+  .cache.json). No registry/site/Video.tsx yet — the composition does not
+  exist until the skeleton wave.
+- NEXT WAVE: skeleton (one opus builder) from
+  `scratchpad/ep6/skeleton-worklist.md` — Video.tsx SCRIPT table with the
+  ONSET count grid (negative gaps), worlds (garden / window / hotel), Boom +
+  Flash + finger-counting kid rigs, Volcano promotion with zero-diff gate,
+  per-turn `volume` in `src/lib/narration.ts`, cold open + act 1 staged,
+  registry entry `BoomStorm`. Then act waves (max 2 builders), recap, gates,
+  deploy. Mike's ear pending: Boom's voice
+  (`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8).
 
 ## 2026-10-19 — hub feedback round 3: ep-2 bug pass (SHIPPED, RATIFIED 2026-10-21)
 Math (8) filed eight notes on `PuffWind` and one on DripChooses' rain exit

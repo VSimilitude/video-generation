@@ -136,6 +136,16 @@ our theme palette overrides its colors:
 - Audition on the *hardest* lines a character has, not the first one — a small
   apology, a delighted shout and a big push ask three different things of one
   voice.
+- **Measure before you listen, and measure against the neighbours.** A new
+  voice is cast into an ensemble, so the first question is collision, not
+  beauty: median f0, IQR (expressive range in semitones), chars/s and
+  spectral centroid for every candidate on the same lines, against the
+  committed clips of the characters it will share scenes with. The ep-5
+  audition found three cast girls stacked in one 320–380 Hz band and a
+  0.17 st "incumbent" that read a shout and a deadpan identically — neither
+  is audible one clip at a time. Numbers shortlist; Mike's ear picks. Treat
+  MiniMax `pitch` as a re-render (it changes rate and lands a different
+  interval on every voice), never as a transform you can add up.
 - Per-line overrides (`{ text, voice, speed }`) are the mechanism for a
   one-off tonal shift; don't fork a whole video's voice for one aside.
 - **A body with a face and a line gets its own voice.** The narrator may quote
@@ -683,7 +693,16 @@ the previous frame renders differently every time.
   bubble away from its speaker (`at: { x }` in `Bubbles`), move the tail with
   it — `tailAt` takes the speaker's composition x and the tail lands under
   them, clamped to stay on the bubble. A tail pointing at nobody reads as
-  narration.
+  narration. The tail cannot stretch, so a speaker far from its bubble
+  (a crater crop, a portrait of a mountain) still gets a tail aimed at the
+  air: offset the mark toward the bubble or aim the tail by hand (ep 5's
+  `aimTails` pattern, in three files pending kit promotion). A face whose
+  mouth is the only part on screen tails from the MOUTH, never the eye —
+  the volcano's first line in series history shipped off his eye in the
+  skeleton and was caught in review.
+- **`mix-blend-mode` does nothing inside these worlds.** The overlay and
+  cast layers are stacking contexts, so a blend composites as `normal` and
+  merely lightens; draw the effect (a tint rect, an opacity ramp) instead.
 - Bubbles pop with a spring and grow *out of the tail* (`transformOrigin`), so
   the line looks like it came from the mouth. They never fade in like captions.
 - **A bubble outranks every graphic in the scene.** Word cards, rule stamps and

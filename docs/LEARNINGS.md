@@ -12,6 +12,73 @@ and abandoned. Newest entries at the top.
 
 ---
 
+## 2026-10-26 — volcano retro (Ember and the Mountain That Said Good Morning — kids ep 5)
+
+Written by the ep-6 showrunner at the canon fold, two months after the cut
+shipped (2026-08-25) and a week after the hub round rated it 🤩. Mike's own
+tweak notes never arrived, so every TOP item in `ep5-decision-log.md` is
+still PROVISIONAL and the bible marks them so. Canon went into
+`docs/kids/BIBLE.md` (ep-5 row, Ember + volcano blocks, Sunny's new
+steady state, ledger closures, a new "Casting constraints" section). The
+process lessons:
+
+- **The campaign survived three agent deaths because paid work lives on
+  disk and plans live in files.** Showrunner #3 and both act builders were
+  killed by the session-limit boundary bug mid-wave; #4 booted from
+  HANDOFF + the decision log, audited the uncommitted tree (17/17 smoke
+  stills, exit 0), adopted two orphaned plates by reconstructing their
+  cache entries from the generator's own hash, and resumed. Nothing was
+  re-bought. The rule that made it cheap: every wave writes its worklist
+  and decision log BEFORE building, so a successor inherits a plan, not a
+  transcript. Keep doing it; it is the whole recovery story.
+- **Cast by measurement first, ear second — and the measurement found a
+  wall.** The Ember audition (`scratchpad/ep5_ember_audition/
+  MEASUREMENTS.md`) measured median f0, IQR, chars/s and centroid for
+  every candidate against committed neighbour clips, and found Drip, Puff
+  and Pip stacked in one 320–380 Hz band: "find the brightest voice" was
+  the wrong brief; "read small and quick from below the wall" was the
+  right one (`Playful_Girl`, ~270 Hz, +4.1 st clear). The dead builder's
+  incumbent `Lovely_Girl` had 0.17 st of expressive range — it played
+  "Done!" and the break identically — and had cited a measurement file
+  that never existed. Two keepers now in the bible: the band is full, and
+  MiniMax `pitch` is a re-render (+3 → +4.33 st on one voice, +1.88 on
+  another), not a transform.
+- **A scenery character's first line needs a mouth.** The volcano's
+  portrait bubble tail anchored on his eye in the skeleton; the
+  showrunner's sampled review caught it (his first words in series
+  history must visibly come from the mouth). Both act builders then
+  independently found the kit's tail cannot stretch and `tailAt` only
+  slides within the bubble, so distant speaker marks leave tails pointing
+  at nobody — ACT2's `aimTails` helper became the episode pattern, in
+  three files. Kit promotion of a tail-aim primitive is on the backlog
+  with the y>=170 clamp. Related: `mix-blend-mode` never works inside
+  these worlds (overlay/cast layers are stacking contexts; it composites
+  as normal and lightens) — now a STYLE line.
+- **Sampled showrunner review after builder self-review: 1 find in ~340
+  builder stills, zero repairs on the act and recap waves.** Builders ran
+  135 + 141 + 63 stills with 10+ self-fixes each; the showrunner read 6–8
+  per wave and found one real thing (the eye-tail). The ratio held from
+  eps 3–4: builder self-review is the lever, the sampled pass is the
+  safety net, and reading more stills into the showrunner would not have
+  bought more.
+- **Identity gaps as character worked and are cheap:** volcano 48f, Rock
+  24f before every line, declared once in the script and never escalated.
+  The 180f record silence after "It is today." was kept to the frame; the
+  trim floor (>165f) was written into the script so no builder could
+  "tighten" the series' spine. Write floors on the holds that matter.
+- **Say the lesson once, plainly** (already a world rule from the hub
+  round, re-confirmed here): the island-chain diagram implied "many
+  islands AND one island ageing" and the 8-year-old could not resolve it;
+  one Narrator sentence fixed it for 328 frames of kokoro. When the
+  picture is the lesson, a sentence says it.
+- **What did not get checked:** nobody ear-checked the one-word MiniMax
+  clips or the four migrated clips in the new mix before the cut shipped
+  — the same gap that let ep 4's chant through. The pre-written fallbacks
+  were insurance nobody cashed. The kids' 🤩 says it landed anyway; the
+  gap is still a gap.
+
+---
+
 ## 2026-10-17 — the hub's first feedback round (Math, 8, via the family hub)
 
 The first notes to arrive through the family hub (kthanks.com, four faces +

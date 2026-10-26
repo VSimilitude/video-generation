@@ -47,3 +47,14 @@ island. Ep-2's Rock gets a role in the volcano ep (origin payoff: he was
 lava once). Elegant_Man @ pitch −6 is reserved as the volcano's voice.
 Runtime rule (Mike 2026-08-04): 10–30 min is all fine — hit the right
 beats, never target a duration.
+
+**Fired (history, 2026-10-26 update):** eps 4 and 5 shipped as decided —
+Sunny's peak, then the ceremony ("I did that." / "No. He really didn't.",
+the fuse closed, 180f record silence). Sunny's new steady state is
+PRECISION (half-right forever, every claim true). The volcano is awake and
+voiced (`Elegant_Man` −6, scarce); Ember is the new island beside him.
+Hero arcs now SPENT, do not reuse: the circle (Drip), I-am-real-stuff
+(Puff), wrong-about-self (Ray), ambition-from-one-spot (Pip),
+impatience-vs-slow (Ember). **Ep 6 = the storm, "WHY IS THUNDER ALWAYS
+LATE?" (Mike, 2026-10-26, ratified)** — design in
+`src/videos/storm/ep6-brief.md`. Ep 7 has no canon.
