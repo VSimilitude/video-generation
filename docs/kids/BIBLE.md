@@ -31,6 +31,7 @@ document disagrees with the tweak-round state, the tweak-round state wins.
 | 3 | `sky-blue` | Ray and the Sky Nobody Painted | 17:27.3 | Ray the sunbeam learns he was seven colours all along — why the sky is blue and a sunset is not. |
 | 4 | `plants` | Pip and the Sunshine Kitchen | 15:36.2 | Pip the dandelion seed — total ambition, zero legs — builds "the biggest thing in the world" from one spot by ordering light, water and air: photosynthesis, at Sunny's absolute peak. |
 | 5 | `volcano` | Ember and the Mountain That Said Good Morning | 14:02.8 (25284f) | Ember, a one-minute-old drop of lava who wants everything now, rides the eruption out of the mountain that has slept on the horizon for four shows — and learns rock time from Rock. The volcano speaks (seven lines), Sunny is wrong for the first time (the ceremony), a new island is born, and the ep-4 dirt debt is graded. |
+| 6 | `storm` | Boom and the One, Two, Three | 15:35 (28049f) | Boom the thunder — born in the Cloud Hotel's lobby in the same instant as silent Flash — wants to be ON TIME and is counted at a window by a kid on ten fingers: six, three, two, one, zero (the break), then three, six, nine, ten-and-nothing. He is not late, he is FAR, and far is a ruler (three counts a kilometre). Cloudia's hotel goes vertical, Drip freezes big, Blue is finally first, the volcano says one line, and the end card hangs a half moon over the island. |
 | — | `drip-fork` | DripChooses (CYOA, phase 1.5) | 4:41–5:20/path | **Non-canon.** Branching Drip mini-adventure built from ep-1 assets (`docs/CYOA.md`). |
 | — | `drip-again` | DripAgain — Drip Goes Up Again | 5:11–5:55/path | **Non-canon.** Sequel CYOA pitched by the 8-year-old (beaver's dam, a mountain that is really a volcano, obsidian). |
 
@@ -56,6 +57,21 @@ RATIFIED by Mike 2026-10-26** — the kids have seen the card. Ep-5 =
 25284 frames, 190 spoken lines (178 recordings, 12 `sameAs` aliases, 4
 cache-migrated clips), four Big Word cards (MAGMA, LAVA, ERUPTION,
 EROSION) + the dirt answer as a STAMP on the returning ep-4 card.
+
+**Ep-6 canon status.** Folded 2026-10-26 by the ep-6 showrunner the day
+the cut shipped, from `src/videos/storm/script.md` (source of truth) +
+`ep6-decision-log.md` + `narration.mjs`. **Straight-to-cut campaign:
+nothing from ep 6 has Mike's sign-off yet** — every TOP item is
+**PROVISIONAL** until his pass: Boom's casting
+(`English_magnetic_voiced_man`), Blue's payoff FIRED, the ep-7 moon tease,
+the half moon lit toward the sunset, the S12 count (Blue's line sits
+between the flash and "One." — ~6s under a three-count), picture-only
+sound design, the volcano's one line, Drip's travel-sized variant, Cloudia
+as a faceless tower in exteriors. Ep 6 = 28,049 frames, 26 scenes, 198
+spoken lines + 52 count firings (192 recordings incl. 10 count numbers +
+2 cache migrations; 58 `sameAs` aliases), three Big Word cards (STATIC,
+LIGHTNING, THUNDER) + the rule stamp LIGHT IS FAST. SOUND IS SLOW., one
+MYTH stamp.
 
 Series shape constants: cold open → title → three acts → recap (chant,
 mind-blower, tease); Big Word cards; the next-time question on the end card.
@@ -94,7 +110,14 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
   also fired the Blue button's second form ("He was not first. He was
   very sure, though. Those are different things.") and the translation
   joke "'Presently', from a volcano, means ten thousand years. He is the
-  politest clock in the world."
+  politest clock in the world." Ep 6: she owns THE COUNT — ten kokoro
+  number clips ("One."–"Ten.") on a thirty-frame onset grid, 52 firings,
+  counted with the kid's fingers; **she never says "Present." herself**;
+  the lesson said once ("Three counts for every kilometre. You are the only
+  thing in this show a kid can measure with their fingers."); "Different
+  show. Same hotel." (`co_09`, the ninth firing); the Blue button FLIPPED
+  (`a2_26`); "Both true." ×2 (`a2_31` source, `a3_67`); "There he is." ×2
+  (`co_24`, `a1_59` — the same nine seconds twice).
 
 ### Drip
 - **Casting, locked:** minimax `Lively_Girl`, emotion `happy` throughout,
@@ -118,7 +141,13 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
   with Puff — entrance = the standing line's **fourth identical firing**
   (`a3_35`, cache-migrated from sky-blue `a1_31_drip`); delighted at the
   hundred-million-years number ("We know! We love it!"); chant syllable
-  "Sand!". "Travel-sized": still 0 since ep 1.
+  "Sand!". Ep 6: rides Puff's lift to the penthouse and FREEZES — hail,
+  for once in her life big (ice coat, scale 0.6 → 0.9); owns BOTH roll
+  calls (the hail — see the ledger); standing entrance **fifth identical
+  firing** (`a1_09`, cache-migrated from sky-blue `a1_31_drip`); melts
+  back to a drop on the step — **"I am travel-sized again."** (`a3_07`,
+  CUTTABLE, PROVISIONAL), the first travel-sized revival since ep 1.
+  "Travel-sized": 1 variant in ep 6.
 
 ### Puff
 - **Casting, locked:** minimax `Exuberant_Girl`, speed 1.0. Ep-3 cameo was
@@ -144,7 +173,14 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
   carries the new island's first soil to Pip's meadow and the first seed
   rides his wind back; entrance = the catch-phrase again, cache-migrated
   from wind `a1_40_puff` (series count now 6, unverified), zero seasoned
-  lines; chant syllable "Soil!".
+  lines; chant syllable "Soil!". Ep 6: two mechanism jobs — the LIFT (the
+  updraft; his entrance IS the lift: "Going up." chain, `a1_06` source +
+  `a1_12`, `a1_37`, each one a coat of ice on Drip) and the GUST FRONT (the
+  break "Going down." `a2_02`, then the catch-phrase ONCE at the kid's
+  window as the cold wind, `a2_03`, cache-migrated from wind `a1_40_puff`
+  — series count 7, unverified). "Different show" skipped again (cannot be
+  pointed at). The ep-4 "his catch-phrase IS his entrance" was a ruling,
+  not a law (ep-6 decision log).
 
 ### Sunny
 - **Casting, locked:** kokoro `am_puck`, speed 1.0 — series voice since
@@ -197,7 +233,17 @@ mind-blower, tease); Big Word cards; the next-time question on the end card.
   at last. It only took five shows."), "I warm the sea on top of it!"
   about the island he cannot see. "You're welcome! HA! HA!" ×4 (ceiling 8
   untouched). Interrupted a scene not about him once, truthfully ("If
-  anyone down there needs light, I am available!").
+  anyone down there needs light, I am available!"). **Ep 6: precision
+  throughout** — his heat built the storm (true, and he says so); hidden
+  behind the tower from Scene 5 to Scene 22 and loud about it
+  (`SunnyGlow`); interrupts ×5, every one true; greeting+brag
+  **six-for-six** (`co_03`/`co_04`); "You're welcome! HA! HA!" ×4 (`co_07`
+  source + `a1_22`, `a3_06`, `rc_10`; ceiling 8 untouched); at the
+  mind-blower he keeps the inside — "The surface. Only the surface.
+  Inside, I am MUCH hotter." / Narrator "I checked. Fifteen million
+  degrees, in the middle. It holds." (`rc_08`/`rc_09`); end card, from
+  below the horizon: "I CAN ANSWER THAT ONE!" (`rc_17`, true — the light on
+  the moon is his).
 
 ### Ray
 - **Casting, locked:** minimax `Young_Knight`, speed 1.0 (Mike,
@@ -355,7 +401,7 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 - **Status:** Mike laughed out loud, "hilarious", cameos wanted "for sure"
   (2026-08-04). His built identity is audience-validated and **carries
   into cameos unchanged**.
-- **Approved-for-development arc — the anti-Sunny:** confidently wrong
+- **The anti-Sunny arc — FIRED in ep 6, now history:** confidently wrong
   about being "first" (or a similar superlative) episode after episode
   until one day he is finally right. Mirrors Sunny's inverted claim
   machinery (Sunny claims credit and is at-least-half right until ep 5;
@@ -374,10 +420,19 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   Ember, flat: "I live here. I was here before here was here." → 45f
   freeze → "Then I am first to visit! Visiting counts!" → Narrator:
   "He was not first. He was very sure, though. Those are different
-  things." Wrong-count: ep 3 origin, ep 4 twice, ep 5 twice. **Payoff
-  still NOT fired after ep 5.** The Narrator's button is now a FORMAT —
-  "He was not first. He was very ___, though. Those are different
-  things." — and flipping it is how the payoff lands when it fires.
+  things." Wrong-count: ep 3 origin, ep 4 twice, ep 5 twice. **THE PAYOFF
+  FIRED IN EP 6 (Scene 12; PROVISIONAL — showrunner call, Mike gave the
+  slot as "natural but NOT promised"; reversal: cut the flipped button +
+  his reaction and re-word `a2_21` to a wrong claim, one scene, cents):**
+  he is light, the flash is light, he arrives WITH Flash — "First! Sorry,
+  sea! I am first!" (`a2_21`) — and is RIGHT for the first time in four
+  episodes; the Narrator's FORMAT flips once and closes: "He was first. He
+  was also very fast. Today, those are the same thing." (`a2_26`); "He has
+  never been right before. He does not have a line for it." → the series'
+  second stunned beat, **90f**, a `<Freeze>`; "I was first!" / Boom "And I
+  was on time. Good team." / "Both true."; exit "First to go home! Sorry,
+  curtain!". **The arc is SPENT and the format is CLOSED** — from ep 7
+  Blue is a cameo who was right once; do not re-arm the wrongness.
 - **Signature construction:** *"I just said that!"* — 4-firing `sameAs`
   chain, **capped at 4** (ep 3).
 - **The blue copies (name canon, Mike's pick, T4):** **Bluington,
@@ -419,8 +474,10 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   amplitude blur, same body, noticed by nobody, exits before scene end;
   not in the recap — his ep-3 panel wave was his). Ep 5: one silent
   garnish firing (Scene 22 — already on an island that did not exist
-  yesterday, noticed by nobody, same body, amplitude blur). Series total:
-  7 (ep 3) + 1 (ep 4) + 1 (ep 5), zero clips.
+  yesterday, noticed by nobody, same body, amplitude blur). Ep 6: one silent garnish firing
+  (Scene 12 — far frame edge, also with the flash, also first, noticed by
+  nobody). Series total: 7 (ep 3) + 1 (ep 4) + 1 (ep 5) + 1 (ep 6), zero
+  clips.
 
 ### Rock
 - **Casting, locked:** minimax `Deep_Voice_Man`, `happy`, speed 0.85.
@@ -466,7 +523,24 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   zillion tiny water drops, floating together. That is all! No fluff! No
   feathers!"; house rule "Every guest must hug a speck of dust"; "I love
   my guests. I hate gravity."; "Darling. There are no stairs."; the
-  MYTH-stamp "clouds are not pillows" was hers to bust.
+  MYTH-stamp "clouds are not pillows" was hers to bust. **Ep 6: the storm
+  paid — second lead,** thirty lines, every one hotel management and every
+  one mechanism (a thunderhead is the Cloud Hotel gone vertical: a lift
+  with no stairs, a penthouse freezer, guests rubbing past each other,
+  somebody leaving through the wall). "darling" on 28 composed lines;
+  dropped on exactly ONE — the break `a1_45` "Somebody has just left
+  through the wall!" — back one line later, strained; "Mark him present,
+  darling." closes it. Two ep-1 canon lines re-fired VERBATIM as fresh
+  Abbess recordings (quotes, not chains — ep-1 Cloudia was kokoro):
+  "Darling. There are no stairs." (`a1_03`) and "I love my guests. I hate
+  gravity." (`a3_02`). **Owns the ep-6 MYTH bust:** "Darling. We do not
+  bump. We mingle." (the zillion-drops canon re-stated inside the defence,
+  `a2_70`). The gala gag: "born for a gala" → "Darling, I could weep." →
+  "Is this the gala?" / "Darling. I believe it is." → the grandest
+  check-out in the history of the trade, through the wall and the floor.
+  Staging canon (PROVISIONAL, builder call for Mike's eye): in exteriors
+  the small grey cloud IS her rig and she speaks from it; once the tower
+  stands it is a building with no face and she is the manager inside.
 
 ### Ember
 - **Casting, PROVISIONAL (ep-5 decision-log TOP, Mike's ear pending):**
@@ -528,7 +602,11 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   volcano, means ten thousand years") / V6 "I believe the garden is
   ready." / V7 "Good night." Banked, unfired: "…Ah. There it is. I do
   like this part." Future episodes keep him RARE — single digits, ideally
-  one or two lines, never banter.
+  one or two lines, never banter. **Ep 6: ONE line** — "Louder than me.
+  Well done." (`a2_63`, at the overhead CRACK, 48f gap, CUTTABLE,
+  PROVISIONAL; nobody replies, Boom beams). Boom's "The loud part is the
+  best part." (`a2_76`) is an ECHO of V3, not a quote. Series total 8. His
+  lit summit was the one steady light on ep 6's dark horizon.
 - **End state (NEW CANON, ep 5, PROVISIONAL):** **AWAKE.** "He is not
   going back to sleep. He is just being polite. He has ten thousand years
   of work to do." Summit glowing gently, thin smoke, the new island
@@ -536,11 +614,86 @@ property of light. Line counts below are the ep-3 revision-2 cast table
   him, naming him, and talking to him are LEGAL from ep 5's Scene 3 on
   ("The rules are over.") — see the ledger for the current volcano rule.
 
+### Boom
+- **Casting, PROVISIONAL (ep-6 decision-log TOP, Mike's ear pending):**
+  minimax `English_magnetic_voiced_man`, speed **1.0 on every line,
+  forever** (sound has one speed, so does he; the arc is what he is proud
+  of, never tempo), cast emotion `happy`; exactly two `auto` lines, both
+  cited — the break `a2_59` "Present." and the turn `a3_27` "Count me.".
+  **No caps in any line text** — his loud is the mix and the bubble.
+  Measured 128.3 Hz: +3.5 st clear of Rock (104.9) and +3.3 st of the
+  volcano (105.8), who follows him directly in Scene 16; within 1.4 st of
+  Sunny — keep them spatially distinct when adjacent. The by-ear winner
+  `English_FriendlyPerson` (deepest, most "giant") landed ON Rock across
+  his 36 real lines; its takes are kept on disk — a free restore if Mike
+  prefers the giant and accepts the collision. Shortlist with paths:
+  `scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8. Constant
+  `BOOM_MINIMAX_VOICE`; a recast re-buys 36 clips (cents) and re-times
+  every Boom scene.
+- **Personality + want:** hero of ep 6. The thunder — the sound of the
+  lightning, he/him, born in the lobby of the Cloud Hotel in the same
+  instant as Flash, out of the same crackle. Enormous, soft-edged, the
+  loudest thing in the sky and the gentlest character in the episode: a
+  very large friendly man who set off promptly and would like you to know
+  it. Wants to be ON TIME; has theories about why everyone else is early.
+  Never sorry (Puff's), never a verdict-giver (Ember's), never a pedant
+  (Ray's). Register: warm run-on sentences, commas not full stops.
+- **Body (PROVISIONAL for Mike's eye, `src/videos/storm/scenes/Boom.tsx`):**
+  **size IS distance** — `distance` 0..1: plum-sized, crisp, ink-outlined
+  at zero; huge with three feathered halos at nine counts
+  (`distanceForCount(n)`); two offset rings sit behind his travel; a
+  fixed-cadence walk (1.5 steps/s) that is on or off and NEVER faster;
+  `burstAt` ring burst on "Present!"; **no arms**. He cannot be
+  sharp-and-far or soft-and-near. Far firings are the identical clip at
+  `volume` 0.85 (three counts) / 0.6 (six) / 0.45 (nine).
+- **Catch-phrase / chain — "Present!" (the episode's spine; SPENT as a
+  spine, reusable as his word):** 1 recording (`a1_48_boom`, his birth at
+  zero distance) + 8 `sameAs` aliases (`a2_12`, `a2_25`, `a2_52`, `a2_57`,
+  `a3_11`, `a3_21`, `a3_38`, `a3_64`) = **9 firings of "Present!"**, plus
+  THE BREAK **"Present."** (`a2_59`, fresh recording, full stop, `auto`) at
+  count zero with Flash still in the frame — ten spoken arrivals in all
+  (the script's "ten firings" counts the break); the eleventh arrival is
+  nothing: ten fingers, 120f of silence, then the lobby cut and the final
+  alias. Pattern, not chain: his theories ("a very early planet" `a2_20`,
+  "the ground is moving" `a2_53`, "I have not changed one thing" `a3_12`),
+  resolved at the turn — "Far is a number." He addresses Flash six times;
+  she replies zero.
+- **Arc (ep 6):** born loud at zero distance → counted at six, three, two,
+  one by a kid at a window → the break at zero ("Present." / Narrator "I
+  did not get to one.") → the turn at six, going away: he is not late, he
+  is FAR, and far is a ruler ("Count me.") → nine, the rumble → ten and
+  nothing → present in the lobby, instantly ("Both true." / "That is the
+  whole thing."). **End state:** on the far horizon with the storm, a
+  voice from the distance ("I know. I am busy." / "By the time you hear
+  me, I have already happened."), still following Flash ("I always leave
+  when she leaves."; "I tell her everything anyway."). Not spent as a
+  character — a cameo from him is a count and a far "Present!" (one alias,
+  volume only).
+
+### Flash
+- **Casting, locked: NONE, EVER.** The lightning, she/her — **a silent
+  constant** (world rule 4). Blue-white zig, the same body every time
+  (Violet's same-blob law), on screen **≤6 frames per appearance**, gone
+  before anyone finishes a sentence. Introduced by name once (`a1_46`,
+  under the LIGHTNING card): "She does not stay. She does not wait. She
+  has never finished a sentence in her life, because she has never had
+  time to start one."
+- **Laws:** strikes the sea far out or goes ACROSS the sky; the overhead
+  bolt goes SIDEWAYS; **nothing on screen is ever struck**. Boom addresses
+  her six times (`a1_52`, `a2_14`, `a2_61`/`a2_62`, `a3_13`, `a3_24`,
+  `a3_42`); she replies **zero** — the zero is the physics. Her light
+  arrives WITH Blue (Scene 12): the mechanism of his payoff. Her own
+  six-frame slam is the THUNDER chant's reprise; she exits every chase
+  frame-left with Boom looking after her.
+- **Weak point on record:** googly eyes at the first kink read as
+  "somebody" at full size; whether a six-year-old registers a character in
+  six frames is untested (skeleton report).
+
 ### Cameos + minor bodies
 
 | Body | Episode(s) | Voice | Notes |
 |---|---|---|---|
-| The kid | 1, 2, 3, 4, 5 | silent, always | Silhouette; frames every cold open. Five canon episodes running (seven counting the CYOAs); keeps the streak. Ep 4: opens (breath launches Pip) and closes (a plant hands the breath back). Ep 5: builds a sandcastle all episode (the silent builder parallel — sand is ground-up mountain) and watches the changed horizon on the end card. |
+| The kid | 1–6 | silent, always | Silhouette; frames every cold open. Six canon episodes running (eight counting the CYOAs); keeps the streak. Ep 4: opens (breath launches Pip) and closes (a plant hands the breath back). Ep 5: builds a sandcastle all episode (the silent builder parallel — sand is ground-up mountain) and watches the changed horizon on the end card. **Ep 6: the kid DOES the thing** — at the window from the first dark sky to the end card, counting on fingers with the Narrator (the first time in six shows the kid performs what the audience can copy); ten fingers is the kid's ruler and running out of them is act three's joke; one finger on "Count that one."; ten fingers and a wave at a flash they cannot hear, on the last picture. Hand rig (`scenes/Kid.tsx`): finger width 18·s under a ~23.5·s pitch so counts separate at phone size; fingers rise from the clip's first frame, fully up at the measured +13f onset. |
 | Beetle | 2 | minimax `Patient_Man`, `calm`, 0.92 | Genuinely cannot perceive Puff (not unkind). Two lines fired three times. |
 | Leaf | 2 | minimax `Calm_Woman`, `calm`, 0.92 | Same two lines, one scene later; the different voice IS the joke. Beetle+Leaf were recast off the Narrator after the six-year-old caught the shared voice — origin of the distinct-voice rule. |
 | Flower, Moose | 1 | Narrator cameo-voiced | Pre-dates the distinct-voice rule; if either returns with a line, it gets its own voice. |
@@ -551,7 +704,9 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 | The Pip siblings | 4, 5 | none | Roll-call names: Pipsqueak, Pipley, other Pip, Pippa, Pip the third — same order both firings. Sprout row on Scene-15 marks is staging canon (plants cannot move). Ep 5: **Pipsqueak** is dispatched by Pip and is the first seed on the new island (silent pappus seed). |
 | The island chain | 5 | none | Roll-call names: **Island, Islet, other Island, Island the third, Sandy** (the sandbar — erosion inside the naming). Same order both firings. The chain is the volcano's CV: newest black at the front (Ember), oldest green at the back; **lots of islands AND one island ageing — both true, said out loud** (`a3_49b`). |
 | The magma crowd | 5 | none | Crowd-with-faces, downstairs; bubbles only. |
-| The volcano | 2–4 (scenery), 5 (speaks) | `Elegant_Man` −6 | **Graduated to a character in ep 5** — see his block in §2. Horizon obligations in the ledger. |
+| The hail guests | 6 | none | Crowd-with-faces (`HailBall` — round ice, never Blobbies: Blobby is a drop). Roll-call names, both firings, same order: **Hail, Hailey, other Hail, Hail the third, Stony.** The penthouse is a freezer; the rubbing that builds the crackle is said as a roll call two scenes before the STATIC card; by morning every one of them is called Puddle. |
+| Stony | 6 | none | The big hailstone — the same body both firings (biggest `HailBall`, greyer ice, frost crown); the most trips up and down the tower (how hail grows: a coat of ice per trip); bounces once and sits on the step at the check-out; the last to melt, crownless, at Scene 22's end. Zero lines, zero cost — the Violet pattern on a weather crowd. |
+| The volcano | 2–4 (scenery), 5–6 (speaks) | `Elegant_Man` −6 | **Graduated to a character in ep 5** — see his block in §2. Horizon obligations in the ledger. |
 | Blobby / BlobbyCrowd, AirBlob | kit | none | Unrigged background bodies (`src/lib/kid/characters/`). Rule of thumb: if it has a line it's a Drip; if it's scenery it's a Blobby. |
 
 ---
@@ -613,16 +768,16 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 
 | Phrase | Owner | State |
 |---|---|---|
-| "You're welcome! HA! HA!" | Sunny | Ep 1: 3 (+ Drip's `a3_43` return); ep 2: 6; ep 3: **8 — ceiling 8** (raised 7→8 by Mike for `a3_31b`, 2026-08-04); ep 4: 5; ep 5: 4 (`co_07` source + 3 aliases). No firing past 8; ceilings are per episode and hard. |
-| "GOOD MORNING, EVERYBODY!" → "I invented mornings!" | Sunny | Greeting+brag pairing, **five-for-five** (ep 1 `a1_09`/`a1_11`, ep 2 `a2_02`/`a2_05`, ep 3 `a1_03`+`a3_31` alias/`a3_31b`, ep 4 `a1_02`/`a1_03`, ep 5 `co_04`/`co_05`). Series constant, not an option. |
+| "You're welcome! HA! HA!" | Sunny | Ep 1: 3 (+ Drip's `a3_43` return); ep 2: 6; ep 3: **8 — ceiling 8** (raised 7→8 by Mike for `a3_31b`, 2026-08-04); ep 4: 5; ep 5: 4 (`co_07` source + 3 aliases); ep 6: 4 (`co_07` source + `a1_22`, `a3_06`, `rc_10`). No firing past 8; ceilings are per episode and hard. |
+| "GOOD MORNING, EVERYBODY!" → "I invented mornings!" | Sunny | Greeting+brag pairing, **six-for-six** (ep 1 `a1_09`/`a1_11`, ep 2 `a2_02`/`a2_05`, ep 3 `a1_03`+`a3_31` alias/`a3_31b`, ep 4 `a1_02`/`a1_03`, ep 5 `co_04`/`co_05`, ep 6 `co_03`/`co_04`). Series constant, not an option. |
 | "OH, that one is me as well! HA! HA!" | Sunny | Ep-2 card: fired. Eps 3–4: zero (saved twice). **Ep 5: CASHED** at the knock (`co_10`). Bank empty — any future firing is a fresh choice, not a payoff. |
 | "I did that." / "No. He really didn't." | Sunny / Narrator | **SPENT, ep 5** (`a2_33`/`a2_34`) — the ceremony. Never again as those words. |
 | "That is not me." / "The warm on top is me." | Sunny | **SPENT, ep 5** (`a3_79`/`a3_80`, PROVISIONAL — one-line cut restores the bank). The precision device it founded is reusable: Sunny names exactly which part is his. |
-| "You can't see me. But you can FEEL me." | Puff | 6 series-wide (unverified — recount owed); one per appearance. Ep-4 and ep-5 firings cache-migrated from wind `a1_40_puff` — the canon "FEEL" capital never gets a fresh draw. Quoted from memory by the 8-year-old (hub, 2026-10-17) — it has stuck. |
-| "I am NOT small! I am travel-sized!" | Drip | Ep-1 gag (2 + speck visuals); revive only as fan service. Eps 2–5: 0. |
+| "You can't see me. But you can FEEL me." | Puff | 7 series-wide (unverified — recount owed); one per appearance. Ep 6: 1 (`a2_03`, AS the gust front at the kid's window — not his entrance; the lift was). Ep-4, ep-5 and ep-6 firings cache-migrated from wind `a1_40_puff` — the canon "FEEL" capital never gets a fresh draw. Quoted from memory by the 8-year-old (hub, 2026-10-17) — it has stuck. |
+| "I am NOT small! I am travel-sized!" | Drip | Ep-1 gag (2 + speck visuals); revive only as fan service. Eps 2–5: 0. **Ep 6: 1 VARIANT** — "I am travel-sized again." (`a3_07`, as she melts back to a drop; CUTTABLE, PROVISIONAL). |
 | "Look up. That's me." | Ray | 3 in ep 3 (incl. sunset form); ep 4: 1 at the moon + approved variant "Look down. That is also me." Ep 5: 0 (absent). His pointing line. |
-| "darling" | Cloudia | Hers; lending it out is the joke (Puff, once). Ep 4: ×5, every composed line. Ep 5: absent. |
-| "Different show. Same ___." | Narrator | 8 firings (sun, sky, rain, air, beam, weather, **rock**, **first**), always 0.92 flat. One per returning-character entrance; skip is legal when the character cannot be pointed at (Puff) or when the entrance line carries itself (Drip, ep 5). "Same first." names a returning LAW, not a character — approved blank construction. |
+| "darling" | Cloudia | Hers; lending it out is the joke (Puff, once). Ep 4: ×5, every composed line. Ep 5: absent. Ep 6: 28 composed lines carry it, dropped on exactly ONE (the break `a1_45`) — the barometer worked. |
+| "Different show. Same ___." | Narrator | 9 firings (sun, sky, rain, air, beam, weather, rock, first, **hotel** — ep 6 `co_09`), always 0.92 flat. One per returning-character entrance; skip is legal when the character cannot be pointed at (Puff) or when the entrance line carries itself (Drip, eps 5–6). "Same first." names a returning LAW, not a character — approved blank construction. |
 | "It will do." | Pip | Ep 4: 5 firings, 1 recording, self-capped at 5 + the break "It will not do." (separate recording, plot-causal). Ep 5: 1 cache-migrated re-fire (`a3_74`), not a 6th chain firing. Companion Narrator chain "It is the highest grade she gives." ×2 series-wide (OFF in ep 5). |
 | "That is also true." | Ray | Ep 4: 3 firings, 1 recording, capped 3. **PROVISIONAL** — new canon pending Mike's ear. |
 | "Hi! It's me! I'm the weather!" | Drip | Standing entrance, **fourth identical firing** in ep 5 (cache-migrated take — audibly identical is the joke). |
@@ -635,6 +790,12 @@ property of light. Line counts below are the ep-3 revision-2 cast table
 | "I just said that!" | Blue | 4 firings, one recording — **capped at 4** (ep 3). |
 | "Great ___, ___!" | Yellow | 7 firings in ep 3, buttoned with "Great bounce, me!". |
 | "Are we there yet?" | Ray | Ep-3 gag: 5 identical firings (one recording) + 1 truncated; escalating silences 45/75/105/135/165f. Spent. Named by the 8-year-old as ep 3's funny part (hub, 2026-10-17). |
+| "Present!" / the break "Present." | Boom | **Ep 6: 9 firings, 1 recording** (`a1_48` source + 8 aliases) + the break "Present." (`a2_59`, fresh, full stop, `auto`) — the spine; ten spoken arrivals, the eleventh is silence. Reusable as his word at any far arrival (one alias, `volume` only). |
+| "Going up." / "Going down." | Puff | Ep 6: 3 firings, 1 recording (`a1_06` source + `a1_12`, `a1_37`) + the break "Going down." (`a2_02`, fresh, plot-causal — the downdraft that becomes the gust front). The lift IS his entrance. |
+| "First! Sorry, ___! I am first!" / the flipped button | Blue / Narrator | **SPENT, ep 6** (`a2_21` / `a2_26` "He was first. He was also very fast. Today, those are the same thing."; PROVISIONAL). The format "He was not first. He was very ___, though. Those are different things." is CLOSED — do not re-arm. |
+| "Both true." | Narrator | Ep 6: 2 (`a2_31` source, `a3_67` kokoro alias) — the episode's verdict word; reusable. |
+| "There he is." | Narrator | Ep 6: 2 (`co_24`, `a1_59` — the same nine seconds twice, cold open and act 1). Spent with that mirror. |
+| Boom's theories ("I have a theory…") | Boom | Ep 6: 3 fresh run-ons (`a2_20`, `a2_53`, `a3_12`) — pattern, not chain; resolved at the turn ("Far is a number."). Available if he theorises again. |
 
 ### The long fuse — CLOSED (ep 5)
 
@@ -669,8 +830,16 @@ down that coast is one of his. He has done this before. Many times. They
 are all called Island." / "I am the new one."; goodbye "Bye, Island. Bye,
 Islet. Bye, other Island. Bye, Island the third. Bye, Sandy." / "None of
 them moved. Islands never do. It was still polite." / "See you in ten
-thousand years."). Used crowds so far: raindrops, puffs, colours/copies,
-seeds, islands — ep 6 needs a fresh crowd.
+thousand years."); ep 6: the penthouse hail (Drip, `happy`: "Hi, Hail!
+Hi, Hailey! Hi, other Hail! Hi, Hail the third!" / 24f / "Hi, Stony." /
+"Every guest on the top floor is called Hail. They keep rubbing past each
+other. It builds up." / "I am one of them now."; goodbye on the lawn
+"Bye, Hail. Bye, Hailey. Bye, other Hail. Bye, Hail the third. Bye,
+Stony." / "They are all melting. By morning, every one of them will be
+called Puddle." / "I was big for an hour. It was lovely." — the joke IS
+the lesson: the rubbing that builds the crackle, said two scenes before
+the STATIC card). Used crowds so far: raindrops, puffs, colours/copies,
+seeds, islands, hail — ep 7 needs a fresh crowd.
 
 ### Other running state
 
@@ -685,11 +854,12 @@ seeds, islands — ep 6 needs a fresh crowd.
   verdict fired at the eruption's peak. New state: PRECISION (his block).
   The Narrator still checks every claim; from ep 6 on each one he makes
   must be individually true, and the comedy is how exactly he allocates.
-- **Sunny interrupts a scene not about him**: ep 2 ×5, ep 4 ×3, ep 5 ×1 —
-  every firing true. Ep-4 first: he does NOT interrupt Sc 23.
-- **Blue anti-Sunny arc**: seeded ep 3, watered ep 4 and ep 5, unfired —
-  see Blue's block. The payoff is Mike's call; the ep-6 showrunner was
-  given the slot as "natural but NOT promised".
+- **Sunny interrupts a scene not about him**: ep 2 ×5, ep 4 ×3, ep 5 ×1,
+  ep 6 ×5 (`a1_18`, `a1_35`, `a2_48`, `a3_04`, `a3_45`) — every firing
+  true. Ep-4 first: he does NOT interrupt Sc 23.
+- **Blue anti-Sunny arc — FIRED, ep 6 (PROVISIONAL)**: seeded ep 3,
+  watered eps 4–5, paid in ep-6 Scene 12 with Flash — see Blue's block.
+  The second long fuse is closed; **no long fuse is burning after ep 6.**
 - **The island chain is a timeline** (ep 5, canon): the volcano has built
   many islands, one at a time; newest is black rock at the front (Ember),
   oldest is green at the back, so the row reads as one island ageing.
@@ -703,6 +873,34 @@ seeds, islands — ep 6 needs a fresh crowd.
 - **Ep-5 soil canon, closed:** dirt = crushed mountain + old leaves
   (stamped on the ep-4 card); the first seed on the new island is
   Pipsqueak.
+- **Storm canon (ep 6):** light is fast, sound is slow (rule stamp LIGHT
+  IS FAST. SOUND IS SLOW.); **three counts for every kilometre** (one
+  parent-aside "about five seconds a mile", once); a thunderhead is the
+  Cloud Hotel gone vertical — a lift (the updraft) with no stairs, a
+  penthouse freezer where hail grows a coat per trip, static from guests
+  rubbing past each other, lightning leaving through the wall and thunder
+  born in the same instant; nothing on screen is ever struck; the kid
+  watches from a window from the first dark sky (one plain safety
+  sentence, never fear). Boom's ten arrivals and the kid's ten fingers
+  are the series' first count the audience can copy.
+- **Moon canon (ep 6 end card, PROVISIONAL — recap builder call 1, which
+  corrected the showrunner's brief):** the Moon's lit half ALWAYS faces
+  the Sun, so an evening half moon is a first-quarter moon lit on the
+  SUNSET side (terminator tilted to the true angle toward Sunny's set
+  point); it stands ~90° from the setting Sun — frame-left above the
+  island when Sunny sets frame-right. The light on the moon is Sunny's
+  (true, `rc_17`); the shape is where you are standing. Ep 7 builds on
+  this; a kid can check it the same week.
+- **Ep-6 fun fact + myth (rules 17/18):** a lightning bolt is about five
+  times hotter than the SURFACE of the Sun (~30,000 °C against ~5,500;
+  the core ~15 million — Sunny keeps the inside, the Narrator checks);
+  Lake Maracaibo, Venezuela — a thunderstorm more than a hundred nights a
+  year, "the lightning capital of the world" (Catatumbo); viewer facts:
+  "You have never heard a thunder that was not already over." / the
+  crackle on your balloon is him, tiny ("You will not need any
+  fingers."). MYTH: "thunder is clouds bumping" — busted by Cloudia,
+  "Darling. We do not bump. We mingle." The optional second ("never
+  strikes twice") was NOT fired and is available.
 
 ### Casting constraints (measured, ep-5 audition — binding for new voices)
 
@@ -764,7 +962,10 @@ what a script may not break.
 3. **Distinct-voice rule.** Anything with a face and a line gets its own
    voice. Corollary: a silent character who speaks becomes another voice,
    another audition, another cast row — which is why Violet never speaks.
-4. **The silent constants:** the kid, the volcano, Violet. Never voiced.
+4. **The silent constants:** the kid, Violet, and from ep 6 **Flash** (the
+   lightning: ≤6 frames per appearance, same body, zero replies to Boom's
+   six addresses). The volcano was one until ep 5 and now speaks, rarely.
+   Never voiced.
 5. **`sameAs` discipline.** Every repetition gag on MiniMax is ONE
    recording, aliased byte-identically — the generator resolves backwards,
    so the earliest firing must be the source. A re-record kills the joke.
@@ -825,11 +1026,14 @@ what a script may not break.
     3). CYOA shorts are exempt. Ledger: ep 1 dinosaur puddle; ep 2
     Sahara→Amazon; ep 3 black midday sky on the Moon; ep 4 oxygen in your
     next breath + tree mass from air; ep 5 ground-up mountains + the K
-    island. All five already comply — no retrofit.
+    island; ep 6 lightning ≈5× hotter than the Sun's surface + Lake
+    Maracaibo. All six comply — no retrofit.
 18. **Aim for one myth-bust per episode** (Math via Mike, 2026-10-18). The
     MYTH stamp (born ep 1 Sc 14 "clouds are not pillows"; fired twice in
     ep 3 Sc 15–16 "it is not the sea" / "show us the paint") is a house
-    device the 8-year-old asked for more of. Eps 2, 4 and 5 have none.
+    device the 8-year-old asked for more of. Eps 2, 4 and 5 have none; ep 6 busts "thunder is clouds
+    bumping" (Cloudia, "We do not bump. We mingle.") — the first bust
+    since the rule.
     Every episode brief names the real kid misconception its subject
     invites and busts it on the stamp — a genuine misconception, never a
     straw man, and the correction stays a gift (rule 11). Forward-only:
@@ -844,23 +1048,36 @@ The series arc canon through ep 5 — **ep 4 = plants / photosynthesis
 and its guardrails live in `docs/roles/audience.md`, "Series arc canon";
 both are now HISTORY (fired). Read it with this file.
 
-**Ep 6 = THE STORM — "WHY IS THUNDER ALWAYS LATE?"** (ep-5 end card,
-RATIFIED by Mike 2026-10-26; the kids have seen it, it is an audience
-promise). Design of record: `src/videos/storm/ep6-brief.md` and
-`ep6-decision-log.md`. Standing guardrails carried in: reunite the
-weather crew (Cloudia is owed the storm); hero arc must not repeat Drip
-(the circle), Puff (I am real stuff), Ray (wrong about self), Pip
-(ambition from one spot), Ember (impatience vs slow); Blue's payoff slot
-is natural but NOT promised; Sunny plays his new precision; the volcano
-stays awake on the horizon with the island.
+**Ep 6 = THE STORM — "WHY IS THUNDER ALWAYS LATE?" — SHIPPED 2026-10-26
+(history).** "Boom and the One, Two, Three" (`BoomStorm`, 15:35). Design
+of record: `src/videos/storm/script.md` + `ep6-decision-log.md` (every
+TOP item PROVISIONAL until Mike's pass). Guardrails honoured: Cloudia got
+the storm; Sunny played precision; the volcano stayed awake on the horizon
+with the island and spoke once; Blue's payoff FIRED (PROVISIONAL).
+**Hero arcs now SPENT, do not reuse:** the circle (Drip), I-am-real-stuff
+(Puff), wrong-about-self (Ray), ambition-from-one-spot (Pip),
+impatience-vs-slow (Ember), **on-time-vs-far / "far is a ruler" (Boom)**;
+nor a talking hero with a silent partner (Boom/Flash spent it).
 
-**Ep 7 has no arc canon.** The ep-6 tease is a real decision and gets
-TOP-logged for Mike.
+**Ep 7 tease = "WHY DOES THE MOON CHANGE SHAPE?" — PROVISIONAL (showrunner
+call, decision-log TOP; Mike has NOT ruled).** The ep-6 end card already
+shows it, so the kids may have seen it — a tease is an audience promise;
+Mike overturns EARLY (reversal: one card + two kokoro lines,
+`NextTimeCard`/`NEXT_TIME` + `rc_16`, free until ep-7 work starts). Why
+the moon: the end-card picture exists (half moon over the island), the
+Earth's-shadow misconception is rule-18 gold, thirty nightly home checks,
+canon plants (ep 3's Moon as control experiment, ep 4's "Look up. That's
+me." at the moon, ep 6's moon canon in the ledger), and it sits two
+episodes clear of the ceremony — Mike rejected the moon at ep 5 for
+proximity to it; this call assumes two episodes is the distance he asked
+for. Logged alternate: "WHY IS THE SEA SALTY?" (Drip + Rock, a tastable
+check; its one-line arm is NOT fired). Ep 7 has no arc canon beyond the
+tease.
 
 **Kid pitch, unratified (Math, 8, via the hub, 2026-10-19), on
 DripAgain's race:** "the lava drip races should be a new character that
 looks like [Ember], but is a bit smaller … the name is a little [Ember] and
 then little [Ember] will turn into little obsidian." The dictation said
-"Amber"; Ember is ep 5's hero, whose canon is not folded into this file yet.
+"Amber"; Ember is ep 5's hero (canon folded above, 2026-10-26).
 Pitch, not canon: a Little Ember who becomes Little Obsidian when the lava
 hits the pond. Mike has not ruled; do not build it unasked.

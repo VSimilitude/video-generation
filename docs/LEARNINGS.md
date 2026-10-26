@@ -12,6 +12,102 @@ and abandoned. Newest entries at the top.
 
 ---
 
+## 2026-10-26 — storm retro (Boom and the One, Two, Three — kids ep 6)
+
+Written the day the cut shipped (commits 6841034 → 13b1e90; 28,049f =
+15:35), by the showrunner, BEFORE Mike's pass — so every TOP item in
+`src/videos/storm/ep6-decision-log.md` is PROVISIONAL and the bible marks
+them so. First "straight to a deployed cut" campaign: no sign-off stops at
+brief, treatment or script; every creative call logged TOP-first with its
+rejected alternative and reversal cost; Mike judges the deployed episode.
+Canon went into `docs/kids/BIBLE.md` (ep-6 row, Boom + Flash blocks, the
+hail and Stony, moon canon, ledger). What the day taught:
+
+- **Straight-to-cut works when the decision log IS the sign-off.** Two
+  parallel treatment writers → synthesis → script → narration → skeleton →
+  two parallel act builders → recap, in one day, zero waits on Mike, ~40
+  logged calls. The cost is a long TOP list and a tease card the kids may
+  see before he rules — the log says "overturn EARLY" and must be read
+  top-down the day he watches.
+- **The count-honesty check belongs at SCRIPT stage.** S12: Blue's 88f
+  line sits between the flash and "One.", so flash → "Present!" is ~6.3s
+  under a three-count; a kid counting along gets six. The act-2 builder
+  found it with a stopwatch — a builder can only stage the script's
+  picture. The question to ask of every count in a script: **"does a line
+  sit between the flash and the count?"** The Narrator's number is a
+  measurement a kid is checking on fingers; nothing may sit inside it.
+  Shipped as written; one-line SCRIPT-table reorder if Mike rules.
+- **The onset grid made kokoro count.** Kokoro pads each number with ~0.9s
+  of silence; clips laid end to end counted at ~1.3s and "three counts a
+  kilometre" would have been false on screen. Fix: a computed grid (30f per
+  count, NEGATIVE gaps against the measured word onsets, load-time asserts
+  — 52 firings, clip + gap = 30), fingers rising from the clip's first
+  frame and fully up at the measured +13f onset, `useStage` latest-turn-
+  wins so overlapping silent tails do not shut the next speaker's mouth.
+  Measure onsets; never trust clip edges for a rhythm.
+- **Distance is `volume` on the turn, not a new clip.** Boom's arrivals are
+  ONE recording; far firings are the identical clip at 0.85 / 0.6 / 0.45 by
+  count (new optional `volume` on `DialogueTurn`/`TimedTurn`, additive).
+  `sameAs` discipline survived; nothing re-bought. Sound design otherwise
+  is picture-only (glass rattle, mug ripple) — the suite has no SFX layer
+  and the box no ffmpeg; a pure-node WAV wave is logged, not built.
+- **Two parallel builders on shared files, zero conflicts: anchored
+  insertion + `flock`.** Each act builder owned its act file; its only edits
+  elsewhere were two prompt entries under `// ACT2-PROMPTS-ANCHOR` /
+  `// ACT3-…` in backgrounds.mjs and two measured PLATES rows under the same
+  anchors in common.tsx (Edit-only, append below the anchor); `npm run
+  backgrounds` and `npm run site` were serialised with `flock
+  /tmp/storm-site.lock`. This is what makes max-2 builders safe on one
+  episode — brief it every time.
+- **`generate-backgrounds.mjs --dry-run` deleted every cached plate, twice.**
+  The early return sat AFTER the "drop deleted keys" sweep with an empty
+  `nextCache`; both act builders lost plates (six restored from git, two
+  from PNG copies as lossless webp, hashes unchanged). Fixed and verified
+  (dry-run leaves all 10). Rule, now in STYLE: **a dry-run must touch
+  nothing** — no cache write, no sweep, no manifest; the early return
+  precedes every mutation. The tell was in the act-2 report, not a gate:
+  "before committing, `ls` the plates" is a gate now.
+- **Finger width < finger pitch, or a hand cannot count.** The kid's hand
+  rig drew 24·s-wide fingers on a ~23.5·s pitch, so three or four raised
+  fingers fused into a slab at phone size — on every count in the episode.
+  Found by the act-3 builder after both acts landed; fixed to 18·s by the
+  showrunner. Check a counting rig at 0.25 scale before the first beat.
+- **Builders corrected the brief twice and were right both times.** The
+  recap builder flipped the moon: the brief said "lit half AWAY from the
+  sunset"; the lit side faces the Sun, so a first-quarter moon at dusk is
+  lit TOWARD it — a kid checking this week would have caught the brief.
+  The act-2 builder found the S12 count. The writer caught the "four and a
+  half MORE kids" arithmetic the same way. Keep letting agents flag, not
+  smuggle; briefs should say "check the physics of anything a kid can
+  verify this week".
+- **Cast by measurement again — this time the male band.** The by-ear
+  winner `English_FriendlyPerson` measured 104.9 Hz across his 36 real
+  lines: on top of Rock (104.9) and the volcano (105.8), who follows Boom
+  directly in S16. `English_magnetic_voiced_man` (128.3 Hz, +3.5 st clear)
+  shipped PROVISIONAL; FriendlyPerson's takes are on disk. New keeper in the
+  bible: measure pitch gates on ORDINARY lines, not excited audition
+  run-ons — run-ons pushed every candidate up.
+- **Sampled review ratio held: 2 real finds (R1 roll-call bubble placement,
+  R2 window-world isolation, both skeleton) in ~470 builder stills** across
+  four waves; zero repairs on the act and recap waves. Same lesson as eps
+  3–5: builder self-review is the lever, the sampled pass is the net.
+- **Process: the harness cut every showrunner run at ~15–25 tool calls;
+  `SendMessage` resume worked every time** and cost nothing because the
+  state was in files (worklists, wave reports, decision log, HANDOFF
+  in-flight). Plan showrunner waves as ≤15-call units with the next step
+  written down before each heavy call. One session-limit kill at 09:54 ET
+  took the showrunner and the narration builder together — recovery ~0
+  (the builder's report was on disk; the showrunner re-keyed by hand, 249
+  cached / 1 synthesized). Later the quota gate called a PAUSE and it was
+  honoured cleanly — the first campaign where the pause was planned rather
+  than suffered. Never talk yourself out of a PAUSE.
+- **What did not get checked:** no ear pass on the deployed mix (Boom's
+  chain source, Blue's `a2_32` above his s/word band, the one-word chant
+  clips — the ep-4 risk class), no SFX, and the S12 count stands as
+  shipped. The kids' verdict and Mike's pass are the next data.
+
+---
+
 ## 2026-10-26 — volcano retro (Ember and the Mountain That Said Good Morning — kids ep 5)
 
 Written by the ep-6 showrunner at the canon fold, two months after the cut

@@ -56,5 +56,13 @@ voiced (`Elegant_Man` −6, scarce); Ember is the new island beside him.
 Hero arcs now SPENT, do not reuse: the circle (Drip), I-am-real-stuff
 (Puff), wrong-about-self (Ray), ambition-from-one-spot (Pip),
 impatience-vs-slow (Ember). **Ep 6 = the storm, "WHY IS THUNDER ALWAYS
-LATE?" (Mike, 2026-10-26, ratified)** — design in
-`src/videos/storm/ep6-brief.md`. Ep 7 has no canon.
+LATE?" (Mike, 2026-10-26, ratified) — SHIPPED the same day** as "Boom and
+the One, Two, Three" (`src/videos/storm/script.md`; every creative call
+PROVISIONAL in `ep6-decision-log.md` until Mike's pass). Spent in it:
+Boom's arc (wants to be on time → not late, FAR; far is a ruler — add to
+the do-not-reuse list), Blue's anti-Sunny payoff (right once, the button
+flipped, format closed), Cloudia's owed storm, the hail roll call. New
+silent constant: Flash (the lightning). **Ep 7 tease on the ep-6 end card
+= "WHY DOES THE MOON CHANGE SHAPE?" — PROVISIONAL, Mike has not ruled**;
+moon canon (lit side faces the Sun) is in the bible. Ep 7 has no arc canon
+beyond that.

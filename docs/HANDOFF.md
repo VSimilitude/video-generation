@@ -39,12 +39,13 @@ anti-Sunny payoff FIRED, Boom casting PROVISIONAL
 (`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8), half moon lit toward
 the sunset, picture-only (NO sound pass — wave 4 unratified).
 Remaining: phone drop (master render in flight → out/BoomStorm.mp4, then
-720p HEVC hvc1 encode); retro wave (LEARNINGS entry, STYLE rules: dry-run
-must touch nothing, finger width < pitch, anchored-insertion + flock for
-parallel builders, script-stage count-honesty check; BIBLE fold: ep-6
-canon, moon canon, catch-phrase counts; kit promotions earned: MythStamp,
-perspectiveWalk/Chase, FarStorm/FrontHorizon, MistFloor/WallHole,
-HalfMoon, NextTimeCard); then Mike's tweak round from his notes.
+720p HEVC hvc1 encode); **retro wave DONE 2026-10-26 — docs only,
+UNCOMMITTED until the orchestrator commits** (LEARNINGS ep-6 entry; STYLE
+×4 rules: dry-run touches nothing, finger width < pitch, `volume` for
+distance, onset grid; BIBLE ep-6 fold incl. Boom + Flash blocks, the hail
++ Stony, moon canon, ledger counts byte-exact, §5 ep-7 tease PROVISIONAL;
+audience.md arc line; the kit-promotion backlog item below); then Mike's
+tweak round from his notes (decision-log TOP-first).
 Mode note: the showrunner's runs were cut by the harness around 15–25
 tool calls each; resume via SendMessage worked every time.
 
@@ -186,6 +187,24 @@ ep5-decision-log "Casting findings for the bible retro") is the ep-6
 showrunner's first job. Phone drop out/EmberVolcano_phone.mp4 delivered.
 
 ## Backlog (owned, not started)
+- **Ep-6 kit promotions earned (promote when the kit next opens; NOTHING
+  moved yet):** `MythStamp` (now in 4 episodes' scene files);
+  `perspectiveWalk`/`Chase` (act 2 — one world pace in perspective);
+  `FarStorm`/`FrontHorizon` + `Hills`/`StepAndPath`/`Puddle` (act 3;
+  recap.tsx carries ~90 lines of copies); `MistFloor`/`WallHole` (export
+  from storm common.tsx — act 3's `FrontFloor`/`DuskHole` are near-copies);
+  `HalfMoon` (lit side toward the Sun; sweep-flag reversal) and
+  `NextTimeCard` (one string `NEXT_TIME`) for ep 7's end card;
+  `aimTails`-default `Bubbles`, latest-turn-wins `useStage`, `HailBall`.
+  (`volume` on turns and `Volcano` are already in lib.) Polish items, not
+  done: a `still?: number` prop on `Horizon`/`WindowWorld`/`Mug`/
+  `KidAtWindow` so held beats are literally motionless bar one body (S25
+  awe, act-3 turn); S25 Sunny at scale 0.58 reads small on a phone (bigger
+  hits the horizon or the curtain); the act-3 far storm is the kit tower
+  dimmed + clipped at the horizon — a grey slab (real far-storm design only
+  if Mike minds); an SFX layer (pure-node PCM WAVs → `public/sfx/` →
+  `<Audio>`) if sound design is ever wanted; Flash's six-frame legibility
+  for a six-year-old is untested.
 - **Bubbles kit gap (ep-4 B3 builder find):** the y>=170 centre clamp in
   `Bubbles` (plants scenes/common.tsx) plus absolute-`left` shrink-to-fit
   means any cutaway framing with a speaker above the midline couples

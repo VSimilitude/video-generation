@@ -210,6 +210,10 @@ our theme palette overrides its colors:
   to MiniMax and moved him back to his episode-one kokoro voice two days later,
   because the new read made him an authority and the joke is a show-off who
   happens to be right. A recast can simply be wrong; make it cheap to undo.
+- **Distance is `volume` on the turn, not a new clip.** A repeated line
+  heard from far away is the identical recording with `volume` on its
+  `DialogueTurn` (ep 6: 0.85 / 0.6 / 0.45 by count) — `sameAs` discipline
+  survives, no filtered copies, no re-record.
 - **The drawn word and the spoken word are allowed to disagree.** A speech
   bubble may keep "PUUUSH!" while the clip says "PUSH!": on screen the extra
   letters are a picture of a long loud noise, which is exactly what a
@@ -413,6 +417,11 @@ came out of it.
   nothing happening. Stage the change as a *value* change: a pale,
   desaturated primer state that the payoff saturates. If before and after
   differ only in hue name, they differ in nothing a viewer can see.
+- **A dry-run touches nothing.** `--dry-run` prints prompts and returns
+  BEFORE any cache write, deleted-key sweep or manifest write; ep 6's
+  generator returned after the sweep with an empty cache and erased every
+  committed plate, twice. Any generator's early return precedes every
+  mutation, and "`ls` the output dir after a dry-run" is a gate.
 
 ## Character-first staging
 
@@ -441,6 +450,10 @@ came out of it.
   the shape has a front, either the character genuinely faces that way or the
   design is wrong. Direction of travel belongs in `bank` and in **detached**
   motion dashes (a comics device), never in the anatomy.
+- **Finger width < finger pitch, or a hand cannot count.** The kid's hand
+  rig drew 24·s fingers on a ~23.5·s pitch and three raised fingers fused
+  into a slab at phone size on every count of ep 6 (fixed to 18·s). Check a
+  counting or pointing rig at 0.25 scale before the first beat is staged.
 
 ## Ray, and the two rules that came out of him (ep 3, 2026-08-01)
 
@@ -759,3 +772,11 @@ the previous frame renders differently every time.
   own mouth — so a character who stops talking stops on a smile, not on a gap.
 - `DialogueAudio` mounts each turn at its offset; a scene is either one clip or
   one exchange, never both.
+- **A spoken count is a metronome: build it as an onset grid.** Kokoro pads
+  each number clip with ~0.9s of silence, so clips laid end to end count at
+  ~1.3s and a lesson like "three counts a kilometre" turns false on screen
+  (ep 6). Measure each number's word onset, put the onsets on a fixed grid
+  (30f) with negative gaps, assert clip + gap = grid at load, and key the
+  staging (fingers, rings) to the onset, not the clip edge. With overlapping
+  tails `useStage` must be latest-turn-wins or the next speaker's mouth
+  stays shut. Anything a kid counts along with must be on the grid.
