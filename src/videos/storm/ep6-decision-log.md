@@ -9,6 +9,39 @@ marks where he has not ruled.
 
 ## TOP — needs Mike's ear/eye after watching
 
+- **NO SOUND DESIGN IN THE SKELETON — rumble, CRACK and gust are
+  PICTURE-ONLY** (skeleton wave, 2026-10-26). The script calls for an SFX
+  rumble at the nine-counts (`co_24`, `a1_59`, `a3_38`) and the loudest
+  CRACK at the overhead break; the suite has no SFX layer and the box has
+  no ffmpeg. Shipped: glass rattle + mug ripple on every arrival, the
+  identical "Present!" at distance volume. Option logged for a sound pass
+  after the acts: pure-node PCM WAVs (`scripts/gen-sfx.mjs` →
+  `public/sfx/storm/`) played with `<Audio>`. Reversal: one builder wave,
+  no re-records.
+- **"Present!" VOLUME LADDER BY COUNT** (builder, ratified by the
+  showrunner): 0–2 counts 1.0; 3 → 0.85; 6 → 0.6; 9 → 0.45. The script
+  names only `a2_52` louder / `a3_21`, `a3_38` far; `a2_12` (six) sits
+  with `a3_21`, `a2_25`/`a3_11` (three) at 0.85 so distance reads the
+  same both halves. Reversal: one table in Video.tsx.
+- **CLOUDIA IS THE HOTEL IN EXTERIORS; THE TOWER HAS NO FACE** (builder
+  call 6, showrunner-ratified): in Scene 1 the small grey cloud over the
+  sea is Cloudia's rig and she speaks from it; once the tower stands up
+  (`HotelTower`) it is a building, and she is the manager INSIDE. Rejected:
+  a face on the tower (two Cloudias on screen at the lobby cut). For
+  Mike's eye on the deployed cut. Reversal: one face toggle.
+- **THE HAIL ARE ROUND ICE (`HailBall`), NOT BLOBBIES** (builder call 7):
+  Blobby is a drop; hail must read as balls. Stony = the biggest HailBall,
+  greyer ice + frost crown, same body at the penthouse / on the step /
+  last to melt. Reversal: swap the body component.
+- **FINGERS RISE FROM THE CLIP'S FIRST FRAME, FULLY UP AT +13f** (the
+  measured word onset) — the onset grid made visible; a snap on the clip
+  start would be up 0.4s before the word. Reversal: one constant
+  (`COUNT_VOICE_LEAD`).
+- **TITLE ON TWO LINES** ("Boom and the / One, Two, Three"), 120px —
+  one line clipped at the frame edges. Reversal: font size.
+- **Interior tower section shows 4 floors, exterior 6** (builder call 9)
+  so characters read inside; a kid may notice the floor count differs.
+  Reversal: a constant.
 - **BOOM CAST: `English_magnetic_voiced_man`, PROVISIONAL** (narration
   wave, measured). The by-ear audition winner `English_FriendlyPerson`
   (deepest, most "giant") measured 104.9 Hz across his 36 real lines — on

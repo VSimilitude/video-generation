@@ -21,6 +21,13 @@ export type DialogueTurn = {
   /** Character id — matched by `isSpeaking`/`speakerAt`, so keep it stable. */
   speaker: string;
   gapFrames?: number;
+  /**
+   * Playback volume for this one instance of the clip, 0..1 (default 1).
+   * Added for ep 6, whose far thunder is the SAME recording played quieter
+   * (world rule 5: identical clip, volume on the instance, no filtered copy).
+   * Optional and additive: a turn without it plays exactly as before.
+   */
+  volume?: number;
 };
 
 export type SceneDef = {
@@ -45,6 +52,8 @@ export type TimedTurn = {
   /** Frames from the start of the *scene*. */
   from: number;
   durationInFrames: number;
+  /** Carried from `DialogueTurn.volume`; `DialogueAudio` plays it. */
+  volume?: number;
 };
 
 export type TimedScene = {
@@ -114,6 +123,7 @@ function layoutTurns(defs: DialogueTurn[], fps: number): TimedTurn[] {
       clip: def.clip,
       from: at,
       durationInFrames,
+      ...(def.volume !== undefined ? { volume: def.volume } : {}),
     };
     at += durationInFrames + (def.gapFrames ?? DEFAULT_TURN_GAP_FRAMES);
     return turn;
@@ -249,6 +259,7 @@ export const DialogueAudio: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         React.createElement(Audio, {
           src: staticFile(turn.clip.file),
           pauseWhenBuffering: true,
+          volume: turn.volume ?? 1,
         }),
       ),
     ),

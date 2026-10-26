@@ -1,0 +1,38 @@
+{
+  "garden_heavy_day": {
+    "hash": "c806c02cde4cf322",
+    "outFile": "garden_heavy_day.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide calm empty seaside lawn on a very hot still summer morning seen from slightly above looking down across the grass towards the sea, painted as flat simplified storybook shapes, the bottom third of the frame a broad plain sweep of short warm green and golden green grass seen from above as one smooth flat surface of colour with no individual blades, no flowers, no paths, no stones and no detail in it at all, staying completely plain and smooth right down to the bottom edge of the frame, above it a wide calm band of deep saturated turquoise water, one straight level horizon line placed a little above the middle of the frame with a completely bare empty sea horizon that has nothing standing on it anywhere along its whole length, and the sky filling the top half evenly coloured all the way across in deep clear blue with a soft warm yellow tint low down, the same brightness everywhere with no bright spot and no glare, two or three small soft white clouds only in the top corners, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "bay_through_window_yellow": {
+    "hash": "5fc02b311f525ef9",
+    "outFile": "bay_through_window_yellow.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide calm empty seaside lawn on a heavy hot summer afternoon seen from slightly above looking down across the grass towards the sea, painted as flat simplified storybook shapes, the bottom third of the frame a broad plain sweep of short deep olive green grass seen from above as one smooth flat surface of colour with no individual blades, no flowers, no paths, no stones and no detail in it at all, staying completely plain and smooth right down to the bottom edge of the frame, above it a wide calm band of deep dark teal water, one straight level horizon line placed a little above the middle of the frame with a completely bare empty sea horizon that has nothing standing on it anywhere along its whole length, and the sky filling the top half evenly coloured all the way across in heavy warm mustard yellow low down fading up into deep dusty teal blue, the same brightness everywhere with no bright spot and no glare, completely empty and open through the middle, two or three small soft clouds only in the top corners, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "sea_sky_heavy": {
+    "hash": "21a31181316b2f6d",
+    "outFile": "sea_sky_heavy.webp",
+    "aspectRatio": "16:9",
+    "prompt": "a wide expanse of completely calm open water under an enormous open sky on a heavy hot summer afternoon, painted as flat simplified storybook shapes, the bottom third of the frame one smooth plain band of deep dark teal water with no waves, no foam, no boats and no detail in it at all, one straight level horizon line placed low, about a third of the way up the frame, completely bare and empty along its whole length with nothing standing on it anywhere, and above it the sky filling the entire upper two thirds of the picture, evenly coloured all the way across in heavy warm mustard yellow low down fading up into deep dusty teal blue, the same brightness everywhere with no bright spot and no glare, completely empty and open through the middle, a few small soft clouds only in the very top corners, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "hotel_lobby_grey": {
+    "hash": "195d7e4a59030e6e",
+    "outFile": "hotel_lobby_grey.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the inside of a huge soft rounded room made entirely of soft cloud, seen straight on, painted as flat simplified storybook shapes, soft billowy pale grey and lavender grey walls curving round the left and right edges of the frame and a soft rounded billowy ceiling across the top, the whole middle of the frame left completely open and plain and empty, the bottom third one broad flat level floor of smooth pale grey mist with no detail in it at all, soft even grey light everywhere with no bright spot, very low contrast, calm and quiet and cosy, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "tower_interior": {
+    "hash": "cf582986a9e1d336",
+    "outFile": "tower_interior.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the inside of an enormously tall narrow space made entirely of soft cloud, seen straight on from within, painted as flat simplified storybook shapes, soft billowy walls of pale grey and dusty lavender running vertically up both sides of the frame, a wide plain open column of soft evenly lit pale grey violet mist filling the whole middle of the frame from top to bottom with nothing in it at all, no ledges, no shapes and no detail, evenly lit all the way up with no bright spot, very low contrast, calm, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  },
+  "penthouse_freezer": {
+    "hash": "8e19c6446bf44521",
+    "outFile": "penthouse_freezer.webp",
+    "aspectRatio": "16:9",
+    "prompt": "the inside of a wide soft rounded room made entirely of frosty cloud high up in very cold air, seen straight on, painted as flat simplified storybook shapes, soft billowy walls of icy pale blue and white curving round the left and right edges of the frame and a soft rounded billowy ceiling across the top, the whole middle of the frame left completely open and plain and empty, the bottom third one broad flat level floor of smooth pale icy blue mist with no detail in it at all, a few tiny soft white frost sparkles only near the edges, cool even light everywhere with no bright spot, very low contrast, calm, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+  }
+}

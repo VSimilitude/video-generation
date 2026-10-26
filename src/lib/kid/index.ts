@@ -88,3 +88,11 @@ export {
   type PipState,
   type LeanFiring,
 } from "./characters/Pip";
+// Promoted out of `src/videos/volcano/scenes/Volcano.tsx` when episode six
+// needed him awake on its horizon. Ep 5 keeps its import via a re-export.
+export {
+  makeVolcano,
+  volcanoFace,
+  VOLCANO_PORTRAIT,
+  type VolcanoProps,
+} from "./characters/Volcano";

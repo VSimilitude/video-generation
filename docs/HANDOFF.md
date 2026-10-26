@@ -55,14 +55,37 @@ Wave 1 state (2026-10-26):
   src/videos/storm/narrationManifest.ts, public/narration/storm/ (250 mp3 +
   .cache.json). No registry/site/Video.tsx yet — the composition does not
   exist until the skeleton wave.
-- NEXT WAVE: skeleton (one opus builder) from
-  `scratchpad/ep6/skeleton-worklist.md` — Video.tsx SCRIPT table with the
-  ONSET count grid (negative gaps), worlds (garden / window / hotel), Boom +
-  Flash + finger-counting kid rigs, Volcano promotion with zero-diff gate,
-  per-turn `volume` in `src/lib/narration.ts`, cold open + act 1 staged,
-  registry entry `BoomStorm`. Then act waves (max 2 builders), recap, gates,
-  deploy. Mike's ear pending: Boom's voice
-  (`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8).
+- **SKELETON WAVE COMPLETE — COMMIT POINT (2026-10-26).** One opus
+  builder from `scratchpad/ep6/skeleton-worklist.md` +
+  `scratchpad/ep6/skeleton-brief-addendum.md`; report
+  `scratchpad/ep6/skeleton-wave-report.md` (rig vocabularies, plate set,
+  52-firing count-grid table, volumes, zero-diff outputs, builder calls,
+  weak points, repairs). Landed: Video.tsx (250 keys, held beats, ONSET
+  count grid computed from the manifest with load-time asserts, per-key
+  volumes; 28,049f = 15:35), scenes/{common,coldOpen,act1,Boom,Flash,
+  Kid}.tsx + briefed empty act2/act3/recap.tsx, backgrounds.mjs + 6 plates
+  (4 act keys named only), Volcano PROMOTED to src/lib/kid/characters/
+  (zero-diff PASS, 0 frames vs control; volcano scene imports unchanged),
+  optional `volume` on TimedTurn (src/lib/narration.ts, additive),
+  registry `BoomStorm`. Showrunner sampled review → 2 repairs (S6
+  roll-call tails to Drip; outside-the-glass layer clipped + under the
+  kid) applied and re-gated. Gates confirmed by the showrunner: typecheck
+  0, lint:hooks 0 findings, full --scale=0.25 render EXIT 0 (post-repair,
+  `scratchpad/ep6/validate-render2.log`), `npm run site` EXIT 0. New
+  decision-log TOP items: picture-only SFX (rumble/CRACK), volume ladder,
+  Cloudia-is-the-hotel-outside, HailBall hail, finger onset, two-line
+  title, 4-vs-6 floors.
+  Commit by explicit path: src/videos/storm/{Video.tsx, backgrounds.mjs,
+  backgroundManifest.ts, ep6-decision-log.md, scenes/}, public/backgrounds/
+  storm/, src/lib/kid/characters/Volcano.tsx, src/lib/kid/index.ts,
+  src/videos/volcano/scenes/Volcano.tsx, src/lib/narration.ts,
+  src/videos/registry.ts, docs/HANDOFF.md. Deploy is optional at this
+  point (acts are placeholders playing real dialogue).
+- NEXT WAVE: ACT2 + ACT3 in parallel (disjoint act2.tsx / act3.tsx; max 2
+  builders; quota check before each spawn), RECAP after one lands, then an
+  optional SOUND PASS pending Mike's SFX ruling — all from
+  `scratchpad/ep6/act-waves-worklist.md` (complete; boot order inside).
+- Mike's ear pending: Boom's voice (`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8).
 
 ## 2026-10-19 — hub feedback round 3: ep-2 bug pass (SHIPPED, RATIFIED 2026-10-21)
 Math (8) filed eight notes on `PuffWind` and one on DripChooses' rain exit

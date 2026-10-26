@@ -71,6 +71,13 @@ import {
   HEIGHT as VOLCANO_HEIGHT,
 } from "./volcano/Video";
 import {
+  StormVideo,
+  timeline as stormTimeline,
+  FPS as STORM_FPS,
+  WIDTH as STORM_WIDTH,
+  HEIGHT as STORM_HEIGHT,
+} from "./storm/Video";
+import {
   KidDemoVideo,
   timeline as kidDemoTimeline,
   FPS as KID_DEMO_FPS,
@@ -276,6 +283,17 @@ export const VIDEOS: VideoEntry[] = [
     width: VOLCANO_WIDTH,
     height: VOLCANO_HEIGHT,
     durationInFrames: volcanoTimeline().durationInFrames,
+  },
+  {
+    id: "BoomStorm",
+    title: "Boom and the One, Two, Three",
+    description:
+      "Why is thunder always late? It is not. It is far. Count with the kid at the window as Boom, the noise who was born on time, rolls in across the bay. Episode six of Little Big World.",
+    component: StormVideo,
+    fps: STORM_FPS,
+    width: STORM_WIDTH,
+    height: STORM_HEIGHT,
+    durationInFrames: stormTimeline().durationInFrames,
   },
   {
     id: "DripChooses",
