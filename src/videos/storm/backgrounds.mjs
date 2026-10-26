@@ -72,6 +72,115 @@ export default {
     "no watermark, not photographic",
 
   backgrounds: {
+    // ACT2-PROMPTS-ANCHOR: the act-2 builder adds its two prompt entries
+    // (bay_through_window_dark, bay_lit_from_above) directly below this line.
+
+    /**
+     * ACT2, Scenes 11–15 — the bay through the glass under the storm. The
+     * yellow window plate's skeleton, colour words only, so the horizon (and
+     * the volcano on it) does not move when the light does. Dark SLATE, never
+     * black (ep-4 rule: a friendly night). The sky is asked LIGHTER than the
+     * water so the sky→sea step is still the strongest luminance drop the
+     * skyline measure looks for.
+     */
+    bay_through_window_dark: {
+      prompt:
+        "a wide calm empty seaside lawn on a dark stormy summer afternoon seen " +
+        "from slightly above looking down across the grass towards the sea, " +
+        "painted as flat simplified storybook shapes, the bottom third of the " +
+        "frame a broad plain sweep of short dim dark green grass seen from " +
+        "above as one smooth flat surface of colour with no individual " +
+        "blades, no flowers, no paths, no stones and no detail in it at all, " +
+        "staying completely plain and smooth right down to the bottom edge of " +
+        "the frame, above it a wide calm band of very deep dark navy teal " +
+        "water, one straight level horizon line placed a little above the " +
+        "middle of the frame with a completely bare empty sea horizon that " +
+        "has nothing standing on it anywhere along its whole length, and the " +
+        "sky filling the top half evenly coloured all the way across in soft " +
+        "dark slate blue grey with a faint dusty violet tint, a little lighter " +
+        "than the water, the same brightness everywhere with no bright spot " +
+        "and no glare, completely empty and open through the middle, two or " +
+        "three soft darker grey clouds only in the top corners",
+    },
+
+    /**
+     * ACT2, Scenes 16–17 — the hotel DIRECTLY OVERHEAD: the sky through the
+     * glass is the cloud's flat pale underside, and the lawn and the sea are
+     * lit evenly from above. Same skeleton again. The underside's shapes (and
+     * Flash across it) are SVG on top; this plate is only a flat pale ceiling
+     * of sky.
+     */
+    bay_lit_from_above: {
+      prompt:
+        "a wide calm empty seaside lawn under a low flat ceiling of pale grey " +
+        "cloud on a stormy summer afternoon seen from slightly above looking " +
+        "down across the grass towards the sea, painted as flat simplified " +
+        "storybook shapes, the bottom third of the frame a broad plain sweep " +
+        "of short cool dark green grass seen from above as one smooth flat " +
+        "surface of colour with no individual blades, no flowers, no paths, " +
+        "no stones and no detail in it at all, staying completely plain and " +
+        "smooth right down to the bottom edge of the frame, above it a wide " +
+        "calm band of deep dark slate teal water, one straight level horizon " +
+        "line placed a little above the middle of the frame with a completely " +
+        "bare empty sea horizon that has nothing standing on it anywhere " +
+        "along its whole length, and the sky filling the top half one flat " +
+        "even pale silvery lavender grey all the way across like the smooth " +
+        "underside of a cloud, lit evenly from above, the same brightness " +
+        "everywhere with no bright spot and no glare, completely plain and " +
+        "open",
+    },
+    // ACT3-PROMPTS-ANCHOR: the act-3 builder adds its two prompt entries
+    // (lawn_hail_dark, bay_dusk_clear) directly below this line.
+
+    /**
+     * ACT3 — Scenes 18 and 22: the lawn the hail bounces on, through the
+     * window. `bay_through_window_yellow`'s skeleton word for word (colour
+     * words only) so the horizon seats on the same line; the hail, the rain,
+     * the path, the step and the puddles are SVG.
+     */
+    lawn_hail_dark: {
+      prompt:
+        "a wide calm empty seaside lawn under a dark stormy afternoon sky seen " +
+        "from slightly above looking down across the grass towards the sea, " +
+        "painted as flat simplified storybook shapes, the bottom third of the " +
+        "frame a broad plain sweep of short dark wet deep green grass seen " +
+        "from above as one smooth flat surface of colour with no individual " +
+        "blades, no flowers, no paths, no stones and no detail in it at all, " +
+        "staying completely plain and smooth right down to the bottom edge of " +
+        "the frame, above it a wide calm band of dark slate grey teal water, " +
+        "one straight level horizon line placed a little above the middle of " +
+        "the frame with a completely bare empty sea horizon that has nothing " +
+        "standing on it anywhere along its whole length, and the sky filling " +
+        "the top half evenly coloured all the way across in deep dark slate " +
+        "blue grey, the same brightness everywhere with no bright spot and no " +
+        "glare, completely empty and open through the middle, a few soft dark " +
+        "grey clouds only in the top corners",
+    },
+
+    /**
+     * ACT3 — Scene 23 (and the recap's 25–26): dusk, the storm gone far, the
+     * sky clearing. Same skeleton as the window plates so the horizon does
+     * not move. The far storm flicker, the half moon and every light are SVG.
+     */
+    bay_dusk_clear: {
+      prompt:
+        "a wide calm empty seaside lawn on a clear still evening at dusk seen " +
+        "from slightly above looking down across the grass towards the sea, " +
+        "painted as flat simplified storybook shapes, the bottom third of the " +
+        "frame a broad plain sweep of short dark blue green grass seen from " +
+        "above as one smooth flat surface of colour with no individual " +
+        "blades, no flowers, no paths, no stones and no detail in it at all, " +
+        "staying completely plain and smooth right down to the bottom edge of " +
+        "the frame, above it a wide calm band of deep dusky violet blue water, " +
+        "one straight level horizon line placed a little above the middle of " +
+        "the frame with a completely bare empty sea horizon that has nothing " +
+        "standing on it anywhere along its whole length, and the sky filling " +
+        "the top half evenly coloured all the way across in soft dusky rose " +
+        "and lilac low down fading up into deep clear indigo blue, the same " +
+        "brightness everywhere with no bright spot and no glare, completely " +
+        "empty and open through the middle, two or three small soft violet " +
+        "clouds only in the top corners",
+    },
     // --- THE GARDEN AND THE BAY -------------------------------------------
     //
     // ONE SKELETON in two framings, read them side by side: ep 5's

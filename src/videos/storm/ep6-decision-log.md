@@ -9,6 +9,34 @@ marks where he has not ruled.
 
 ## TOP — needs Mike's ear/eye after watching
 
+- **S12 COUNT HONESTY — flash→"Present!" is ~6.3s under a three-count**
+  (act-2 builder find, 2026-10-26). Blue's 88f line `a2_21` sits between
+  the flash and "One." in the ratified script order, so from the flash to
+  Boom's arrival a kid counting along gets six, while the Narrator says
+  three. Shipped: the script's picture (Flash frame 0, Blue 4f behind,
+  Boom visibly walking from the flash the whole way, the count on the
+  grid). Rejected: a second Flash at the count (owes a boom); overlapping
+  Blue with "One." (two voices). Fix if Mike wants it: move `a2_21_blue`
+  after `a2_25_boom` in the Video.tsx SCRIPT table (one line; Blue shouts
+  "First!" after Boom lands — the flipped button still follows). Reversal:
+  one line, no re-records.
+- **CLOUDIA OVERHEAD IS A HATCH IN THE UNDERSIDE (S16 `a2_65`, S17), not a
+  lobby cut** (act-2 builder call 9, ratified): the window stays the stage
+  and the lobby cut is reserved for S14's two frames. Rejected: a third
+  lobby cut. Reversal: copy S14's shot pattern, one scene.
+- **NO BUBBLE ON THE BREAK "Present."** (act-2 builder call 4, ratified):
+  nothing to announce, nothing hangs in the 60f. Reversal: one line
+  (`S16_BUBBLES`).
+- **BOOM'S GLASS SEAT MOVED OFF EMBER'S ISLAND** in both acts (act 2
+  (720,250) scale 0.8; act 3 (760,290)) — the skeleton's `BOOM_AT_GLASS`
+  (560,410) hid the island at six counts and half the volcano at nine. He
+  now arrives upper-left of the kid's head rather than beside it. Reversal:
+  one constant per act.
+- **THE STORM IN ACT 3 IS THE KIT TOWER, DIMMED AND CLIPPED AT THE
+  HORIZON** (act-3 builder call 4): the far storm reads as a grey slab with
+  a cloud top behind the volcano in S20–S23 (the volcano + island are
+  re-drawn in front — "past the volcano" holds). Rejected: a new far-storm
+  design (scope). Reversal: one component (`FarStorm`), no scene change.
 - **NO SOUND DESIGN IN THE SKELETON — rumble, CRACK and gust are
   PICTURE-ONLY** (skeleton wave, 2026-10-26). The script calls for an SFX
   rumble at the nine-counts (`co_24`, `a1_59`, `a3_38`) and the loudest
@@ -145,6 +173,40 @@ marks where he has not ruled.
   rule after the treatments propose.** Alternates logged in brief §5. A
   tease is an audience promise — Mike should overturn EARLY, before the
   kids see the ep-6 end card.
+
+## Act-wave calls (showrunner + act builders, 2026-10-26)
+
+- **Anchored insertions**: the act builders' only sanctioned edits outside
+  their act files were their two prompt entries (backgrounds.mjs, under
+  per-act anchor comments) and their two measured `PLATES` rows
+  (common.tsx, same) — zero merge conflicts; `npm run backgrounds` and
+  `npm run site` serialised with `flock`.
+- **`scripts/generate-backgrounds.mjs` dry-run bug FIXED** (found by the
+  act-2 builder; both builders lost plates to it): `--dry-run` returned
+  AFTER the "drop deleted keys" sweep with an empty `nextCache`, deleting
+  every cached plate. The early return now precedes the sweep; verified
+  (dry-run leaves all 10 storm plates). Act-2's two plates were restored
+  from PNG copies as LOSSLESS webp (pixel-identical; cache hashes
+  unchanged) — larger files (228/322 KB), same picture.
+- **Plates**: `bay_through_window_dark` 0.514 / `bay_lit_from_above` 0.426
+  (inside the 0.08 band); `lawn_hail_dark` 0.470; `bay_dusk_clear` 0.361
+  (>0.08 off — the one pre-authorised re-roll came back 0.339 and pink, v1
+  restored; seated by its measured skyline so the horizon sits at 470
+  exactly). Forbidden-word sweep 0 hits, all keys.
+- **Held beats as `<Freeze>`** (act 2: the 60f break, Blue's 90f) — literally
+  nothing moves; act 3's turn (60f) and ten-and-nothing (120f) are
+  staged-still (breathing only).
+- **S12 Flash on frame 0, Blue +4f** (not `flashFor` −8) — see TOP.
+- **Act-3 far bolts go sideways**; s23's tiny one ends on the sea right of
+  the island. Sky-white scales with distance (1 / .7 / .4 / .2 / .15).
+- **Bubbles >6 words shortened** by both builders (a2_61, a2_76, a2_75,
+  a2_03, a3_02 "LOVE MY GUESTS. HATE GRAVITY.", a3_23, a3_24) — the clips
+  are untouched.
+- **Act-3 lobby is empty at the final "Present!"** (every guest checked
+  out in S18); Scene 9's hole still in the wall with dusk through it.
+- **Act-3 roll call firing 2**: Drip (on the step beside Stony) speaks the
+  goodbyes; each named stone finishes melting just after its name; Stony
+  last, still on the step, crownless, at scene end.
 
 ## Narration-wave calls (2026-10-26)
 

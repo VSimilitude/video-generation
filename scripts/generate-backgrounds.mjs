@@ -314,14 +314,17 @@ async function generateVideo({ slug, config }, { token, only, force, dryRun }) {
     }
   }
 
+  // A dry run touches nothing on disk: it must return BEFORE the delete sweep
+  // below (with `nextCache` empty, that sweep removed every committed plate —
+  // found by the ep-6 act builders, 2026-10-26).
+  if (dryRun) return { generated, failed };
+
   // Drop images whose keys were deleted from backgrounds.mjs.
   for (const [key, old] of Object.entries(cache)) {
     if (!nextCache[key] && old.outFile) {
       await rm(path.join(outDir, old.outFile), { force: true });
     }
   }
-
-  if (dryRun) return { generated, failed };
 
   await writeFile(cachePath, JSON.stringify(nextCache, null, 2));
 

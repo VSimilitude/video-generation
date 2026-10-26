@@ -773,6 +773,25 @@ export const PLATES: Record<string, { skyline: number | null; scale: number; nea
   hotel_lobby_grey: { skyline: null, scale: 1.43, near: "#efeef2" },
   tower_interior: { skyline: null, scale: 1.43, near: "#ece3f0" },
   penthouse_freezer: { skyline: null, scale: 1.43, near: "#cce5f3" },
+  // ACT2-PLATES-ANCHOR: the act-2 builder inserts its two measured rows
+  // (bay_through_window_dark, bay_lit_from_above) directly below this line.
+  // ACT2, MEASURED (same method). Dark slate storm sky lighter than the navy
+  // sea (the step the measure needs); 0.514 is 0.049 off the yellow window
+  // plate, inside the 0.08 band — no re-roll. Lossless webp (restored after the
+  // dry-run deletion, see the act-2 report).
+  bay_through_window_dark: { skyline: 0.514, scale: 1.5, near: "#1d4322" },
+  // The hotel overhead: a flat pale silver-lavender underside of sky, the sea
+  // and the lawn lit evenly from above. 0.426, 0.039 off the yellow plate.
+  bay_lit_from_above: { skyline: 0.426, scale: 1.5, near: "#295428" },
+  // ACT3-PLATES-ANCHOR: the act-3 builder inserts its two measured rows
+  // (lawn_hail_dark, bay_dusk_clear) directly below this line.
+  // ACT3 (measured, same method): the hail lawn, the window plates' skeleton.
+  lawn_hail_dark: { skyline: 0.47, scale: 1.5, near: "#223c19" },
+  // ACT3: dusk, v1 of two rolls (v2 measured 0.339 and lost the indigo; v1
+  // restored, v2 in scratchpad/ep6/plate-rerolls/). 1.5 still covers the glass
+  // (plate top 46 < glass top 64); the lawn edge sits ~30px lower than the
+  // hail lawn's. Recap 25–26 reuse it.
+  bay_dusk_clear: { skyline: 0.361, scale: 1.5, near: "#0b223e" },
 };
 
 export const PLATE = { w: 1344, h: 768 } as const;

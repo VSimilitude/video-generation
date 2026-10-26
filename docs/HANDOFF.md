@@ -86,6 +86,32 @@ Wave 1 state (2026-10-26):
   optional SOUND PASS pending Mike's SFX ruling — all from
   `scratchpad/ep6/act-waves-worklist.md` (complete; boot order inside).
 - Mike's ear pending: Boom's voice (`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8).
+- **ACT WAVE IN FLIGHT (2026-10-26, act-waves showrunner).** Two opus
+  builders spawned in parallel on disjoint files from
+  `scratchpad/ep6/act-waves-worklist.md` + `scratchpad/ep6/act-builder-addendum.md`
+  (binding ops rules: report-first PROGRESS, anchored insertions only in
+  backgrounds.mjs / common.tsx PLATES, flock on backgrounds + site, stills
+  tool, full-render gate). Reports (disk-first): `scratchpad/ep6/act2-report.md`,
+  `scratchpad/ep6/act3-report.md`; stills under `scratchpad/ep6/stills/act{2,3}/`.
+  RECAP builder spawns after one act lands (never a third concurrent).
+  Mike's rulings for this wave: straight to a deployed cut, no sign-off stops;
+  acts PICTURE-ONLY (sound pass wave 4 NOT ratified); Boom casting stays
+  provisional. If this session dies: inventory on-disk act files + reports,
+  route unverified work through an auditor before trusting it, then resume
+  at "Showrunner steps after the acts land" in the worklist.
+  STATE AT THE QUOTA PAUSE (2026-10-26, ~16:00 ET): both act builders had
+  finished staging + stills + typecheck/lint and were on their full-render
+  gates (`scratchpad/ep6/validate-act2.log`, `validate-act3.log`); report
+  bodies on disk (act2-report.md / act3-report.md). Showrunner sampled
+  review of both acts: no blocking visual find; decision-log TOP + an
+  "Act-wave calls" section written. Generator dry-run bug FIXED in
+  `scripts/generate-backgrounds.mjs` (verified; 10 storm plates on disk).
+  PENDING small repair (showrunner, after both builders report): Kid.tsx
+  `Hand` finger width 24·s → 18·s (x−9·s, rx 9·s) so raised fingers
+  separate; then verify one count still per act, typecheck, lint:hooks,
+  full --scale=0.25 render EXIT 0 + zero bubble warnings, `npm run site`.
+  Then the intermediate commit point; RECAP builder from
+  `scratchpad/ep6/recap-brief-addendum.md` only after the quota reset.
 
 ## 2026-10-19 — hub feedback round 3: ep-2 bug pass (SHIPPED, RATIFIED 2026-10-21)
 Math (8) filed eight notes on `PuffWind` and one on DripChooses' rain exit
