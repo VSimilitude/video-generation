@@ -5,36 +5,29 @@ work), then this (where we are). Memory auto-loads the decision record.
 Everything below is committed and pushed on `main` unless marked otherwise.
 This file is CURRENT STATE, not a journal — git log holds the history.
 
-## MODE TONIGHT: Mike-ASLEEP (2026-08-24, back from trip; see
-ORCHESTRATION.md "Operating modes")
+## MODE: EP-6 CAMPAIGN RUNNING (booted 2026-10-26, Mike AWAKE, "straight to a cut")
 
-Mike Mon night 2026-08-24: 0% weekly (resets Fri) + 0% session used — "plan
-to use all or most of it for this project"; if he doesn't reply, move on
-with best guesses and LOG decisions for later. Decisions taken at boot:
-**start the ep-5 campaign overnight** (his pick); ep-4 phone render SKIPPED
-(his pick). Hourly watchdog cron ARMED in this session (job 7918a398,
-session-only — re-arm on any fresh autonomous boot). Do NOT park a campaign
-at a sign-off gate while he sleeps; screenable + deployed + a short list of
-calls to overturn beats documents to read. Normal gates resume when awake.
+Mike's boot rulings 2026-10-26 (FINAL, do not re-ask): **ep 6 = the storm,
+"WHY IS THUNDER ALWAYS LATE?"** (the ep-5 tease, ratified; the kids have
+seen the card). **Mode = straight to a deployed cut**: no sign-off stops at
+brief/treatment/script; every creative call logged in
+`src/videos/<slug>/ep6-decision-log.md` TOP-first; Mike judges the deployed
+episode and overturns from the list. Weekly fable at boot: 0%. Standing
+rules: `node scripts/check-quota.mjs` before EVERY spawn, max 2 concurrent
+builders, wind-down 18M/21M weighted. Hourly watchdog cron armed in the
+orchestrator session (session-only; re-arm on a fresh boot).
 
-**The 5-hour window is per-ACCOUNT and shared with Mike's other sessions,
-which can burn it fast while this one sits quiet.** On 2026-08-07 this
-session read 38% from Mike, overrode a correct PAUSE on a bad diagnosis, and
-was actually at 93%. check-quota is recalibrated (ceiling 450k → 1.2M output,
-from a live 1.24M ↔ 93% reading) and now sums cache tokens when sanity-
-checking. Gate between every batch; when a reading looks absurd, check the
-cache fields and ask Mike rather than overriding.
+Quota lore (keep): the 5-hour window is per-ACCOUNT, shared with Mike's
+other sessions; the window anchors at the FIRST ACTION after the previous
+reset and ccusage floors block starts to the hour, so check-quota adds
+60-min slop and prints SLOP ZONE near boundaries; a session-limit kill
+message's reset time beats ccusage. Never talk yourself out of a PAUSE.
 
-**Reset-boundary recalibration (2026-08-25, mid-flight kill + Mike's
-ruling):** the real window anchors at the FIRST ACTION after the previous
-reset; ccusage floors block starts to the hour, so its predicted reset can
-run up to an hour early (observed: predicted 11:00 ET, real 11:50). A
-showrunner + ACT2 builder were killed at 11:47 after a false "fresh
-window" PROCEED at 11:04. check-quota now adds 60-min boundary slop to
-the reset estimate (QUOTA_RESET_SLOP_MIN) and prints a SLOP ZONE warning
-for readings taken just after a floored boundary — when the previous
-window died at the session limit, trust the API kill message's reset time
-over ccusage.
+## EP 6 — IN FLIGHT (showrunner owns this section)
+Wave 1 spawned 2026-10-26: ep-5 canon fold into BIBLE.md → brief (names
+the fun fact + the myth per bible rules 17/18) → treatments → script →
+showrunner edit pass → narration (casting audition, TTS). Commit point
+after the wave; staging waves follow.
 
 ## 2026-10-19 — hub feedback round 3: ep-2 bug pass (SHIPPED, RATIFIED 2026-10-21)
 Math (8) filed eight notes on `PuffWind` and one on DripChooses' rain exit
@@ -118,9 +111,8 @@ plus one docs commit; then deploy from a clean worktree per CLAUDE.md.
 
 ## Live right now (https://vsimilitude.github.io/video-generation/)
 - Financial series: BondBasics, SwapBasics (approved, dormant).
-- Kids: DripWaterCycle (ep1), PuffWind (ep2 third cut, 12:29),
-  RaySkyBlue (ep3 FINAL cut, 17:27.3 — deployed 2026-08-05),
-  DripChooses (CYOA branching demo).
+- Kids: DripWaterCycle (ep1), PuffWind (ep2), RaySkyBlue (ep3), PipPlants
+  (ep4), EmberVolcano (ep5), DripChooses + DripAgain (CYOA).
 
 ## EP 3 — SHIPPED (campaign closed 2026-08-05)
 "Ray and the Sky Nobody Painted", src/videos/sky-blue. Comedy rewrite
@@ -162,124 +154,17 @@ calls in decision-log TOP). Builder weak points for the retro are logged
 at the end of the reboot-4 notes in git (d2841ef..0a23e9c messages) and
 in post-b3-worklist.md.
 
-## IN FLIGHT: ep 5 — the volcano wakes
-Campaign showrunner spawned 2026-08-24 (Mike-asleep mode, fresh weekly
-quota — his call: burn most of it here). Arc canon + guardrails:
-docs/roles/audience.md "Series arc canon" (ep-2 Rock cast in ep 5,
-outgassing OUT of scope, volcano sleep-gag had its final rep in ep 4,
-soil bridge from ep 4). Runtime rule: 10–30 min, hit the beats, never
-target a duration. Path: bible canon catch-up (showrunner's call) →
-brief → treatments → script → staging waves → deployed screenable cut,
-straight through, no sign-off stops; all creative calls LOGGED in an
-ep5 decision log for Mike's tweak round. Standing spawn rules: quota
-gate before EVERY spawn, max 2 concurrent builders, wind-down 18M/21M.
-
-Campaign state (showrunner keeps this current):
-- Slug `volcano`, dir src/videos/volcano/ live: ep5-decision-log.md
-  (boot + brief calls logged), ep5-brief.md (FINAL for treatments).
-- Ep-4 CANON folded into BIBLE.md (2026-08-24, canon only — PROVISIONAL
-  markers on everything Mike hasn't ratified; extraction record
-  scratchpad/ep5/ep4-canon-extract.md). Ep-4 taste/process retro still
-  belongs to Mike's ep-4 tweak round.
-- Treatment round DONE: ep5-treatment-A.md + ep5-treatment-B.md landed;
-  showrunner synthesis ep5-synthesis.md is the rule of record (B's
-  structure + A's spine gag; ceremony at the eruption; volcano speaks 7
-  lines; title "Ember and the Mountain That Said Good Morning"; ep-6
-  tease = thunder, TOP-logged for Mike).
-- script.md LANDED (31 scenes, 189 lines) + showrunner edit pass DONE
-  (rulings in script.md "Showrunner edit-pass rulings"; Scene-5 Sunny
-  pair promoted to load-bearing; all 12 writer deviations accepted).
-  script.md is the single source of truth for the cut.
-- NARRATION WAVE (resumed 2026-08-25 by a fresh showrunner after the
-  2026-08-24 ~22:24 connection drop killed the prior crew mid-wave):
-  narration.mjs LANDED (dead opus builder, imports clean, UNAUDITED)
-  → auditor pass DONE (spec-faithful; findings
-  scratchpad/ep5/narration-audit.md) → repairs APPLIED (rc_04 aliased,
-  wake-claim wording = recorded take, doc fixes; rulings in decision
-  log) → 4 cache migrations SEEDED into public/narration/volcano/
-  (hashes replayed MATCH; first gen run must show all four `(cached)`)
-  → Ember audition DONE (16 voices measured; the dead builder's
-  `Lovely_Girl` was unbacked and measured worst-fit; RATIFIED PICK
-  `Playful_Girl`, no pitch construction — PROVISIONAL, Mike's ear
-  pending, shortlist in scratchpad/ep5_ember_audition/MEASUREMENTS.md
-  §8; constant set in narration.mjs; TOP-logged in decision log)
-  → TTS GENERATION DONE, ALL GATES GREEN: 4/4 migrations `(cached)`
-  both runs; 189 mp3s = 189 cache keys = 189 manifest entries; 13/13
-  aliases byte-identical to sources; fuse a2_39 byte-identical to
-  wind a2_45; typecheck clean; 172 fresh draws ≈ $0.25; 2 re-rolls
-  (rc_03 "Lava!", a3_75 Pip — both improved, takes preserved);
-  cadence recomputed from real durations, NO breaches (median laugh
-  gap 6.0s, worst 44.0s = the ceremony hold under its 45–48s claim,
-  Scene 5 39.5s under its 45s ceiling); 699.9s spoken / 13:22 wall
-  before staged holds — in the 10–30 window, NO trims (never target
-  a duration). Full detail scratchpad/ep5/narration-wave-report.md.
-  Ear-pending flags (Mike, PROVISIONAL): Ember=Playful_Girl casting
-  (shortlist MEASUREMENTS.md §8), rc_03 "Lava!" softest chant shout,
-  a3_63 "Presently." pace.
-- NARRATION WAVE CLOSED + COMMITTED (orchestrator, 7634741; Ember
-  ear shortlist delivered to Mike's phone, PROVISIONAL, no reply
-  expected). SKELETON WAVE IN FLIGHT (opus builder, spawned
-  2026-08-25 from scratchpad/ep5/skeleton-wave-worklist.md):
-  Video.tsx + full timed 31-scene table + ScenePlaceholders + Ember
-  rig + cold open + act 1 (incl. the volcano wake staging) +
-  Root/registry entries + act-1 backgrounds; mandatory still
-  self-review; gates typecheck + full --scale=0.25 render + site
-  build; report → scratchpad/ep5/skeleton-wave-report.md. Wave
-  landed, all gates green (24,948f = 13:52 registered, 31 scenes
-  timed, all held beats machine-verified, Ember rig + volcano
-  character + cold open + act 1 built, 7 plates, registry entry).
-  Showrunner sampled review: ACCEPTED with one fix in flight
-  (volcano portrait bubble tail re-anchored eye→mouth for V1/V2 +
-  the inherited pattern; builder re-gating). Rulings logged in the
-  decision log (no-arms Ember ratified, MAGMA 24f beat ratified,
-  Pip promotion sanctioned for act 3, KidSilhouette promotion
-  deferred). Act-waves worklist written:
-  scratchpad/ep5/act-waves-worklist.md (ACT2+ACT3 parallel, RECAP
-  after one lands; max 2 concurrent).
-- SKELETON WAVE CLOSED (committed c0940bb by orchestrator; successor
-  showrunner acceptance pass 2026-08-25 PASSED — fresh 16-still
-  re-render from committed code, stills_accept/, zero repairs; ruling
-  in the decision log). First ACT2+ACT3 builders and showrunner #3
-  killed ~11:47 ET at the session limit (transcripts lost).
-- ACT-WAVE SALVAGE (successor showrunner #4, 2026-08-25): the dead
-  builders' WIP audited and KEPT — act2 (s10–s17) + act3 (s18–s26)
-  structurally complete, 17/17 smoke stills render, sampled stills at
-  bar. Repairs by hand: Pip re-exports added to scenes/common.tsx
-  (typecheck now green), orphaned plates black_beach_night + meadow_day
-  adopted into the background cache with reconstructed hashes (no
-  re-roll; 12/12 cached, manifest regenerated). Rulings in
-  ep5-decision-log.md "Act-wave salvage calls". COMMIT POINT handed to
-  the orchestrator (salvage checkpoint, explicit paths in the report).
-- ACT-RESUME WAVE CLOSED (2026-08-25): ACT2 + ACT3 resumed audit-first,
-  21 repairs between them (bubble tails act-wide, over-limit bubbles,
-  evening wash, crest slab, held-beat intrusions...), all gates green
-  incl. full renders EXIT 0, showrunner sampled review ACCEPTED zero
-  repairs. Rulings in ep5-decision-log.md "Act-resume-wave calls"
-  (s23 crop kept, a3_62 summary ratified, dusty-rose ratified, tail-aim
-  kit promotion → backlog). COMMIT POINT handed to the orchestrator
-  (act2.tsx, act3.tsx, decision log, HANDOFF).
-- RECAP WAVE CLOSED + EPISODE CUT COMPLETE (2026-08-25): all five recap
-  scenes staged, 10 builder finds fixed, authoritative full-union gate
-  render EXIT 0 with zero bubble warnings (scratchpad/ep5/
-  recap-render.log), showrunner sampled review ACCEPTED zero repairs.
-  Rulings + backlog adds (volcanoBubble seat gap, SeaWorld/aimTails
-  promotions, mix-blend-mode STYLE line) in ep5-decision-log.md
-  "Recap-wave calls". No site-registry diff needed (EmberVolcano
-  already public via src/videos/registry.ts). COMMIT + DEPLOY POINT
-  handed to the orchestrator: src/videos/volcano/scenes/recap.tsx,
-  src/videos/volcano/ep5-decision-log.md, docs/HANDOFF.md.
-- Phone drop DONE: out/EmberVolcano_phone.mp4 (25.2MiB, 720p HEVC hvc1
-  CRF 29 +faststart, encoded via `npx remotion ffmpeg` — system ffmpeg
-  is not installed). Full-scale master at out/EmberVolcano.mp4 (274MB,
-  not for chat). Handed to the orchestrator for delivery to Mike.
-- Remaining (post-deploy, next session if quota kills this one): Mike's
-  FULL-CONTEXT ear/eye pass on the deployed episode (Ember casting
-  PROVISIONAL, rc_03 chant shout, a3_63 "Presently." pace, armless
-  Ember look), tweak round from his notes, then retro: LEARNINGS.md
-  entry + STYLE.md adds + BIBLE fold (ep-5 canon: volcano awake, new
-  island, Island the third named) + kit-cleanup backlog triage.
-- Then: showrunner sampled still review, gates, site gallery entry
-  (deferred to the deployable cut), deploy.
+## EP 5 — SHIPPED (2026-08-25), canon fold PENDING
+"Ember and the Mountain That Said Good Morning" (`EmberVolcano`,
+src/videos/volcano, 25284f after the 2026-10-17 Scene-21 fix), live on the
+gallery and the hub. script.md is the source of truth; ep5-decision-log.md
+holds every call (TOP items PROVISIONAL: Ember=Playful_Girl casting,
+rc_03 chant shout, a3_63 "Presently." pace, armless Ember; ep-6 tease
+RATIFIED 2026-10-26). Mike's own tweak notes never arrived; the kids rated
+it 🤩 via the hub. Ep-5 retro (LEARNINGS entry, STYLE adds, BIBLE fold:
+volcano awake, new island, Island the third named, casting findings in
+ep5-decision-log "Casting findings for the bible retro") is the ep-6
+showrunner's first job. Phone drop out/EmberVolcano_phone.mp4 delivered.
 
 ## Backlog (owned, not started)
 - **Bubbles kit gap (ep-4 B3 builder find):** the y>=170 centre clamp in
