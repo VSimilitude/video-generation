@@ -38,9 +38,9 @@ ep-7 tease = THE MOON ("WHY DOES THE MOON CHANGE SHAPE?"), Blue's
 anti-Sunny payoff FIRED, Boom casting PROVISIONAL
 (`scratchpad/ep6_boom_audition/MEASUREMENTS.md` §8), half moon lit toward
 the sunset, picture-only (NO sound pass — wave 4 unratified).
-Remaining: phone drop (master render in flight → out/BoomStorm.mp4, then
-720p HEVC hvc1 encode); **retro wave DONE 2026-10-26 — docs only,
-UNCOMMITTED until the orchestrator commits** (LEARNINGS ep-6 entry; STYLE
+Phone drop DONE (out/BoomStorm_phone.mp4, 22.5MiB, 720p HEVC, delivered to
+Mike 2026-10-26; master out/BoomStorm.mp4 233MB). Retro wave DONE,
+committed f2c0ac9 (LEARNINGS ep-6 entry; STYLE
 ×4 rules: dry-run touches nothing, finger width < pitch, `volume` for
 distance, onset grid; BIBLE ep-6 fold incl. Boom + Flash blocks, the hail
 + Stony, moon canon, ledger counts byte-exact, §5 ep-7 tease PROVISIONAL;
