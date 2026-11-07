@@ -1,6 +1,6 @@
 # Animation roadmap — puppets, poses, and stepped timing
 
-Status: Step 1 TESTED AND REJECTED 2026-11-06 (see verdict below); Step 2 is the open proposal. Origin: a Reddit creator whose Remotion video
+Status 2026-11-06: Step 1 (twos) tested and rejected; the Reddit lineage traced to the p5.brush kit below; **Step 2 (the painted medium) is the open proposal**, awaiting Mike's go. Origin: a Reddit creator whose Remotion video
 read as noticeably better than ours explained his setup as (1) tools and
 systems Claude animates *with*, (2) graphics on a puppet-and-rig system so
 Claude poses puppets instead of drawing every frame, (3) drawing "on twos"
@@ -83,7 +83,96 @@ Reddit video was the *poses*, not the frame rate — which is Step 2.
 `Stepped` and `StepDemo` stay in the tree as a hidden workbench; do not
 use `Stepped` in an episode.
 
-## Step 2 — pose-track puppet layer (the real win; spec, then Opus builds)
+## What the Reddit video's lineage actually is (found 2026-11-06)
+
+reddit.com is unreachable from this box, but the setup described in the
+reply matches a public kit: **JohnHeibel/ClaudeAnimationBase** (2.6k stars,
+Sep 2026) and the six-minute film built on it, **raiscan/all-that-time-saved**
+(YouTube G2m9CwD_ocY, "All That Time Saved" by UncleHerbert, animation and
+code by Claude Opus 5.5). Both repos are cloned read-only in the session
+scratchpad; the kit is MIT.
+
+It is **not Remotion**. It is p5.js + p5.brush rendered headless by
+Puppeteer, one pure function of time per shot, exactly our contract. What
+makes it read as hand-made is **the medium**, not the rig and not the
+frame rate (the film's own rule is "puppets on twos, camera on ones", and
+Mike rejected twos on our tweens anyway):
+
+- every shape is painted: flat wash + watercolour layer with edge bleed and
+  pigment texture, paper grain under everything, a vignette;
+- every outline is one continuous **tapered ink stroke**, never a uniform
+  SVG stroke; "plain shapes look like 2000s Flash" is the kit's first rule;
+- vertices are **jittered** per element and **re-seeded 12×/s** ("boil"),
+  so linework crawls while nothing else steps (`boilSeed(key)` per element
+  so still things do not jitter);
+- a **soft palette**, no pure black or white, few hues, one body colour in
+  three values;
+- the character is crude (a block with four legs) but has **31 acted
+  emotions** where ~12 change the body or add a painted emote (sweat,
+  hearts, bulb, rain cloud) and a colour tint (pale/flushed/green);
+- turns are **drawn key views** (front, 3/4, side, back 3/4, back) with
+  smears, never a projected rotation;
+- a 460-line ANIMATION_GUIDE.md the model reads first: three goals
+  (handmade, alive, one piece), "no text", "something happens in every
+  scene", **timing by reads** (list what the viewer must understand, give
+  each read time, one read at a time), transitions at every seam, and a
+  review loop of contact sheets / frame strips / crops at three zooms.
+
+Fork comparison of the kit's model sheets against our KidDemo and
+BoomStorm stills (text report, 2026-11-06): our silhouettes and designs are
+**better**; we lose on uniform strokes, flat fills and smooth gradients,
+geometric edges, specular white shines, saturated primaries + pure white,
+no paper, no boil. "Clean vector UI illustration" versus "painted".
+
+The film's repo adds, for later: a parametric human rig with named poses
+and an IK `reach()` whose elbow never flips (elbow pops 21 → 3), replacement
+mouths lip-synced from forced-aligned lyrics, five media (rubber hose, cut
+card, riso, banknote, doodle) each with motion rules, and a polish
+checklist of pose/staging failures the director caught.
+
+## Step 2 — the medium: a painted look for the SVG kit (the real win)
+
+Keep SVG, keep the rig, keep Remotion. Change how every mark is rendered,
+in this order (fork's ranking by gain per effort):
+
+1. **Paper + palette.** One full-frame grain plate (committed webp or
+   `feTurbulence`) at multiply/soft-light over everything, a faint vignette,
+   and a desaturated, warmer `kidTheme`: ink is near-black with a cast, white
+   becomes cream, primaries come down. Cheapest; changes the show's register.
+2. **Wobble.** `feTurbulence` + `feDisplacementMap` on each character and
+   prop group, seeded from a stable per-element key (our `phase`/`boilKey`),
+   so outline and fill distort together and joins stay clean.
+3. **Tapered outlines.** A `ribbon(points, w0, w1)` helper that emits a
+   variable-width filled path instead of a stroked one; convert the hero
+   outlines first (Drip's body, Sunny's disc), details later.
+4. **Painted fills.** Flat colour plus a turbulence-alpha second layer with a
+   darker pooled band low and a lighter dry band high. Delete gradients and
+   specular shines.
+5. **Boil.** Re-seed the displacement 10–12×/s from `frame`; everything else
+   stays on ones (matches Mike's twos verdict).
+6. **Emotes + tints.** Painted `!`, `?`, sweat, hearts, bulb, zzz that pop by
+   the head; `EMOTIONS` gains a tint column.
+
+**Gate (before any episode is touched):** a hidden `PaintDemo` composition
+rendering Drip, Sunny and one storm scene twice side by side, flat vs
+painted, as stills for Mike's phone; then a 10 s render at 0.25 scale to
+measure cost (full-frame displacement roughly doubles render time; apply
+filters per group, not per frame, if it hurts). Adoption = a STYLE.md
+"Medium" section, ep 7 onward; back-porting episodes 1–6 only if Mike asks.
+
+## Step 3 — acting, not skeletons
+
+From the kit, cheaper than a full puppet layer and probably enough:
+drawn key views per character (front, 3/4, side) with `turn()` smears;
+`take()` and `jump()` as rig verbs; emotes; a body/prop column in the
+emotion table so ~a third of emotions change more than the face; and
+"timing by reads" + the contact-sheet/strip/crop review loop written into
+docs/roles/scene-builder.md. Each is a rig.ts addition in the existing
+style.
+
+## Step 4 — pose-track puppet layer (deferred; the original Step 2)
+
+the real win; spec, then Opus builds)
 
 Goal: a scene keys *poses at times*; the system handles in-betweens,
 anticipation, overshoot, settle, holds, and stepping. "Claude poses the
@@ -128,7 +217,7 @@ Design (all pure functions of frame, same contract as `rig.ts`):
 Order: Drip first (he has arms and the most scenes), then Sunny and
 Cloudia, then the storm cast. Pip/Ray get `point`/`lean` only.
 
-## Step 3 — later, only if 1–2 plateau
+## Step 5 — later, only if the above plateau
 
 - Painted *parts* on the puppet (AI-generated textures on the SVG limbs,
   consistency via the still-review loop) — the second half of the old
