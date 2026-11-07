@@ -85,6 +85,13 @@ import {
   HEIGHT as KID_DEMO_HEIGHT,
 } from "./kid-demo/Video";
 import {
+  StepDemoVideo,
+  timeline as stepDemoTimeline,
+  FPS as STEP_DEMO_FPS,
+  WIDTH as STEP_DEMO_WIDTH,
+  HEIGHT as STEP_DEMO_HEIGHT,
+} from "./step-demo/Video";
+import {
   DripForkVideo,
   branching as dripForkBranching,
   timeline as dripForkTimeline,
@@ -329,6 +336,18 @@ export const VIDEOS: VideoEntry[] = [
     width: KID_DEMO_WIDTH,
     height: KID_DEMO_HEIGHT,
     durationInFrames: kidDemoTimeline().durationInFrames,
+    hidden: true,
+  },
+  {
+    id: "StepDemo",
+    title: "Kids' series — stepped timing A/B",
+    description:
+      "The same 8 s beat on ones, twos and threes, then ONES | TWOS side by side: Stepped wraps only the character layer. Not an episode.",
+    component: StepDemoVideo,
+    fps: STEP_DEMO_FPS,
+    width: STEP_DEMO_WIDTH,
+    height: STEP_DEMO_HEIGHT,
+    durationInFrames: stepDemoTimeline().durationInFrames,
     hidden: true,
   },
   // The player site's home-screen icon, rendered to PNG by `npm run icons`

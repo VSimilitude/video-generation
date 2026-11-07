@@ -31,6 +31,7 @@ export * from "./lines";
 export * from "./staging";
 export * from "./shards";
 export { CharacterFrame, Face, useRig, type CharacterProps, type Rig } from "./Character";
+export { Stepped } from "./Stepped";
 export { BigWordBeat, CutFlash } from "./BigWord";
 export {
   CaptionCard,
