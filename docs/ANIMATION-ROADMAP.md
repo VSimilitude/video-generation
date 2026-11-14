@@ -1,6 +1,6 @@
 # Animation roadmap — puppets, poses, and stepped timing
 
-Status 2026-11-06: Step 1 (twos) tested and rejected; the Reddit lineage traced to the p5.brush kit below; **Step 2 (the painted medium) is the open proposal**, awaiting Mike's go. Origin: a Reddit creator whose Remotion video
+Status 2026-11-14: Step 1 (twos) tested and rejected; **Step 2 is now the LOOK PACKAGE** (five gaps, not just the medium), ruled by Mike 2026-11-14 and being built as the ep-1 remaster (`DripWaterCycleRemaster`, src/videos/water-cycle-remaster/brief.md). Steps 3–5 trimmed to what still applies. Origin: a Reddit creator whose Remotion video
 read as noticeably better than ours explained his setup as (1) tools and
 systems Claude animates *with*, (2) graphics on a puppet-and-rig system so
 Claude poses puppets instead of drawing every frame, (3) drawing "on twos"
@@ -130,103 +130,207 @@ mouths lip-synced from forced-aligned lyrics, five media (rubber hose, cut
 card, riso, banknote, doodle) each with motion rules, and a polish
 checklist of pose/staging failures the director caught.
 
-## Step 2 — the medium: a painted look for the SVG kit (the real win)
+## Step 2 — the LOOK PACKAGE (spec, 2026-11-14)
 
-Keep SVG, keep the rig, keep Remotion. Change how every mark is rendered,
-in this order (fork's ranking by gain per effort):
+Keep SVG, keep the rig, keep Remotion, keep soft gouache storybook. Close the
+five gaps named in memory `ai-graphics-standard-practice-2026` with the
+reference repo's METHOD (claude-animated-shorts: measured bible, post chain,
+camera grammar, lit characters, scored verifier) — not its ink-on-3D look.
 
-1. **Paper + palette.** One full-frame grain plate (committed webp or
-   `feTurbulence`) at multiply/soft-light over everything, a faint vignette,
-   and a desaturated, warmer `kidTheme`: ink is near-black with a cast, white
-   becomes cream, primaries come down. Cheapest; changes the show's register.
-2. **Wobble.** `feTurbulence` + `feDisplacementMap` on each character and
-   prop group, seeded from a stable per-element key (our `phase`/`boilKey`),
-   so outline and fill distort together and joins stay clean.
-3. **Tapered outlines.** A `ribbon(points, w0, w1)` helper that emits a
-   variable-width filled path instead of a stroked one; convert the hero
-   outlines first (Drip's body, Sunny's disc), details later.
-4. **Painted fills.** Flat colour plus a turbulence-alpha second layer with a
-   darker pooled band low and a lighter dry band high. Delete gradients and
-   specular shines.
-5. **Boil.** Re-seed the displacement 10–12×/s from `frame`; everything else
-   stays on ones (matches Mike's twos verdict).
-6. **Emotes + tints.** Painted `!`, `?`, sweat, hearts, bulb, zzz that pop by
-   the head; `EMOTIONS` gains a tint column.
+**What the stills comparison found for OUR material**
+(`scratchpad/remaster/stills-comparison.md`, fork, 6 ep-1 stills + KidDemo
+vs 8 reference frames): gap 1 (medium/post) dominates every still; gap 3
+(light never touches characters: Drip lit identically at dawn, noon and
+indoors; no ground shadow in any episode scene) second; gap 4 (one plane:
+same sharpness/saturation/line weight at every depth) third; gap 2 (camera:
+eye-level, centred, no tilt or push) fourth in a still, probably higher in
+motion; gap 5 is a process gap whose symptoms are everywhere (p98 = 1.00 in
+every frame, s13 40% pure white, high-key everywhere). Measured: our p2
+0.20–0.37 vs ref 0.07–0.17; lum mean 0.46–0.78 vs ref 0.26–0.60 moving with
+the beat; saturation mean 0.53–0.64 vs ref 0.45–0.65 reserved by mood. Hue
+count is fine (3–7 bins) — **the gap is value structure, not hue**. Keep what
+we beat them on: silhouettes, designs, the face rig, readability, diagram
+scenes, per-character hue identity. **Faces are masked from displacement and
+blur.**
 
-**Gate (before any episode is touched):** a hidden `PaintDemo` composition
-rendering Drip, Sunny and one storm scene twice side by side, flat vs
-painted, as stills for Mike's phone; then a 10 s render at 0.25 scale to
-measure cost (full-frame displacement roughly doubles render time; apply
-filters per group, not per frame, if it hurts). Adoption = a STYLE.md
-"Medium" section, ep 7 onward; back-porting episodes 1–6 only if Mike asks.
+### Mechanisms, per gap (all pure functions of frame; additive modules under `src/lib/kid/`)
 
-## Step 3 — acting, not skeletons
+**Gap 1 — painted medium + post chain** (`paint.tsx`, `post.tsx`, `strokes.ts`)
+1. *Paper + palette.* One committed paper plate (`public/kit/paper.webp`,
+   2048², tileable) at `mix-blend-mode: multiply` 0.18 over the whole frame
+   plus `soft-light` 0.10; radial vignette (see bible). `kidPaintTheme`: ink =
+   #2b2a33 (cool near-black, never #000), paper = #f3ead8 (cream; the
+   brightest allowed value), each body colour in THREE values (shadow / base /
+   light) replacing today's base + gradient + shine.
+2. *Tapered outlines.* `ribbon(points, w0, w1, seed)` → variable-width
+   filled path (perfect-freehand `getStroke` with `thinning` 0.6, start/end
+   taper; deterministic by seed). Hero outlines first: Drip body, Sunny disc +
+   rays, Cloudia body. Uniform `stroke=` remains only for details < 2 px.
+3. *Painted fills.* `PaintFill`: flat base colour + a turbulence-alpha
+   second layer (feTurbulence baseFrequency 0.012, 2 octaves) darkening the
+   low 35% of the shape (pooled band, −12 L) and lightening the top 20% (dry
+   band, +8 L); edges get a 2–3 px bleed (`feMorphology dilate` + blur, alpha
+   0.35). **Delete gradients and specular shines** from the paint variants.
+4. *Wobble + boil.* `Boil` wrapper: `feTurbulence` (baseFrequency 0.02,
+   octaves 1) + `feDisplacementMap` scale 2.5 px on each character and prop
+   `<g>`, `seed = hash(boilKey) + floor(frame / 3)` (10 re-seeds/s); filter
+   region padded 8%; faces excluded (`Face` rendered outside the filtered
+   group). Everything else stays on ones.
+5. *Post chain* (`<Post>` around the composition, in this order): grade
+   (saturation ×0.92 by day, ×0.85 at night via `feColorMatrix`; lift blacks
+   so p2 lands in the bible band) → soft bloom on the key light only
+   (Sunny's disc, lamps: `feGaussianBlur` 18 px, `screen` 0.25, masked) →
+   grain (paper plate, above) → vignette. No lens blur full-frame; blur is
+   per plane (gap 4).
 
-From the kit, cheaper than a full puppet layer and probably enough:
-drawn key views per character (front, 3/4, side) with `turn()` smears;
-`take()` and `jump()` as rig verbs; emotes; a body/prop column in the
-emotion table so ~a third of emotions change more than the face; and
-"timing by reads" + the contact-sheet/strip/crop review loop written into
+**Gap 3 — lighting that touches the characters** (`light.ts`, `Shadowed.tsx`)
+- `LightRig` prop on every scene: `{ dir: degrees, elevation: 0–1, key: hex,
+  shadow: hex, contrast: 0–1 }` from the episode's light script (brief §4).
+- *Cast shading:* each character body gets a `shade` layer: an offset copy
+  of its silhouette filled with the shadow colour at 0.25–0.4 alpha, pushed
+  away from the key by `6 px × (1 − elevation)` and blurred 6 px, clipped to
+  the body; a 2 px rim of the key colour on the lit edge (alpha 0.3). Faces
+  untouched.
+- *Ground shadow:* `GroundShadow` ellipse on the ground plane under every
+  standing character: width 0.9× body, height 0.18× body, offset along the
+  key direction by `0.35 × body × (1 − elevation)`, colour = scene shadow
+  colour at 0.3, blur 8 px; detaches and shrinks (×0.5 at 200 px altitude)
+  when the character hovers; absent only in the shadowless scene (s21).
+- *Light pools:* lamps and Sunny project a soft cone (`radial-gradient`
+  screen 0.2) onto the plane behind them; tints the character within it.
+
+**Gap 4 — multi-plane world** (`Planes.tsx`)
+- A `World` wrapper takes `cam` (existing `Cam`) and children `Plane`
+  elements, each `{ depth: ∞|0.15|0.4|1.0|1.3, src|children }`. Translate =
+  `camera.pan × depthFactor`, scale = `1 + (cam.zoom − 1) × depthFactor`.
+  Characters are children of the depth-1.0 plane.
+- *Atmosphere by depth:* far planes get lift (+8 L), desaturation (×0.7),
+  and 1.5 px blur; mid: +3 L, ×0.9, no blur; foreground (1.3): −4 L,
+  2.5 px blur, ink weight ×1.3.
+- Plates come from `backgrounds.mjs` as one prompt PER PLANE with an alpha
+  mask step (sky plane opaque; far/mid/near plates generated on flat key
+  colour and keyed, or painted with a matching horizon cut); the brief lists
+  the plane recipe per location. Decision (remaster log D8): plain 2D
+  layers, NOT `@remotion/three` — software WebGL in headless Chrome on a
+  GPU-less WSL2 box would multiply render time; 2D parallax is a transform
+  per plane.
+
+**Gap 2 — camera and motion grammar** (`camera.ts` additions)
+- `holdCreep(frame, from, seconds)`: every hold creeps (push-in 1.00→1.02
+  over 6 s, or drift ≤0.3 px/frame); holds ≥70% of episode frames.
+- `burst(frame, at, delta)`: ease-out burst — peak velocity on frame 1 of
+  the move, decaying to <0.5 px/frame within 8–12 frames (reference: 720p
+  px/frame 6, 26, 12, 14, 6, 5, 2, 1 scaled ×1.5 for 1080p).
+- `follow(subject)` for transitions where an object carries the eye
+  (Drip's liftoff, the slide, the river); seams between scenes = 6–8 frame
+  dissolve or a continuous move; hard cuts ≤1 per scene; `CutFlash` stays
+  for Big Words.
+- Dutch tilt 2–4° only in drama beats (slosh, liftoff, check-out slide, the
+  moose); low camera (horizon in the top third) when Drip is small among
+  big things; push-in 1.00→1.06 over the reveal on every Big Word.
+- Blink schedule: 1 blink / 3–5 s, 6-frame close–open, never during a
+  `CutFlash`; `rig.blink` already exists — the rule is the schedule.
+
+**Gap 5 — the numeric LOOK bible + scored verifier** — below.
+
+### LOOK bible (numbers; the verifier measures these on 640 px thumbnails, Rec.709 luminance, HSV saturation)
+
+| Dimension | Day | Interior / overcast | Night / dawn | Rule |
+|---|---|---|---|---|
+| Luminance mean | 0.45–0.62 | 0.35–0.50 | 0.22–0.40 | ≥3 scenes of the episode < 0.40; none > 0.70 |
+| Luminance std | 0.16–0.24 | 0.14–0.22 | 0.12–0.20 | tonal range comes from light, not from saturation |
+| p2 (blacks) | 0.14–0.20 | 0.10–0.16 | 0.08–0.14 | ink is #2b2a33; nothing is #000 |
+| p98 (whites) | ≤ 0.96 | ≤ 0.94 | ≤ 0.80 | no pixel > 0.96; paper cream is the ceiling; clouds are never #fff |
+| Pure-white fraction (>0.97) | < 0.5% | < 0.5% | < 0.1% | cards included |
+| Saturation mean | 0.38–0.50 | 0.30–0.42 | 0.30–0.45 | reserved for the lit side and the hero |
+| Saturation p90 | ≤ 0.75 | ≤ 0.65 | ≤ 0.72 | |
+| Hue bins > 2% (of 24) | 3–6 | 3–5 | 3–5 | per-character hue identity kept |
+| Ink weight near / mid / far | 5 / 3.5 / 2 px (tapered, ×1.3 at depth 1.3) | same | same | measured as edge-width median on the strip |
+| Stroke-width CV (uniformity) | ≥ 0.35 | | | 0 = uniform SVG stroke, the tell |
+| Grain | multiply 0.18 + soft-light 0.10 | 0.22 + 0.12 | 0.22 + 0.12 | visible at 1080p, invisible on the phone cut |
+| Vignette | 0.18 edge darkening, radius 0.75 | 0.22 | 0.28 | |
+| Ground shadow | present under every standing body | present | present | absent only in s21 |
+| Camera holds | ≥ 70% of frames at < 0.5 px/frame | | | every hold creeps |
+| Burst decay | peak frame 1, < 0.5 px/frame by frame 12 | | | |
+| Hard cuts | ≤ 1 per scene; seams = 6–8 f dissolve or move | | | |
+| Dutch | 0° default; 2–4° drama only | | | |
+| Blinks | 1 per 3–5 s, 6 f | | | |
+| Boil | 10 re-seeds/s, 2.5 px | | | faces excluded |
+
+### Verifier rubric (fork scores each still 0–10; `scratchpad/remaster/verify.py` supplies the numbers)
+
+| # | Dimension | 10 looks like | 5 looks like | Pass |
+|---|---|---|---|---|
+| V1 | Medium | tapered ink, pooled fills, bleed, grain visible at 100% | taper present, fills still flat | ≥ 7 |
+| V2 | Value structure | bands in the bible for the scene's time of day; no pure white | one band out | ≥ 7 |
+| V3 | Light on characters | cast shade + rim consistent with the key; ground shadow matches | shadow present, direction wrong | ≥ 7 |
+| V4 | Depth | ≥ 3 planes read; far lifted/soft; overlap + scale | 2 planes, same sharpness | ≥ 6 |
+| V5 | Camera | framing per the shot plan; horizon/tilt deliberate | centred eye-level default | ≥ 6 |
+| V6 | Palette | ≤ 6 hue bins, saturation reserved | saturated everywhere | ≥ 7 |
+| V7 | Readability (ours to keep) | silhouette + face read at phone size; bubbles clear of signs | one occlusion | ≥ 8 |
+| V8 | Consistency | same Drip across the sheet; shared baseline; one light | one drift | ≥ 8 |
+
+Pass = every dimension at or above its threshold AND mean ≥ 7.5 AND the
+numeric columns inside the bible band for the scene's time of day. A fail
+names the dimension and the bible row; the builder fixes the mechanism, not
+the still.
+
+### Render-cost budget
+
+Baseline: an ep-1 scale frame at 1080p renders ≈ 0.25 s/frame on this box
+(measure first: 10 s of `DripWaterCycle` at `--scale=1`). Budget for the
+look package: **≤ 2.5× baseline** at `--scale=1` (≈ 36 min / 10 min of
+episode) and ≤ 2× at `--scale=0.25`. Measured on the `PaintDemo` 10 s clip
+with filters on/off; if over budget, in this order: drop the bleed layer,
+coarsen boil to 8 re-seeds/s, apply displacement per character not per
+prop, drop per-plane blur in favour of pre-blurred plates. Never drop the
+ground shadows or the grade.
+
+### Engineering calls (confirmed by `scratchpad/remaster/ref-method-memo.md`; remaster log D8–D11)
+
+- Remotion stays at 4.0.498. `@remotion/effects` is REJECTED: it renders
+  via WebGL/WebGPU on Chrome's HTML-in-canvas path, which cannot run in the
+  `@remotion/player` gallery on iPhone. All mechanisms are SVG filters + CSS.
+- Blink: gap 0.5–2.3 s, 4-frame half/shut/shut/half, and a blink across
+  every expression swap (reference measurement) — supersedes the 3–5 s row.
+- Tapered strokes: `perfect-freehand` (tiny, ESM, deterministic given fixed
+  points); `roughjs` only if hachure fills are wanted later.
+- Multi-plane: 2D layers (above), not `@remotion/three`.
+- Verifier: python3 + PIL/numpy if present, else node + `sharp` (already in
+  node_modules; the fork's `scratchpad/remaster/stats.mjs` is the seed).
+
+### Gate before any episode scene is built
+
+Hidden `PaintDemo` composition: three stills twice (flat vs painted) — Drip
+on the dawn ocean, Sunny's intro, a Cloud Hotel interior with Cloudia — each
+with planes, light rig and post on. A fork scores the painted side on V1–V8;
+pass per the rubric or iterate the kit. Then the 10 s cost measurement.
+Adoption for ep 7+ = a STYLE.md "Medium" section after Mike judges the
+remaster tile; episodes 1–6 are not back-ported unless he asks.
+
+## Step 3 — acting (still applies, after the look package)
+
+Drawn key views per character (front, 3/4, side) with `turn()` smears,
+`take()`/`jump()` rig verbs, painted emotes (`!`, `?`, sweat, hearts, bulb,
+zzz) that pop by the head, a tint column in `EMOTIONS`, and "timing by
+reads" + the contact-sheet/strip/crop review loop in
 docs/roles/scene-builder.md. Each is a rig.ts addition in the existing
-style.
+style. Not part of the remaster unless a scene needs one.
 
-## Step 4 — pose-track puppet layer (deferred; the original Step 2)
+## Step 4 — pose-track puppet layer (deferred)
 
-the real win; spec, then Opus builds)
-
-Goal: a scene keys *poses at times*; the system handles in-betweens,
-anticipation, overshoot, settle, holds, and stepping. "Claude poses the
-puppet" means a scene reads like:
-
-```tsx
-<Drip x={…} y={…}
-  poses={[
-    { at: 0,   pose: "rest" },
-    { at: 40,  pose: "point", side: "right", ease: "snap" },   // 6-frame anticipation + overshoot built in
-    { at: 130, pose: "shrug", hold: 45 },
-    { at: 200, pose: "cheer" },
-  ]}
-/>
-```
-
-Design (all pure functions of frame, same contract as `rig.ts`):
-
-- **Skeleton.** A small named-joint tree per character, declared as data:
-  `root → torso → head`, `torso → shoulderL → elbowL → handL` (same right),
-  optional `hipL/R → footL/R`. Each joint has rest angle, length, and a
-  clamp range. Characters without arms (Pip, Ray, blobs) declare a smaller
-  tree; the pointer leaf is just a joint.
-- **Pose.** `Record<JointName, degrees>` plus `root` offset and squash. A
-  per-character **pose library** (`POSES.drip.point`, `…wave`, `…shrug`,
-  `…lean`, `…cheer`, `…clutch`) is where the drawing craft goes; a scene
-  only names them, or passes a partial override.
-- **Pose track.** `poseAt(frame, track)` lerps joint angles with `kidEase`
-  defaults (anticipate → easeOutBack → settleWave), mirrors `emotionAt`'s
-  "from is whatever the last change left" rule, supports `hold` and
-  per-key `ease`, and quantises with `Stepped`. Holds with a tiny idle
-  overlay so a held pose still breathes.
-- **Parts.** Existing SVG limb/accessory shapes get re-rooted at joints via
-  `<Joint name="elbowL">` groups: today's `Arms pose=…` in Drip.tsx becomes
-  the first pose library. No character redraw: the silhouettes stay.
-- **Lip/face unchanged.** The face rig stays as is; `EmotionCue` and
-  `poses` are independent tracks a scene keys separately, like a real
-  dope sheet.
-- **Workbench.** `KidDemo` gets a pose sheet scene: every library pose for
-  every character as a grid still, so forks can review poses like faces.
-
-Order: Drip first (he has arms and the most scenes), then Sunny and
-Cloudia, then the storm cast. Pip/Ray get `point`/`lean` only.
+A scene keys poses at times; `poseAt(frame, track)` lerps joint angles with
+anticipation/overshoot/settle over a small named-joint tree per character,
+with a per-character pose library and a `KidDemo` pose sheet. Drip first.
+Spec stays as written in git history (this file before 2026-11-14); revive
+only if acting plateaus after Step 3.
 
 ## Step 5 — later, only if the above plateau
 
-- Painted *parts* on the puppet (AI-generated textures on the SVG limbs,
-  consistency via the still-review loop) — the second half of the old
-  Tier 2. Not before the pose layer exists; there is nothing to pose yet.
-- 60 fps container with ones/twos/fours mixing — only if YouTube motion
-  smoothness of camera moves is ever the complaint. Doubles render time.
+Painted parts on the puppet (AI textures on SVG limbs) once a pose layer
+exists; a 60 fps container only if camera smoothness is ever the complaint.
 
 ## Non-goals
 
-Engine moves (Rive/Lottie/Blender) stay rejected for the reasons in the
-graphics roadmap: the still-review + instant-deploy loop is worth more than
-any single visual gain.
+Engine moves (Rive/Lottie/Blender/Three) stay rejected: the still-review +
+instant-deploy loop is worth more than any single visual gain.

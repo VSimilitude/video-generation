@@ -31,7 +31,19 @@ explicit path only. Reference repo (MIT) cloned read-only at
 not its ink-on-3D look; our art direction stays soft gouache storybook).
 
 ### In-flight (showrunner owns this section)
-(not started)
+Wave 1 (A+B+C) IN PROGRESS 2026-11-14. Slug `src/videos/water-cycle-remaster/`,
+composition `DripWaterCycleRemaster`. Done: `narration.mjs` (125 lines verbatim,
+Drip→Lively_Girl happy 1.0, Cloudia→Abbess auto 1.0), 65 Narrator/Sunny clips
+byte-copied + cache-seeded into `public/narration/water-cycle-remaster/`, 60
+Drip/Cloudia clips generating (log scratchpad/remaster/narration-gen.log),
+`remaster-decision-log.md` D1–D7 (cameos NOT recast: the Narrator quotes
+them). Running: fork stills comparison → scratchpad/remaster/stills-comparison.md;
+research memo → scratchpad/remaster/ref-method-memo.md. A DONE (scratchpad/remaster/stills-comparison.md: medium ≫ light > planes >
+camera; bands measured). B DONE (docs/ANIMATION-ROADMAP.md Step 2 = look
+package spec + LOOK bible + rubric V1–V8 + cost budget). C: brief.md §1–7 +
+shot-plan.md (36 rows, rulings D12) DONE. Memo folded (D8–D11). Generation
+EXIT 0 (60 clips, $0.31). Pending: scratchpad/remaster/whisper-gate.md (agent). Then hand back for
+commit; wave D (kit + PaintDemo gate + acts) after that.
 
 ## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
 
