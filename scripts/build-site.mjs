@@ -127,6 +127,15 @@ if (await exists(backgroundsSrc)) {
 await writeFile(path.join(outDir, ".nojekyll"), "");
 
 const { size } = await stat(bundle);
+// public/kit holds the painted-medium plates (paper grain + multiply plates)
+// the look-package kit loads via staticFile; replace rather than merge, as above.
+const kitSrc = path.join(root, "public", "kit");
+const kitOut = path.join(outDir, "kit");
+await rm(kitOut, { recursive: true, force: true });
+if (await exists(kitSrc)) {
+  await cp(kitSrc, kitOut, { recursive: true });
+}
+
 const slugs = (await exists(narrationOut))
   ? (await readdir(narrationOut, { withFileTypes: true }))
       .filter((e) => e.isDirectory())
