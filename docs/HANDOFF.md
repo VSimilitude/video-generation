@@ -5,7 +5,35 @@ work), then this (where we are). Memory auto-loads the decision record.
 Everything below is committed and pushed on `main` unless marked otherwise.
 This file is CURRENT STATE, not a journal — git log holds the history.
 
-## MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
+## MODE: LOOK-PACKAGE CAMPAIGN — ep-1 remaster (Mike AUTONOMOUS, 2026-11-14)
+
+Mike's boot rulings 2026-11-14 (FINAL, do not re-ask): the graphics gap is
+real and wider than the painted medium alone; see memory
+`ai-graphics-standard-practice-2026` (five gaps: per-frame medium + post
+chain, measured camera/motion grammar, lighting on characters, multi-plane
+world, numeric style bible + scored verifier) and the rewrite of
+docs/ANIMATION-ROADMAP.md Step 2 (showrunner's first deliverable).
+**First demo = a from-scratch re-animation of ep 1** (`DripWaterCycle`,
+src/videos/water-cycle) as a NEW composition in a NEW slug dir: keep the
+script text and every line verbatim; re-synthesise only the voices whose
+casting changed since ep 1 (Drip: kokoro af_bella → minimax Lively_Girl
+happy; Cloudia: kokoro bf_emma → minimax Abbess; cameos per the bible's
+distinct-voice rule, log the call); Narrator af_heart and Sunny am_puck
+clips stay byte-identical. Episodes 1–6 and both CYOAs are NOT touched.
+Mode = autonomous: no sign-off stops; every creative call logged TOP-first
+in the remaster's decision log; deployed as a separate gallery tile for
+Mike to judge against the original. Standing rules: `node
+scripts/check-quota.mjs` before EVERY spawn, max 2 concurrent builders,
+builders in worktrees or strictly sequential, orchestrator commits by
+explicit path only. Reference repo (MIT) cloned read-only at
+/tmp/claude-1000/-home-mike-projects/ce0e5e19-50d6-4fee-9385-21c33d3099c2/scratchpad/refs/claude-animated-shorts
+(take its METHOD — measured bible, post chain, camera grammar, verifier —
+not its ink-on-3D look; our art direction stays soft gouache storybook).
+
+### In-flight (showrunner owns this section)
+(not started)
+
+## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
 
 Mike's boot rulings 2026-10-26 (FINAL, do not re-ask): **ep 6 = the storm,
 "WHY IS THUNDER ALWAYS LATE?"** (the ep-5 tease, ratified; the kids have
