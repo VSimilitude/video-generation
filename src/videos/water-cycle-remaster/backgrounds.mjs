@@ -262,9 +262,13 @@ export default {
     hotel_sky_lobby: {
       depth: "sky",
       prompt:
-        "the inside of a cosy grand lobby made entirely of soft cloud, empty: puffy cream and " +
-        "lavender cloud walls curving into a soft arched back wall, a warm honey coloured haze rising " +
-        "from below the floor line, the bottom fifth a soft cream cloud floor, no furniture",
+        // Re-rolled by the act-2 builder: the first roll was a pale pastel (lum 0.78, sat 0.13 under
+        // the interior band) — the LOOK bible's interior is mid-dark and saturated, lit by pools.
+        "the inside of a grand lobby made entirely of cloud, empty, in the evening: deep violet and " +
+        "dusky blue puffy cloud walls in heavy shadow curving into a tall arched back wall, the arch " +
+        "opening onto a warm amber honey haze, dark plum cloud alcoves at both sides, the bottom fifth " +
+        "a shadowed lilac cloud floor with a warm amber pool in its middle, strong contrast between " +
+        "the dark walls and the warm arch, no furniture",
     },
     hotel_sky_lobby_dim: {
       depth: "sky",
