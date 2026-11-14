@@ -31,29 +31,22 @@ explicit path only. Reference repo (MIT) cloned read-only at
 not its ink-on-3D look; our art direction stays soft gouache storybook).
 
 ### In-flight (showrunner owns this section)
-Wave 1 (A+B+C) COMMITTED 0120a21. **Wave D IN PROGRESS 2026-11-14.**
-Builder 1 DONE (kit built, PaintDemo stills rendered, verify.py: painted 9/9 IN
-per still, flat 6/4/2; cost 2.5× at scale 1 = at budget, 1.8× at 0.25; eps 1–6
-cmp-identical; typecheck/lint/site green). Fork review DONE (paintdemo-review.md): ITERATE —
-painted beats flat everywhere (D14), b passes, a/c miss on light mechanisms;
-builder 1 iteration 2 DONE (9/9 IN, eps 1–6 cmp-identical, 2.5× cost);
-fork RE-SCORE PASS (7.6/7.6/7.5, D16) → KIT GATE PASSED; awaiting the kit
-commit, then skeleton builder (Video.tsx + common.tsx + cold open + act 1),
-then act 2 in a worktree in parallel. Act-builder brief
-written: src/videos/water-cycle-remaster/act-builder-brief.md. Clip regen for
-D13 (4 lines) running/checking. D15: scripts/build-site.mjs must copy public/kit/ (tech lead). Whisper gate DONE (D13: 4 respellings,
-clips regenerating; re-gate those 4 next). Builder 1 built: additive modules
-under src/lib/kid/{paint,light,world,camera}/ + opt-in paint path on
-Drip/Sunny/Cloudia, hidden `PaintDemo` (3 flat-vs-painted pairs →
-scratchpad/remaster/paintdemo/), `scratchpad/remaster/verify.py`, 10 s cost
-measurement, before/after cmp of BoomStorm + PipPlants stills; report
-scratchpad/remaster/kit-report.md. Whisper gate agent resumed; report due at
-scratchpad/remaster/whisper-gate.md (rule CHECK clips → decision log).
-Next: fork review of the PaintDemo stills against V1–V8 (if painted scores
-WORSE than flat → STOP and report with still paths — the one Mike decision);
-then acts in worktrees, max 2 builders (s01–s11 | s12–s21, then s22–s32 |
-s33–s36), backgrounds.mjs plates per plane, registry entry, gates, phone cut.
-Spec: docs/ANIMATION-ROADMAP.md Step 2; episode docs: src/videos/water-cycle-remaster/{brief,shot-plan,remaster-decision-log}.md.
+Wave 1 committed 0120a21; kit committed 8caa4ab (gate PASS, D16); remaster
+docs+voices 80f9855; D15 site shell 262f957. **Wave D acts IN PROGRESS
+2026-11-14 15:05.** Skeleton builder (opus, main tree): MILESTONE 1 DONE 15:35 (awaiting commit;
+report scratchpad/remaster/skeleton-report.md; 63 plates generated + keyed
+offline by key-plates.mjs → plateManifest.ts, D17–D20), milestone 2 RUNNING
+(coldOpen + act1). Milestone 1 was:
+Video.tsx (ep-1 SCRIPT table verbatim) + scenes/common.tsx (LIGHT/TIME/SETS
+tables, RemasterCam, Painted* helpers) + backgrounds.mjs (ALL plane plates,
+generated) + hidden registry entry → scratchpad/remaster/skeleton-report.md;
+milestone 2 = coldOpen + act1 (s01–s11) + Drip limb paint. Queued: act 2
+(s12–s21) in a WORKTREE as soon as common.tsx exists (max 2 builders); then
+act 3 (s22–s32) | recap (s33–s36). Fork review per act against V1–V8, then
+hand back per act for commit. Whisper re-gate of the 4 D13 clips pending
+(appends to scratchpad/remaster/whisper-gate.md). Quota window resets ~21:00
+— size batches so a builder finishes before it. Briefs: act-builder-brief.md,
+shot-plan.md, brief.md §3–§4; decisions: remaster-decision-log.md (D1–D16).
 
 ## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
 

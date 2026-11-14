@@ -99,6 +99,13 @@ import {
   HEIGHT as PAINT_DEMO_HEIGHT,
 } from "./paint-demo/Video";
 import {
+  WaterCycleRemasterVideo,
+  timeline as waterCycleRemasterTimeline,
+  FPS as WATER_CYCLE_REMASTER_FPS,
+  WIDTH as WATER_CYCLE_REMASTER_WIDTH,
+  HEIGHT as WATER_CYCLE_REMASTER_HEIGHT,
+} from "./water-cycle-remaster/Video";
+import {
   DripForkVideo,
   branching as dripForkBranching,
   timeline as dripForkTimeline,
@@ -367,6 +374,18 @@ export const VIDEOS: VideoEntry[] = [
     width: PAINT_DEMO_WIDTH,
     height: PAINT_DEMO_HEIGHT,
     durationInFrames: paintDemoTimeline().durationInFrames,
+    hidden: true,
+  },
+  {
+    id: "DripWaterCycleRemaster",
+    title: "Drip's Big Adventure (Remaster)",
+    description:
+      "Episode one of Little Big World re-pictured on the look package: painted medium, light on the characters, multi-plane sets, camera grammar. Same script, same timing.",
+    component: WaterCycleRemasterVideo,
+    fps: WATER_CYCLE_REMASTER_FPS,
+    width: WATER_CYCLE_REMASTER_WIDTH,
+    height: WATER_CYCLE_REMASTER_HEIGHT,
+    durationInFrames: waterCycleRemasterTimeline().durationInFrames,
     hidden: true,
   },
   // The player site's home-screen icon, rendered to PNG by `npm run icons`

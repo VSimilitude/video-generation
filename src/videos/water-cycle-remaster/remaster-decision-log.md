@@ -6,6 +6,95 @@ listed here so he can overturn from the list after judging the deployed tile.
 Composition `DripWaterCycleRemaster`, slug `water-cycle-remaster`. The
 original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
+## 2026-11-14 — skeleton build (Video.tsx, common.tsx, plates)
+
+- **D17 Plane keying = flat key colour, keyed OFFLINE.** Every non-sky plane
+  plate is prompted on a flat key colour and keyed by
+  `src/videos/water-cycle-remaster/key-plates.mjs` (sharp, deterministic,
+  free) into `public/backgrounds/water-cycle-remaster/keyed/<key>.webp` with
+  real alpha; scenes load `plateManifest.ts` (generated) via `<Plate>` /
+  `<SetStack>`. Key colour per plate: magenta #ff00ff (default), green #00ff00
+  for the sunset "home" set (its purples sit near magenta), black = luma key
+  for translucent layers (mist, rain, spray). The keyer measures K from the
+  plate (brush-textured keys still key), ramps alpha by RGB distance, UNMIXES
+  the edge colour (O = K + (C−K)/α) and despills, then BAKES the Step-2
+  atmosphere by depth (far: sat ×0.7 + 1.5 px blur; mid ×0.9; fg brightness
+  ×0.92 + 2.5 px blur, premultiplied) so `<Plane flat>` is exact with zero live
+  filter cost. Rejected: a painted horizon cut (needs straight horizons —
+  fails for the hotel bulk, reeds, headland rock) and a live SVG chroma
+  filter (per-frame cost, the +30 s/10 s class the kit report banned).
+- **D18 Post lives in Video.tsx, once per scene.** `<Post time={TIME[id]}
+  skyRamp={SKY_RAMP.has(id)}>` wraps every scene (staged or placeholder), so
+  bands can't drift per builder. Scenes never mount a second Post; key-light
+  bloom is `<KeyBloom>` in common.tsx (Post's bloom maths, drawn inside the
+  scene — it is graded with the scene, a ≤8% saturation difference).
+- **D19 Seams.** Video.tsx dissolves each scene in over `SEAM[id]` frames
+  (6–8; 0 for s01 and the four Big Word freezes, which continue the previous
+  frozen world) with the outgoing scene drawn N frames past its end
+  underneath. Scene start frames and every DialogueAudio are exactly the
+  Series timing of ep 1's SCRIPT — the timeline does not move.
+- **D20 Post band per scene** (TIME in common.tsx): night = s01–s04 (pre-dawn,
+  dawn title, dawn) and s33–s36 (evening/night recap); interior = s14–s23
+  (cloud interior, grey hotel, rain overcast); day = the rest, incl. s13
+  (exterior noon) and the sunset s29–s32. 8 scenes in the night band (bible:
+  ≥ 3 below lum 0.40).
+
+## 2026-11-14 — D13 re-gate (whisper-gate.md "Re-gate (D13)")
+
+- **D21 Ship the four D13 clips as generated; ear calls go to Mike.** Both
+  Big Words now arrive as the intended syllables (prompted Whisper: "Ee, vap,
+  oh, ray, shun." / "Pre, sip, ih, tay, shun. Whee!"); the first-pass defects
+  are gone. Open to the ear, with the lever named: a1_25 is 4.72 s and a3_08
+  5.29 s (~0.6 s per isolated syllable) — if it reads as a spelling drill the
+  lever is fewer markers (`Ee-vap <#0.2#> oh <#0.2#> RAY-shun!`) or `speed`,
+  not wording; a3_04's "Whee!" was heard "Wait!" unprompted (rc_04's
+  identical "Whee!" was perfect) — re-roll identical text before any
+  reword; rc_04's fresh draw's "PRECIPITATION!" came back "Grecipitation" —
+  listen to the plosive, re-roll if real.
+
+## 2026-11-14 — kit gate PASSED
+
+- **D16 Kit gate PASS (iteration 2).** Fork re-score: a 7.6, b 7.6, c 7.5;
+  every V1–V8 at or above threshold; bands 9/9 IN; no regressions; rim
+  direction confirmed correct (the first "inverted" call was an invisible
+  rim). No kit-blocking fixes. KIT-minor carried into act 1's first task:
+  Drip's arms and feet go through PaintFill + ribbon like the body. V5 = 6
+  everywhere is the demo's centred framing — the shot plan fixes it. Ruling:
+  proceed to acts; the painted medium is adopted for this episode. Adoption
+  for ep 7+ (STYLE.md "Medium") waits for Mike's verdict on the tile.
+
+## 2026-11-14 — kit gate (PaintDemo)
+
+- **D15 Site shell.** `scripts/build-site.mjs` did not copy `public/kit/`;
+  the orchestrator added the one-line copy (262f957).
+- **D14 Kit gate = ITERATE, not STOP.** Fork scores (scratchpad/remaster/
+  paintdemo-review.md): painted beats flat on all three stills (means
+  a 4.9→7.5, b 4.8→7.6, c 4.9→7.3); b PASSES; a fails V3 (6) and c fails V8
+  (7, mean 7.3) on light mechanisms only; numeric bands 9/9 IN. "Painted
+  reads clearly better, not muddier; faces crisp at phone size." Builder 1
+  resumed for five fixes (shade/rim visibility, ground-shadow alpha on dark
+  grounds, c's wall slab + window daylight, b's sky dullness + uniform
+  horizon strokes + bloom, a's hard glow disc + hero saturation). Not a Mike
+  decision: painted is not worse than flat. Builder's spec deviations
+  accepted: ink-only boil (1 octave, 3 px — full-group boil cost +25 s/10 s),
+  cast-shade offset scaled to body size, rim stronger at low key, CSS
+  grade/bloom layers, planes must use PRE-BLURRED plates (live plane blur
+  +30 s/10 s). Cost 2.5× at scale 1 (at budget; bimodal box), 1.8× at 0.25.
+
+## 2026-11-14 — Whisper gate (scratchpad/remaster/whisper-gate.md: 60 clips, 49 PASS, 11 CHECK)
+
+- **D13 Four per-engine respellings in `narration.mjs` (script.md untouched):**
+  a1_25 "Ee-vap-oh-RAY-shun!" → pause-marker syllables (Whisper heard "Uh,
+  what oration?" — the Big Word must be intelligible); a3_08 likewise +
+  "WHEEE!" → "Whee!"; a3_04 "Ohhhh nooooo. WHEEE!" → "Oh, no. <#0.4#> Whee!"
+  (letter-stretch is kokoro-only per STYLE; the pause carries the drama);
+  rc_04 "WHEEE!" → "Whee!" so all three Whee reads match. Cloudia 13/13
+  PASS. No change for metric artefacts (co_04 I've, a1_06/07 slosh→slush,
+  a2_14 slow, a3_06/rc_10 fast excited) nor a2_17 "dust speck"→"Dustbeck".
+  **Ear-pending for Mike:** a2_02 "warm drop" (heard "warm giraffe"), a3_24
+  "standing", a3_33 "Dripley", a2_17 "speck", a3_06/rc_10 pace. Spend:
+  Whisper ≈ 6–10 cents, MiniMax ≈ 31 cents + 2 cents for the four re-rolls.
+
 ## 2026-11-14 — shot plan rulings
 
 - **D12 Shot-plan open questions ruled** (full text at the end of
