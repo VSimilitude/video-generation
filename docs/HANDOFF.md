@@ -31,19 +31,29 @@ explicit path only. Reference repo (MIT) cloned read-only at
 not its ink-on-3D look; our art direction stays soft gouache storybook).
 
 ### In-flight (showrunner owns this section)
-Wave 1 (A+B+C) IN PROGRESS 2026-11-14. Slug `src/videos/water-cycle-remaster/`,
-composition `DripWaterCycleRemaster`. Done: `narration.mjs` (125 lines verbatim,
-Drip→Lively_Girl happy 1.0, Cloudia→Abbess auto 1.0), 65 Narrator/Sunny clips
-byte-copied + cache-seeded into `public/narration/water-cycle-remaster/`, 60
-Drip/Cloudia clips generating (log scratchpad/remaster/narration-gen.log),
-`remaster-decision-log.md` D1–D7 (cameos NOT recast: the Narrator quotes
-them). Running: fork stills comparison → scratchpad/remaster/stills-comparison.md;
-research memo → scratchpad/remaster/ref-method-memo.md. A DONE (scratchpad/remaster/stills-comparison.md: medium ≫ light > planes >
-camera; bands measured). B DONE (docs/ANIMATION-ROADMAP.md Step 2 = look
-package spec + LOOK bible + rubric V1–V8 + cost budget). C: brief.md §1–7 +
-shot-plan.md (36 rows, rulings D12) DONE. Memo folded (D8–D11). Generation
-EXIT 0 (60 clips, $0.31). Pending: scratchpad/remaster/whisper-gate.md (agent). Then hand back for
-commit; wave D (kit + PaintDemo gate + acts) after that.
+Wave 1 (A+B+C) COMMITTED 0120a21. **Wave D IN PROGRESS 2026-11-14.**
+Builder 1 DONE (kit built, PaintDemo stills rendered, verify.py: painted 9/9 IN
+per still, flat 6/4/2; cost 2.5× at scale 1 = at budget, 1.8× at 0.25; eps 1–6
+cmp-identical; typecheck/lint/site green). Fork review DONE (paintdemo-review.md): ITERATE —
+painted beats flat everywhere (D14), b passes, a/c miss on light mechanisms;
+builder 1 iteration 2 DONE (9/9 IN, eps 1–6 cmp-identical, 2.5× cost);
+fork RE-SCORE PASS (7.6/7.6/7.5, D16) → KIT GATE PASSED; awaiting the kit
+commit, then skeleton builder (Video.tsx + common.tsx + cold open + act 1),
+then act 2 in a worktree in parallel. Act-builder brief
+written: src/videos/water-cycle-remaster/act-builder-brief.md. Clip regen for
+D13 (4 lines) running/checking. D15: scripts/build-site.mjs must copy public/kit/ (tech lead). Whisper gate DONE (D13: 4 respellings,
+clips regenerating; re-gate those 4 next). Builder 1 built: additive modules
+under src/lib/kid/{paint,light,world,camera}/ + opt-in paint path on
+Drip/Sunny/Cloudia, hidden `PaintDemo` (3 flat-vs-painted pairs →
+scratchpad/remaster/paintdemo/), `scratchpad/remaster/verify.py`, 10 s cost
+measurement, before/after cmp of BoomStorm + PipPlants stills; report
+scratchpad/remaster/kit-report.md. Whisper gate agent resumed; report due at
+scratchpad/remaster/whisper-gate.md (rule CHECK clips → decision log).
+Next: fork review of the PaintDemo stills against V1–V8 (if painted scores
+WORSE than flat → STOP and report with still paths — the one Mike decision);
+then acts in worktrees, max 2 builders (s01–s11 | s12–s21, then s22–s32 |
+s33–s36), backgrounds.mjs plates per plane, registry entry, gates, phone cut.
+Spec: docs/ANIMATION-ROADMAP.md Step 2; episode docs: src/videos/water-cycle-remaster/{brief,shot-plan,remaster-decision-log}.md.
 
 ## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
 

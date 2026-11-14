@@ -166,7 +166,7 @@ export default {
       text: "That has a name, and it is a big one. When the sun warms water until it floats up into the air, that is evaporation.",
       ...NARRATOR,
     },
-    a1_25_drip: { text: "Ee-vap-oh-RAY-shun!", ...DRIP },
+    a1_25_drip: { text: "Ee <#0.2#> vap <#0.2#> oh <#0.2#> RAY <#0.2#> shun!", ...DRIP }, // D13: MiniMax respelling of "Ee-vap-oh-RAY-shun!" (Whisper heard "Uh, what oration?")
     a1_26_narrator: { text: "Evaporation. Say it with him.", ...NARRATOR },
     a1_27_drip: {
       text: "EE-VAP-OH-RAY-SHUN! I am doing evaporation! I am the best at it!",
@@ -288,7 +288,7 @@ export default {
     a3_01_cloudia: { text: "Everybody OUT! It is check-out time!", ...CLOUDIA },
     a3_02_drip: { text: "Wait! How do I get down the stairs?", ...DRIP },
     a3_03_cloudia: { text: "Darling. There are no stairs.", ...CLOUDIA },
-    a3_04_drip: { text: "Ohhhh nooooo. WHEEE!", ...DRIP },
+    a3_04_drip: { text: "Oh, no. <#0.4#> Whee!", ...DRIP }, // D13: MiniMax respelling of "Ohhhh nooooo. WHEEE!" (letter-stretch is kokoro-only)
     a3_05_narrator: {
       text: "Down he went. The best waterslide ever built, and it goes all the way from the sky to the ground.",
       ...NARRATOR,
@@ -301,7 +301,7 @@ export default {
       text: "When drops fall out of a cloud, that is precipitation. Rain, snow, sleet, hail. All of it is precipitation.",
       ...NARRATOR,
     },
-    a3_08_drip: { text: "Pre-sip-ih-TAY-shun! WHEEE!", ...DRIP },
+    a3_08_drip: { text: "Pre <#0.2#> sip <#0.2#> ih <#0.2#> TAY <#0.2#> shun! Whee!", ...DRIP }, // D13: MiniMax respelling of "Pre-sip-ih-TAY-shun! WHEEE!"
     a3_09_narrator: { text: "Precipitation. The falling part.", ...NARRATOR },
     a3_10_narrator: {
       text: "Drip landed high on a mountain. Sploosh.",
@@ -437,7 +437,7 @@ export default {
       ...CLOUDIA,
     },
     rc_04_drip: {
-      text: "PRECIPITATION! The best waterslide ever! WHEEE!",
+      text: "PRECIPITATION! The best waterslide ever! Whee!", // D13: "WHEEE!" → "Whee!" (MiniMax)
       ...DRIP,
     },
     rc_05_narrator: {
