@@ -6,6 +6,44 @@ listed here so he can overturn from the list after judging the deployed tile.
 Composition `DripWaterCycleRemaster`, slug `water-cycle-remaster`. The
 original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
+## 2026-11-14 — act 3 built (scratchpad/remaster/act3-report.md)
+
+- **D29 Checkpoint commits before fork review (acts 2 and 3).** Both acts
+  passed their own gates (typecheck, lint 0, every-frame 0.25 EXIT 0) while
+  the quota pause blocks their fork reviews until 02:00; the composition is
+  registry-hidden, so committing now protects five hours of builder work at
+  no audience risk. Reviews + the polish pass follow; fixes land as later
+  commits.
+- **D28 Act 3 rulings.** Verify misses on s31 (sky only), s30 (paper map),
+  s23 (rain sky), s22 (lilac lobby) are band exceptions under `--sky`, not
+  faked dark blobs — accepted. Bubble tails point down only, so s22 Cloudia
+  (upper-left) and s32 Sunny (upper-centre) deviate from the plan — accepted.
+  Polish pass: reconcile the lobby desk + sign between act 2 and act 3 (one
+  shared painted prop in common.tsx or act2kit → the act-2 version is canon
+  since it carries Cloudia's desk shadow); the moose reads flat (PaintFill +
+  ribbon, like Drip's limbs); s24 winter boulder stays mossy; s29 striped
+  sea plate → re-roll; `home_sky_sunset`'s hidden small sun is fine. For the
+  recap builder: `PaintedRing` exported from act3kit; check the s35 bath
+  callback against the new bathtub plate.
+
+## 2026-11-14 — act 2 built (worktree; scratchpad in .claude/worktrees/agent-a65a0e019959b2260/scratchpad/remaster/act2-report.md)
+
+- **D27 Polish-pass item: bubble paper → cream.** The kit bubble paints
+  #fffdf7, so every frame with a bubble up fails p98/white. Fix = an
+  optional `paper` prop on SpeechBubble/Bubbles defaulting to today's value
+  (eps 1–6 unchanged), set to #f3ead8 by the remaster's common.tsx. Also in
+  the polish pass: a sun-free `hotel_sky` re-roll for s13/s19/s21, s13's
+  awning wash + Cloudia's bubble tail, s15 mid-dive fog, act-1 L1–L7.
+- **D26 Hotel interior = dusk-violet room, not "noon cream".** The act-2
+  builder re-rolled `hotel_sky_lobby` to land the bible's interior band
+  (first pass measured lum 0.75–0.84, sat 0.06–0.20). Ruling: the band wins;
+  the hotel is lit by its lamps and the window shows the noon sky, the room
+  itself is cool and dim — brief §4 row 13–17 amended to "top soft key from
+  the window + amber lamp pools; room cool violet". KEVIN arrow in brass
+  (one warm family) accepted; the Big Word card's own purple/yellow and
+  s20's p2 floor are accepted exceptions. Act 2 gates: typecheck, lint 0,
+  every-frame 5430–10210 at 0.25 EXIT 0. Fork review after the quota pause.
+
 ## 2026-11-14 — act 1 review (scratchpad/remaster/act1-review.md)
 
 - **D25 Act 1 = ACCEPT WITH FIXES.** Fork: s01–s04, s10 PASS (7.5–7.6); s05–s09,

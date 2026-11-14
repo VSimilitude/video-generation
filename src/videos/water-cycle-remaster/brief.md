@@ -71,7 +71,7 @@ his disc; when he is off screen the key still comes from where he last was.
 | 5–8 | sunrise→morning | rising right → 45°, warm yellow | cool blue | medium-high | Sunny enters: key brightens 2 steps over his entrance |
 | 9–11 | morning | high right, warm | blue | high | liftoff: Drip's shadow detaches from the water and shrinks |
 | 12 | climb | overhead, cooling | grey-blue | falling | atmosphere thickens with altitude |
-| 13–17 | noon above the cloud deck | top, soft white-warm | soft grey | low (cloud = giant softbox) | interior glow from below the floor |
+| 13–17 | noon above the cloud deck | top soft key from the window + amber lamp pools | cool violet room | low (cloud = giant softbox) | room reads dusk-violet (D26); window shows the noon sky |
 | 18 | Big Word | card | — | — | |
 | 19–20 | filling | top, dimming | grey | lower | palette cools one band per scene |
 | 21 | grey and heavy | diffuse, nearly none | blue-grey | lowest | the only near-shadowless scene; the darkest scene |

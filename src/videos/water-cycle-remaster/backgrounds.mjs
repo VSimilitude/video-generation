@@ -484,26 +484,31 @@ export default {
     },
     wants_channel: {
       bright: 0.88,
+      sat: 1.2,
       depth: "sky",
       prompt: "a gouache painting of a straight irrigation channel of water running between rows of green crop fields toward low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_tower: {
       bright: 0.88,
+      sat: 1.2,
       depth: "sky",
       prompt: "a gouache painting of a round water tower tank on tall legs standing over green fields and low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_tap: {
       bright: 0.88,
+      sat: 1.2,
       depth: "sky",
       prompt: "a gouache painting of a simple kitchen sink with a plain curved tap and a little water running, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_kettle: {
       bright: 0.88,
+      sat: 1.2,
       depth: "sky",
       prompt: "a gouache painting of a round cream kettle on a stove top in a cosy kitchen, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_bathtub: {
       bright: 0.88,
+      sat: 1.2,
       depth: "sky",
       prompt: "a gouache painting of an old white clawfoot bathtub full of water and soap bubbles seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a cosy tiled bathroom, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
