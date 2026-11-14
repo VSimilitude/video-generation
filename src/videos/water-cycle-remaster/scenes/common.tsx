@@ -281,6 +281,9 @@ export function useLookAtSpeaker(
  * `x` moved the bubble away from its speaker, because the default tail sits at
  * a fixed inset from the bubble's corner and will then be pointing at nobody.
  */
+/** Bubble paper in the night band: cream dimmed so the bubble stays under the band's p98 ceiling. */
+export const NIGHT_PAPER = "#cdc3b1";
+
 export const Bubbles: React.FC<{
   scene: TimedScene;
   cast: Cast;
@@ -299,7 +302,9 @@ export const Bubbles: React.FC<{
   >;
   fontSize?: number;
   maxWidth?: number;
-}> = ({ scene, cast, text, at, fontSize, maxWidth }) => (
+  /** Bubble paper. Default: paint cream #f3ead8 (never #fff), dimmed in the night band (p98 ≤ 0.80). */
+  background?: string;
+}> = ({ scene, cast, text, at, fontSize, maxWidth, background = TIME[scene.id] === "night" ? NIGHT_PAPER : kidPaintTheme.paper }) => (
   <>
     {(scene.turns ?? []).map((turn, i) => {
       const key = lineKeyOf(turn);
@@ -329,6 +334,7 @@ export const Bubbles: React.FC<{
           until={turn.from + turn.durationInFrames}
           fontSize={fontSize}
           maxWidth={maxWidth}
+          background={background}
         />
       );
     })}
@@ -424,7 +430,7 @@ export const LIGHT: Record<string, LightRig> = {
  */
 export const TIME: Record<string, TimeOfDay> = {
   s01_dawn: "night",
-  s02_title: "night",
+  s02_title: "day",
   s03_ocean_wide: "night",
   s04_slosh: "night",
   s05_sunrise: "day",
@@ -533,10 +539,10 @@ const stack = (s: PlateStack) => s;
  */
 export const SETS = {
   ocean: {
-    predawn: stack({ sky: "ocean_sky_predawn", far: "ocean_far_dawn", mid: "ocean_mid_dawn", near: "ocean_near_dawn", fg: "ocean_fg_spray", haze: "#8a6a86", bg: "#151a4c", groundY: 860, groundLum: 0.22 }),
-    dawn: stack({ sky: "ocean_sky_dawn", far: "ocean_far_dawn", mid: "ocean_mid_dawn", near: "ocean_near_dawn", fg: "ocean_fg_spray", haze: "#c8a0a0", bg: "#43367a", groundY: 860, groundLum: 0.25 }),
-    sunrise: stack({ sky: "ocean_sky_sunrise", far: "ocean_far_morning", mid: "ocean_mid_dawn", near: "ocean_near_dawn", fg: "ocean_fg_spray", haze: "#f0d0a0", bg: "#6a8ac8", groundY: 860, groundLum: 0.3 }),
-    morning: stack({ sky: "ocean_sky_morning", far: "ocean_far_morning", mid: "ocean_mid_morning", near: "ocean_near_morning", fg: "ocean_fg_spray", haze: "#cfe0ea", bg: "#5a9ad4", groundY: 860, groundLum: 0.35 }),
+    predawn: stack({ sky: "ocean_sky_predawn", far: "ocean_far_dawn", mid: "ocean_mid_dawn", near: "ocean_near_dawn", haze: "#8a6a86", bg: "#151a4c", groundY: 860, groundLum: 0.22 }),
+    dawn: stack({ sky: "ocean_sky_dawn", far: "ocean_far_dawn", mid: "ocean_mid_dawn", near: "ocean_near_dawn", haze: "#c8a0a0", bg: "#43367a", groundY: 860, groundLum: 0.25 }),
+    sunrise: stack({ sky: "ocean_sky_sunrise", far: "ocean_far_morning", mid: "ocean_mid_morning", haze: "#f0d0a0", bg: "#6a8ac8", groundY: 860, groundLum: 0.3 }),
+    morning: stack({ sky: "ocean_sky_morning", far: "ocean_far_morning", mid: "ocean_mid_morning", haze: "#cfe0ea", bg: "#5a9ad4", groundY: 860, groundLum: 0.35 }),
   },
   sky: {
     morning: stack({ sky: "sky_sky_high", far: "sky_far_streaks", haze: "#d8e6f0", bg: "#4a8ad0", groundY: 1000, groundLum: 0.5 }),
@@ -664,6 +670,20 @@ export const Plate: React.FC<{
   );
 };
 
+/** Painted top edge of a keyed plate (fraction of its height; 0 for full plates). */
+export function plateTop(k: PlateKey): number {
+  const e = PLATES[k] as { top?: number };
+  return e.top ?? 0;
+}
+
+/**
+ * The `y` offset that puts plate `k`'s painted top edge (its horizon / band
+ * top, measured by key-plates.mjs) at screen y `target` (default bleed 0.1).
+ */
+export function horizonAt(k: PlateKey, target: number, bleed = 0.1): number {
+  return target - (-HEIGHT * bleed + plateTop(k) * HEIGHT * (1 + 2 * bleed));
+}
+
 /** Crossfade two plates (the ep-1 SkyBlend, re-pictured: sunrise, the snow dissolve, greying). */
 export const SkyBlend: React.FC<{ from: PlateKey; to: PlateKey; u: number; y?: number; fit?: "cover" | "width" }> = ({
   from,
@@ -694,18 +714,25 @@ export const SetStack: React.FC<{
   cam: Cam;
   swap?: Partial<Record<PlaneName, PlateKey>>;
   offsets?: Partial<Record<PlaneName, number>>;
+  /** Put a plane's painted top edge at this screen y (overrides `offsets` for that plane). */
+  horizons?: Partial<Record<PlaneName, number>>;
   hide?: PlaneName[];
+  /** Plate overscan per side (default 0.1). Raise to ~0.25 for pull-outs below zoom 0.85. */
+  bleed?: number;
   sky?: React.ReactNode;
   far?: React.ReactNode;
   mid?: React.ReactNode;
   stage?: React.ReactNode;
   fg?: React.ReactNode;
   skyFit?: "cover" | "width";
-}> = ({ set, cam, swap = {}, offsets = {}, hide = [], sky, far, mid, stage, fg, skyFit }) => {
+}> = ({ set, cam, swap = {}, offsets = {}, horizons = {}, hide = [], bleed = 0.1, sky, far, mid, stage, fg, skyFit }) => {
   const plate = (p: PlaneName) => {
     if (hide.includes(p)) return null;
     const k = swap[p] ?? set[p];
-    return k ? <Plate k={k} y={offsets[p] ?? 0} fit={p === "sky" ? skyFit : undefined} /> : null;
+    if (!k) return null;
+    const h = horizons[p];
+    const y = h !== undefined ? horizonAt(k, h, bleed) : offsets[p] ?? 0;
+    return <Plate k={k} y={y} bleed={bleed} fit={p === "sky" ? skyFit : undefined} />;
   };
   return (
     <World cam={cam}>

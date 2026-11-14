@@ -30,10 +30,10 @@
     "prompt": "a distant calm sea seen from water level: a flat strip of pale violet blue ocean with faint soft swell lines filling only the bottom half of the frame, its top edge a straight level horizon, very distant, soft, hazy, pale, low contrast, slightly blurred, atmospheric perspective, everything above the horizon on a plain flat solid bright magenta (#ff00ff) background, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "ocean_far_morning": {
-    "hash": "7c831f430c23d596",
+    "hash": "413293343a24cd96",
     "outFile": "ocean_far_morning.webp",
     "aspectRatio": "16:9",
-    "prompt": "a distant calm sea seen from water level: a flat strip of pale teal blue ocean with faint soft swell lines and tiny sparkles filling only the bottom half of the frame, its top edge a straight level horizon, very distant, soft, hazy, pale, low contrast, slightly blurred, atmospheric perspective, everything above the horizon on a plain flat solid bright magenta (#ff00ff) background, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a distant calm open sea seen from water level: a soft hazy swell line, a flat strip of pale teal blue water with faint soft swell lines filling only the bottom half of the frame, its top edge one smooth straight level horizon, open water only, no buildings, no land, no islands, no city, very distant, soft, hazy, pale, low contrast, slightly blurred, atmospheric perspective, everything above the horizon on a plain flat solid bright magenta (#ff00ff) background, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "ocean_mid_dawn": {
     "hash": "4611d2214eb8f656",
@@ -72,10 +72,10 @@
     "prompt": "an open clear high sky with no ground and no horizon, rich cornflower blue at the top easing to a lighter warm blue at the bottom, smooth even colour, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "sky_far_streaks": {
-    "hash": "c36941e0dbd0048c",
+    "hash": "f5af5279fe13c5dd",
     "outFile": "sky_far_streaks.webp",
     "aspectRatio": "16:9",
-    "prompt": "four long soft cream white cloud streaks clearly visible, drifting horizontally across the frame with warm peach undersides, soft edges, on a plain flat solid bright green (#00ff00) background, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "three long thin horizontal cirrus cloud wisps like single dry brush strokes, cream with warm peach undersides, stretched across the upper middle of the frame, on a plain flat solid bright green (#00ff00) background, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "layers_sky": {
     "hash": "9e0e9510d2289fea",
@@ -252,10 +252,10 @@
     "prompt": "tall green grass blades and a few reeds very close to the camera rising from the bottom left and bottom right corners, the centre empty, on a plain flat solid bright magenta (#ff00ff) background, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "home_sky_sunset": {
-    "hash": "7ad7605ae789d66c",
+    "hash": "026bd191a55d399f",
     "outFile": "home_sky_sunset.webp",
     "aspectRatio": "16:9",
-    "prompt": "a warm sunset sky over the sea, deep orange and coral low on the left, rose pink and soft purple higher up, violet at the top right, a few peach cloud streaks, even colour, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "an empty evening sky only, no sun, no sea, no land, no horizon line, deep orange and coral at the lower left corner, rose pink and soft purple higher up, deep violet at the top right, a few long thin peach cloud streaks, smooth even colour, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "home_sky_evening": {
     "hash": "f9e0a30d36b75e3b",
@@ -294,58 +294,58 @@
     "prompt": "a large dark near rock headland very close to the camera filling the left two thirds of the frame from top to bottom, dark purple brown with a warm orange rim on its right edge, on a plain flat solid bright green (#00ff00) background on the right, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "everywhere_lake": {
-    "hash": "dccc78ccc963f53f",
+    "hash": "933a166242a48e27",
     "outFile": "everywhere_lake.webp",
     "aspectRatio": "16:9",
-    "prompt": "a calm mountain lake on a bright morning, pine trees along the far shore, still blue water in the foreground, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a calm round mountain lake on a bright morning, rounded pine trees along the far shore, still blue water filling the whole foreground to the bottom edge, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "everywhere_paddy": {
-    "hash": "dee5923630b2ed61",
+    "hash": "725e3fe4a4d2e140",
     "outFile": "everywhere_paddy.webp",
     "aspectRatio": "16:9",
-    "prompt": "flooded green rice paddy terraces on a bright morning, mirror still water reflecting the blue sky, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of flooded green rice paddy terraces on a bright morning, flat still water reflecting a blue sky, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "everywhere_puddle": {
-    "hash": "a4060e01f0b6e0cb",
+    "hash": "23b78e0ad0340261",
     "outFile": "everywhere_puddle.webp",
     "aspectRatio": "16:9",
-    "prompt": "a single shallow rain puddle on a grey stone pavement corner seen from low down, bright morning, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a shallow rain puddle of clear blue water reflecting the blue sky, lying in a sandy dirt path through green grass, seen from low down, bright morning, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "everywhere_dogbowl": {
-    "hash": "1becfa508232515d",
+    "hash": "aee4e2875581c46d",
     "outFile": "everywhere_dogbowl.webp",
     "aspectRatio": "16:9",
-    "prompt": "a round blue pet water bowl full of water on a warm tiled kitchen floor, close and low, bright morning, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a simple shallow round blue dog water dish full of water on a warm tiled kitchen floor, seen close and low, bright morning, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_channel": {
-    "hash": "39427a0219dd847e",
+    "hash": "5da29aa0b485e692",
     "outFile": "wants_channel.webp",
     "aspectRatio": "16:9",
-    "prompt": "a straight irrigation channel of water running between rows of green crop fields, late afternoon gold light from the left, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a straight irrigation channel of water running between rows of green crop fields toward low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_tower": {
-    "hash": "52fe237d2933890a",
+    "hash": "c0102c56e540c956",
     "outFile": "wants_tower.webp",
     "aspectRatio": "16:9",
-    "prompt": "a round water tower tank on tall legs standing over green fields, late afternoon gold light from the left, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a round water tower tank on tall legs standing over green fields and low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_tap": {
-    "hash": "44e6e605636e3311",
+    "hash": "d12574c03fa60589",
     "outFile": "wants_tap.webp",
     "aspectRatio": "16:9",
-    "prompt": "a kitchen sink with a curved metal tap, close up, warm late afternoon window light from the left, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a simple kitchen sink with a plain curved tap and a little water running, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_kettle": {
-    "hash": "4ac32930a1a86148",
+    "hash": "c1d92e13282c878e",
     "outFile": "wants_kettle.webp",
     "aspectRatio": "16:9",
-    "prompt": "a rounded kettle on a stove top in a cosy kitchen, close up, warm late afternoon light from the left, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a round cream kettle on a stove top in a cosy kitchen, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_bathtub": {
-    "hash": "45f7b3a1904c4805",
+    "hash": "ac031835ce0ca0e6",
     "outFile": "wants_bathtub.webp",
     "aspectRatio": "16:9",
-    "prompt": "a white bathtub full of water and bubbles in a cosy bathroom, a small yellow rubber toy duck floating, warm light, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of an old white clawfoot bathtub full of water and soap bubbles seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a cosy tiled bathroom, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "mind_bathtub": {
     "hash": "8fc8d8597b7874d8",

@@ -224,15 +224,31 @@ async function bake(rgba, w, h, atm) {
 }
 
 await mkdir(KEYED_DIR, { recursive: true });
+const oldManifest = await readFile(path.join(HERE, "plateManifest.ts"), "utf8").catch(() => "");
+const oldTop = Object.fromEntries([...oldManifest.matchAll(/"([^"]+)": \{[^}]*"top":([0-9.]+)/g)].map((m) => [m[1], +m[2]]));
 const plates = {};
 const report = [];
 for (const [key, spec] of Object.entries(config.backgrounds)) {
   const src = generated[key];
   const depth = spec.depth ?? "sky";
   if (!src) { report.push(`${key}: MISSING (not generated)`); continue; }
-  if (!spec.key) { plates[key] = { src, depth, keyed: false }; continue; }
+  if (!spec.key && !spec.bright && !spec.sat) { plates[key] = { src, depth, keyed: false }; continue; }
+  if (!spec.key) {
+    // a full (sky/insert) plate with a baked value trim: opaque copy in keyed/
+    const rel = `backgrounds/${SLUG}/keyed/${key}.webp`;
+    plates[key] = { src: rel, depth, keyed: false };
+    if (only && !only.includes(key)) continue;
+    const { data, info } = await sharp(path.join(PUB, src)).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    const n = info.width * info.height;
+    const rgba = Buffer.alloc(n * 4);
+    for (let i = 0; i < n; i++) { rgba[i * 4] = data[i * 3]; rgba[i * 4 + 1] = data[i * 3 + 1]; rgba[i * 4 + 2] = data[i * 3 + 2]; rgba[i * 4 + 3] = 255; }
+    const baked = await bake(rgba, info.width, info.height, { sat: spec.sat ?? 1, blur: 0, bright: spec.bright ?? 1 });
+    await sharp(baked, { raw: { width: info.width, height: info.height, channels: 4 } }).webp({ quality: 90 }).toFile(path.join(PUB, rel));
+    report.push(`${key}: value-trim sat=${spec.sat ?? 1} bright=${spec.bright ?? 1}`);
+    continue;
+  }
   const keyedRel = `backgrounds/${SLUG}/keyed/${key}.webp`;
-  plates[key] = { src: keyedRel, depth, keyed: true };
+  plates[key] = { src: keyedRel, depth, keyed: true, top: oldTop[key] ?? 0 };
   if (only && !only.includes(key)) continue;
   const { data, info } = await sharp(path.join(PUB, src)).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const n = info.width * info.height;
@@ -244,14 +260,49 @@ for (const [key, spec] of Object.entries(config.backgrounds)) {
     plates[key] = { src, depth, keyed: false };
     continue;
   }
+  if (spec.killPink) {
+    // stray key-pink specks inside the painting (spray, foam tips) → transparent
+    for (let i = 0; i < n; i++) {
+      const r = res.out[i * 4], g = res.out[i * 4 + 1], b = res.out[i * 4 + 2];
+      if (r > g + 55 && b > g + 25) res.out[i * 4 + 3] = 0;
+    }
+  }
   if (spec.fill === "below") fillBelow(res.out, info.width, info.height, data);
-  const baked = await bake(res.out, info.width, info.height, atmosphere(depth));
+  if (spec.featherTop) {
+    // soften the painted top edge: per column, alpha ramps in over `featherTop` × height below the first opaque row
+    const f = Math.max(2, Math.round(spec.featherTop * info.height));
+    for (let x = 0; x < info.width; x++) {
+      let t = -1;
+      for (let y = 0; y < info.height; y++) if (res.out[(y * info.width + x) * 4 + 3] > 128) { t = y; break; }
+      if (t < 0) continue;
+      for (let y = 0; y < info.height; y++) {
+        const i = (y * info.width + x) * 4 + 3;
+        if (y < t) res.out[i] = 0;
+        else if (y < t + f) res.out[i] = Math.round(res.out[i] * ((y - t) / f));
+      }
+    }
+  }
+  const atm0 = atmosphere(depth);
+  // per-plate saturation trim (`sat` in backgrounds.mjs) on top of the depth atmosphere
+  const atm = spec.sat || spec.bright
+    ? { ...(atm0 ?? { sat: 1, blur: 0, bright: 1 }), sat: (atm0?.sat ?? 1) * (spec.sat ?? 1), bright: (atm0?.bright ?? 1) * (spec.bright ?? 1) }
+    : atm0;
+  const baked = await bake(res.out, info.width, info.height, atm);
   await sharp(baked, { raw: { width: info.width, height: info.height, channels: 4 } })
     .webp({ quality: 90, alphaQuality: 100 })
     .toFile(path.join(PUB, keyedRel));
+  // painted top edge: median over columns of the first row with alpha > 0.5 (fraction of height)
+  const tops = [];
+  for (let x = 0; x < info.width; x += 8) {
+    let t = info.height;
+    for (let y = 0; y < info.height; y++) if (baked[(y * info.width + x) * 4 + 3] > 128) { t = y; break; }
+    tops.push(t);
+  }
+  tops.sort((a, b) => a - b);
+  plates[key].top = +(tops[tops.length >> 1] / info.height).toFixed(3);
   let opaque = 0;
   for (let i = 0; i < n; i++) if (baked[i * 4 + 3] > 128) opaque++;
-  report.push(`${key}: ${spec.key} ${res.K ? `K=${res.K.map((v) => v.toFixed(0)).join(",")} d0=${res.d0.toFixed(0)} ` : ""}opaque=${((100 * opaque) / n).toFixed(1)}%`);
+  report.push(`${key}: top=${plates[key].top} ${spec.key} ${res.K ? `K=${res.K.map((v) => v.toFixed(0)).join(",")} d0=${res.d0.toFixed(0)} ` : ""}opaque=${((100 * opaque) / n).toFixed(1)}%`);
 }
 
 const lines = Object.keys(plates).sort().map((k) => `  ${JSON.stringify(k)}: ${JSON.stringify(plates[k])},`).join("\n");

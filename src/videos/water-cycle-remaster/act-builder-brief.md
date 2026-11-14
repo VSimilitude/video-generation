@@ -79,3 +79,9 @@ with the still paths for the fork review; list every changed path. No commits.
    shot plan's creeps, bursts and tilts.
 4. Act 1's first task (KIT-minor): route Drip's arm and foot paths through
    PaintFill + ribbon like the body (edit `paint/PaintedCast.tsx` only).
+5. Whenever the camera ROLLS (dutch) or pulls out below zoom 0.85, set
+   SetStack `bleed` 0.25–0.35 — a roll without bleed exposes the frame edge
+   (act-1 review F1).
+6. Inspect every insert/montage plate alone at 100% before using it: flux
+   drifts photoreal on "puddle/fence/paving" prompts (act-1 F3); re-roll with
+   the gouache anchor enforced.

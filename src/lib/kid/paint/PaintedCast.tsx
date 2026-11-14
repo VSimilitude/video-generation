@@ -72,6 +72,8 @@ const DRIP_BODY =
   ` A ${D_BALL_R} ${D_BALL_R} 0 0 1 ${-D_BALL_R} ${D_BALL_Y}` +
   ` C ${-D_BALL_R} -34 -34 -84 0 ${D_TIP_Y} Z`;
 const DRIP_BBOX: BBox = { x: -110, y: -144, w: 220, h: 300 };
+const DRIP_ARMS_BBOX: BBox = { x: -175, y: -100, w: 350, h: 225 };
+const DRIP_FEET_BBOX: BBox = { x: -92, y: D_BALL_Y + D_BALL_R - 20, w: 184, h: 44 };
 const DRIP_BOIL_BOX: BBox = { x: -195, y: -150, w: 390, h: 335 };
 
 const DRIP_ARM: Record<string, string> = {
@@ -97,6 +99,8 @@ export const DripPaint: React.FC<FrameProps & { rig: Rig; pose: string; arms: bo
   const d = DRIP_ARM[pose] ?? DRIP_ARM.rest;
   const [hx, hy] = DRIP_HAND[pose] ?? DRIP_HAND.rest;
   const armInk = outlinePath(d, 44, 34, seed + 3, { closed: false, jitter: 0.4 });
+  // Filled limb tube: 28 at the shoulder easing to 24 at the wrist, no wobble (the ink carries it).
+  const armFill = outlinePath(d, 28, 24, seed + 6, { closed: false, jitter: 0 });
   const handInk = ribbon(circlePts(hx, hy, 22, 28), 9, 3, seed + 4, { closed: true, thickAt: thick });
   const footInk = (s: number) =>
     ribbon(ellipsePts(s * 50, D_BALL_Y + D_BALL_R + 2, 40, 20, 32), 8, 2.5, seed + 5 + s, { closed: true, thickAt: Math.PI / 2 });
@@ -108,16 +112,18 @@ export const DripPaint: React.FC<FrameProps & { rig: Rig; pose: string; arms: bo
       scale={props.scale} flip={props.flip} zIndex={props.zIndex}>
       <Boil id={`${key}-boil`} boilKey={key} frame={rig.frame} bbox={DRIP_BOIL_BOX}
         scale={paint.boil ?? DEFAULT_BOIL} every={paint.boilEvery} off={paint.boilOff} defsOnly={!all}>
-        {feet
-          ? [-1, 1].map((s) => (
-              <g key={s}>
-                <ellipse cx={s * 50} cy={D_BALL_Y + D_BALL_R + 2} rx={40} ry={20} fill={P.waterLimb.shadow} />
-                <BoilGroup id={`${key}-boil`} off={inkOff}>
-                  <path d={footInk(s)} fill={P.water.line} />
-                </BoilGroup>
-              </g>
-            ))
-          : null}
+        {feet ? (
+          <>
+            {/* Feet: one PaintFill (pooled limb blue) under the two tapered ink rings. */}
+            <PaintFill id={`${key}-feet`} bbox={DRIP_FEET_BBOX} v={P.waterLimb} seed={(seed + 11) % 997} bleed={paint.bleed ?? true}
+              shape={[-1, 1].map((s) => <ellipse key={s} cx={s * 50} cy={D_BALL_Y + D_BALL_R + 2} rx={40} ry={20} />)} />
+            {[-1, 1].map((s) => (
+              <BoilGroup key={s} id={`${key}-boil`} off={inkOff}>
+                <path d={footInk(s)} fill={P.water.line} />
+              </BoilGroup>
+            ))}
+          </>
+        ) : null}
         {arms ? (
           <g transform={`translate(0 ${swing})`}>
             {[-1, 1].map((s) => (
@@ -125,8 +131,16 @@ export const DripPaint: React.FC<FrameProps & { rig: Rig; pose: string; arms: bo
                 <BoilGroup id={`${key}-boil`} off={inkOff}>
                   <path d={armInk} fill={P.water.line} />
                 </BoilGroup>
-                <path d={d} stroke={P.waterLimb.base} strokeWidth={28} strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                <circle cx={hx} cy={hy} r={22} fill={P.waterLimb.base} />
+              </g>
+            ))}
+            {/* Arms + hands: one PaintFill over a tapered tube (was a uniform 28-unit stroke). */}
+            <PaintFill id={`${key}-arms`} bbox={DRIP_ARMS_BBOX} v={P.waterLimb} seed={(seed + 7) % 997} bleed={paint.bleed ?? true}
+              shape={[-1, 1].flatMap((s) => [
+                <path key={`a${s}`} d={armFill} transform={s === 1 ? "scale(-1 1)" : undefined} />,
+                <circle key={`h${s}`} cx={hx * -s} cy={hy} r={22} />,
+              ])} />
+            {[-1, 1].map((s) => (
+              <g key={s} transform={s === 1 ? "scale(-1 1)" : undefined}>
                 <BoilGroup id={`${key}-boil`} off={inkOff}>
                   <path d={handInk} fill={P.water.line} />
                 </BoilGroup>

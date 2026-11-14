@@ -25,6 +25,11 @@
 //   fill:  "below" for horizon BAND plates (sea, hills, banks, shore): per column, everything below
 //          the first solidly-keyed-out-to-opaque row is forced opaque (a horizon cut DERIVED from
 //          the key), so a pale band that sits close to the key colour can't go see-through.
+//   bright: optional brightness trim baked into the plate (value structure: the flux palette is
+//          high-key; the LOOK bible wants day lum 0.45–0.62 with real darks). Also on sky plates.
+//   featherTop: fraction of the plate height over which the painted top edge fades in (soft horizon).
+//   killPink: drop stray key-pink specks left inside the painting (foam tips).
+//   sat:   optional saturation trim baked into the plate (LOOK bible sat bands; ×, after depth).
 //   tint:  black-key plates only — the layer's colour (default paper cream #efe6d6); the plate's
 //          brightness only shapes alpha + a light shading.
 //   depth: the plane's depth; key-plates.mjs bakes the Step-2 atmosphere into the pixels
@@ -76,12 +81,16 @@ export default {
         "warm gold band along the bottom edge, two thin lilac cloud streaks, smooth even colour",
     },
     ocean_sky_sunrise: {
+      sat: 1.2,
+      bright: 0.85,
       depth: "sky",
       prompt:
         "an open sky in the early morning, clear blue at the top fading to warm golden yellow and " +
         "peach along the bottom edge, a few small soft cream clouds, even colour",
     },
     ocean_sky_morning: {
+      sat: 1.25,
+      bright: 0.8,
       depth: "sky",
       prompt:
         "an open clear morning sky, cornflower blue at the top easing to a pale warm blue near the " +
@@ -97,15 +106,20 @@ export default {
         `everything above the horizon ${MAGENTA}`,
     },
     ocean_far_morning: {
+      bright: 0.85,
+      sat: 0.9,
+      featherTop: 0.07,
       depth: 0.15,
       fill: "below",
       key: "magenta",
       prompt:
-        "a distant calm sea seen from water level: a flat strip of pale teal blue ocean with faint " +
-        `soft swell lines and tiny sparkles filling only the bottom half of the frame, its top edge a straight level horizon, ${FAR}, ` +
-        `everything above the horizon ${MAGENTA}`,
+        "a distant calm open sea seen from water level: a soft hazy swell line, a flat strip of pale teal blue " +
+        "water with faint soft swell lines filling only the bottom half of the frame, its top edge one smooth straight " +
+        `level horizon, open water only, no buildings, no land, no islands, no city, ${FAR}, everything above the horizon ${MAGENTA}`,
     },
     ocean_mid_dawn: {
+      bright: 0.85,
+      sat: 0.45,
       depth: 0.4,
       fill: "below",
       key: "magenta",
@@ -115,6 +129,9 @@ export default {
         `edge, above the waves ${MAGENTA}`,
     },
     ocean_mid_morning: {
+      killPink: true,
+      bright: 0.72,
+      sat: 1.25,
       depth: 0.4,
       fill: "below",
       key: "magenta",
@@ -124,6 +141,8 @@ export default {
         MAGENTA,
     },
     ocean_near_dawn: {
+      bright: 0.75,
+      sat: 0.7,
       depth: 1.0,
       fill: "below",
       key: "magenta",
@@ -133,6 +152,9 @@ export default {
         MAGENTA,
     },
     ocean_near_morning: {
+      killPink: true,
+      bright: 0.55,
+      sat: 1.3,
       depth: 1.0,
       fill: "below",
       key: "magenta",
@@ -148,6 +170,8 @@ export default {
         `right corners only, the middle empty, ${BLACK}`,
     },
     sky_sky_high: {
+      sat: 1.15,
+      bright: 0.8,
       depth: "sky",
       prompt:
         "an open clear high sky with no ground and no horizon, rich cornflower blue at the top " +
@@ -157,8 +181,8 @@ export default {
       depth: 0.15,
       key: "green",
       prompt:
-        "four long soft cream white cloud streaks clearly visible, drifting horizontally across the frame with " +
-        `warm peach undersides, soft edges, ${GREEN}`,
+        "three long thin horizontal cirrus cloud wisps like single dry brush strokes, cream with warm peach " +
+        `undersides, stretched across the upper middle of the frame, ${GREEN}`,
     },
 
     // =====================================================================
@@ -352,6 +376,8 @@ export default {
         `centre, the hilltop across the bottom third, above them ${MAGENTA}`,
     },
     valley_near_river: {
+      sat: 0.72,
+      bright: 0.9,
       depth: 1.0,
       key: "green",
       prompt:
@@ -360,6 +386,8 @@ export default {
         `the top two thirds of the frame ${GREEN}`,
     },
     valley_near_river_late: {
+      sat: 0.75,
+      bright: 0.92,
       depth: 1.0,
       key: "magenta",
       prompt:
@@ -376,8 +404,9 @@ export default {
     home_sky_sunset: {
       depth: "sky",
       prompt:
-        "a warm sunset sky over the sea, deep orange and coral low on the left, rose pink and soft " +
-        "purple higher up, violet at the top right, a few peach cloud streaks, even colour",
+        "an empty evening sky only, no sun, no sea, no land, no horizon line, deep orange and coral " +
+        "at the lower left corner, rose pink and soft purple higher up, deep violet at the top right, " +
+        "a few long thin peach cloud streaks, smooth even colour",
     },
     home_sky_evening: {
       depth: "sky",
@@ -426,40 +455,57 @@ export default {
     // INSERTS (single vignette plates, D12 Q4) and the s30 map — no keying
     // ---------------------------------------------------------------------
     everywhere_lake: {
+      bright: 0.88,
+      sat: 1.08,
       depth: "sky",
-      prompt: "a calm mountain lake on a bright morning, pine trees along the far shore, still blue water in the foreground",
+      prompt:
+        "a gouache painting of a calm round mountain lake on a bright morning, rounded pine trees along the far shore, still blue water filling the whole foreground to the bottom edge, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, no signature",
     },
     everywhere_paddy: {
+      bright: 0.88,
+      sat: 1.08,
       depth: "sky",
-      prompt: "flooded green rice paddy terraces on a bright morning, mirror still water reflecting the blue sky",
+      prompt:
+        "a gouache painting of flooded green rice paddy terraces on a bright morning, flat still water reflecting a blue sky, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare",
     },
     everywhere_puddle: {
+      bright: 0.8,
+      sat: 1.08,
       depth: "sky",
-      prompt: "a single shallow rain puddle on a grey stone pavement corner seen from low down, bright morning",
+      prompt:
+        "a gouache painting of a shallow rain puddle of clear blue water reflecting the blue sky, lying in a sandy dirt path through green grass, seen from low down, bright morning, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, no signature",
     },
     everywhere_dogbowl: {
+      bright: 0.85,
+      sat: 1.08,
       depth: "sky",
-      prompt: "a round blue pet water bowl full of water on a warm tiled kitchen floor, close and low, bright morning",
+      prompt:
+        "a gouache painting of a simple shallow round blue dog water dish full of water on a warm tiled kitchen floor, seen close and low, bright morning, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare",
     },
     wants_channel: {
+      bright: 0.88,
       depth: "sky",
-      prompt: "a straight irrigation channel of water running between rows of green crop fields, late afternoon gold light from the left",
+      prompt: "a gouache painting of a straight irrigation channel of water running between rows of green crop fields toward low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_tower: {
+      bright: 0.88,
       depth: "sky",
-      prompt: "a round water tower tank on tall legs standing over green fields, late afternoon gold light from the left",
+      prompt: "a gouache painting of a round water tower tank on tall legs standing over green fields and low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_tap: {
+      bright: 0.88,
       depth: "sky",
-      prompt: "a kitchen sink with a curved metal tap, close up, warm late afternoon window light from the left",
+      prompt: "a gouache painting of a simple kitchen sink with a plain curved tap and a little water running, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_kettle: {
+      bright: 0.88,
       depth: "sky",
-      prompt: "a rounded kettle on a stove top in a cosy kitchen, close up, warm late afternoon light from the left",
+      prompt: "a gouache painting of a round cream kettle on a stove top in a cosy kitchen, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     wants_bathtub: {
+      bright: 0.88,
       depth: "sky",
-      prompt: "a white bathtub full of water and bubbles in a cosy bathroom, a small yellow rubber toy duck floating, warm light",
+      prompt: "a gouache painting of an old white clawfoot bathtub full of water and soap bubbles seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a cosy tiled bathroom, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     mind_bathtub: {
       depth: "sky",

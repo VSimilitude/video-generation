@@ -6,6 +6,32 @@ listed here so he can overturn from the list after judging the deployed tile.
 Composition `DripWaterCycleRemaster`, slug `water-cycle-remaster`. The
 original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
+## 2026-11-14 — act 1 review (scratchpad/remaster/act1-review.md)
+
+- **D25 Act 1 = ACCEPT WITH FIXES.** Fork: s01–s04, s10 PASS (7.5–7.6); s05–s09,
+  s11 marginal/FAIL on V4/V3/V5/V8 — same Drip/Sunny, soft gouache, nothing
+  ink-on-3D; bubbles and the Big Word card read. FIX-NOW before commit: F1
+  roll exposes the frame edge (SetStack `bleed` 0.25–0.35 whenever the cam
+  rolls — now a brief rule); F2 `ocean_far_morning` top edge reads as a city
+  skyline (re-roll or feather the top 6–8%); F3 s08 `everywhere_puddle` insert
+  is photoreal (re-roll with the anchor enforced; inspect lake/paddy/dogbowl);
+  F4 s01 foam cape reads as a seashell; F5 s06 Sunny bloom too faint + smooth
+  digital sky. LATER polish (after acts 2–3): L1–L7 in the review.
+  **Bands bent (bible footnote):** day saturation-mean floor 0.32 for
+  ocean/sky-dominated frames (0.38 stays for interiors/valley); p2 ≤ 0.30
+  for sky-only frames; hue-bin ceiling 8 for gradient-sky frames; the shared
+  BigWord highlight block's 0.58% white accepted for this episode; s02's
+  high-key title card accepted.
+
+## 2026-11-14 — act scheduling
+
+- **D22 Act 3 builds in the MAIN tree beside act 1's uncommitted work.** Act 1
+  added `horizons`/`bleed` to SetStack and `bright`/`sat` plate trims that act 3
+  needs; a worktree off c82f560 would lack them. Act 2 is isolated in its own
+  worktree (file-disjoint: act2.tsx only). Ownership stays strictly by file
+  (act3.tsx/act3kit.tsx/its plate block vs act1.tsx/act1kit.tsx), so concurrent
+  edits cannot collide; common.tsx is frozen until act 1 is committed.
+
 ## 2026-11-14 — skeleton build (Video.tsx, common.tsx, plates)
 
 - **D17 Plane keying = flat key colour, keyed OFFLINE.** Every non-sky plane
@@ -28,13 +54,26 @@ original `DripWaterCycle` (src/videos/water-cycle) is untouched.
   bands can't drift per builder. Scenes never mount a second Post; key-light
   bloom is `<KeyBloom>` in common.tsx (Post's bloom maths, drawn inside the
   scene — it is graded with the scene, a ≤8% saturation difference).
+- **D23 s08 whip tour mapping (act-1 builder).** a1_19 is "Every ocean! /
+  Every lake! / Every puddle! / Every single day! HA! HA!". Chunk 1 "Every
+  ocean!" plays ON the ocean (its move = a BURST pull-out from the Drip
+  close-up); chunks 2–4 each follow a 26 px whip BURST to the lake, the puddle
+  and the dog bowl plates, so every insert matches its word. The paddy plate
+  is unused. Four chunks, four moves, as D12 Q2 asked.
+- **D24 Plate value trims (act-1 builder).** The flux plates are high-key
+  (day stills measured lum 0.65–0.73, p2 0.3–0.4). Fixes are BAKED, not live:
+  `bright`/`sat` fields in backgrounds.mjs (key-plates.mjs applies them, sky
+  plates included), a multiply `Zenith` gradient in day skies, and a dark
+  foreground swell (`FgSwell`, the 1.3 plane) for the scene's darkest value.
+  The morning ocean drops its near plate (its foam keyed out brown with pink
+  specks); `FgSwell` is the near/foreground there.
 - **D19 Seams.** Video.tsx dissolves each scene in over `SEAM[id]` frames
   (6–8; 0 for s01 and the four Big Word freezes, which continue the previous
   frozen world) with the outgoing scene drawn N frames past its end
   underneath. Scene start frames and every DialogueAudio are exactly the
   Series timing of ep 1's SCRIPT — the timeline does not move.
-- **D20 Post band per scene** (TIME in common.tsx): night = s01–s04 (pre-dawn,
-  dawn title, dawn) and s33–s36 (evening/night recap); interior = s14–s23
+- **D20 Post band per scene** (TIME in common.tsx): night = s01, s03, s04 (pre-dawn,
+  dawn; s02's sunrise title card moved to day in act-1 build — it is a sunrise picture) and s33–s36 (evening/night recap); interior = s14–s23
   (cloud interior, grey hotel, rain overcast); day = the rest, incl. s13
   (exterior noon) and the sunset s29–s32. 8 scenes in the night band (bible:
   ≥ 3 below lum 0.40).

@@ -257,6 +257,11 @@ blur.**
 | Blinks | 1 per 3–5 s, 6 f | | | |
 | Boil | 10 re-seeds/s, 2.5 px | | | faces excluded |
 
+Band exceptions (act-1 review, 2026-11-14): sky/ocean-dominated day frames
+may sit at saturation mean ≥ 0.32; sky-only frames (airborne, Sunny alone)
+may have p2 ≤ 0.30; gradient-sky frames may show up to 8 hue bins. Cards
+keep their own rows. `verify.py --sky` applies these.
+
 ### Verifier rubric (fork scores each still 0–10; `scratchpad/remaster/verify.py` supplies the numbers)
 
 | # | Dimension | 10 looks like | 5 looks like | Pass |

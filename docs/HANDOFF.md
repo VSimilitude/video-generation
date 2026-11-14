@@ -40,9 +40,20 @@ offline by key-plates.mjs → plateManifest.ts, D17–D20), milestone 2 RUNNING
 Video.tsx (ep-1 SCRIPT table verbatim) + scenes/common.tsx (LIGHT/TIME/SETS
 tables, RemasterCam, Painted* helpers) + backgrounds.mjs (ALL plane plates,
 generated) + hidden registry entry → scratchpad/remaster/skeleton-report.md;
-milestone 2 = coldOpen + act1 (s01–s11) + Drip limb paint. Queued: act 2
-(s12–s21) in a WORKTREE as soon as common.tsx exists (max 2 builders); then
-act 3 (s22–s32) | recap (s33–s36). Fork review per act against V1–V8, then
+milestone 2 = coldOpen + act1 (s01–s11) + Drip limb paint. Skeleton COMMITTED c82f560. Act-2 builder (opus, WORKTREE off c82f560, owns
+scenes/act2.tsx s12–s21 only) RUNNING since 15:35 → scratchpad/remaster/
+act2-report.md. Act 1 (s01–s11) BUILT 16:10 (gates green, every-frame 0–5429 at 0.25 EXIT 0;
+report skeleton-report.md 'Milestone 2'; verify OUT rows on day/airborne
+bands under review) → fork review DONE: ACCEPT WITH FIXES (D25; act1-review.md) → fix pass DONE 16:34
+(F1–F5, verify.py --sky; gates green) → ACT 1 READY TO COMMIT (paths in the
+report to the orchestrator; exclude scenes/act3*.tsx WIP). Fork re-check of
+the fix sheet deferred to the polish pass. **QUOTA PAUSE until 2026-11-15
+02:00 — no new spawns; act 2 (worktree) and act 3 (main) keep running and
+their reports get logged without spawning; fork reviews of acts 2–3 and the
+recap builder start after 02:00.** LATER polish L1–L7 queued for after acts 2–3.
+Act-3 builder (opus, MAIN tree, owns scenes/act3.tsx + act3kit.tsx + its plate
+block; D22) RUNNING since 16:12 → act3-report.md. Two builders live (act 2
+worktree, act 3 main). Next slot: recap (s33–s36). Act 1 commit after review. Fork review per act against V1–V8, then
 hand back per act for commit. Whisper re-gate of the 4 D13 clips pending
 (appends to scratchpad/remaster/whisper-gate.md). Quota window resets ~21:00
 — size batches so a builder finishes before it. Briefs: act-builder-brief.md,
