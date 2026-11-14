@@ -16,6 +16,7 @@
     "check:branching": "node scripts/check-branching.mjs"
   },
   "dependencies": {
+    "perfect-freehand": "1.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remotion": "4.0.498"

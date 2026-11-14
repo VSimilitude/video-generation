@@ -1,6 +1,7 @@
 import React from "react";
 import { CharacterFrame, Face, useRig, type CharacterProps } from "../Character";
 import { kidTheme } from "../theme";
+import { DripPaint, type PaintOpts } from "../paint/PaintedCast";
 
 // Drip — the hero. A water droplet: pointed on top, heavy and round at the
 // bottom, with the big eyes and small body of a character who is going to be
@@ -27,6 +28,8 @@ export type DripProps = CharacterProps & {
   shadow?: boolean;
   /** Override the arm pose; by default it follows the emotion. */
   pose?: "rest" | "hips" | "cheer" | "clutch";
+  /** Look-package painted path (ROADMAP Step 2). Unset = today's flat kit, unchanged. */
+  paint?: PaintOpts;
 };
 
 export const Drip: React.FC<DripProps> = (props) => {
@@ -46,6 +49,9 @@ export const Drip: React.FC<DripProps> = (props) => {
       : emotion === "scared"
         ? "clutch"
         : "rest");
+  if (props.paint) {
+    return <DripPaint {...props} paint={props.paint} rig={rig} pose={pose} arms={arms} feet={feet} />;
+  }
 
   // Arms swing with the breath, but a few frames *behind* it: a limb that
   // moves on the same frame as the body it hangs off reads as one rigid shape.

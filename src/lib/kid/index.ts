@@ -97,3 +97,15 @@ export {
   VOLCANO_PORTRAIT,
   type VolcanoProps,
 } from "./characters/Volcano";
+// --- Look package (docs/ANIMATION-ROADMAP.md Step 2; remaster brief §6) ----
+// All opt-in: a character's painted path runs only with its `paint` prop set.
+export { ribbon, outlinePath, samplePath, circlePts, roundRectPath, svgFromStroke, hashKey, type Pt, type Polyline, type RibbonOpts } from "./paint/strokes";
+export { PaintFill, type BBox } from "./paint/PaintFill";
+export { Boil, BoilGroup, boilSeed } from "./paint/Boil";
+export { Post, POST_BANDS, POST_FLOOR, PAPER_SRC, paperMulSrc, type Bloom, type PostGrade } from "./paint/Post";
+export { kidPaintTheme, threeValues, PAINT_INK, PAINT_PAPER, type Value3 } from "./paint/theme";
+export { DripPaint, SunnyPaint, CloudiaPaint, type PaintOpts } from "./paint/PaintedCast";
+export { keyVector, keyDirTo, rgba, softRadial, rimFor, shadeAlpha, shadePush, groundShadowGeom, type LightRig, type TimeOfDay } from "./light/light";
+export { CastShade, GroundShadow, LightPool } from "./light/Shadowed";
+export { World, Plane, camForDepth, atmosphereFor, depthFactor, type Depth, type Atmosphere } from "./world/Planes";
+export { holdCreep, creepVelocity, burst, follow, dissolve, withCam, type CamDelta } from "./camera/grammar";

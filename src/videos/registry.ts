@@ -92,6 +92,13 @@ import {
   HEIGHT as STEP_DEMO_HEIGHT,
 } from "./step-demo/Video";
 import {
+  PaintDemoVideo,
+  timeline as paintDemoTimeline,
+  FPS as PAINT_DEMO_FPS,
+  WIDTH as PAINT_DEMO_WIDTH,
+  HEIGHT as PAINT_DEMO_HEIGHT,
+} from "./paint-demo/Video";
+import {
   DripForkVideo,
   branching as dripForkBranching,
   timeline as dripForkTimeline,
@@ -348,6 +355,18 @@ export const VIDEOS: VideoEntry[] = [
     width: STEP_DEMO_WIDTH,
     height: STEP_DEMO_HEIGHT,
     durationInFrames: stepDemoTimeline().durationInFrames,
+    hidden: true,
+  },
+  {
+    id: "PaintDemo",
+    title: "Kids' series — look package gate",
+    description:
+      "FLAT (today's kit) vs PAINTED (tapered ink, painted fills, boil, light rig, ground shadows, planes, post) on three ep-1 frames, plus a 10 s cost clip. Not an episode.",
+    component: PaintDemoVideo,
+    fps: PAINT_DEMO_FPS,
+    width: PAINT_DEMO_WIDTH,
+    height: PAINT_DEMO_HEIGHT,
+    durationInFrames: paintDemoTimeline().durationInFrames,
     hidden: true,
   },
   // The player site's home-screen icon, rendered to PNG by `npm run icons`

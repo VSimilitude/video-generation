@@ -1,6 +1,7 @@
 import React from "react";
 import { CharacterFrame, Face, useRig, type CharacterProps } from "../Character";
 import { kidTheme } from "../theme";
+import { SunnyPaint, type PaintOpts } from "../paint/PaintedCast";
 
 // Sunny — the sun. Big, warm, and completely convinced he is the main
 // character, which is why his default expression is `proud` and his brows are
@@ -27,6 +28,8 @@ export type SunnyProps = CharacterProps & {
   smug?: boolean;
   /** Ray rotation speed in degrees per frame. */
   raySpeed?: number;
+  /** Look-package painted path (ROADMAP Step 2). Unset = today's flat kit, unchanged. */
+  paint?: PaintOpts;
 };
 
 export const Sunny: React.FC<SunnyProps> = (props) => {
@@ -35,6 +38,9 @@ export const Sunny: React.FC<SunnyProps> = (props) => {
   const rig = smug
     ? { ...base, emo: { ...base.emo, browAsym: -14, mouthTilt: 5 } }
     : base;
+  if (props.paint) {
+    return <SunnyPaint {...props} paint={props.paint} rig={rig} />;
+  }
 
   const spin = rig.frame * (props.raySpeed ?? 0.16) + rig.phase * 9;
   const shades = props.shades;

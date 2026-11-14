@@ -1,6 +1,7 @@
 import React from "react";
 import { CharacterFrame, Face, useRig, type CharacterProps } from "../Character";
 import { kidTheme, mixHex } from "../theme";
+import { CloudiaPaint, type PaintOpts } from "../paint/PaintedCast";
 
 // Cloudia — the cloud who runs the place. Her `fill` prop (0..1) is the
 // character's whole arc in one number: as she takes on water she darkens from
@@ -29,10 +30,15 @@ export type CloudiaProps = CharacterProps & {
   bowTie?: boolean;
   /** Manager's clipboard, tucked under one side. */
   clipboard?: boolean;
+  /** Look-package painted path (ROADMAP Step 2). Unset = today's flat kit, unchanged. */
+  paint?: PaintOpts;
 };
 
 export const Cloudia: React.FC<CloudiaProps> = (props) => {
   const rig = useRig(props);
+  if (props.paint) {
+    return <CloudiaPaint {...props} paint={props.paint} rig={rig} />;
+  }
   const fill = Math.max(0, Math.min(1, props.fill ?? 0));
 
   // Colour, sag and drip all key off the same number.
