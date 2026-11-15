@@ -267,6 +267,14 @@ for (const [key, spec] of Object.entries(config.backgrounds)) {
       if (r > g + 55 && b > g + 25) res.out[i * 4 + 3] = 0;
     }
   }
+  if (spec.erase) {
+    // polish: stray painted specks above a band plate's edge (s29's yellow "stains") → transparent.
+    // `erase: [[x, y, r], …]` in the plate's own pixels.
+    for (const [ex, ey, er] of spec.erase)
+      for (let y = Math.max(0, ey - er); y <= Math.min(info.height - 1, ey + er); y++)
+        for (let x = Math.max(0, ex - er); x <= Math.min(info.width - 1, ex + er); x++)
+          if ((x - ex) ** 2 + (y - ey) ** 2 <= er * er) res.out[(y * info.width + x) * 4 + 3] = 0;
+  }
   if (spec.fill === "below") fillBelow(res.out, info.width, info.height, data);
   if (spec.featherTop) {
     // soften the painted top edge: per column, alpha ramps in over `featherTop` × height below the first opaque row

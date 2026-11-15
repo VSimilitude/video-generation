@@ -443,6 +443,8 @@ export default {
     home_near_shore: {
       depth: 1.0,
       key: "green",
+      // polish A3-4: two stray yellow keyed specks above the foam (s29's "stain" under Drip)
+      erase: [[664, 539, 8], [672, 539, 8], [680, 539, 8], [688, 539, 8], [696, 539, 8], [704, 539, 8], [712, 539, 8], [720, 539, 8], [1208, 527, 10], [1217, 527, 10], [1226, 527, 10], [1235, 527, 10], [1244, 527, 10], [1253, 527, 10], [1262, 527, 10], [1271, 527, 10], [868, 544, 5], [668, 546, 3], [672, 546, 3], [676, 546, 3], [680, 546, 3], [684, 546, 3], [688, 546, 3], [692, 546, 3], [696, 546, 3], [700, 546, 3], [704, 546, 3], [708, 546, 3], [1203, 537, 4], [1208, 537, 4], [1213, 537, 4], [1218, 537, 4], [1223, 537, 4], [1228, 537, 4], [1233, 537, 4], [1238, 537, 4]],
       prompt:
         "a smooth sandy shoreline with lacy cream foam along the water's edge across the bottom quarter " +
         `of the frame, warm orange sunset tones and purple shadows, above the shore ${GREEN}`,
@@ -484,13 +486,14 @@ export default {
       sat: 1.08,
       depth: "sky",
       prompt:
-        "a gouache painting of a simple shallow round blue dog water dish full of water on a warm tiled kitchen floor, seen close and low, bright morning, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare",
+        "a loose hand-painted gouache illustration from a children's picture book: a low round dog water dish made of dull blue painted clay, full of water, sitting on a warm wooden floor, seen close and low, soft morning light, a plain warm ochre wall behind, flat chalky colour, the dish painted with two or three flat tones only, big flat brushy shapes, visible dry-brush strokes and paper grain, simplified forms, naive storybook style, painted by hand",
     },
     wants_channel: {
       bright: 0.88,
-      sat: 1.2,
+      sat: 1.5, // polish: the overcast re-roll came back grey (sat 0.24 in frame)
       depth: "sky",
-      prompt: "a gouache painting of a straight irrigation channel of water running between rows of green crop fields toward low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
+      // Polish A3-3: re-worded positively (flux-schnell ignores "no ..." lists); overcast sky so no painted sun (Sunny is the only sun).
+      prompt: "a loose hand-painted gouache illustration from a children's picture book: a straight irrigation channel of blue water running between rows of green crops toward soft low hills under a soft overcast pale cream sky filled evenly with flat painted cloud cover, warm late afternoon light from the left and long soft violet shadows, big flat brushy shapes, visible dry-brush strokes and paper grain, chalky matte gouache, simplified forms, naive storybook style, painted by hand",
     },
     wants_tower: {
       bright: 0.88,
@@ -502,7 +505,8 @@ export default {
       bright: 0.88,
       sat: 1.2,
       depth: "sky",
-      prompt: "a gouache painting of a simple kitchen sink with a plain curved tap and a little water running, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
+      // Polish A3-3: re-worded positively (flux-schnell ignores "no ..." lists).
+      prompt: "a loose hand-painted gouache illustration from a children's picture book: a simple kitchen sink painted in flat cream with a plain curved tap painted in one flat dull grey-blue, a little stream of water running into the sink, close up, a small window on the left, warm late afternoon gold light from the left and soft violet shadows, big flat brushy shapes, visible dry-brush strokes and paper grain, chalky matte gouache, simplified forms, naive storybook style, painted by hand",
     },
     wants_kettle: {
       bright: 0.88,
@@ -514,7 +518,8 @@ export default {
       bright: 0.88,
       sat: 1.2,
       depth: "sky",
-      prompt: "a gouache painting of an old white clawfoot bathtub full of water and soap bubbles seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a cosy tiled bathroom, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
+      // Polish A3-3: re-rolled with the anchor enforced and NO duck (the duck is an SVG prop in act3.tsx).
+      prompt: "a loose hand-painted gouache illustration from a children's picture book: an old cream clawfoot bathtub full of blue water and round soap bubbles, side on across the middle of the picture, ochre feet, a plain warm wall with a small window on the left, late afternoon gold light from the left and soft violet shadows, big flat brushy shapes, visible dry-brush strokes and paper grain, chalky matte gouache, simplified forms, naive storybook style, painted by hand",
     },
     mind_bathtub: {
       depth: "sky",

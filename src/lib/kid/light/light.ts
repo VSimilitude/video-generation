@@ -11,6 +11,11 @@ export type LightRig = {
   key: string;
   shadow: string;
   contrast: number;
+  /**
+   * Optional visibility multiplier for the light ON the character (cast-shade, lit-side band and rim
+   * alphas, clamped; also widens the rim and the shade push). Omitted = the iteration-2 look, so existing episodes are unchanged.
+   */
+  strength?: number;
 };
 
 export type TimeOfDay = "day" | "interior" | "night";
@@ -30,11 +35,16 @@ export function keyDirTo(from: { x: number; y: number }, to: { x: number; y: num
 /** Rim: width (local units) and alpha grow as the key drops toward the horizon (dawn = rim-lit). */
 export function rimFor(light: LightRig): { width: number; alpha: number } {
   const low = 1 - Math.max(0, Math.min(1, light.elevation));
-  return { width: 2 + 5 * low, alpha: 0.3 + 0.35 * low };
+  const a = 0.3 + 0.35 * low;
+  const w = 2 + 5 * low;
+  if (light.strength === undefined) return { width: w, alpha: a };
+  // With a strength the rim also widens, so it clears the body's ink line (a 2–5 unit rim sits under it).
+  return { width: w * Math.max(1, light.strength * 1.4), alpha: Math.min(0.95, a * light.strength) };
 }
 
 export function shadeAlpha(light: LightRig): number {
-  return 0.3 + 0.1 * Math.max(0, Math.min(1, light.contrast));
+  const a = 0.3 + 0.1 * Math.max(0, Math.min(1, light.contrast));
+  return light.strength === undefined ? a : Math.min(0.85, a * light.strength);
 }
 
 /**
@@ -44,7 +54,8 @@ export function shadeAlpha(light: LightRig): number {
  * overhead key keeps a floor of 40% so a top light still shades the belly.
  */
 export function shadePush(light: LightRig, bodyH: number): number {
-  return 6 * (bodyH / 50) * Math.max(0.4, 1 - light.elevation);
+  const p = 6 * (bodyH / 50) * Math.max(0.4, 1 - light.elevation);
+  return light.strength === undefined ? p : p * Math.max(1, light.strength);
 }
 
 /** Ground-shadow geometry (scene px). Spec: 0.9× w, 0.18× w tall, offset 0.35× along −key, ×0.5 at 200 px altitude. */

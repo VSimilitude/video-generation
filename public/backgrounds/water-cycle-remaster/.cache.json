@@ -312,16 +312,16 @@
     "prompt": "a gouache painting of a shallow rain puddle of clear blue water reflecting the blue sky, lying in a sandy dirt path through green grass, seen from low down, bright morning, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "everywhere_dogbowl": {
-    "hash": "aee4e2875581c46d",
+    "hash": "fe3d5b18f597d546",
     "outFile": "everywhere_dogbowl.webp",
     "aspectRatio": "16:9",
-    "prompt": "a gouache painting of a simple shallow round blue dog water dish full of water on a warm tiled kitchen floor, seen close and low, bright morning, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no lens flare, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a loose hand-painted gouache illustration from a children's picture book: a low round dog water dish made of dull blue painted clay, full of water, sitting on a warm wooden floor, seen close and low, soft morning light, a plain warm ochre wall behind, flat chalky colour, the dish painted with two or three flat tones only, big flat brushy shapes, visible dry-brush strokes and paper grain, simplified forms, naive storybook style, painted by hand, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_channel": {
-    "hash": "5da29aa0b485e692",
+    "hash": "c66a001e1a20e4c9",
     "outFile": "wants_channel.webp",
     "aspectRatio": "16:9",
-    "prompt": "a gouache painting of a straight irrigation channel of water running between rows of green crop fields toward low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a loose hand-painted gouache illustration from a children's picture book: a straight irrigation channel of blue water running between rows of green crops toward soft low hills under a soft overcast pale cream sky filled evenly with flat painted cloud cover, warm late afternoon light from the left and long soft violet shadows, big flat brushy shapes, visible dry-brush strokes and paper grain, chalky matte gouache, simplified forms, naive storybook style, painted by hand, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_tower": {
     "hash": "c0102c56e540c956",
@@ -330,10 +330,10 @@
     "prompt": "a gouache painting of a round water tower tank on tall legs standing over green fields and low hills, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_tap": {
-    "hash": "d12574c03fa60589",
+    "hash": "969caa3fdb8d82e5",
     "outFile": "wants_tap.webp",
     "aspectRatio": "16:9",
-    "prompt": "a gouache painting of a simple kitchen sink with a plain curved tap and a little water running, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a loose hand-painted gouache illustration from a children's picture book: a simple kitchen sink painted in flat cream with a plain curved tap painted in one flat dull grey-blue, a little stream of water running into the sink, close up, a small window on the left, warm late afternoon gold light from the left and soft violet shadows, big flat brushy shapes, visible dry-brush strokes and paper grain, chalky matte gouache, simplified forms, naive storybook style, painted by hand, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_kettle": {
     "hash": "c1d92e13282c878e",
@@ -342,10 +342,10 @@
     "prompt": "a gouache painting of a round cream kettle on a stove top in a cosy kitchen, close up, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "wants_bathtub": {
-    "hash": "ac031835ce0ca0e6",
+    "hash": "65b24e65e8c33d26",
     "outFile": "wants_bathtub.webp",
     "aspectRatio": "16:9",
-    "prompt": "a gouache painting of an old white clawfoot bathtub full of water and soap bubbles seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a cosy tiled bathroom, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a loose hand-painted gouache illustration from a children's picture book: an old cream clawfoot bathtub full of blue water and round soap bubbles, side on across the middle of the picture, ochre feet, a plain warm wall with a small window on the left, late afternoon gold light from the left and soft violet shadows, big flat brushy shapes, visible dry-brush strokes and paper grain, chalky matte gouache, simplified forms, naive storybook style, painted by hand, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "mind_bathtub": {
     "hash": "8fc8d8597b7874d8",

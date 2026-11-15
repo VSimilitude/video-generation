@@ -292,23 +292,34 @@ export const FgSwell: React.FC<{ top: number; color?: string; deep?: string; ink
  * value structure wants lum ≤ 0.62 and real saturation in the sky; the plates
  * come back high-key. Put it in the `sky` slot, under any pools/blooms.
  */
-export const Zenith: React.FC<{ color?: string; mid?: string; reach?: number; opacity?: number }> = ({
+export const Zenith: React.FC<{ color?: string; mid?: string; reach?: number; opacity?: number; bleed?: number }> = ({
   color = "#2f5fa8",
   mid = "#7a9ccf",
   reach = 62,
   opacity = 0.8,
-}) => (
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      background: `linear-gradient(180deg, ${color} 0%, ${mid} ${reach * 0.5}%, rgba(255,255,255,0) ${reach}%)`,
-      mixBlendMode: "multiply",
-      opacity,
-      pointerEvents: "none",
-    }}
-  />
-);
+  bleed = 0,
+}) => {
+  // `bleed` (polish A3-2): overscan sideways and upward (solid `color` above the frame) so a rolled
+  // camera never swings the gradient's corner into view; the stops keep their frame positions.
+  const st = (p: number) => (bleed * 100 + p) / (1 + bleed);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        ...(bleed > 0
+          ? { left: -WIDTH * bleed, width: WIDTH * (1 + 2 * bleed), top: -HEIGHT * bleed, height: HEIGHT * (1 + bleed) }
+          : { inset: 0 }),
+        background:
+          bleed > 0
+            ? `linear-gradient(180deg, ${color} 0%, ${color} ${st(0)}%, ${mid} ${st(reach * 0.5)}%, rgba(255,255,255,0) ${st(reach)}%)`
+            : `linear-gradient(180deg, ${color} 0%, ${mid} ${reach * 0.5}%, rgba(255,255,255,0) ${reach}%)`,
+        mixBlendMode: "multiply",
+        opacity,
+        pointerEvents: "none",
+      }}
+    />
+  );
+};
 
 /**
  * Extra paper multiply for a sky plane (sky slot): the tileable kit paper at

@@ -66,7 +66,7 @@ export const CastShade: React.FC<{
       <g clipPath={`url(#${id}-clip)`}>
         <rect {...r} fill={light.shadow} opacity={shadeAlpha(light)} mask={`url(#${id}-shade)`} />
         {/* Lit side: the band facing the key, lifted toward `lit`. */}
-        <rect {...r} fill={lit ?? light.key} opacity={0.42} mask={`url(#${id}-lit)`} />
+        <rect {...r} fill={lit ?? light.key} opacity={light.strength === undefined ? 0.42 : Math.min(0.8, 0.42 * light.strength)} mask={`url(#${id}-lit)`} />
       </g>
       {rim ? (
         <rect {...r} fill={light.key} opacity={rimL.alpha} mask={`url(#${id}-rim)`} style={{ mixBlendMode: "screen" }} />

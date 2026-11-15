@@ -1,4 +1,5 @@
 import React from "react";
+import { LobbyDesk, LobbyDusk, LobbyLamp, LobbySign } from "./lobbykit";
 import { Easing } from "remotion";
 import { SpeechBubble, keyDirTo, kidTheme, kidType, lookAt, threeValues, type EmotionInput } from "../../../lib/kid";
 import { useSpeaking } from "../../../lib/narration";
@@ -50,11 +51,9 @@ import {
   Bonk,
   CloudFloor,
   Daisy,
-  DeskLamp,
   DropStreaks,
   FgMound,
   FloatCrowd,
-  HotelSign,
   Lever,
   MirroredPlate,
   PRECIP,
@@ -63,8 +62,8 @@ import {
   PrecipIcon,
   RainBelow,
   RainStreaks,
-  ReceptionDesk,
   Ripples,
+  RubberDuck,
   ScrollPlate,
   ShadowPool,
   Snowfall,
@@ -100,7 +99,7 @@ const keyAt = (id: string, from: { x: number; y: number }, sun: { x: number; y: 
 });
 
 /** Drip in a body's cast shadow: cooler, flatter key (s27 "Drip reads cooler inside it"). */
-const inShade = (id: string): LightRig => ({ ...LIGHT[id], key: "#a8b8d8", contrast: LIGHT[id].contrast * 0.45 });
+const inShade = (id: string): LightRig => ({ ...LIGHT[id], key: "#a8b8d8", contrast: LIGHT[id].contrast * 0.45, strength: 0.8 });
 
 // ---------------------------------------------------------------------------
 // Scene 22 — Check-out: the lever, the vanishing floor, Drip on nothing
@@ -165,6 +164,7 @@ const CheckoutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
     cloudia: { x: S22_CLOUDIA.x, y: cloudiaY, scale: S22_CLOUDIA.scale, who: "cloudia" },
   };
   const lampOn = 1;
+  const lampS = project(cam, { x: S22_LAMP.x, y: S22_LAMP.y });
   return (
     <AbsoluteFill style={{ overflow: "hidden", background: "#55667c" }}>
       <AbsoluteFill style={{ transform: `translateY(${shiftY}px)` }}>
@@ -179,7 +179,8 @@ const CheckoutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               <RainBelow top={S22_FLOOR - 40 + Math.max(0, follow - S22_FLOOR)} scroll={6 + since * 0.4} />
               <Svg>
                 <CloudFloor top={S22_FLOOR} hole={{ x: S22_DRIP.x, r: holeR }} />
-                <HotelSign x={S22_SIGN.x} y={S22_SIGN.y} dim={0.2} />
+                {/* Polish A2-3/A3-6 (D30): the canon cream board, desk and lamp from lobbykit. */}
+                <LobbySign id="s22-sign" x={S22_SIGN.x} y={S22_SIGN.y} cord={230} rotate={-1.5} />
               </Svg>
               {/* Lamp cone on Cloudia (screen 0.2) + the floor pool under the lamp. */}
               <LightPool x={S22_CLOUDIA.x - 40} y={cloudiaY - 20} r={330} ry={300} color="#ffd8a0" opacity={0.32 * lampOn} />
@@ -189,8 +190,8 @@ const CheckoutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               </AbsoluteFill>
               <Svg>
                 <Lever x={S22_LEVER.x} y={S22_LEVER.y} pull={pull} />
-                <ReceptionDesk x0={S22_DESK.x0} x1={S22_DESK.x1} top={S22_DESK.top} bottom={S22_FLOOR + 8} />
-                <DeskLamp x={S22_LAMP.x} y={S22_LAMP.y + 6} />
+                <LobbyDesk id="s22-desk" x0={S22_DESK.x0} x1={S22_DESK.x1} top={S22_DESK.top} bottom={S22_FLOOR + 8} label="CHECK OUT" />
+                <LobbyLamp id="s22-lamp" x={S22_LAMP.x} y={S22_LAMP.y + 6} />
               </Svg>
               <LightPool x={S22_LAMP.x + 40} y={S22_DESK.top + 30} r={260} ry={120} color="#ffd8a0" opacity={0.4} />
               {/* The rain world's cold light comes UP through the hole once it opens. */}
@@ -213,6 +214,17 @@ const CheckoutScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
               <DropStreaks x={S22_DRIP.x} y={dripMid.y} strength={clamp01(since / 8) * 0.9} />
             </>
           }
+        />
+        {/* Polish A3-6 (D30): act 2's dusk-violet room light (s21→s22 continuity), fading out as the fall
+            leaves the lobby; A3-5: the desk lamp LIT — a cone onto Cloudia and a pool on the desk top. */}
+        <LobbyDusk
+          opacity={1 - clamp01(since / 14)}
+          pools={[
+            { x: lampS.x + 150, y: lampS.y - 40, r: 380, ry: 300, color: "#ffd08a", opacity: 0.55 },
+            { x: lampS.x + 60, y: lampS.y + 40, r: 300, ry: 110, color: "#ffbe5c", opacity: 0.6 },
+            { x: lampS.x, y: lampS.y - 190, r: 130, ry: 100, color: "#ffe2a8", opacity: 0.8 },
+            { x: 1500, y: 300, r: 640, ry: 420, color: "#cadcff", opacity: 0.35 },
+          ]}
         />
       </AbsoluteFill>
       <Bubbles
@@ -284,7 +296,7 @@ const PlungeWorld: React.FC<{ slam: number }> = ({ slam }) => {
       cam={cam}
       bleed={0.3}
       hide={["far", "mid", "fg"]}
-      sky={<><Zenith color="#26304a" mid="#56688a" reach={60} opacity={0.85} /><LightPool x={200} y={1000} r={900} color="#4aa8a0" opacity={0.35} /><LightPool x={1700} y={80} r={900} color="#8a6ac0" opacity={0.4} /></>}
+      sky={<><Zenith color="#26304a" mid="#56688a" reach={60} opacity={0.85} bleed={0.3} /><LightPool x={200} y={1000} r={900} color="#4aa8a0" opacity={0.35} /><LightPool x={1700} y={80} r={900} color="#8a6ac0" opacity={0.4} /></>}
       far={
         <>
           <ScrollPlate k="rain_far_curtain" speed={5} opacity={0.55} />
@@ -401,13 +413,12 @@ const LandingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         set={SETS.valley.rock}
         cam={cam}
         horizons={{ far: 330 }}
-        offsets={{ fg: 700 }}
-        hide={["mid"]}
+        hide={["mid", "fg"]}
         mid={<Plate k="valley_mid_rock" x={620} y={horizonAt("valley_mid_rock", 470)} />}
         sky={
           <>
             {winter > 0 ? <AbsoluteFill style={{ opacity: winter }}><Plate k="valley_sky_winter" /></AbsoluteFill> : null}
-            <Zenith color="#3f6aa8" mid="#86a6cf" reach={58} opacity={0.65 * (1 - winter)} />
+            <Zenith color="#3f6aa8" mid="#86a6cf" reach={58} opacity={0.65 * (1 - winter)} bleed={0.3} />
             <LightPool x={120} y={260} r={900} color="#ffe2a4" opacity={0.4 * (1 - winter)} />
           </>
         }
@@ -425,7 +436,8 @@ const LandingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             <Splash x={S24_DRIP.x} y={S24_ROCK_TOP - 20} from={splooshAt} />
           </>
         }
-        fg={<><FgMound id="s24-fgl" side="left" reach={540} top={890} /><Snowfall opacity={winter} /></>}
+        // Polish A3-1: the grass plate slid 360 px left so no near blade crosses Drip's box in any frame.
+        fg={<><Plate k="valley_fg_grass" y={700} x={-360} /><FgMound id="s24-fgl" side="left" reach={540} top={890} /><Snowfall opacity={winter} /></>}
       />
       <Bubbles
         scene={scene}
@@ -495,7 +507,7 @@ const DownhillScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         horizons={{ far: 430, mid: 560 }}
         offsets={{ fg: 700 }}
         fg={<FgMound id="s25-fgl" side="left" reach={600} top={880} />}
-        sky={<><Zenith color="#3f6aa8" mid="#86a6cf" reach={60} opacity={0.7} /><LightPool x={0} y={300} r={1000} color="#ffd284" opacity={0.4} /></>}
+        sky={<><Zenith color="#3f6aa8" mid="#86a6cf" reach={60} opacity={0.7} bleed={0.3} /><LightPool x={0} y={300} r={1000} color="#ffd284" opacity={0.4} /></>}
         mid={
           <>
             <Stream pts={[[-300, 560], [0, 600], [260, 650], [480, 720], [640, 800]]} w0={12} w1={44} grow={grow(0)} seed={161} />
@@ -566,7 +578,7 @@ const FlowerScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         hide={["near", "fg"]}
         horizons={{ far: 380, mid: 470 }}
         fg={<FgMound id="s26-fgr" side="right" reach={600} top={910} />}
-        sky={<><Zenith color="#5a78b0" mid="#c0a890" reach={62} opacity={0.55} /><LightPool x={-60} y={520} r={1000} ry={600} color="#ffbe5c" opacity={0.45} /></>}
+        sky={<><Zenith color="#5a78b0" mid="#c0a890" reach={62} opacity={0.55} bleed={0.3} /><LightPool x={-60} y={520} r={1000} ry={600} color="#ffbe5c" opacity={0.45} /></>}
         stage={
           <>
             <Plate k="valley_near_river_late" y={horizonAt("valley_near_river_late", S26_SURFACE - 150)} x={-frame * 0.8} />
@@ -652,6 +664,8 @@ const MooseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   });
   const emotion = useEmotion(scene, "drip", { a3_24_drip: "grumpy", a3_26_drip: "grumpy" }, "happy");
   const shaded = dripX > 760 && dripX < 1500 && frame > bounceAt;
+  // 0→1 as Drip enters the moose's shadow (edges eased over 90 px and 10 frames).
+  const shadeAmt = clamp01((frame - bounceAt) / 10) * clamp01((dripX - 760) / 90) * clamp01((1500 - dripX) / 90);
   const dripY = stand("drip", dripSurf + 70 * S27_SCALE);
   const dripS = project(cam, { x: dripX, y: midOf("drip", dripY, S27_SCALE) });
   const family = Array.from({ length: 7 }, (_, i) => {
@@ -677,12 +691,13 @@ const MooseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         horizons={{ far: 330, mid: 440 }}
         offsets={{ fg: 700 }}
         fg={<><FgMound id="s27-fgl" side="left" reach={520} top={900} /><FgMound id="s27-fgr" side="right" reach={360} top={960} seed={411} /></>}
-        sky={<><Zenith color="#5a78b0" mid="#c0a890" reach={62} opacity={0.55} /><LightPool x={-80} y={560} r={1100} ry={620} color="#ffbe5c" opacity={0.5} /></>}
+        sky={<><Zenith color="#5a78b0" mid="#c0a890" reach={62} opacity={0.55} bleed={0.3} /><LightPool x={-80} y={560} r={1100} ry={620} color="#ffbe5c" opacity={0.5} /></>}
         stage={
           <>
             <Plate k="valley_near_river_late" y={horizonAt("valley_near_river_late", 520, 0.3)} x={-frame * 0.7} bleed={0.3} />
             {/* The moose's long backlit shadow, toward camera, across the water. */}
-            <ShadowPool x={1240 + slide * 1100} y={S27_SURFACE + 60} rx={620} ry={150} color="#1e3260" opacity={0.6 * (1 - slide)} rotate={6} />
+            {/* Polish A3-5: deeper, so it reads as the moose's shade over the water and over Drip inside it. */}
+            <ShadowPool x={1240 + slide * 1100} y={S27_SURFACE + 60} rx={620} ry={170} color="#16244a" opacity={0.85 * (1 - slide)} rotate={6} />
             <Svg>
               <g transform={`translate(${mooseX} ${MOOSE_T.y}) scale(${MOOSE_T.s})`}>
                 <PaintedMoose />
@@ -695,10 +710,13 @@ const MooseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             <Ripples at={[0, 1, 2, 3].map((k) => [[1112, 1275, 1687, 1850][k] + slide * 1100, S27_SURFACE - 34, 50] as [number, number, number])} opacity={0.7} />
             <Splash x={1112} y={S27_SURFACE - 40} from={stompAt} s={1.2} />
             <FloatCrowd id="s27" drops={family} litDir={-1} />
-            <PaintedDrip id={scene.id} x={dripX} y={dripY} scale={S27_SCALE} emotion={emotion} speaking={useSpeaking(scene, "drip")}
-              phase={PHASE.drip} idle={1} look={dripX < 1000 ? "upRight" : "right"} light={shaded ? inShade(scene.id) : undefined} />
+            {/* Polish A3-5: inside the moose's shade Drip himself darkens and cools (the pool alone only shaded the water). */}
+            <AbsoluteFill style={shadeAmt > 0.01 ? { filter: `brightness(${(1 - 0.3 * shadeAmt).toFixed(3)}) saturate(${(1 - 0.12 * shadeAmt).toFixed(3)}) hue-rotate(${(6 * shadeAmt).toFixed(2)}deg)` } : undefined}>
+              <PaintedDrip id={scene.id} x={dripX} y={dripY} scale={S27_SCALE} emotion={emotion} speaking={useSpeaking(scene, "drip")}
+                phase={PHASE.drip} idle={1} look={dripX < 1000 ? "upRight" : "right"} light={shaded ? inShade(scene.id) : undefined} />
+            </AbsoluteFill>
             <Waterline x={dripX} surface={dripSurf} w={212 * S27_SCALE} depth={70 * S27_SCALE} />
-            {shaded ? <ShadowPool x={dripX} y={midOf("drip", dripY, S27_SCALE)} rx={140} ry={140} color="#3a4a80" opacity={0.35} /> : null}
+            {shaded ? <ShadowPool x={dripX} y={midOf("drip", dripY, S27_SCALE)} rx={150} ry={150} color="#2a3a70" opacity={0.5} /> : null}
             <Bonk x={S27_KNEE.x - 40} y={S27_KNEE.y + 40} from={bounceAt} />
           </>
         }
@@ -737,7 +755,8 @@ const S28_LABELS: Record<string, string> = {
   wants_tap: "somebody's tap",
 };
 
-const S28_TUB = { x: 1010, surface: 586, scale: 0.5 };
+// Polish A3-3: the re-rolled tub plate puts its water at screen y 527.
+const S28_TUB = { x: 1010, surface: 530, scale: 0.5 };
 
 const InsertShot: React.FC<{ shot: Shot; scene: TimedScene; opacity: number }> = ({ shot, scene, opacity }) => {
   const frame = useCurrentFrame();
@@ -776,6 +795,9 @@ const InsertShot: React.FC<{ shot: Shot; scene: TimedScene; opacity: number }> =
                 idle={1.2} look="left" pose="cheer" />
             </div>
             <Waterline x={S28_TUB.x} surface={S28_TUB.surface} w={212 * S28_TUB.scale} depth={4} tint="#9fc6d8" opacity={0.0} />
+            <Svg>
+              <RubberDuck id={`s28-duck-${shot.at}`} x={1460} y={S28_TUB.surface + 8} s={0.8} bob={frame} />
+            </Svg>
           </>
         ) : null}
       </AbsoluteFill>
@@ -793,12 +815,12 @@ const EverybodyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const list = atLine(scene, "a3_28_narrator");
   const popular = atLine(scene, "a3_29_drip");
   const shots: Shot[] = [
-    { k: "wants_channel", at: 0, label: "", src: [[960, 900]] },
+    { k: "wants_channel", at: 0, label: "", src: [[960, 930]] },
     { k: "wants_tower", at: secs(list, 2.25), label: "", src: [[960, 420]] },
     { k: "wants_kettle", at: secs(list, 3.35), label: "", src: [[1010, 460]] },
-    { k: "wants_bathtub", at: secs(list, 4.05), label: "", src: [[760, 580]], drip: true },
-    { k: "wants_tap", at: secs(list, 5.15), label: "", src: [[1180, 680]] },
-    { k: "wants_bathtub", at: popular - 10, label: "", src: [[760, 580]], drip: true },
+    { k: "wants_bathtub", at: secs(list, 4.05), label: "", src: [[760, 520]], drip: true },
+    { k: "wants_tap", at: secs(list, 5.15), label: "", src: [[1200, 790]] },
+    { k: "wants_bathtub", at: popular - 10, label: "", src: [[760, 520]], drip: true },
   ];
   const DIS = 6;
   let cur = 0;
@@ -828,6 +850,9 @@ const EverybodyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 // ("…that is collection.", 5.2 s into a3_32); CutFlash; out of the freeze on a
 // flash for the sibling mob (a3_33), who fill the lower half.
 
+/** Polish A3-4: the sunset FgMound family — violet bank a step above a near-black core. */
+const DUSK_BANK = { base: "#33263e", shadow: "#1c1424", light: "#7a5266", line: "#0a0810" };
+const DUSK_CORE = { base: "#1a1420", shadow: "#0e0b14", light: "#2a2030", line: "#0a0810" };
 const S29_SCALE = 0.82;
 
 function s29Pose(scene: TimedScene, frame: number) {
@@ -874,7 +899,7 @@ const HomeWorld: React.FC<{ scene: TimedScene; mob?: number }> = ({ scene, mob =
       fg={
         <>
           <div style={{ position: "absolute", inset: 0, transform: `translateX(${416 * panU}px)` }}>
-          <FgMound id="s29-fgr" side="right" reach={650} top={850} blades={false} v={{ base: "#1e1826", shadow: "#0e0b14", light: "#3a2a3a", line: "#0a0810" }} />
+          <FgMound id="s29-fgr" side="right" reach={650} top={850} blades={false} v={DUSK_BANK} core={DUSK_CORE} />
           </div>
           <div style={{ position: "absolute", inset: 0, transform: `translateX(${-1500 * panU}px)` }}>
             <Plate k="home_fg_rock" bleed={0.3} x={-220} />
@@ -1055,7 +1080,7 @@ const CreditScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         bleed={0.3}
         hide={["far", "mid", "near", "fg"]}
         offsets={{ sky: 250 }}
-        sky={<><Zenith color="#3a2a6a" mid="#8a5a8a" reach={55} opacity={0.5} /><LightPool x={sunMid.x} y={sunMid.y} r={1000} color="#ff9a50" opacity={0.3 + 0.2 * slide} /></>}
+        sky={<><Zenith color="#3a2a6a" mid="#8a5a8a" reach={55} opacity={0.5} bleed={0.3} /><LightPool x={sunMid.x} y={sunMid.y} r={1000} color="#ff9a50" opacity={0.3 + 0.2 * slide} /></>}
         stage={
           <>
             <LightPool x={S31_RING.cx} y={S31_RING.cy} r={460} color="#ffc070" opacity={0.3 * slide} />
@@ -1120,14 +1145,14 @@ const RoundAgainScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         horizons={{ mid: 700, near: 990 }}
         sky={
           <>
-            <Zenith color="#3a2a6a" mid="#8a5a8a" reach={50} opacity={0.45} />
+            <Zenith color="#3a2a6a" mid="#8a5a8a" reach={50} opacity={0.45} bleed={0.3} />
             <LightPool x={sunMid.x} y={sunMid.y} r={900} color="#ff9a50" opacity={0.35 + 0.25 * warmth} />
             <PaintedSunny id={scene.id} x={sunX} y={sunY} scale={sunScale} emotion="proud" speaking={useSpeaking(scene, "sunny")} phase={PHASE.sunny}
               shades={1 - lean} look={lookAt(sunMid, dripMid, 1200)} />
           </>
         }
         far={<MirroredPlate k="home_far_headland" y={horizonAt("home_far_headland", 590)} />}
-        fg={<><FgMound id="s32-fgl" side="left" reach={540} top={930} blades={false} v={{ base: "#1e1826", shadow: "#0e0b14", light: "#3a2a3a", line: "#0a0810" }} /><FgMound id="s32-fgr" side="right" reach={440} top={960} blades={false} v={{ base: "#1e1826", shadow: "#0e0b14", light: "#3a2a3a", line: "#0a0810" }} seed={421} /></>}
+        fg={<><FgMound id="s32-fgl" side="left" reach={540} top={930} blades={false} v={DUSK_BANK} core={DUSK_CORE} /><FgMound id="s32-fgr" side="right" reach={440} top={960} blades={false} v={DUSK_BANK} core={DUSK_CORE} seed={421} /></>}
         stage={
           <>
             <LightPool x={S32_DRIP.x - 200} y={S32_SURFACE} r={800} ry={160} color="#ffb070" opacity={0.2 + 0.25 * warmth} />

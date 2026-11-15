@@ -28,6 +28,7 @@ import {
   type TimedScene,
 } from "./common";
 import { FgSwell, Glints, Svg, secs } from "./act1kit";
+import { PaintedShape, band, circleD } from "./act3kit";
 
 // Cold open, re-pictured on the look package (shot-plan rows s01–s02).
 // Beats are ep 1's (src/videos/water-cycle/scenes/coldOpen.tsx); every picture
@@ -164,11 +165,12 @@ const DawnScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 
 /**
  * The foam cape, re-pictured as FOAM (act-1 review F4: the old cream sheet
- * read as a seashell): two tapered sea-foam arcs sweeping off his shoulders
- * and fluttering down behind him, beaded with cream foam bubbles (pooled
- * lavender underside, tapered ink rim), plus a little spray. No filled sheet.
- * Drawn in Drip's local units so it stays welded to him.
+ * read as a seashell; polish F4b: the beaded arcs read as pearl strings).
+ * Now a pooled cream wash per side (a painted band that thickens toward the
+ * hem, where foam gathers) with a few irregular bubble CLUSTERS on it and a
+ * little spray. Drawn in Drip's local units so it stays welded to him.
  */
+const FOAM_V = { base: "#e2d8c8", shadow: "#a9a2c2", light: "#f3ead8", line: "#5d6f86" };
 const FoamCape: React.FC<{ x: number; y: number; scale: number; billow: number }> = ({ x, y, scale, billow }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -176,46 +178,56 @@ const FoamCape: React.FC<{ x: number; y: number; scale: number; billow: number }
   const t = frame / fps;
   const cream = "#ece2cf";
   const shade = "#b9b0cc";
-  const ink = "#5d6f86";
   // One arc per side: shoulder → out → down to the hem, fluttering.
   const arc = (side: number): Pt[] =>
-    Array.from({ length: 9 }, (_, i) => {
-      const u = i / 8;
+    Array.from({ length: 13 }, (_, i) => {
+      const u = i / 12;
       const flutter = Math.sin(t * 2.6 + u * 4 + side) * 10 * u;
       return [side * (70 + 150 * Math.sin(u * 1.35) + flutter), -40 + 190 * u + Math.sin(t * 2 + u * 3) * 6 * u] as Pt;
     });
-  const bubbles = [-1, 1].flatMap((side) =>
-    arc(side)
-      .filter((_, i) => i >= 2)
-      .map(([bx, by], i) => ({ bx, by: by + 6, r: 9 + ((i + (side > 0 ? 1 : 0)) % 3) * 5, k: `${side}-${i}` })),
-  );
+  // Irregular clusters (2 per side): a few bubbles of mixed size huddled on the wash, not a string of beads.
+  const CL: Array<{ u: number; parts: Array<[number, number, number]> }> = [
+    { u: 0.55, parts: [[0, 0, 11], [13, -6, 6], [-9, 8, 5], [6, 10, 4]] },
+    { u: 0.92, parts: [[0, 0, 14], [-16, -4, 8], [12, 9, 7], [22, -5, 4], [-6, 15, 5]] },
+  ];
   return (
     <div style={{ position: "absolute", left: x, top: y, width: 360, height: 380, marginLeft: -180, marginTop: -190,
       transformOrigin: "50% 100%", transform: `scale(${scale * (0.92 + 0.08 * billow)})`, opacity: Math.min(1, billow * 1.4) }}>
       <svg width={360} height={380} viewBox="-180 -190 360 380" overflow="visible">
         {[-1, 1].map((side) => {
           const pts = arc(side);
+          // The wash: a puffy union of overlapping blobs along the arc, small at the shoulder and
+          // pooling larger toward the hem (foam is a mass of bubbles, not a strap).
+          const puffs = pts.slice(1).map(([px, py], i) => {
+            const u = (i + 1) / 12;
+            const r = 9 + 24 * u * u + 3 * Math.sin(i * 2.7 + side);
+            return circleD(px + side * 4 * Math.sin(i * 1.9), py + 3 * Math.cos(i * 2.3), r);
+          });
           return (
             <g key={side}>
-              <path d={ribbon(pts, 26, 6, 300 + side, { jitter: 0.6 })} fill={cream} opacity={0.9} />
-              <path d={ribbon(pts.map(([px, py]) => [px, py + 7] as Pt), 9, 2, 310 + side, { jitter: 0.6 })} fill={shade} opacity={0.7} />
-              <path d={ribbon(pts.map(([px, py]) => [px, py - 9] as Pt), 4, 1, 320 + side, { jitter: 0.5 })} fill={ink} opacity={0.8} />
-            </g>
-          );
-        })}
-        {bubbles.map(({ bx, by, r, k }, i) => {
-          const wob = Math.sin(t * 3 + i * 1.3) * 3;
-          const cy = by + wob;
-          return (
-            <g key={k}>
-              <circle cx={bx} cy={cy} r={r} fill={cream} />
-              <ellipse cx={bx} cy={cy + r * 0.45} rx={r * 0.85} ry={r * 0.45} fill={shade} opacity={0.6} />
-              <path d={ribbon([[bx - r, cy], [bx - r * 0.6, cy + r * 0.8], [bx, cy + r], [bx + r * 0.6, cy + r * 0.8], [bx + r, cy]], 3.5, 1, 330 + i, { jitter: 0.2 })} fill={ink} />
+              <PaintedShape id={`s01-foam${side}`} ds={puffs} bbox={{ x: side < 0 ? -270 : 30, y: -70, w: 240, h: 270 }}
+                v={FOAM_V} ink={2.5} seed={300 + side} strength={1.2} />
+              {/* pooled lavender underside along the hem */}
+              <path d={band(pts.slice(6).map(([px, py]) => [px, py + 12] as Pt), (u) => 6 + 14 * u, 310 + side, 0.3)} fill={shade} opacity={0.55} />
+              {CL.map(({ u, parts }, ci) => {
+                const [cx, cy] = pts[Math.round(u * 12)];
+                return parts.map(([dx, dy, r], i) => {
+                  const wob = Math.sin(t * 3 + i * 1.3 + ci) * 2;
+                  const bx = cx + side * dx;
+                  const by = cy + dy - 4 + wob;
+                  return (
+                    <g key={`${ci}-${i}`}>
+                      <circle cx={bx} cy={by} r={r} fill={cream} opacity={0.92} />
+                      <path d={ribbon([[bx - r * 0.8, by + r * 0.35], [bx, by + r * 0.85], [bx + r * 0.8, by + r * 0.35]], Math.max(2, r * 0.35), 1, 330 + i + ci * 7, { jitter: 0.2 })} fill={shade} opacity={0.8} />
+                    </g>
+                  );
+                });
+              })}
             </g>
           );
         })}
         {[0, 1, 2, 3, 4].map((i) => (
-          <circle key={i} cx={(i - 2) * 70 + Math.sin(t + i) * 8} cy={150 - ((t * 40 + i * 37) % 60)} r={4 + (i % 2) * 2} fill={cream} opacity={0.7} />
+          <circle key={i} cx={(i - 2) * 70 + Math.sin(t + i) * 8} cy={150 - ((t * 40 + i * 37) % 60)} r={3 + (i % 3) * 1.5} fill={cream} opacity={0.6} />
         ))}
       </svg>
     </div>

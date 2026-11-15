@@ -254,7 +254,7 @@ const SunriseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         sky={
           <>
             <SkyBlend from="ocean_sky_dawn" to="ocean_sky_sunrise" u={gold} />
-            <Zenith opacity={0.55 + 0.25 * gold} />
+            <Zenith opacity={0.55 + 0.25 * gold} bleed={0.3} />
             <LightPool x={S5_SUN.x} y={Math.min(760, sunMid.y)} r={900 + 300 * bright} ry={600} color="#ffcf78" opacity={0.25 + 0.45 * bright} />
             <PaintedSunny id={scene.id} x={S5_SUN.x} y={rise} scale={S5_SUN.scale} emotion="proud" speaking={useSpeaking(scene, "sunny")}
               phase={PHASE.sunny} shades={0} look={{ x: -0.3, y: 0.35 }} />
@@ -289,7 +289,8 @@ const SunriseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
 // before the a1_12 bubble; BURST back up just before a1_13 "I am the SUN".
 
 const S6_SUN = { x: 1260, y: 440, scale: 1.7 };
-const S6_DRIP = { x: 330, ground: 1010, scale: 0.3 };
+// Polish L5: 1.3× (0.3 → 0.39) for phone findability; still tiny in a big ocean.
+const S6_DRIP = { x: 330, ground: 1010, scale: 0.39 };
 
 const SunnyIntroScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
@@ -325,7 +326,7 @@ const SunnyIntroScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         fg={<FgSwell top={1048} amp={12} />}
         sky={
           <>
-            <Zenith />
+            <Zenith bleed={0.3} />
             {/* Sky-weight paper multiply: the high sky is otherwise a smooth digital gradient. */}
             <PaperWash opacity={0.32} />
             <LightPool x={sunMid.x} y={sunMid.y} r={1000} color="#ffd98a" opacity={0.45} />
@@ -393,7 +394,7 @@ const WarmingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cam={cam}
         horizons={{ far: 600, mid: 770, near: 1000 }}
         fg={<FgSwell top={995} />}
-        sky={<><Zenith /><LightPool x={sunMid.x} y={sunMid.y} r={900} color="#ffd98a" opacity={0.3} /></>}
+        sky={<><Zenith bleed={0.3} /><LightPool x={sunMid.x} y={sunMid.y} r={900} color="#ffd98a" opacity={0.3} /></>}
         stage={
           <>
             <LightPool x={1100} y={900} r={900} ry={200} color="#ffcf78" opacity={0.15 + 0.35 * heat} />
@@ -473,7 +474,7 @@ const EverywhereScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             bleed={0.35}
             horizons={{ far: 470, mid: 660, near: 1010 }}
         fg={<FgSwell top={1010} />}
-            sky={<><Zenith /><LightPool x={1700} y={150} r={900} color="#ffd98a" opacity={0.35} /></>}
+            sky={<><Zenith bleed={0.3} /><LightPool x={1700} y={150} r={900} color="#ffd98a" opacity={0.35} /></>}
             stage={
               <>
                 <LightPool x={S8_DRIP.x} y={focus.y} r={520} ry={560} color="#ff8fb0" opacity={0.35 * bliss} />
@@ -610,7 +611,7 @@ const LiftoffScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         bleed={0.3}
         horizons={{ far: 520, mid: 700, near: 990 }}
         fg={<FgSwell top={995} />}
-        sky={<><Zenith color="#1d4a92" mid="#5f86c4" reach={85} opacity={0.9} /><LightPool x={1750} y={120} r={900} color="#ffd98a" opacity={0.4} /></>}
+        sky={<><Zenith color="#1d4a92" mid="#5f86c4" reach={85} opacity={0.9} bleed={0.3} /><LightPool x={1750} y={120} r={900} color="#ffd98a" opacity={0.4} /></>}
         stage={
           <>
             <LightPool x={900} y={940} r={1000} ry={180} color="#ffcf78" opacity={0.45} />
@@ -672,7 +673,7 @@ const RisingWorld: React.FC<{ slam: number }> = ({ slam }) => {
       bleed={0.3}
       hide={["near"]}
       horizons={{ far: 900, mid: 960 }}
-      sky={<><Zenith color="#1d4a92" mid="#5f86c4" reach={85} opacity={0.9} /><LightPool x={1750} y={120} r={900} color="#ffd98a" opacity={0.4} /></>}
+      sky={<><Zenith color="#1d4a92" mid="#5f86c4" reach={85} opacity={0.9} bleed={0.3} /><LightPool x={1750} y={120} r={900} color="#ffd98a" opacity={0.4} /></>}
       stage={
         <>
           <Svg>
@@ -751,7 +752,7 @@ const BestAtItScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cam={cam}
         bleed={0.3}
         horizons={{ far: 260 }}
-        sky={<><Zenith color="#1d4a92" mid="#5f86c4" reach={85} opacity={0.9} /><LightPool x={1750} y={60} r={1300} color="#ffcf78" opacity={0.75} /></>}
+        sky={<><Zenith color="#1d4a92" mid="#5f86c4" reach={85} opacity={0.9} bleed={0.3} /><LightPool x={1750} y={60} r={1300} color="#ffcf78" opacity={0.75} /></>}
         mid={
           <Crowd id="s11m" bob={2} litDir={1}
             rows={[-300, -60, 180, 420, 660, 900, 1140, 1380].map((y, r) => ({ y, s: 0.34, count: 14, spread: 5200, x: 960 + (r % 2) * 120, tint: 0.4 }))}
