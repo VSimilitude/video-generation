@@ -263,11 +263,14 @@ export const ScrollPlate: React.FC<{ k: PlateKey; speed: number; left?: number; 
   const off = (((frame * speed) % h) + h) % h;
   return (
     <>
-      {[0, 1, 2].map((i) => (
-        <div key={i} style={{ position: "absolute", left, top: i * h - off - HEIGHT * 0.1, width: WIDTH, height: h, opacity }}>
-          <Plate k={k} bleed={0.1} />
-        </div>
-      ))}
+      {/* Polish A3-2: three columns (the plate spans 1.2 W), so a roll's corners never reach a tile edge. */}
+      {[0, 1, 2].flatMap((i) =>
+        [-1, 0, 1].map((j) => (
+          <div key={`${i}:${j}`} style={{ position: "absolute", left: left + j * WIDTH * 1.2, top: i * h - off - HEIGHT * 0.1, width: WIDTH, height: h, opacity }}>
+            <Plate k={k} bleed={0.1} />
+          </div>
+        )),
+      )}
     </>
   );
 };
@@ -865,7 +868,20 @@ export const FgMound: React.FC<{
   v?: Value3;
   blades?: boolean;
   seed?: number;
-}> = ({ id, side, reach, top, v = { base: "#1a221e", shadow: "#0c0f12", light: "#2e3a30", line: "#0a0c10" }, blades = true, seed = 401 }) => {
+  /** The near-black core in the corner (the scene's darkest value, LOOK p2); the bank `v` sits a step above it. */
+  core?: Value3;
+}> = ({
+  id,
+  side,
+  reach,
+  top,
+  // Polish A3-4: a value FAMILY, not a #1a221e-flat blob — mid-dark moss bank, a lit ribbon top edge,
+  // and a near-black core pooled in the corner, so it reads as a bank/rock at phone size.
+  v = { base: "#2c3a28", shadow: "#172014", light: "#5f7444", line: "#0e120e" },
+  blades = true,
+  seed = 401,
+  core = { base: "#141a16", shadow: "#0a0d0e", light: "#232c24", line: "#0a0c10" },
+}) => {
   const frame = useCurrentFrame();
   const sx = (x: number) => (side === "left" ? x : WIDTH - x);
   const pts: Pt[] = [];
@@ -878,9 +894,21 @@ export const FgMound: React.FC<{
   }
   const d = `M ${sx(-300)} ${HEIGHT + 300} L ${pts.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" L ")} L ${sx(reach)} ${HEIGHT + 300} Z`;
   const x0 = Math.min(sx(-300), sx(reach));
+  // Polish A3-4: the moss bank band is ~CORE_DROP px deep so it reads as a bank at phone size (22 read as a hairline).
+  const CORE_DROP = 64;
+  const corePts: Pt[] = pts.map(([px, py], i) => {
+    const u = i / n;
+    return [sx(-300 + (reach * 0.9 + 300) * u), py + CORE_DROP + Math.sin(u * 7 + seed) * 10];
+  });
+  const coreD = `M ${sx(-300)} ${HEIGHT + 300} L ${corePts.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" L ")} L ${sx(reach * 0.9)} ${HEIGHT + 300} Z`;
   return (
     <Svg>
       <PaintedShape id={id} ds={[d]} bbox={{ x: x0, y: top - 10, w: reach + 300, h: HEIGHT + 300 - top }} v={v} ink={7} seed={seed} />
+      {/* The core: the same silhouette, reach × 0.9, CORE_DROP px lower — the bank is a lit band over a near-black body. */}
+      <PaintedShape id={`${id}-core`} ds={[coreD]} bbox={{ x: Math.min(sx(-300), sx(reach * 0.9)), y: top + CORE_DROP - 12, w: reach * 0.9 + 300, h: HEIGHT + 300 - top - CORE_DROP + 12 }}
+        v={core} ink={0} seed={seed + 50} bleed={false} />
+      {/* Lit top edge: a tapered light ribbon along the crest (the key catches the bank's lip). */}
+      <path d={ribbon(pts.slice(0, n - 2), 7, 1.5, seed + 3, { jitter: 0.5 })} fill={v.light} opacity={0.85} />
       {blades
         ? Array.from({ length: 12 }, (_, i) => {
             const u = 0.05 + (i / 12) * 0.8;
@@ -894,5 +922,27 @@ export const FgMound: React.FC<{
           })
         : null}
     </Svg>
+  );
+};
+
+/**
+ * Polish A3-3: the bath's rubber duck as OUR prop (the plate's was a glossy 3D render): pooled yolk
+ * body + head, flag-orange beak, ink eye, a ribbon wing, a painted ripple at the waterline. No
+ * specular. Origin = the waterline under the body's centre; `bob` = a frame-driven phase.
+ */
+export const RubberDuck: React.FC<{ id: string; x: number; y: number; s?: number; bob?: number }> = ({ id, x, y, s = 1, bob = 0 }) => {
+  const dy = Math.sin(bob * 0.12) * 3;
+  const rock = Math.sin(bob * 0.09 + 1) * 3;
+  const body = "M -78 -26 C -86 -56 -60 -62 -40 -46 C -10 -58 50 -58 70 -30 C 82 -12 70 10 40 12 L -50 12 C -74 10 -80 -6 -78 -26 Z";
+  const head = circleD(34, -86, 34);
+  const beak = "M 60 -92 C 82 -98 100 -90 98 -80 C 96 -72 78 -70 62 -76 Z";
+  return (
+    <g transform={`translate(${x} ${y + dy}) rotate(${rock}) scale(${s})`}>
+      <PaintedShape id={`${id}-body`} ds={[body, head]} bbox={{ x: -86, y: -120, w: 170, h: 132 }} v={PV.yolk} ink={5} seed={701} />
+      <PaintedShape id={`${id}-beak`} ds={[beak]} bbox={{ x: 60, y: -98, w: 40, h: 28 }} v={PV.flag} ink={3} seed={703} />
+      <path d={ribbon([[-34, -30], [-6, -40], [24, -28]], 5, 1.5, 705)} fill={PV.yolk.line} />
+      <circle cx={44} cy={-94} r={5.5} fill={INK} />
+      <path d={ribbon([[-104, 10], [-40, 16], [30, 14], [96, 8]], 5, 1.2, 707)} fill={PAPER} opacity={0.75} />
+    </g>
   );
 };

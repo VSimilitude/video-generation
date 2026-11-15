@@ -359,12 +359,13 @@ function clamp(v: number, lo: number, hi: number): number {
 // Sun-side switch 1 at s24 (key right → left; we have travelled); Sunny
 // re-enters camera-LEFT at s31 and stays left to the end.
 
-const rig = (dir: number, elevation: number, key: string, shadow: string, contrast: number): LightRig => ({
+const rig = (dir: number, elevation: number, key: string, shadow: string, contrast: number, strength?: number): LightRig => ({
   dir,
   elevation,
   key,
   shadow,
   contrast,
+  ...(strength === undefined ? {} : { strength }),
 });
 
 /** Card scenes (titles, Big Word freezes) keep the world's key: a frozen frame is still lit. */
@@ -404,14 +405,14 @@ export const LIGHT: Record<string, LightRig> = {
   s22_checkout: rig(-95, 0.8, "#c4d6ea", "#3a4656", 0.5),
   s23_bigword_precipitation: rig(-95, 0.8, "#c4d6ea", "#3a4656", 0.5),
   // 24–25 after rain: breaking sun LEFT; soft blue; rising. SUN-SIDE SWITCH 1.
-  s24_landing: rig(-150, 0.45, "#ffe2a4", "#5a78a8", 0.55),
-  s25_downhill: rig(-160, 0.3, "#ffd284", "#4a6aa0", 0.7),
+  s24_landing: rig(-150, 0.45, "#ffe2a4", "#5a78a8", 0.55, 1.7),
+  s25_downhill: rig(-160, 0.3, "#ffd284", "#4a6aa0", 0.7, 1.7),
   // 26–28 late afternoon: low left, gold; long blue; high. Longest shadows.
-  s26_flower: rig(-170, 0.14, "#ffbe5c", "#2f4c80", 0.88),
-  s27_moose: rig(-172, 0.1, "#ffbe5c", "#2f4c80", 0.9),
-  s28_everybody_wants_a_bit: rig(-168, 0.16, "#ffbe5c", "#2f4c80", 0.85),
+  s26_flower: rig(-170, 0.14, "#ffbe5c", "#2f4c80", 0.88, 1.6),
+  s27_moose: rig(-172, 0.1, "#ffbe5c", "#2f4c80", 0.9, 1.6),
+  s28_everybody_wants_a_bit: rig(-168, 0.16, "#ffbe5c", "#2f4c80", 0.85, 1.5),
   // 29–32 sunset: low left, orange; purple; high → medium. Warmest palette.
-  s29_bigword_collection: rig(-172, 0.1, "#ff9a50", "#4a2f6a", 0.85),
+  s29_bigword_collection: rig(-172, 0.1, "#ff9a50", "#4a2f6a", 0.85, 1.6),
   s30_twist: rig(-160, 0.3, "#ffb070", "#4a2f6a", 0.7),
   s31_credit: rig(-172, 0.12, "#ff9a50", "#4a2f6a", 0.75),
   s32_round_again: rig(-170, 0.16, "#ffa45c", "#4a2f6a", 0.6),
@@ -709,6 +710,14 @@ export const SkyBlend: React.FC<{ from: PlateKey; to: PlateKey; u: number; y?: n
  * `offsets` shifts a plate vertically (horizon placement per shot plan),
  * `hide` drops a plane.
  */
+/** Plane haze veil with overscan (Plane's atmosphere amounts: far 0.12, mid 0.06). */
+const HazeVeil: React.FC<{ color: string; opacity: number; bleed: number }> = ({ color, opacity, bleed }) => {
+  const b = Math.max(0.3, bleed);
+  return (
+    <div style={{ position: "absolute", left: -WIDTH * b, top: -HEIGHT * b, width: WIDTH * (1 + 2 * b), height: HEIGHT * (1 + 2 * b), background: color, opacity }} />
+  );
+};
+
 export const SetStack: React.FC<{
   set: PlateStack;
   cam: Cam;
@@ -725,7 +734,9 @@ export const SetStack: React.FC<{
   stage?: React.ReactNode;
   fg?: React.ReactNode;
   skyFit?: "cover" | "width";
-}> = ({ set, cam, swap = {}, offsets = {}, horizons = {}, hide = [], bleed = 0.1, sky, far, mid, stage, fg, skyFit }) => {
+  /** Planes that take the set's atmospheric haze veil (default far + mid). */
+  hazeOn?: PlaneName[];
+}> = ({ set, cam, swap = {}, offsets = {}, horizons = {}, hide = [], bleed = 0.1, sky, far, mid, stage, fg, skyFit, hazeOn = ["far", "mid"] }) => {
   const plate = (p: PlaneName) => {
     if (hide.includes(p)) return null;
     const k = swap[p] ?? set[p];
@@ -741,13 +752,17 @@ export const SetStack: React.FC<{
         {plate("sky")}
         {sky}
       </Plane>
-      <Plane depth={0.15} flat haze={set.haze}>
+      {/* The planes' haze veil is drawn here, BLED like the plates (Plane's own veil is a frame-sized
+          fill: a pan or roll slid its edge into frame — the s29 seam, the s23 corner wedge). */}
+      <Plane depth={0.15} flat haze="transparent">
         {plate("far")}
         {far}
+        {hazeOn.includes("far") ? <HazeVeil color={set.haze} opacity={0.12} bleed={bleed} /> : null}
       </Plane>
-      <Plane depth={0.4} flat haze={set.haze}>
+      <Plane depth={0.4} flat haze="transparent">
         {plate("mid")}
         {mid}
+        {hazeOn.includes("mid") ? <HazeVeil color={set.haze} opacity={0.06} bleed={bleed} /> : null}
       </Plane>
       <Plane depth={1.0} flat>
         {plate("near")}

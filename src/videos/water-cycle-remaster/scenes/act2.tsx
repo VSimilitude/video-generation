@@ -1,5 +1,7 @@
 import React from "react";
 import { Easing, staticFile } from "remotion";
+import { LobbyDesk, LobbyLamp, LobbySign } from "./lobbykit";
+import { PaperWash } from "./act1kit";
 import {
   SpeechBubble,
   circlePts,
@@ -502,6 +504,8 @@ const LayersScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cam={cam}
         skyFit="width"
         offsets={{ sky: skyY, far: farY, mid: midY }}
+        // Polish (act-2 L1): act 1's paper multiply over the otherwise smooth gradient sky.
+        sky={<PaperWash opacity={0.32} />}
         far={
           <Svg>
             {/* High cirrus: at this height clouds are streaks, not puffs. */}
@@ -705,17 +709,6 @@ const CloudHotelScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             </Svg>
             {/* Warm light from the doorway, pooling on the deck. */}
             <LightPool x={S13_DOOR_X} y={S13_GROUND - 40} r={520} ry={170} color="#ffd9a0" opacity={0.45} />
-            <PaintedDrip
-              id={scene.id}
-              x={S13_DRIP.x}
-              y={S13_DRIP.y}
-              scale={S13_DRIP.scale}
-              emotion={dripEmotion}
-              phase={PHASE.drip}
-              idle={0.9}
-              groundY={985}
-              look={lookAt(dripMid, { x: S13_DOOR_X, y: 300 }, 900)}
-            />
             <PaintedCloudia
               id={scene.id}
               x={S13_CLOUDIA.x}
@@ -749,15 +742,30 @@ const CloudHotelScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         ]}
         pools={[
           { x: S13_DOOR_X, y: 760, r: 420, ry: 330, color: WARM, opacity: 0.55 },
-          { x: 960, y: 320, r: 1150, ry: 600, color: "#cadcff", opacity: 1 },
+          // Polish A2-2: the awning panels went one value deeper (pinkDeep) to hold under this softbox.
+          { x: 960, y: 290, r: 1150, ry: 560, color: "#cadcff", opacity: 1 },
         ]}
       />
-      {/* The sign hangs above the softbox glow, not under it (it washed out in the first pass). */}
+      {/* The sign hangs above the softbox glow, not under it (it washed out in the first pass).
+          Polish A2-2: Drip too is drawn above the room's violet multiply (it turned him navy); the
+          door's warm light reaches his camera-left (lit) side through its own small pool. */}
       <World cam={cam}>
         <Plane depth={1.0} flat>
           <Svg>
             <HotelSign id="s13-sign" x={S13_DOOR_X} y={150} from={Math.round(doorTo * 0.55)} />
           </Svg>
+            <PaintedDrip
+              id={scene.id}
+              x={S13_DRIP.x}
+              y={S13_DRIP.y}
+              scale={S13_DRIP.scale}
+              emotion={dripEmotion}
+              phase={PHASE.drip}
+              idle={0.9}
+              groundY={985}
+              look={lookAt(dripMid, { x: S13_DOOR_X, y: 300 }, 900)}
+            />
+          <LightPool x={S13_DRIP.x - 70} y={dripMid.y} r={120} ry={150} color={WARM} opacity={0.3} />
         </Plane>
       </World>
       <Bubbles
@@ -765,7 +773,7 @@ const CloudHotelScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cast={{ cloudia: S13_CLOUDIA }}
         text={{ a2_06_cloudia: "Welcome to the CLOUD HOTEL!" }}
         // Lower-left, below the awning line: the sign owns the top centre.
-        at={{ a2_06_cloudia: { x: 600, y: 565, tail: "left", tailAt: 420 } }}
+        at={{ a2_06_cloudia: { x: 600, y: 485, tail: "left", tailAt: 420 } }}
       />
     </AbsoluteFill>
   );
@@ -792,9 +800,9 @@ const Doorway: React.FC<{ id: string; x: number; groundY: number }> = ({ id, x, 
       <PShape id={`${id}-h1`} d={circleD(x - 38, groundY - 200, 13)} v={V.brass} w={[4, 1.5]} seed={73} />
       <PShape id={`${id}-h2`} d={circleD(x + 38, groundY - 200, 13)} v={V.brass} w={[4, 1.5]} seed={74} />
       <PShape id={`${id}-carpet`} d={roundRectPath(x - w - 70, groundY - 14, (w + 70) * 2, 26, 13)} v={V.tomato} w={[5, 2]} seed={75} />
-      <PShape id={`${id}-awnP`} d={pinkD} v={V.pink} w={[5, 1.6]} seed={76} />
+      <PShape id={`${id}-awnP`} d={pinkD} v={V.pinkDeep} w={[5, 1.6]} seed={76} />
       <PShape id={`${id}-awnC`} d={creamD} v={V.creamCard} w={[5, 1.6]} seed={77} />
-      <PShape id={`${id}-rail`} d={roundRectPath(x - w * 1.5, top - 84, w * 3, 28, 14)} v={V.pinkDeep} w={[6, 2]} seed={78} />
+      <PShape id={`${id}-rail`} d={roundRectPath(x - w * 1.5, top - 84, w * 3, 28, 14)} v={V.plum} w={[6, 2]} seed={78} />
     </g>
   );
 };
@@ -870,26 +878,8 @@ const HotelSign: React.FC<{ id: string; x: number; y: number; from: number }> = 
   const { fps } = useVideoConfig();
   const s = spring({ frame: frame - from, fps, config: { damping: 11, mass: 0.7 } });
   if (s <= 0.01) return null;
-  const w = 560;
-  const h = 110;
-  return (
-    <g transform={`translate(${x} ${y}) scale(${s}) rotate(${-2.5 + (1 - s) * 8})`}>
-      <path d={`${ribbon([[-200, -h / 2], [-210, -h / 2 - 90]], 5, 2, 101)} ${ribbon([[200, -h / 2], [210, -h / 2 - 90]], 5, 2, 102)}`} fill={INK} />
-      <PShape id={`${id}-card`} d={roundRectPath(-w / 2, -h / 2, w, h, 26)} v={V.creamCard} w={[9, 3]} ink={INK} seed={103} />
-      <text
-        x={0}
-        y={16}
-        textAnchor="middle"
-        fontFamily={kidTheme.fontFamily}
-        fontSize={56}
-        fontWeight={900}
-        letterSpacing={4}
-        fill={INK}
-      >
-        CLOUD HOTEL
-      </text>
-    </g>
-  );
+  // Polish A2-3 (D30): the canon board lives in lobbykit (s22 hangs the same one indoors).
+  return <LobbySign id={id} x={x} y={y} scale={s} rotate={-2.5 + (1 - s) * 8} />;
 };
 
 /** Two banks of mist, parting on the narrator's sentence (fg 1.3, no ink: mist has no edge). */
@@ -1265,8 +1255,8 @@ const WhatACloudIsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         ]}
       />
       {/* a2_10's two chunks (text unchanged in the voice; the bubble is a summary). */}
-      <SpeechBubble x={720} y={760} text="A zillion tiny water drops!" tail="left" tailAt={470} from={dive1 + 12} until={split} />
-      <SpeechBubble x={720} y={760} text="Floating together. No fluff!" tail="left" tailAt={470} from={dive2 + 12} until={zTo} />
+      <SpeechBubble x={720} y={760} text="A zillion tiny water drops!" tail="left" tailAt={470} from={dive1 + 12} until={split} background={kidPaintTheme.paper} />
+      <SpeechBubble x={720} y={760} text="Floating together. No fluff!" tail="left" tailAt={470} from={dive2 + 12} until={zTo} background={kidPaintTheme.paper} />
       <Bubbles
         scene={scene}
         cast={projectCast(cam, cast)}
@@ -1335,7 +1325,9 @@ const DustRuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             <Svg>
               <PaintedCloud id="s16-floor" x={960} y={S16_GROUND + 190} w={2700} h={420} seed={5} />
               <Lamp id="s16-lamp" x={S16_LAMP.x} y={S16_LAMP.y} />
-              <Desk id="s16-desk" x0={60} x1={720} top={S16_DESK_TOP} ground={S16_GROUND + 30} />
+              {/* Polish A2-3 (D30): the canon lobby desk + its lamp (lobbykit), shared with act 3's s22. */}
+              <LobbyDesk id="s16-desk" x0={60} x1={720} top={S16_DESK_TOP} bottom={S16_GROUND + 30} label="FRONT DESK" labelX={390} />
+              <LobbyLamp id="s16-desklamp" x={640} y={S16_DESK_TOP + 4} />
               <Pedestal id="s16-ped" x={S16_BOWL.x} groundY={S16_GROUND} bowlY={S16_BOWL.y} />
               <VelvetRope id="s16-rope" x0={1160} x1={1340} y={S16_GROUND - 10} />
             </Svg>
@@ -1395,6 +1387,8 @@ const DustRuleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           ARCH_POOL,
           { x: S16_LAMP.x - 120, y: 720, r: 700, ry: 400, color: WARM, opacity: 0.42 },
           { x: S16_CLOUDIA.x, y: 620, r: 380, ry: 300, color: "#fff0d2", opacity: 0.3 },
+          // The desk lamp's pool on the desk top and Cloudia's camera-right side.
+          { x: 620, y: S16_DESK_TOP - 40, r: 260, ry: 150, color: WARM, opacity: 0.5 },
         ]}
       />
       <ChainCards u={chain} />
@@ -1417,16 +1411,6 @@ const Lamp: React.FC<{ id: string; x: number; y: number }> = ({ id, x, y }) => (
     <path d={ribbon([[x, -40], [x + 1, y * 0.4], [x - 1, y * 0.75], [x, y - 28]], 4, 1.5, 170)} fill={INK} />
     <PShape id={`${id}-shade`} d={`M ${x - 80} ${y + 34} Q ${x} ${y - 78} ${x + 80} ${y + 34} Z`} v={V.brass} w={[6, 2]} seed={171} />
     <ellipse cx={x} cy={y + 36} rx={38} ry={10} fill={CREAM} />
-  </g>
-);
-
-/** Cloudia's reception desk (wood, painted, pooled). */
-const Desk: React.FC<{ id: string; x0: number; x1: number; top: number; ground: number }> = ({ id, x0, x1, top, ground }) => (
-  <g>
-    {/* Cloud-marble, not wood: the hotel is built of its own sky (and a brown desk was a fourth hue family). */}
-    <PShape id={`${id}-front`} d={roundRectPath(x0, top + 22, x1 - x0, ground - top - 22, 14)} v={V.marble} w={[7, 2.4]} seed={181} />
-    <PShape id={`${id}-top`} d={roundRectPath(x0 - 24, top, x1 - x0 + 48, 34, 12)} v={threeValues("#8a7cc0", "#4a3c7a", { tame: 0.04 })} w={[6, 2]} seed={182} />
-    <path d={ribbon([[x0 + 40, top + 90], [(x0 + x1) / 2, top + 92], [x1 - 40, top + 90]], 4, 1.5, 183)} fill={INK} opacity={0.5} />
   </g>
 );
 
@@ -1480,14 +1464,16 @@ const VelvetRope: React.FC<{ id: string; x0: number; x1: number; y: number }> = 
 );
 
 /** One speck of dust. Kevin, later. ≥24 px with a ≥2 px ink rim. */
-const Speck: React.FC<{ id: string; x: number; y: number; r: number; glow?: number }> = ({ id, x, y, r, glow = 0 }) => {
+const Speck: React.FC<{ id: string; x: number; y: number; r: number; glow?: number; dark?: boolean }> = ({ id, x, y, r, glow = 0, dark = false }) => {
   const frame = useCurrentFrame();
   const rot = Math.sin(frame / 40) * 8;
+  // Polish L3 (`dark`, Kevin): the core one value step darker and a 4 px rim, findable at phone size.
+  const v = dark ? { ...V.dust, base: V.dust.shadow, shadow: mixHex(V.dust.shadow, INK, 0.35), light: V.dust.base } : V.dust;
   return (
     <g transform={`translate(${x} ${y}) rotate(${rot})`}>
       {glow > 0.02 ? <circle r={r * 2.2} fill={V.lit.light} opacity={0.3 * glow} /> : null}
-      <PShape id={id} d={circleD(0, 0, r)} v={V.dust} w={[Math.max(3.5, r * 0.18), 2.5]} ink={INK} seed={211} />
-      <circle cx={r * 0.45} cy={r * 0.3} r={r * 0.28} fill={V.dust.shadow} />
+      <PShape id={id} d={circleD(0, 0, r)} v={v} w={dark ? [8, 4] : [Math.max(3.5, r * 0.18), 2.5]} ink={INK} seed={211} />
+      <circle cx={r * 0.45} cy={r * 0.3} r={r * 0.28} fill={v.shadow} />
     </g>
   );
 };
@@ -1646,7 +1632,7 @@ const KevinScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           <Svg>
             {/* Kevin's own tiny shadow, on Drip's crown below him. */}
             <ellipse cx={S17_SPECK.x + 6} cy={S17_SPECK.y + 62} rx={34} ry={9} fill="#2a2850" opacity={0.28} />
-            <Speck id="s17-kevin" x={S17_SPECK.x} y={S17_SPECK.y} r={40} glow={0.5} />
+            <Speck id="s17-kevin" x={S17_SPECK.x} y={S17_SPECK.y} r={40} glow={0.5} dark />
           </Svg>
         </Plane>
       </World>
@@ -1836,6 +1822,7 @@ const HotelFillsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         cam={cam}
         hide={["far", "fg"]}
         offsets={{ mid: 300 }}
+        hazeOn={["far"]}
         sky={
           <>
             <SkyBlend from="hotel_sky" to="hotel_sky_grey" u={0.12 + full * 0.3} y={-260} />
@@ -1845,6 +1832,10 @@ const HotelFillsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         mid={
           <>
             <PlateTint k="hotel_mid_bulk" color="#5a6494" opacity={Math.min(1, 0.3 + grey * 1.4)} y={300} />
+            {/* Polish A2-1: a shade side on the bulk's camera-left half, so the tower separates from the sky. */}
+            <AbsoluteFill style={{ WebkitMaskImage: "linear-gradient(90deg, #000 0%, #000 52%, transparent 64%)", maskImage: "linear-gradient(90deg, #000 0%, #000 52%, transparent 64%)" }}>
+              <PlateTint k="hotel_mid_bulk" color="#2a2850" opacity={0.45} y={300} />
+            </AbsoluteFill>
             <Svg>
               {floorAt.map((at, i) => {
                 const pop = spring({ frame: frame - at, fps, config: { damping: 11, mass: 0.7 } });
@@ -1854,7 +1845,7 @@ const HotelFillsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
                 const windows = 3 + (i === 0 ? 1 : 0);
                 return (
                   <g key={i} transform={`translate(${S19_PEAK.x} ${fy}) scale(${0.3 + 0.7 * pop}) translate(${-S19_PEAK.x} ${-fy})`} opacity={Math.min(1, pop * 1.6)}>
-                    <PaintedCloud id={`s19-floor${i}`} x={S19_PEAK.x} y={fy} w={fw} h={170} grey={0.2 + grey} seed={i * 1.7 + 2} line={6} />
+                    <PaintedCloud id={`s19-floor${i}`} x={S19_PEAK.x} y={fy} w={fw} h={170} grey={0.2 + grey} seed={i * 1.7 + 2} line={8} />
                     {Array.from({ length: windows }, (_, k) => {
                       const wx = S19_PEAK.x + ((k + 0.5) / windows - 0.5) * fw * 0.6;
                       return (
@@ -1900,7 +1891,7 @@ const HotelFillsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           { x: 960, y: 1080, r: 1700, ry: 520, color: DUSK, opacity: 1 },
           { x: 1920, y: 0, r: 1000, ry: 700, color: DUSK, opacity: 1 },
           // The plate's painted sun disc (top centre) held down: Sunny is the only sun in this show.
-          { x: 960, y: 110, r: 560, ry: 300, color: "#2a3470", opacity: 0.9 },
+          { x: 960, y: 110, r: 560, ry: 300, color: "#2a3470", opacity: 0.85 },
           { x: 0, y: 0, r: 900, ry: 640, color: DUSK, opacity: 0.9 },
         ]}
         pools={[
@@ -1910,10 +1901,12 @@ const HotelFillsScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             [1200, 651],
             [975, 891],
             [S19_PEAK.x, S19_PEAK.y + 30],
-          ].map(([wx, wy]) => ({ x: wx, y: wy, r: 120, color: WARM, opacity: 0.85 })),
-          { x: S19_PEAK.x, y: S19_PEAK.y - 150, r: 460, ry: 320, color: "#fff4dc", opacity: 1 },
+          ].map(([wx, wy]) => ({ x: wx, y: wy, r: 130, color: WARM, opacity: 1 })),
+          // Polish A2-1: the white top-centre pool read as a digital sun glare; the new floors now take a warm,
+          // tight pool and the plate's sun stays held down by the dark above.
+          { x: S19_PEAK.x, y: S19_PEAK.y - 30, r: 460, ry: 260, color: "#ffd9a0", opacity: 1 },
           { x: 330, y: 330, r: 620, ry: 380, color: "#b8ceff", opacity: 0.6 },
-          { x: S19_CLOUDIA.x + 120, y: 760, r: 460, ry: 380, color: "#fff0d2", opacity: 0.65 },
+          { x: S19_CLOUDIA.x + 120, y: 760, r: 460, ry: 380, color: "#fff0d2", opacity: 0.55 },
         ]}
       />
       <Bubbles
@@ -2152,6 +2145,8 @@ const GreyAndHeavyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             <AbsoluteFill style={{ opacity: grey }}>
               <Plate k="hotel_far_grey" y={60} />
             </AbsoluteFill>
+            {/* Polish L2: the far cloud bank one band darker (it was the brightest thing in the darkest scene). */}
+            <PlateTint k="hotel_far_grey" color="#262c46" opacity={0.4 + 0.35 * grey} y={60} />
           </>
         }
         mid={
@@ -2240,7 +2235,7 @@ const GreyAndHeavyScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         text={{ a2_28_sunny: "Rude! I was shining nicely.", a2_29_cloudia: "I love guests. I hate gravity." }}
         at={{
           a2_28_sunny: { x: 1200, y: 200, tail: "right", tailAt: 1480 },
-          a2_29_cloudia: { x: 420, y: 920, tail: "right", tailAt: 640 },
+          a2_29_cloudia: { x: 420, y: 920, tail: "right", tailAt: 620 }, // polish L5: tail 20 px left, off the balcony edge
         }}
       />
     </AbsoluteFill>

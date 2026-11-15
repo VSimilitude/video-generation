@@ -11,7 +11,7 @@ export const PLATES = {
   "home_far_headland_evening": {"src":"backgrounds/water-cycle-remaster/keyed/home_far_headland_evening.webp","depth":0.15,"keyed":true,"top":0.641},
   "home_fg_rock": {"src":"backgrounds/water-cycle-remaster/keyed/home_fg_rock.webp","depth":1.3,"keyed":true,"top":0.184},
   "home_mid_sea": {"src":"backgrounds/water-cycle-remaster/keyed/home_mid_sea.webp","depth":0.4,"keyed":true,"top":0.392},
-  "home_near_shore": {"src":"backgrounds/water-cycle-remaster/keyed/home_near_shore.webp","depth":1,"keyed":true,"top":0.72},
+  "home_near_shore": {"src":"backgrounds/water-cycle-remaster/keyed/home_near_shore.webp","depth":1,"keyed":true,"top":0.721},
   "home_sky_evening": {"src":"backgrounds/water-cycle-remaster/home_sky_evening.webp","depth":"sky","keyed":false},
   "home_sky_sunset": {"src":"backgrounds/water-cycle-remaster/home_sky_sunset.webp","depth":"sky","keyed":false},
   "hotel_far": {"src":"backgrounds/water-cycle-remaster/keyed/hotel_far.webp","depth":0.15,"keyed":true,"top":0.296},
