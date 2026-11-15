@@ -52,20 +52,23 @@ of all eight re-rolled plates NO SUN (D36, scratchpad/remaster/sun-check-review.
 Scope per D35; report scratchpad/remaster/polish-report.md (FINAL, has the
 git-add list and the NOT DONE list). Three-way merge onto main was simulated
 clean at 21:25 for .cache.json / backgrounds.mjs / plateManifest.ts.
-NEXT (showrunner, after the orchestrator merges): post-merge pass on main =
-s28 tub vs s35 tub continuity; recap s36 FgMound (passes its own `v`, gains
-the new default `core`) and recap planes under the new SetStack haze; ONE
-fork review of all changed scenes (acts 1-3 polish + recap fix; watch p2 on
-s24/s26/s32 after the mound change, the drab `wants_channel`, the s33 ring
-behind the ECK/shun chips) -> a fix builder only for FAILs -> full gates
-(typecheck, lint:hooks, every-frame whole composition at 0.25 EXIT 0; no
-narration line changed, so no new Whisper gate) -> full-scale render
-out/DripWaterCycleRemaster.mp4 -> phone cut (720p HEVC hvc1 CRF 28-31
-faststart <30 MiB; no ffmpeg on PATH, use `npx remotion ffmpeg`) ->
-orchestrator ships (registry unhide, `npm run site`, deploy from a clean
-worktree) -> LEARNINGS/STYLE retro + bible update.
+Polish merged 16894ad (docs 8f98fe2). **POST-MERGE PASS (23:30):** final
+review on merged main = SHIP AFTER ONE BLOCKER (D39,
+scratchpad/remaster/final/final-review.md); blocker B1 (s08 foreground swell
+ends) fixed in scenes/act1kit.tsx, UNCOMMITTED (D38). **FINAL CUT RENDERED 01:41
+(2026-11-15), chain log scratchpad/remaster/final/chain.log:** every-frame
+whole composition at 0.25 EXIT 0 (pre-fix bundle) + re-gate 0-5429 with the
+fix EXIT 0; full render EXIT 0 -> out/DripWaterCycleRemaster.mp4 (1080p h264,
+18341 f, 10:11, 271.8 MB); phone cut out/DripWaterCycleRemaster_phone.mp4
+(720p HEVC hvc1 CRF 29, moov before mdat, 22.64 MiB). No narration line
+changed in the whole recovery, so no new Whisper gate. Neither file has been
+WATCHED by anyone: motion and audio are Mike's to judge. NEXT: orchestrator
+commits act1kit.tsx + docs, delivers the two files, ships (registry unhide,
+`npm run site`, deploy from a clean worktree) -> showrunner writes the
+LEARNINGS/STYLE retro + bible update. Mike's list: decision log D35, D37,
+D39 + scratchpad/remaster/final/final-review.md SHIP-WITH.
 Mike already has the kit sheet and act 1–3 contact sheets.
-Decision log: remaster-decision-log.md D1–D37 TOP-first. Briefs:
+Decision log: remaster-decision-log.md D1–D39 TOP-first. Briefs:
 act-builder-brief.md, shot-plan.md, brief.md.
 
 ## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")

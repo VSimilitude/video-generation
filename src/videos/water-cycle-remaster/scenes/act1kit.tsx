@@ -274,10 +274,13 @@ export const FgSwell: React.FC<{ top: number; color?: string; deep?: string; ink
   const frame = useCurrentFrame();
   const t = frame / FPS;
   const pts: Pt[] = [];
-  for (let x = -400; x <= WIDTH + 400; x += 40) {
+  // Overscan ±2200 (was ±400): on the 1.3 plane a pull-out to zoom 0.62 shrinks the swell to ~0.51, and
+  // ±400 left both ends inside the frame (s08's dark slab under Drip, final review B1). Same curve on screen.
+  const OVER = 2200;
+  for (let x = -OVER; x <= WIDTH + OVER; x += 40) {
     pts.push([x, top + Math.sin(x / 420 + t * 0.6 + seed) * amp + Math.sin(x / 150 + t * 1.1) * amp * 0.25]);
   }
-  const d = `M -400 ${HEIGHT + 400} L ${pts.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" L ")} L ${WIDTH + 400} ${HEIGHT + 400} Z`;
+  const d = `M ${-OVER} ${HEIGHT + 1400} L ${pts.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" L ")} L ${WIDTH + OVER} ${HEIGHT + 1400} Z`;
   return (
     <Svg>
       <path d={d} fill={color} />

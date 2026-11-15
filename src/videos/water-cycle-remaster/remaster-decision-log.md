@@ -6,6 +6,30 @@ listed here so he can overturn from the list after judging the deployed tile.
 Composition `DripWaterCycleRemaster`, slug `water-cycle-remaster`. The
 original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
+## 2026-11-14 23:30 — final review on merged main (scratchpad/remaster/final/final-review.md)
+
+- **D39 Final review = SHIP AFTER ONE BLOCKER; the rest ships as a list for
+  Mike.** Act means on viewed scenes: act 1 7.45, act 2 7.69, act 3 7.35,
+  recap 7.41. The s34 ring now reads as a directed clockwise cycle (stills;
+  motion unjudged). No sun in any background, no merge side effects on the
+  recap, no pure white, no covered face/sign/word. Shipped with, not fixed
+  (overturn = a second polish wave): the s34 EVAPORATION tag is cut by the
+  left frame edge for about 2 s while the camera follows the draw; the s35
+  bath stop is "close enough" to s28's tub but not the same room (navy tub in
+  a blue tiled room vs cream tub in a yellow room; its duck is in the plate,
+  not the s28 painted duck); s22 sign reads grey rather than cream; s21
+  bubble sits on Cloudia with its tail pointing away; s19 Cloudia washed.
+- **D38 Blocker B1 fixed by the showrunner directly (one constant), no
+  builder spawned.** s08, frames ~3665-3697: the foreground swell showed both
+  ends as a dark slab under Drip on the pull-out (path overscan was 400 px;
+  the 1.3 plane at zoom 0.62 needs far more). `FgSwell` overscan 400 -> 2200
+  in scenes/act1kit.tsx; same curve on screen elsewhere. Checked on stills at
+  3670/3685/3695: the swell now crosses the full width as a dark foreground
+  band. Why not a builder: quota headroom was under one batch and the fix is
+  mechanical; the act-1 range was re-gated every-frame afterwards. The defect
+  predates the polish pass (no earlier still sampled the pull-out), so other
+  one-second transients between sampled frames cannot be excluded.
+
 ## 2026-11-14 21:30 — recovery after the 21:04 crew kill (new showrunner)
 
 - **D37 Polish pass accepted for merge on the builder's gates plus three
