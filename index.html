@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#5b6cff" />
+    <meta
+      name="description"
+      content="Little Big World and the rest of our videos, playing live in the browser."
+    />
+    <title>Little Big World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Installable web app. Every path here is relative on purpose: the site
+         is served from a repo subpath on GitHub Pages, so a leading "/" would
+         point at the wrong origin root. -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon-180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <!-- iOS: added to the home screen, run without Safari's chrome. The
+         translucent status bar plus viewport-fit=cover above means the page
+         owns the full screen and honours env(safe-area-inset-*) itself. -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Videos" />
+    <style>
+      /* Page chrome only; everything inside #root is styled from
+         src/site/siteTheme.ts so the site matches the family hub. */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f4f6ff;
+        color: #23264a;
+        font-family: "Baloo 2", "Nunito", "Segoe UI", system-ui, -apple-system,
+          sans-serif;
+        -webkit-text-size-adjust: 100%;
+        overflow-x: hidden;
+        /* No pull-to-refresh / rubber band: mid-episode, both read as the
+           video breaking. */
+        overscroll-behavior: none;
+      }
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+      img,
+      video,
+      canvas {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Relative path on purpose: the site is served from a repo subpath on
+         GitHub Pages, so nothing here may start with "/". -->
+    <script src="./bundle.js" defer></script>
+    <!-- Offline support. Registered relative to this page so the worker's
+         scope is the repo subpath, and after load so it never competes with
+         the first paint. Failure is silent: the site works without it. -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("./sw.js").catch(function () {});
+        });
+      }
+    </script>
+  </body>
+</html>
