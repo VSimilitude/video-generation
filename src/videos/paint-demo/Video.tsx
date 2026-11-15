@@ -69,7 +69,15 @@ type SceneProps = { painted: boolean; frame: number; cam: Cam };
  * are diagnostics only (the grade and ground shadows are never dropped).
  */
 type CostKnobs = { debugDir?: number; boilScope?: "ink" | "all"; grade?: { saturate?: number; contrast?: number }; postMode?: "baked" | "css"; post?: { grade?: boolean; paper?: boolean; vignette?: boolean }; bleed?: boolean; every?: number; flatPlanes?: boolean; noPost?: boolean; noBoil?: boolean };
-const KNOBS = getInputProps() as CostKnobs;
+// getInputProps() throws outside the Studio / server render (the Player site
+// bundles this module through the registry), so fall back to no knobs there.
+const KNOBS: CostKnobs = (() => {
+  try {
+    return getInputProps() as CostKnobs;
+  } catch {
+    return {};
+  }
+})();
 const paintOpts = (light: LightRig, boilKey: string) => ({
   light,
   boilKey,
