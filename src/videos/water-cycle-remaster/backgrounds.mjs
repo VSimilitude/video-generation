@@ -517,20 +517,28 @@ export default {
       prompt: "a gouache painting of an old white clawfoot bathtub full of water and soap bubbles seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a cosy tiled bathroom, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature",
     },
     mind_bathtub: {
+      bright: 0.85,
+      sat: 0.72,
       depth: "sky",
-      prompt: "a bathtub full of still water in a dim bathroom at night, cool moonlit blue light through a small window",
+      prompt: "a gouache painting of an old clawfoot bathtub full of still water seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a small tiled bathroom at night, a small window on the left with a deep blue night sky, the room dim, cool moonlit blue and violet everywhere, low contrast, loose rough dry-brush gouache strokes clearly visible, grainy textured watercolour paper showing through, like a hand painted children's picture book page, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no smooth gradients, no glossy highlights, no lens flare, no text, no signature",
     },
     mind_street: {
+      bright: 0.85,
+      sat: 0.72,
       depth: "sky",
-      prompt: "a narrow old cobbled street at night with old gas lamp posts, wet shiny cobbles, cool moonlit blue",
+      prompt: "a gouache painting of a narrow old Victorian cobbled street at night seen at eye level, tall brick terraced houses on both sides with a few small warm lit windows, two old gas lamp posts with small soft amber glows, a still rain puddle on the cobbles in the foreground centre, deep moonlit blue and violet, soft low contrast, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no glossy highlights, no lens flare, no depth of field, no text, no signature",
     },
     mind_jungle: {
+      bright: 0.85,
+      sat: 0.72,
       depth: "sky",
-      prompt: "a lush jungle at night with giant leaves and hanging vines, cool moonlit blue, soft and calm",
+      prompt: "a gouache painting of a calm jungle pool at night, giant rounded leaves and hanging vines framing the left and right edges, a still dark pool of water across the lower third, deep moonlit blue and teal, soft low contrast, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no glossy highlights, no lens flare, no depth of field, no text, no signature",
     },
     mind_footprint: {
+      bright: 0.85,
+      sat: 0.72,
       depth: "sky",
-      prompt: "a wide flat muddy clearing among giant prehistoric ferns at night, cool moonlit blue, low view across the mud",
+      prompt: "a gouache painting of a wide flat clearing of dark wet blue-grey mud at night, seen from very low near the ground, giant prehistoric tree ferns and cycads soft and hazy in the distance under a deep indigo night sky, empty smooth dark mud across the lower half, cool moonlit blue and violet, low contrast, loose rough dry-brush gouache strokes clearly visible, grainy textured watercolour paper showing through, like a hand painted children's picture book page, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no smooth gradients, no glossy highlights, no lens flare, no text, no signature",
     },
     map_paper: {
       depth: "sky",

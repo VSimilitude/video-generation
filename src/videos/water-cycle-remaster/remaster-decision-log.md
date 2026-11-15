@@ -6,6 +6,52 @@ listed here so he can overturn from the list after judging the deployed tile.
 Composition `DripWaterCycleRemaster`, slug `water-cycle-remaster`. The
 original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
+## 2026-11-14 — recap built (scratchpad/remaster/recap-report.md)
+
+- **D32 Recap (s33–s36) built; cards keep their own rows.** s33/s34 are cream
+  paper cards (p98 0.82–0.86 with tags/bubbles up) and fail the night band by
+  design — accepted as card exceptions (bible: "cards keep their own rows");
+  s36 is evening, not night (lum 0.39–0.45). All four `mind_*` plates
+  re-rolled from smooth digital illustration; the s35 bath matches s28's
+  clawfoot tub. Checkpoint commit requested before the fork review (D29
+  reasoning). Weak points to the polish queue if time allows: s33 panels
+  small/pastel, s34 ring line thin, footprint fill flat, CloudiaHat flat.
+
+## 2026-11-14 — act 3 review + act-1 re-check (scratchpad/remaster/act3-review.md)
+
+- **D31 Act 3 = ACCEPT WITH FIXES** (mean 7.1; s30/s31 pass; s24 6.1 lowest).
+  Staging, camera verbs, bubbles, Big Words and beats are right; the weak axis
+  is plate/prop medium and light not reading on the characters. FIX-NOW →
+  polish pass: s24 foreground grass crosses Drip; roll/pan bleed again (s23
+  corner, s29 seam) → bleed 0.3/0.35; s28 bathtub insert is a digital render
+  with a glossy 3D duck → re-roll + SVG duck; `FgMound` near-black corner
+  blobs → value family + ribbon + pooled fill, drop the yellow ellipse under
+  Drip in s29; light on characters — the s24 key switch to LEFT is invisible
+  on Drip through s29, the moose's shadow does not cover Drip, s22's lamp
+  emits nothing → raise CastShade/rim to the PaintDemo day values, multiply
+  pool for the moose shadow, light the lamp. **Act-1 fix re-check ACCEPTED**
+  (F1, F2, F5 landed; F3 dog-bowl plate still a render, F4 foam reads as
+  pearl beads → polish). Polish builder spawned with
+  scratchpad/remaster/polish-worklist.md; recap builder runs in parallel.
+
+## 2026-11-14 — act 2 review (scratchpad/remaster/act2-review.md)
+
+- **D30 Act 2 = ACCEPT WITH FIXES** (mean 7.55; 8/10 pass; s13 and s19 fail).
+  FIX-NOW → polish pass: s19 painted-sun glare halo (mask/re-roll), haze on
+  the far plane only, shade side on the tower bulk, ribbon the sprouting
+  floors; s13 Cloudia's bubble +40 px off her crown, Drip exempt from the
+  Room tint so he keeps his cyan (door-glow on his lit side), narrower
+  softbox pool so the awning is not washed. **Desk + sign canon:** desk =
+  act 3's SHAPE (scalloped cloud top, lamp, label) in act 2's COLOUR
+  (violet cloud-marble) — s16 gains the scallop, s22 recolours; sign = act
+  2's hanging cream wooden board, s22's lilac plaque restyles to it; s22
+  takes the dusk Room tint so the s21→s22 cut does not jump charcoal → pale
+  lilac. LATER: s12 thermometer + PaperWash, s21 far bank one band darker,
+  Kevin darker core + rim, swarm outlines via one shared ribbon filter.
+  Confirmed: light pools carry every interior (s16/s17 strongest frames),
+  s21 reads shadowless/gloomiest, Cloudia is ep 1's Cloudia, MYTH stamp /
+  TAKE ONE / GUESTS / KEVIN read for a six-year-old.
+
 ## 2026-11-14 — act 3 built (scratchpad/remaster/act3-report.md)
 
 - **D29 Checkpoint commits before fork review (acts 2 and 3).** Both acts

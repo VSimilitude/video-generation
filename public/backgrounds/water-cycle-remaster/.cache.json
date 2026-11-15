@@ -348,28 +348,28 @@
     "prompt": "a gouache painting of an old white clawfoot bathtub full of water and soap bubbles seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a cosy tiled bathroom, a window on the left, warm late afternoon gold light low from the left with long soft blue shadows, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no chrome reflections, no lens flare, no depth of field, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "mind_bathtub": {
-    "hash": "8fc8d8597b7874d8",
+    "hash": "e26cde08694d6b1e",
     "outFile": "mind_bathtub.webp",
     "aspectRatio": "16:9",
-    "prompt": "a bathtub full of still water in a dim bathroom at night, cool moonlit blue light through a small window, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of an old clawfoot bathtub full of still water seen side on across the middle of the frame, a small yellow rubber duck floating at the right end, a small tiled bathroom at night, a small window on the left with a deep blue night sky, the room dim, cool moonlit blue and violet everywhere, low contrast, loose rough dry-brush gouache strokes clearly visible, grainy textured watercolour paper showing through, like a hand painted children's picture book page, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no smooth gradients, no glossy highlights, no lens flare, no text, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "mind_street": {
-    "hash": "fe364a27939fecdb",
+    "hash": "fb823694a9618894",
     "outFile": "mind_street.webp",
     "aspectRatio": "16:9",
-    "prompt": "a narrow old cobbled street at night with old gas lamp posts, wet shiny cobbles, cool moonlit blue, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a narrow old Victorian cobbled street at night seen at eye level, tall brick terraced houses on both sides with a few small warm lit windows, two old gas lamp posts with small soft amber glows, a still rain puddle on the cobbles in the foreground centre, deep moonlit blue and violet, soft low contrast, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no glossy highlights, no lens flare, no depth of field, no text, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "mind_jungle": {
-    "hash": "d5731fd485e9ee80",
+    "hash": "77620fbfc7b37fc4",
     "outFile": "mind_jungle.webp",
     "aspectRatio": "16:9",
-    "prompt": "a lush jungle at night with giant leaves and hanging vines, cool moonlit blue, soft and calm, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a calm jungle pool at night, giant rounded leaves and hanging vines framing the left and right edges, a still dark pool of water across the lower third, deep moonlit blue and teal, soft low contrast, painterly, thick visible gouache brush strokes on textured paper, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no glossy highlights, no lens flare, no depth of field, no text, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "mind_footprint": {
-    "hash": "cd29aae05bd64ae0",
+    "hash": "bd4c0c074f7b317d",
     "outFile": "mind_footprint.webp",
     "aspectRatio": "16:9",
-    "prompt": "a wide flat muddy clearing among giant prehistoric ferns at night, cool moonlit blue, low view across the mud, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
+    "prompt": "a gouache painting of a wide flat clearing of dark wet blue-grey mud at night, seen from very low near the ground, giant prehistoric tree ferns and cycads soft and hazy in the distance under a deep indigo night sky, empty smooth dark mud across the lower half, cool moonlit blue and violet, low contrast, loose rough dry-brush gouache strokes clearly visible, grainy textured watercolour paper showing through, like a hand painted children's picture book page, soft edges, muted storybook colours, no photoreal, no vector art, no 3D render, no digital illustration, no smooth gradients, no glossy highlights, no lens flare, no text, no signature, background art for a preschool animated series, soft gouache painting, visible brush texture, saturated storybook colour, gentle airbrushed shading, soft rounded shapes, simple uncluttered composition, no characters, no people, no animals, no buildings, no fences, no text, no watermark, not photographic"
   },
   "map_paper": {
     "hash": "b00033ad56ea38d0",

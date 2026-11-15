@@ -31,36 +31,27 @@ explicit path only. Reference repo (MIT) cloned read-only at
 not its ink-on-3D look; our art direction stays soft gouache storybook).
 
 ### In-flight (showrunner owns this section)
-Wave 1 committed 0120a21; kit committed 8caa4ab (gate PASS, D16); remaster
-docs+voices 80f9855; D15 site shell 262f957. **Wave D acts IN PROGRESS
-2026-11-14 15:05.** Skeleton builder (opus, main tree): MILESTONE 1 DONE 15:35 (awaiting commit;
-report scratchpad/remaster/skeleton-report.md; 63 plates generated + keyed
-offline by key-plates.mjs → plateManifest.ts, D17–D20), milestone 2 RUNNING
-(coldOpen + act1). Milestone 1 was:
-Video.tsx (ep-1 SCRIPT table verbatim) + scenes/common.tsx (LIGHT/TIME/SETS
-tables, RemasterCam, Painted* helpers) + backgrounds.mjs (ALL plane plates,
-generated) + hidden registry entry → scratchpad/remaster/skeleton-report.md;
-milestone 2 = coldOpen + act1 (s01–s11) + Drip limb paint. Skeleton COMMITTED c82f560. Act 2 (s12–s21) BUILT 16:50 in worktree
-.claude/worktrees/agent-a65a0e019959b2260 (gates green; report + stills in
-THAT worktree's scratchpad/remaster/act2*; changed: scenes/act2.tsx,
-backgrounds.mjs act-2 block, hotel_sky_lobby.webp, .cache.json) — fork review
-+ merge into main AFTER the pause (D26–D27 rulings logged). Act 1 (s01–s11) BUILT 16:10 (gates green, every-frame 0–5429 at 0.25 EXIT 0;
-report skeleton-report.md 'Milestone 2'; verify OUT rows on day/airborne
-bands under review) → fork review DONE: ACCEPT WITH FIXES (D25; act1-review.md) → fix pass DONE 16:34
-(F1–F5, verify.py --sky; gates green) → ACT 1 READY TO COMMIT (paths in the
-report to the orchestrator; exclude scenes/act3*.tsx WIP). Fork re-check of
-the fix sheet deferred to the polish pass. **QUOTA PAUSE until 2026-11-15
-02:00 — no new spawns; act 2 (worktree) and act 3 (main) keep running and
-their reports get logged without spawning; fork reviews of acts 2–3 and the
-recap builder start after 02:00.** LATER polish L1–L7 queued for after acts 2–3.
-Act 3 (s22–s32) BUILT 17:25 in the main tree (gates green, every-frame
-10211–16039 at 0.25 EXIT 0; report act3-report.md; stills scratchpad/remaster/
-act3/; D28). Checkpoint commits of acts 2 + 3 requested (D29). Two builders live (act 2
-worktree, act 3 main). Next slot: recap (s33–s36). Act 1 commit after review. Fork review per act against V1–V8, then
-hand back per act for commit. Whisper re-gate of the 4 D13 clips pending
-(appends to scratchpad/remaster/whisper-gate.md). Quota window resets ~21:00
-— size batches so a builder finishes before it. Briefs: act-builder-brief.md,
-shot-plan.md, brief.md §3–§4; decisions: remaster-decision-log.md (D1–D16).
+Commits: wave 1 0120a21 · kit 8caa4ab (gate PASS D16) · docs/voices 80f9855 ·
+site shell 262f957 · skeleton c82f560 · act 1 (after fix pass, D25) · act 3
+96feb43 · act 2 ac8ff01 merged 7b24e16. **All 32 story scenes staged;
+composition `DripWaterCycleRemaster` still `hidden: true`.** Quota window
+reopened 20:36 (PROCEED). Reviews DONE: act 2 ACCEPT WITH FIXES 7.55 (D30), act 3 ACCEPT WITH FIXES
+7.1 (D31), act-1 fix re-check ACCEPTED. RECAP (s33–s36) BUILT 21:20 in the main tree (gates green, every-frame
+16040–18340 at 0.25 EXIT 0; recap-report.md; D32) → checkpoint commit
+requested; fork review RUNNING → recap-review.md. ALL 36 SCENES STAGED. RUNNING since 20:58: POLISH builder (opus) in the hand-made
+worktree .claude/worktrees/polish, branch `worktree-polish` off 7b24e16,
+worklist scratchpad/remaster/polish-worklist.md (K1 bubble cream prop, act-2
++ act-3 FIX-NOW, lobbykit canon desk/sign, act-1 leftovers, LATER items) →
+polish-report.md, stills scratchpad/remaster/polish/. (Agent-tool worktree
+isolation failed because the harness cwd moved to /home/mike/projects; the
+worktree was created by hand with git.) NEXT: orchestrator merges
+`worktree-polish` into main after the recap lands → final gates: every-frame full render
+at 0.25 EXIT 0, full-scale render out/DripWaterCycleRemaster.mp4, phone cut
+(720p HEVC hvc1 CRF 28–31 faststart <30 MiB), registry unhide (minimal
+diff), `npm run site` → final report → orchestrator commits + deploys the
+tile for Mike. Mike already has the kit sheet and act 1–3 contact sheets.
+Decision log: remaster-decision-log.md D1–D29 TOP-first. Briefs:
+act-builder-brief.md, shot-plan.md, brief.md.
 
 ## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
 
