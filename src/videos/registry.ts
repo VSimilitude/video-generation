@@ -386,7 +386,6 @@ export const VIDEOS: VideoEntry[] = [
     width: WATER_CYCLE_REMASTER_WIDTH,
     height: WATER_CYCLE_REMASTER_HEIGHT,
     durationInFrames: waterCycleRemasterTimeline().durationInFrames,
-    hidden: true,
   },
   // The player site's home-screen icon, rendered to PNG by `npm run icons`
   // (which bundles src/videos/app-icon/entry.tsx directly rather than this
