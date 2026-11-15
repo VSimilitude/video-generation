@@ -40,38 +40,32 @@ reopened 20:36 (PROCEED). Reviews DONE: act 2 ACCEPT WITH FIXES 7.55 (D30), act 
 16040–18340 at 0.25 EXIT 0; recap-report.md; D32) → COMMITTED faea4ce; fork
 review DONE: ACCEPT WITH FIXES 7.1 (D33; the s34 ring must read as a DIRECTED
 cycle). ALL 36 SCENES STAGED AND COMMITTED.
-**CREW KILLED 21:04; new showrunner booted 21:18 (D34).** Two fresh Opus
-builders spawned 21:30, each auditing its predecessor's uncommitted partial
-work before finishing it (never resume the dead ones):
-(1) POLISH, worktree .claude/worktrees/polish, branch `worktree-polish` off
-7b24e16 (predates the recap commit; its recap.tsx is a stub and must not be
-touched there). Scope per D35 (FIX-NOW + act-1 leftovers + cheap LATER; the
-rest deferred), `wants_channel` sun disc removed (D36). **21:52: edits done, tsc 0; whole-composition every-frame gate render RUNNING in the worktree (≈1170/18341, ~50 min left). NOT gated until scratchpad/remaster/polish/validate.log ends `EXIT 0`; do not commit or merge the branch before that. The polish builder (agent a2b128680c5cd6d93) is waiting on it and will finalise polish-report.md; the showrunner handed back at 21:52 with the recap fix ready to commit and resumes by message.** Report →
-scratchpad/remaster/polish-report.md (FINAL when its status line says so),
-gate log scratchpad/remaster/polish/validate.log.
-(2) RECAP FIX, main tree, ONLY scenes/recap.tsx + scenes/recapkit.tsx, the
-four FIX-NOW of recap-review.md. **GATED 21:47, UNCOMMITTED (ready to
-commit):** tsc 0, lint:hooks 0, every-frame 16040–18340 at 0.25 EXIT 0
-(2301/2301; showrunner re-ran tsc/lint and read the log). All four items
-LANDED by the builder's own stills; the four `mind_*` plates have one moon
-each and no sun (D36). NOT yet seen by a review fork: goes into the final
-post-merge fork review. Report → recap-report.md "Fix pass", sheets
-scratchpad/remaster/recap/sheet_fix2.png + crops_fix2.png, verify table
-recap/verify-table-fix2.md, gate log scratchpad/remaster/recap/validate_fix.log.
-If a builder dies again: check its gate log + report status line, typecheck,
-then brief a FRESH builder with the remaining items (briefs are in the
-showrunner's transcript; the item lists are the worklist/review files + D35).
-NEXT after both are gated: orchestrator commits the recap fix on main,
-commits the worktree on `worktree-polish` and merges it (three-way merge was
-simulated clean) → showrunner post-merge pass: s28 tub vs s35 tub continuity,
-recap mounds/haze after the kit merge, fork review of changed scenes, full
-gates (typecheck, lint:hooks, every-frame whole composition at 0.25 EXIT 0;
-no narration line changed so far, so no new Whisper gate) → full-scale render
-out/DripWaterCycleRemaster.mp4 → phone cut (720p HEVC hvc1 CRF 28–31
-faststart <30 MiB) → orchestrator ships (registry unhide, `npm run site`,
-deploy from a clean worktree) → LEARNINGS/STYLE retro + bible update.
+**CREW KILLED 21:04; new showrunner booted 21:18 (D34); recovery done.**
+RECAP FIX committed 37cb4ea (four FIX-NOW of recap-review.md landed by the
+builder's stills; not yet seen by a review fork).
+**POLISH GATED 22:54, UNCOMMITTED in the worktree .claude/worktrees/polish
+(branch `worktree-polish`, base 7b24e16), ready to commit + merge (D37):**
+tsc 0, lint:hooks 0, every-frame whole composition at 0.25 18341/18341 +
+re-gate of act 2 (5430-10210) and s28 (13624-13979) EXIT 0; eps 1-6
+identical-frame check passed for the additive `LightRig.strength?`; sun check
+of all eight re-rolled plates NO SUN (D36, scratchpad/remaster/sun-check-review.md).
+Scope per D35; report scratchpad/remaster/polish-report.md (FINAL, has the
+git-add list and the NOT DONE list). Three-way merge onto main was simulated
+clean at 21:25 for .cache.json / backgrounds.mjs / plateManifest.ts.
+NEXT (showrunner, after the orchestrator merges): post-merge pass on main =
+s28 tub vs s35 tub continuity; recap s36 FgMound (passes its own `v`, gains
+the new default `core`) and recap planes under the new SetStack haze; ONE
+fork review of all changed scenes (acts 1-3 polish + recap fix; watch p2 on
+s24/s26/s32 after the mound change, the drab `wants_channel`, the s33 ring
+behind the ECK/shun chips) -> a fix builder only for FAILs -> full gates
+(typecheck, lint:hooks, every-frame whole composition at 0.25 EXIT 0; no
+narration line changed, so no new Whisper gate) -> full-scale render
+out/DripWaterCycleRemaster.mp4 -> phone cut (720p HEVC hvc1 CRF 28-31
+faststart <30 MiB; no ffmpeg on PATH, use `npx remotion ffmpeg`) ->
+orchestrator ships (registry unhide, `npm run site`, deploy from a clean
+worktree) -> LEARNINGS/STYLE retro + bible update.
 Mike already has the kit sheet and act 1–3 contact sheets.
-Decision log: remaster-decision-log.md D1–D36 TOP-first. Briefs:
+Decision log: remaster-decision-log.md D1–D37 TOP-first. Briefs:
 act-builder-brief.md, shot-plan.md, brief.md.
 
 ## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")

@@ -8,6 +8,19 @@ original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
 ## 2026-11-14 21:30 — recovery after the 21:04 crew kill (new showrunner)
 
+- **D37 Polish pass accepted for merge on the builder's gates plus three
+  independent checks; the taste review is deferred to ONE post-merge fork.**
+  Checks: showrunner re-ran tsc/lint in the worktree; because the gate log was
+  created before the last two source writes, act 2 and s28 were re-rendered
+  every-frame (EXIT 0); the six BoomStorm/PipPlants frames are byte-identical
+  to main; a separate reviewer found no sun in the eight re-rolled plates.
+  Calls inside the pass (all overturnable): FgMound banks are a moss/violet
+  value family with a 64 px lit band, which lifts p2 to about 0.20-0.23 on
+  s24/s26/s32 (legible banks preferred over a black floor value);
+  `LightRig.strength` 1.5-1.7 on s24-s29 also widens the rim so the left key
+  shows on Drip; Drip's layer is darkened inside the moose shadow in s27; the
+  re-rolled overcast `wants_channel` is the drabbest insert (kept: no sun
+  beats a prettier sky); thermometer paint variant not done (D35 list).
 - **D36 MIKE RULING (relayed 21:40, FINAL, not overturnable): the painted sun
   disc in the re-rolled `wants_channel` plate must go. "Sunny is the only
   sun."** Must-fix for the polish builder: re-roll with a positively worded
