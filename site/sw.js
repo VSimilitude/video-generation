@@ -161,10 +161,21 @@ async function handleShell(request) {
  * The Range branch is the important one. `<audio>` on iOS asks for byte ranges
  * and refuses a plain 200 in reply, so a naive cache-first service worker
  * silences the narration it was supposed to be speeding up. Cached bodies are
- * sliced into a real 206 instead; a range miss goes to the network untouched
- * and warms the cache with one full fetch alongside.
+ * sliced into a real 206 instead.
+ *
+ * A range MISS waits for one full fetch into the cache and is then sliced from
+ * it too, rather than passed through to the network. Every range of one clip
+ * must come from the same source: with the old pass-through, a clip larger
+ * than the 64 KiB Chrome's media loader reads up front (preload="metadata")
+ * got its first range from the network and its tail, requested seconds later,
+ * as a constructed slice from the cache. Chrome rejected that second response
+ * (FFmpegDemuxer "data source error", MEDIA_ERR_NETWORK mid-clip) and
+ * `pauseWhenBuffering` then held the player on the clip forever: the
+ * water-cycle remaster froze at 0:40, at its first clip over 64 KiB. Only when
+ * the cache cannot be filled (offline, quota) does a range go to the network,
+ * and then every range of that clip does.
  */
-const warming = new Set();
+const warming = new Map();
 
 /**
  * URLs already revalidated in this worker's lifetime. iOS fires dozens of
@@ -181,7 +192,13 @@ async function handleRuntime(event, request, url) {
   const key = url.href;
 
   if (request.headers.has("range")) {
-    const cached = await cache.match(key);
+    let cached = await cache.match(key);
+    if (!cached) {
+      // Miss: fill the cache first (one full fetch, shared by every range that
+      // arrives meanwhile), so this range is sliced like all the later ones.
+      await warmUp(cache, key);
+      cached = await cache.match(key);
+    }
     if (cached) {
       const partial = await sliceResponse(cached, request.headers.get("range"));
       if (partial) {
@@ -192,7 +209,6 @@ async function handleRuntime(event, request, url) {
         return partial;
       }
     }
-    event.waitUntil(warmUp(cache, key));
     return fetch(request);
   }
 
@@ -213,15 +229,25 @@ async function handleRuntime(event, request, url) {
   return response;
 }
 
-async function warmUp(cache, key) {
-  if (warming.has(key)) return;
-  warming.add(key);
-  try {
-    const existing = await cache.match(key);
-    if (!existing) await refresh(cache, key);
-  } finally {
-    warming.delete(key);
+/** One full fetch into the cache per clip, however many ranges wait on it. */
+function warmUp(cache, key) {
+  let pending = warming.get(key);
+  if (!pending) {
+    pending = (async () => {
+      try {
+        const existing = await cache.match(key);
+        if (!existing) {
+          await refresh(cache, key);
+          // Just fetched fresh: the ranges that follow need not revalidate.
+          revalidated.add(key);
+        }
+      } finally {
+        warming.delete(key);
+      }
+    })();
+    warming.set(key, pending);
   }
+  return pending;
 }
 
 async function revalidate(cache, key) {

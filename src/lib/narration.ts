@@ -218,15 +218,54 @@ export function beats(
 // still loading when its frame arrives must hold the video, not get its first
 // words skipped. Desktop never notices; iPhone playback is where an episode's
 // dozens of just-in-time <audio> mounts otherwise race the network.
+//
+// The catch: Remotion only stops holding the video on a clip when the element
+// fires "canplay" or, while it is already held, "error". A clip that errors
+// while it is playing (a failed mid-clip range fetch, say) is then seeked by
+// the player's sync, goes back to "waiting", and holds the video forever, as
+// the water-cycle remaster did at 0:40. So every clip retries a failed load
+// once and, if that fails too, drops `pauseWhenBuffering` and plays on without
+// it: a lost line beats a frozen episode.
+
+/** One narration clip, with the error recovery described above. */
+const NarrationClipAudio: React.FC<{ src: string; volume?: number }> = ({
+  src,
+  volume,
+}) => {
+  const ref = React.useRef<HTMLAudioElement>(null);
+  const failures = React.useRef(0);
+  const [giveUp, setGiveUp] = React.useState(false);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onError = () => {
+      if (!el.error) return;
+      failures.current += 1;
+      if (failures.current === 1) {
+        console.warn(`Narration clip ${src} failed (code ${el.error.code}); retrying.`);
+        // The player's sync seeks it back into place once it can play.
+        el.load();
+      } else {
+        console.warn(`Narration clip ${src} failed again; playing on without it.`);
+        setGiveUp(true);
+      }
+    };
+    el.addEventListener("error", onError);
+    return () => el.removeEventListener("error", onError);
+  }, [src]);
+  return React.createElement(Audio, {
+    ref,
+    src,
+    pauseWhenBuffering: !giveUp,
+    ...(volume === undefined ? {} : { volume }),
+  });
+};
 
 // Mounts a scene's narration clip (no-op for silent scenes). Place inside the
 // scene's <Series.Sequence> so the audio starts with the scene.
 export const SceneAudio: React.FC<{ clip?: NarrationClip }> = ({ clip }) => {
   if (!clip) return null;
-  return React.createElement(Audio, {
-    src: staticFile(clip.file),
-    pauseWhenBuffering: true,
-  });
+  return React.createElement(NarrationClipAudio, { src: staticFile(clip.file) });
 };
 
 /**
@@ -256,9 +295,8 @@ export const DialogueAudio: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           durationInFrames: turn.durationInFrames,
           premountFor: TURN_PREMOUNT_FRAMES,
         },
-        React.createElement(Audio, {
+        React.createElement(NarrationClipAudio, {
           src: staticFile(turn.clip.file),
-          pauseWhenBuffering: true,
           volume: turn.volume ?? 1,
         }),
       ),
