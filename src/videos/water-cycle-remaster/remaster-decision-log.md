@@ -6,6 +6,57 @@ listed here so he can overturn from the list after judging the deployed tile.
 Composition `DripWaterCycleRemaster`, slug `water-cycle-remaster`. The
 original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
+## 2026-11-14 21:30 — recovery after the 21:04 crew kill (new showrunner)
+
+- **D36 MIKE RULING (relayed 21:40, FINAL, not overturnable): the painted sun
+  disc in the re-rolled `wants_channel` plate must go. "Sunny is the only
+  sun."** Must-fix for the polish builder: re-roll with a positively worded
+  overcast / sun-out-of-frame sky or paint the disc out, re-key, and confirm
+  by still at 100% that no sun or sun-like disc shows in s28's channel insert
+  (scratchpad/remaster/polish/act3/s28_ch_nosun.png). Every other plate
+  re-rolled in this pass is checked for stray suns too: wants_bathtub,
+  wants_tap, everywhere_dogbowl (polish builder) and the four `mind_*` recap
+  plates (recap builder, then the final review fork confirms all eight).
+  (The showrunner had already made the same call at 21:30; this entry records
+  it as Mike's.)
+- **D35 Polish scope cut to reach a cut tonight.** IN: every act-2/act-3
+  FIX-NOW, the act-1 leftovers (dog bowl, s01 foam cape), and the cheap LATER
+  items (s21 darker far bank + bubble nudge, Kevin darker core + rim, s12
+  PaperWash sky, s06 Drip 1.3×, key-direction check s08/s09; thermometer paint
+  variant only if time is left). OUT, deferred to a later polish wave: act-1
+  L1/L3/L4/L7 (crowd ribbon filter, Sunny lens shine, big wave, NameArrow),
+  act-2 swarm ribbon filter, act-3 LATER (CG boulder plate, flat grass blades,
+  moose per-leg values, striped sea plate, ring strokes, s22 crane wall hold).
+  Reason: none of the OUT items failed a scene; the tile is for judging the
+  look package against the original and Mike prefers finished work to more
+  rounds. Overturn: name the items and they go into a second polish pass.
+- **D34 Both killed builders replaced, not resumed; their partial work audited
+  before reuse.** Polish worktree (21 files) and the recap fix edits (main
+  tree, recap.tsx/recapkit.tsx) both typechecked and hook-linted clean as
+  found; a three-way merge of the polish branch onto faea4ce was simulated
+  clean on the three overlapping files (.cache.json, backgrounds.mjs,
+  plateManifest.ts). Two fresh Opus builders each start with an eye audit of
+  the inherited stills-level claims, then finish and gate. The polish
+  builder's additive kit change (`LightRig.strength?` in src/lib/kid/light)
+  must pass the BoomStorm/PipPlants identical-frame check or move into the
+  remaster's own files. The s35 bath stop uses its own `mind_bathtub` plate,
+  not the re-rolled `wants_bathtub`, so the predecessor's "re-check s35" flag
+  becomes a continuity check (s28 tub vs s35 tub) after the merge.
+
+## 2026-11-14 — recap review (scratchpad/remaster/recap-review.md)
+
+- **D33 Recap = ACCEPT WITH FIXES** (mean 7.1; words and syllable chips read
+  at phone size; staging/timing/bubbles right). The one pedagogy miss: the
+  s34 ring reads as a closed loop but only weakly as a DIRECTED cycle — ep 1
+  drew the mechanism inside the ring. FIX-NOW (recap builder resumed, main
+  tree): paint the transitions on the ring between stations (rising wisps,
+  rain streaks, river ribbon), band ×1.6, ribbon arrowheads ≥ 40 px; s35
+  footprint via PaintFill + ribbon, three values, moon reflection as a soft
+  oval; s36 painted CloudiaHat (additive prop or recapkit copy) and the shore
+  foam pooled into the sand value; s33 narrator-panel ring larger, Drip's
+  bubble tail inside the panel, panels less busy-pastel. LATER: light on
+  Drip in s35/s36, street plate slightly smooth-digital.
+
 ## 2026-11-14 — recap built (scratchpad/remaster/recap-report.md)
 
 - **D32 Recap (s33–s36) built; cards keep their own rows.** s33/s34 are cream

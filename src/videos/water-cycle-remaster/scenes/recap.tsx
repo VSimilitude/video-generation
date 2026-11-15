@@ -1,6 +1,6 @@
 import React from "react";
 import { Img, staticFile } from "remotion";
-import { CloudiaHat, SpeechBubble, threeValues, type Value3 } from "../../../lib/kid";
+import { SpeechBubble, threeValues, type Value3 } from "../../../lib/kid";
 import { useSpeaking } from "../../../lib/narration";
 import {
   AbsoluteFill,
@@ -35,9 +35,11 @@ import {
   type TimedScene,
 } from "./common";
 import { Svg, Zenith, rnd, secs, shake } from "./act1kit";
-import { FgMound, MirroredPlate, PV, PaintedRing, PaintedShape, RainStreaks, band, clamp01, lerp } from "./act3kit";
+import { FgMound, MirroredPlate, PaintedRing, PaintedShape, RainStreaks, ShadowPool, band, clamp01, lerp } from "./act3kit";
 import {
   BlowingLeaves,
+  DirectedRing,
+  PaintedHat,
   CardFrame,
   MedallionRim,
   PaintedTag,
@@ -172,8 +174,8 @@ const ChantScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         maxWidth={460}
       />
       {/* Bottom-row bubble placed directly: Bubbles clamps y ≤ 800, which lands it on the syllable row. */}
-      <SpeechBubble x={bub(2).x} y={cell(PANELS[2]).top + PH * 0.74} text="Best waterslide ever! Whee!" tail="left" tailAt={bub(2).tailAt}
-        from={from[2]} until={to[2]} fontSize={44} maxWidth={520} background={NIGHT_PAPER} />
+      <SpeechBubble x={cell(PANELS[2]).left + PW * 0.69} y={cell(PANELS[2]).top + PH * 0.63} text="Best waterslide ever! Whee!" tail="left" tailAt={bub(2).tailAt}
+        from={from[2]} until={to[2]} fontSize={42} maxWidth={470} background={NIGHT_PAPER} />
     </AbsoluteFill>
   );
 };
@@ -224,13 +226,23 @@ const ChantPanel: React.FC<{ panel: Panel; cam: Cam; dim: number; slam: number; 
     set = SETS.home.evening;
     hide = ["near", "fg"];
     horizons = { mid: 860 };
-    body = <PaintedRing cx={1000} cy={640} r={300} progress={1} spin={frame * 0.6} glow={0.15} />;
+    // s34's directed ring in miniature (≥ 70% of the panel height): the water already going round.
+    body = <DirectedRing cx={1390} cy={700} r={336} progress={1} gap={6} flow={0.4} travel={20 + frame * 1.2} />;
   }
   return (
     <div style={{ position: "absolute", left: c.left, top: c.top, width: PW, height: PH, overflow: "hidden" }}>
       <div style={{ position: "absolute", left: 0, top: 0, width: WIDTH, height: HEIGHT, transform: `scale(${PS})`, transformOrigin: "0 0" }}>
         <SetStack set={set} cam={cam} hide={hide} horizons={horizons} sky={<Zenith color="#3a3a7a" mid="#a07a9a" reach={60} opacity={0.35} />}
-          stage={<><EveningKey />{body}</>} fg={fg} />
+          stage={
+            <>
+              <EveningKey />
+              {/* One band quieter: tone the plate detail down and pool a darker ground behind the character. */}
+              <AbsoluteFill style={{ background: "#6a5a7a", mixBlendMode: "multiply", opacity: 0.28 }} />
+              <ShadowPool x={panel.key === "narrator" ? 1390 : CX} y={680} rx={620} ry={460} color="#2a2246" opacity={0.45} />
+              {body}
+            </>
+          }
+          fg={fg} />
         <AbsoluteFill style={{ background: "#2a2850", mixBlendMode: "multiply", opacity: dim }} />
         {flash > 0.01 ? <AbsoluteFill style={{ background: P.paper, opacity: flash }} /> : null}
       </div>
@@ -250,15 +262,15 @@ const ChantPanel: React.FC<{ panel: Panel; cam: Cam; dim: number; slam: number; 
 // 4.60 s), back out to wide on "Around", then HOLD creep (the frame parents
 // photograph). No bubbles in this scene.
 
-const RING = { cx: 960, cy: 572, r: 292 };
+const RING = { cx: 960, cy: 566, r: 340 };
 const START = 140; // PaintedRing's draw start (deg)
 type Station = { key: keyof typeof WORD_V; word: string; deg: number; tag: { x: number; y: number }; plates: Array<{ k: PlateKey; y: number; w: number }> };
-const MED_R = 118;
+const MED_R = 104;
 const STATIONS: Station[] = [
-  { key: "evaporation", word: "EVAPORATION", deg: 180, tag: { x: 330, y: 572 }, plates: [{ k: "ocean_sky_sunrise", y: -40, w: 480 }, { k: "ocean_mid_morning", y: -60, w: 480 }] },
-  { key: "condensation", word: "CONDENSATION", deg: 270, tag: { x: 1420, y: 190 }, plates: [{ k: "hotel_sky", y: -30, w: 460 }, { k: "hotel_far", y: -70, w: 460 }] },
-  { key: "precipitation", word: "PRECIPITATION", deg: 0, tag: { x: 1600, y: 572 }, plates: [{ k: "rain_sky", y: -40, w: 460 }, { k: "valley_far_hills", y: -70, w: 460 }] },
-  { key: "collection", word: "COLLECTION", deg: 90, tag: { x: 520, y: 930 }, plates: [{ k: "valley_sky_late", y: -40, w: 460 }, { k: "valley_near_river_late", y: -110, w: 460 }] },
+  { key: "evaporation", word: "EVAPORATION", deg: 180, tag: { x: 270, y: 566 }, plates: [{ k: "ocean_sky_sunrise", y: -40, w: 480 }, { k: "ocean_mid_morning", y: -60, w: 480 }] },
+  { key: "condensation", word: "CONDENSATION", deg: 270, tag: { x: 1440, y: 170 }, plates: [{ k: "hotel_sky", y: -30, w: 460 }, { k: "hotel_far", y: -70, w: 460 }] },
+  { key: "precipitation", word: "PRECIPITATION", deg: 0, tag: { x: 1655, y: 566 }, plates: [{ k: "rain_sky", y: -40, w: 460 }, { k: "valley_far_hills", y: -70, w: 460 }] },
+  { key: "collection", word: "COLLECTION", deg: 90, tag: { x: 560, y: 960 }, plates: [{ k: "valley_sky_late", y: -40, w: 460 }, { k: "valley_near_river_late", y: -110, w: 460 }] },
 ];
 const stationPt = (deg: number) => {
   const th = (deg * Math.PI) / 180;
@@ -311,11 +323,14 @@ const RingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const targets = STATIONS.map((s) => fracOf(s.deg) + 0.04);
   let progress = 0.02;
   words.forEach((w, i) => {
-    progress = Math.max(progress, lerp(i === 0 ? 0.02 : targets[i - 1], targets[i], smooth((frame - w + 8) / 14)));
+    if (frame >= w - 8) progress = Math.max(progress, lerp(i === 0 ? 0.02 : targets[i - 1], targets[i], smooth((frame - w + 8) / 14)));
   });
-  progress = Math.max(progress, lerp(targets[3], 1, smooth((frame - around + 4) / 16)));
-  const spinF = Math.max(0, frame - around - 12);
-  const spin = spinF < 40 ? (0.5 * spinF * spinF) / 80 : 0.5 * (spinF - 20);
+  if (frame >= around - 4) progress = Math.max(progress, lerp(targets[3], 1, smooth((frame - around + 4) / 16)));
+  // "Around, and around…": once the ring closes, drops travel clockwise round the band (ease-in, then steady),
+  // and the process marks speed up — the ring no longer spins, the WATER goes round.
+  const tRound = Math.max(0, frame - around);
+  const travel = 1.5 * (tRound - 24 * (1 - Math.exp(-tRound / 24)));
+  const flow = smooth(tRound / 30);
   const on = words.map((w) => smooth((frame - w + 6) / 10));
   const active = words.reduce((acc, w, i) => (frame >= w - 4 ? i : acc), -1);
   const dripLook = frame >= around ? "camera" : active >= 0 ? (["left", "up", "right", "camera"] as const)[active] : "camera";
@@ -330,7 +345,8 @@ const RingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         </div>
         <LightPool x={-160} y={980} r={1500} ry={1000} color="#ffb07a" opacity={0.34} />
         <LightPool x={RING.cx} y={RING.cy} r={420} color="#ffd8a0" opacity={0.18} />
-        <PaintedRing cx={RING.cx} cy={RING.cy} r={RING.r} progress={progress} spin={spin} glow={0.1} stations={false} />
+        <DirectedRing cx={RING.cx} cy={RING.cy} r={RING.r} progress={progress} start={START} gap={(Math.asin(MED_R / RING.r) * 180) / Math.PI}
+          flow={flow} travel={travel} />
         {STATIONS.map((s, i) => (
           <StationVignette key={s.key} s={s} on={on[i]} />
         ))}
@@ -340,7 +356,7 @@ const RingScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             phase={PHASE.sunny} shades={0} raySpeed={0.3} look={{ x: 0.5, y: 0.4 }} />
         ) : null}
         {on[1] > 0.02 ? (
-          <PaintedCloudia id={scene.id} boilKey="cloudia-s34" x={stationPt(270).x - 150} y={stationPt(270).y - 20} scale={0.3 * on[1]} emotion="happy"
+          <PaintedCloudia id={scene.id} boilKey="cloudia-s34" x={stationPt(270).x + 46} y={stationPt(270).y - 60} scale={0.28 * on[1]} emotion="happy"
             phase={PHASE.cloudia} fill={0.4} bowTie look={{ x: 0.4, y: 0.3 }} />
         ) : null}
         <LightPool x={RING.cx} y={RING.cy + 40} r={220} ry={160} color="#ffc890" opacity={0.3} />
@@ -583,8 +599,10 @@ const toeD = (deg: number, len: number, w0: number, w1: number, seed: number) =>
   });
   return band(pts, (u) => lerp(w0, w1, u) * (u > 0.85 ? Math.sqrt(Math.max(0.05, (1 - u) / 0.15)) : 1), seed, 0.05);
 };
-const MUD_V: Value3 = { base: "#1e2242", shadow: "#10122a", light: "#363c66", line: "#0a0c1e" };
-const PRINT_WATER: Value3 = { base: "#2e4682", shadow: "#1a2650", light: "#5a72b0", line: "#1a2448" };
+/** Wet lip (lightest), inner floor (darkest), water between — the print's three-value family. */
+const MUD_V: Value3 = { base: "#363e6c", shadow: "#1c2044", light: "#5c66a2", line: "#0c0e24" };
+const FLOOR_V: Value3 = { base: "#161a38", shadow: "#0a0c20", light: "#262c56", line: "#06081a" };
+const PRINT_WATER: Value3 = { base: "#28407a", shadow: "#16224a", light: "#5a72b0", line: "#7088c0" };
 
 const FootprintStop: React.FC<{ scene: TimedScene; emotion: ReturnType<typeof useEmotion>; talking: boolean }> = ({ scene, emotion, talking }) => {
   const frame = useCurrentFrame();
@@ -601,20 +619,38 @@ const FootprintStop: React.FC<{ scene: TimedScene; emotion: ReturnType<typeof us
     return `M ${pts.join(" L ")} Z`;
   };
   const rim = [pad(0, 30, 150, 84), ...TOE_DEG.map((d, i) => toeD(d, d === -90 ? 470 : 420, 124, 64, 1011 + i))];
-  const water = [pad(0, 34, 122, 62), ...TOE_DEG.map((d, i) => toeD(d, d === -90 ? 430 : 384, 92, 36, 1021 + i))];
+  const floor = [pad(0, 28, 136, 72), ...TOE_DEG.map((d, i) => toeD(d, d === -90 ? 450 : 402, 108, 50, 1031 + i))];
+  const water = [pad(0, 36, 118, 58), ...TOE_DEG.map((d, i) => toeD(d, d === -90 ? 428 : 382, 88, 34, 1021 + i))];
   const bob = Math.sin(frame / 18) * 2;
   return (
     <>
       <Svg>
-        <PaintedShape id="s35-print-rim" ds={rim} bbox={{ x: PRINT.x - 330, y: PRINT.y - 300, w: 660, h: 420 }} v={MUD_V} ink={6} seed={1001} />
-        <PaintFill id="s35-print-water" shape={<>{water.map((d, i) => <path key={i} d={d} />)}</>} bbox={{ x: PRINT.x - 300, y: PRINT.y - 280, w: 600, h: 390 }}
-          v={PRINT_WATER} seed={1003} />
-        {/* The moon, held in the puddle (low, dimmed cream: the only bright thing). */}
-        <ellipse cx={PRINT.x + 10} cy={PRINT.y - 150 + bob} rx={34} ry={13} fill={NIGHT_PAPER} opacity={0.7} />
-        <path d={ribbon([[PRINT.x - 40, PRINT.y - 128], [PRINT.x + 10, PRINT.y - 131 + bob], [PRINT.x + 60, PRINT.y - 128]], 2, 5, 1005)} fill={NIGHT_PAPER} opacity={0.4} />
-        <path d={ribbon([[PRINT.x - 120, PRINT.y + 40], [PRINT.x - 60, PRINT.y - 10], [PRINT.x - 20, PRINT.y - 60]], 3, 7, 1007)} fill={PV.snow.shadow} opacity={0.35} />
+        <PaintedShape id="s35-print-rim" ds={rim} bbox={{ x: PRINT.x - 330, y: PRINT.y - 300, w: 660, h: 420 }} v={MUD_V} ink={4} inkColor="#141834" seed={1001} strength={1.5} thickAt={-Math.PI / 2} />
+        <PaintedShape id="s35-print-floor" ds={floor} bbox={{ x: PRINT.x - 316, y: PRINT.y - 290, w: 632, h: 400 }} v={FLOOR_V} ink={0} seed={1009} strength={1.4} />
+        <PaintedShape id="s35-print-water" ds={water} bbox={{ x: PRINT.x - 300, y: PRINT.y - 280, w: 600, h: 390 }} v={PRINT_WATER} ink={3} inkColor={PRINT_WATER.line}
+          seed={1003} strength={1.6} />
+        {/* Wet-lip catchlights along the far edges (moon from above). */}
+        {TOE_DEG.map((d, i) => {
+          const a = (d * Math.PI) / 180;
+          const L = d === -90 ? 470 : 420;
+          const pts: Pt[] = [0.35, 0.6, 0.85].map((u) => [PRINT.x + Math.cos(a) * L * u - 30, PRINT.y + Math.sin(a) * L * u * 0.62 - 4]);
+          return <path key={d} d={ribbon(pts, 2, 6, 1041 + i)} fill={MUD_V.light} opacity={0.7} />;
+        })}
+        <path d={ribbon([[PRINT.x - 150, PRINT.y + 4], [PRINT.x - 40, PRINT.y - 30], [PRINT.x + 90, PRINT.y - 24]], 3, 8, 1007)} fill={MUD_V.light} opacity={0.55} />
+        {/* The moon, held in the heel's water: a soft larger oval (stacked low-opacity washes, no hard disc), broken by ripples. */}
+        <filter id="s35-moon-soft" x="-50%" y="-80%" width="200%" height="260%">
+          <feGaussianBlur stdDeviation="9 5" />
+        </filter>
+        <g filter="url(#s35-moon-soft)">
+          <ellipse cx={PRINT.x + 6} cy={PRINT.y + 30 + bob * 0.5} rx={88} ry={28} fill={NIGHT_PAPER} opacity={0.3} />
+          <ellipse cx={PRINT.x + 6} cy={PRINT.y + 30 + bob * 0.5} rx={50} ry={15} fill={NIGHT_PAPER} opacity={0.45} />
+        </g>
+        <path d={ribbon([[PRINT.x - 70, PRINT.y + 22], [PRINT.x + 6, PRINT.y + 18 + bob], [PRINT.x + 84, PRINT.y + 22]], 2, 4, 1013)} fill={PRINT_WATER.shadow} opacity={0.5} />
+        <path d={ribbon([[PRINT.x - 50, PRINT.y + 40], [PRINT.x + 6, PRINT.y + 37 - bob], [PRINT.x + 64, PRINT.y + 40]], 2, 4, 1015)} fill={PRINT_WATER.shadow} opacity={0.45} />
+        <path d={ribbon([[PRINT.x - 60, PRINT.y + 60], [PRINT.x + 10, PRINT.y + 57 + bob], [PRINT.x + 80, PRINT.y + 60]], 2, 5, 1005)} fill={NIGHT_PAPER} opacity={0.3} />
       </Svg>
-      <LightPool x={PRINT.x + 10} y={PRINT.y - 150} r={200} ry={80} color="#a8c0ff" opacity={0.25} />
+      <LightPool x={PRINT.x + 10} y={PRINT.y + 36} r={170} ry={52} color="#8a9ad0" opacity={0.4} />
+      <LightPool x={PRINT.x + 10} y={PRINT.y - 60} r={360} ry={200} color="#a8c0ff" opacity={0.16} />
       <PaintedDrip id={scene.id} boilKey="drip-s35" x={S35_DRIP.x} y={stand("drip", S35_DRIP.ground)} scale={S35_DRIP.scale} emotion={emotion} speaking={talking}
         phase={PHASE.drip} idle={1.2} look="left" pose={frame > atLine(scene, "rc_10_drip") + 40 ? "cheer" : undefined} groundY={S35_DRIP.ground} groundLum={0.25} />
     </>
@@ -665,6 +701,7 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
           <>
             <div style={{ position: "absolute", inset: "-8%", background: "#4a3c7a", mixBlendMode: "multiply", opacity: 0.5 }} />
             <LightPool x={S36_SUN.x} y={900} r={900} ry={200} color="#ff9e60" opacity={0.2} />
+            <ShoreSand top={900} />
             <PosterCard on={poster} />
             <PaintedSunny id={scene.id} x={S36_SUN.x} y={S36_SUN.y} scale={S36_SUN.scale} emotion={frame >= posterAt ? "proud" : "happy"} speaking={sunnyTalking}
               phase={PHASE.sunny} shades={frame >= posterAt ? 0.15 : 0} smug={frame >= posterAt} raySpeed={0.3 + gust * 0.4} look={{ x: -0.2, y: 0.1 }} />
@@ -682,7 +719,7 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
             {frame >= windAt ? (
               <Svg>
                 <g transform={`translate(${hatX} ${hatY}) rotate(${Math.sin(frame / 9) * 22})`}>
-                  <CloudiaHat stream={0.8} />
+                  <PaintedHat id="s36-hat" stream={0.8} frame={frame} />
                 </g>
               </Svg>
             ) : null}
@@ -702,6 +739,40 @@ const TeaseScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
       {card > 0 ? <NextCard on={card} /> : null}
       {black > 0 ? <AbsoluteFill style={{ background: "#07081a", opacity: black }} /> : null}
     </AbsoluteFill>
+  );
+};
+
+/**
+ * The shore's foam scribble (a bright plate band carrying p98) pooled into the
+ * evening sand value: a painted sand band over it, wavy wet top edge, a few
+ * broken dim foam dabs — the waterline stays, the white squiggle goes.
+ */
+const SAND_V: Value3 = { base: "#7e5a52", shadow: "#4a3044", light: "#9a7262", line: "#2e1e2c" };
+const WET_V: Value3 = { base: "#5e4250", shadow: "#3e2a40", light: "#7a5a62", line: "#2e1e2c" };
+const ShoreSand: React.FC<{ top: number }> = ({ top }) => {
+  const frame = useCurrentFrame();
+  const edge = (x: number, lift = 0) => top - lift + Math.sin(x / 260 + 1.3) * 9 + Math.sin(x / 90) * 3;
+  const pts: Pt[] = [];
+  for (let x = -400; x <= WIDTH + 400; x += 40) pts.push([x, edge(x)]);
+  const path = (q: Pt[]) => q.map((v) => `${v[0].toFixed(1)} ${v[1].toFixed(1)}`).join(" L ");
+  const d = `M -400 ${HEIGHT + 300} L ${path(pts)} L ${WIDTH + 400} ${HEIGHT + 300} Z`;
+  // the wet strip: the sand's top ~30 px, darker (the waterline), its lower edge ragged
+  const low: Pt[] = pts.map(([x]) => [x, edge(x) + 26 + Math.sin(x / 47) * 6 + rnd(Math.round(x), 1407) * 6] as Pt);
+  const wet = `M ${path(pts)} L ${path([...low].reverse())} Z`;
+  return (
+    <Svg>
+      <PaintedShape id="s36-sand" ds={[d]} bbox={{ x: -400, y: top - 12, w: WIDTH + 800, h: HEIGHT + 300 - top }} v={SAND_V} ink={0} seed={1401} strength={1.3} />
+      <PaintedShape id="s36-wet" ds={[wet]} bbox={{ x: -400, y: top - 12, w: WIDTH + 800, h: 60 }} v={WET_V} ink={0} seed={1402} strength={1.2} />
+      <path d={band(pts, () => 4, 1404, 0.3)} fill="#3a2a4a" opacity={0.6} />
+      {/* warm evening glint on the wet sand under Sunny's side */}
+      <path d={band(pts.filter(([x]) => x > 200 && x < 900).map(([x, y]) => [x, y + 12] as Pt), (u) => 5 * Math.sin(Math.PI * u), 1406, 0.3)} fill="#c88a6a" opacity={0.22} />
+      {Array.from({ length: 8 }, (_, i) => {
+        const x = 120 + i * 230 + rnd(i, 1403) * 80 + Math.sin(frame / 30 + i) * 6;
+        const y = edge(x) + 2;
+        const w = 30 + rnd(i, 1405) * 50;
+        return <path key={i} d={ribbon([[x, y], [x + w / 2, y - 2], [x + w, y + 1]], 3, 1, 1411 + i)} fill="#a89cb6" opacity={0.4} />;
+      })}
+    </Svg>
   );
 };
 

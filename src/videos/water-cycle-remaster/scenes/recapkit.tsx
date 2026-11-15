@@ -11,7 +11,7 @@ import {
   type Pt,
 } from "./common";
 import { PaperWash, Svg, rnd } from "./act1kit";
-import { PaintedShape, circleD, clamp01 } from "./act3kit";
+import { PaintedShape, band, circleD, clamp01 } from "./act3kit";
 
 // Painted props for the recap (s33–s36), owned by the recap builder. Same
 // recipe as act1kit/act3kit: PaintFill (flat base + pooled band + dry band)
@@ -253,6 +253,231 @@ export const BlowingLeaves: React.FC<{ strength: number; count?: number; seed?: 
             <path d="M 0 0 Q 44 40 92 0 Q 46 14 0 0 Z" fill={v.shadow} />
             <path d={ribbon([[2, 0], [46, -3], [90, 0]], 3, 1, seed + i)} fill={v.line} />
             <path d={ribbon([[0, 0], [44, -38], [92, 0]], 4, 2, seed + i + 50)} fill={v.line} opacity={0.8} />
+          </g>
+        );
+      })}
+    </Svg>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Cloudia's hat, painted (a recap copy of the kit's flat CloudiaHat: same
+// silhouette, PaintFill + tapered ink ribbons, tapered wavy streamers)
+// ---------------------------------------------------------------------------
+
+/** Evening values for the hat: dusky rose (it flies in front of the dusk multiply, so it is pre-darkened), warm rim. */
+const HAT_V: Value3 = { base: "#c4628a", shadow: "#7a3060", light: "#e4949a", line: "#341230" };
+const BRIM_V: Value3 = { base: "#a24672", shadow: "#62224e", light: "#d07e90", line: "#341230" };
+const HAT_RIM = "#f0a070";
+
+export const PaintedHat: React.FC<{ id: string; stream?: number; frame?: number }> = ({ id, stream = 0, frame = 0 }) => {
+  const brim = "M -120 40 A 120 30 0 1 0 120 40 A 120 30 0 1 0 -120 40 Z";
+  const crown = "M -66 40 L -50 -66 Q 0 -96 50 -66 L 66 40 Z";
+  return (
+    <g>
+      {stream > 0
+        ? [0, 1].map((i) => {
+            const L = 170 + stream * 240;
+            const pts: Pt[] = Array.from({ length: 16 }, (_, k) => {
+              const u = k / 15;
+              const amp = (6 + 22 * u) * (i ? 0.8 : 1);
+              return [
+                50 + u * L,
+                -16 + i * 30 + u * (10 + i * 30) + Math.sin(u * 4.2 - frame / 4 + i * 1.7) * amp + Math.sin(u * 9 - frame / 3 + i) * 3 * u,
+              ];
+            });
+            // tapered ribbon streamer: body, a light dry stroke along it, a thin ink edge on the under side
+            const w = (u: number) => 30 * (1 - u) ** 0.7 + 3;
+            const lightPts = pts.map(([x, y]) => [x, y - 4] as Pt);
+            const edgePts = pts.map(([x, y], k) => [x, y + w(k / 15) * 0.45] as Pt);
+            return (
+              <g key={i}>
+                <path d={band(pts, w, 1201 + i, 0.18)} fill={HAT_V.shadow} />
+                <path d={band(pts, (u) => w(u) * 0.62, 1203 + i, 0.25)} fill={HAT_V.base} />
+                <path d={band(lightPts.slice(0, 11), (u) => 5 * (1 - u) + 1, 1205 + i, 0.3)} fill={HAT_V.light} opacity={0.8} />
+                <path d={band(edgePts, (u) => 3 * (1 - u) + 0.6, 1211 + i, 0.2)} fill={HAT_V.line} opacity={0.85} />
+              </g>
+            );
+          })
+        : null}
+      <PaintedShape id={`${id}-brim`} ds={[brim]} bbox={{ x: -120, y: 10, w: 240, h: 60 }} v={BRIM_V} ink={5} seed={1221} strength={1.6} />
+      <PaintedShape id={`${id}-crown`} ds={[crown]} bbox={{ x: -66, y: -90, w: 132, h: 130 }} v={HAT_V} ink={5} seed={1223} strength={1.6} />
+      {/* the brim's shadow on the crown foot, the band, and a warm evening rim on the sun (left) side */}
+      <path d={band([[-62, 30], [0, 36], [62, 30]], () => 16, 1227, 0.2)} fill={HAT_V.shadow} opacity={0.75} />
+      <path d={ribbon([[-58, -16], [0, -21], [58, -16]], 10, 5, 1225)} fill={HAT_V.line} />
+      <path d={ribbon([[-58, 30], [-52, -20], [-44, -64], [-20, -80]], 7, 2, 1229)} fill={HAT_RIM} opacity={0.7} />
+      <path d={ribbon([[-112, 44], [-60, 60], [0, 66]], 6, 1, 1231)} fill={HAT_RIM} opacity={0.5} />
+    </g>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// The DIRECTED ring for s34: a thick painted band (1.6x act 3's) carrying the
+// process between stations — wisps rising (sea→cloud), rain falling
+// (cloud→ground), a river running (ground→sea), waves (sea) — and big
+// ribbon arrowheads travelling clockwise.
+// ---------------------------------------------------------------------------
+
+const RW = kidPaintTheme.water;
+/** Process marks need a mid value on the cream band (the water family's light reads as paper). */
+const VAPOUR = "#45689a";
+const RAIN = "#17507f";
+
+/**
+ * Ring station geometry is the caller's (degrees, SVG convention: 0 = right,
+ * 90 = bottom); the ring runs CLOCKWISE on screen, i.e. increasing degrees.
+ * Legs: sea(180)→cloud(270) wisps rise, cloud(270)→ground(0) rain falls,
+ * ground(0)→sea(90) a river runs, sea leg (90→180) waves. `travel` (deg)
+ * moves a train of water drops round the band once the ring has closed.
+ */
+export const DirectedRing: React.FC<{
+  cx: number;
+  cy: number;
+  r: number;
+  progress: number;
+  start?: number;
+  flow?: number;
+  travel?: number;
+  /** Station half-width in degrees: the marks stay inside the visible part of each leg. */
+  gap?: number;
+}> = ({ cx, cy, r, progress, start = 140, flow = 0, travel = 0, gap = 18 }) => {
+  const frame = useCurrentFrame();
+  const p = clamp01(progress);
+  const at = (deg: number, rr = r): Pt => {
+    const th = (deg * Math.PI) / 180;
+    return [cx + Math.cos(th) * rr, cy + Math.sin(th) * rr];
+  };
+  const arc = (a: number, b: number, rr = r, n = 40): Pt[] =>
+    Array.from({ length: n + 1 }, (_, i) => at(a + ((b - a) * i) / n, rr));
+  const drawnFrac = (deg: number) => ((((deg - start) % 360) + 360) % 360) / 360;
+  const drawn = (deg: number) => drawnFrac(deg) <= p + 0.001;
+  // How far into a leg the drawing has reached (0..1), so marks appear as the band passes.
+  const legOn = (a: number, b: number) => clamp01((p - drawnFrac(a)) / Math.max(0.001, drawnFrac(b) - drawnFrac(a)));
+  const end = start + 360 * p;
+  const k = 1.6;
+  const n = Math.max(4, Math.round(140 * p));
+  const speed = 1 + flow * 1.6;
+  const lo = gap + 6;
+  // The sea leg (94°→178°) can contain the draw start: paint only the part of it the band has reached.
+  const seaPieces: Array<[number, number]> = [];
+  {
+    const S0 = 94;
+    const S1 = 178;
+    const s0 = ((start - S0) % 360 + 360) % 360 + S0; // start expressed inside [S0, S0+360)
+    if (s0 < S1) {
+      if (end > s0 + 1) seaPieces.push([s0, Math.min(S1, end)]);
+      if (end > S0 + 360) seaPieces.push([S0, Math.min(s0, end - 360)]);
+    } else {
+      const a0 = S0 + 360 * Math.ceil((start - S0) / 360);
+      if (end > a0) seaPieces.push([a0, Math.min(a0 + (S1 - S0), end)]);
+    }
+  }
+  return (
+    <Svg>
+      {p > 0.01 ? (
+        <>
+          <path d={band(arc(start, end, r, n), () => 66 * k, 271, 0.12)} fill={PAPER} opacity={0.4} />
+          <path d={band(arc(start, end, r, n), () => 32 * k, 273, 0.1)} fill={PAPER} />
+          <path d={band(arc(start, end, r + 1, n), () => 34, 277, 0.14)} fill={RW.light} opacity={0.75} />
+          <path d={band(arc(start, end, r, n), () => 16, 275, 0.16)} fill={RW.line} />
+        </>
+      ) : null}
+      {/* sea leg (collection → evaporation): a broad sea-blue band with small cream crests drifting along it */}
+      {seaPieces.map(([a, b], j) => (
+        <g key={`sea${j}`}>
+          <path d={band(arc(a, b, r, 20), () => 46, 1301 + j, 0.12)} fill={RW.shadow} />
+          <path d={band(arc(a, b, r - 4, 20), () => 26, 1303 + j, 0.16)} fill={RW.base} opacity={0.9} />
+        </g>
+      ))}
+      {seaPieces.length > 0 ? (
+        <>
+          {Array.from({ length: 4 }, (_, i) => {
+            const u = (frame * 0.006 * speed + i / 4) % 1;
+            const d = 96 + u * 80;
+            if (!drawn(d)) return null;
+            const pts = arc(d - 4, d + 4, r - 8, 6).map(([x, y], j) => [x, y - Math.sin((j / 6) * Math.PI) * 7] as Pt);
+            return <path key={`w${i}`} d={ribbon(pts, 5, 2, 1305 + i)} fill={PAPER} opacity={0.85 * Math.sin(u * Math.PI)} />;
+          })}
+        </>
+      ) : null}
+      {/* evaporation → condensation: vapour wisps rising off the band, outside the ring */}
+      {legOn(180 + gap, 270 - gap) > 0
+        ? Array.from({ length: 6 }, (_, i) => {
+            const u = (frame * 0.012 * speed + i / 6) % 1;
+            const d = 180 + lo + (i / 5) * (90 - 2 * lo);
+            if (!drawn(d)) return null;
+            const [x0, y0] = at(d, r + 20);
+            const y = y0 + 30 - u * 120;
+            const x = x0 - 20 + Math.sin(u * 5 + i) * 10;
+            const o = Math.sin(u * Math.PI);
+            const pts: Pt[] = Array.from({ length: 12 }, (_, j) => {
+              const t = j / 11;
+              return [x + Math.sin(t * 5.5 + i) * 13, y + 52 - t * 104];
+            });
+            return (
+              <g key={`v${i}`} opacity={0.95 * o}>
+                <path d={band(pts, (t) => 20 * (0.3 + 0.7 * Math.sin(Math.PI * t)), 1311 + i, 0.15)} fill={VAPOUR} />
+                <path d={band(pts, (t) => 6 * Math.sin(Math.PI * t), 1316 + i, 0.2)} fill={PAPER} opacity={0.45} />
+              </g>
+            );
+          })
+        : null}
+      {/* condensation → precipitation: a sheet of rain falling across the band */}
+      {legOn(270 + gap, 360 - gap) > 0
+        ? Array.from({ length: 9 }, (_, i) => {
+            const d = 270 + lo + (i / 8) * (90 - 2 * lo);
+            if (!drawn(d)) return null;
+            const [x, y] = at(d);
+            const f = ((frame * 2.2 * speed + i * 23) % 50) / 50;
+            const yy = y - 70 + f * 130;
+            return (
+              <path key={`r${i}`} d={ribbon([[x + 11, yy], [x + 4, yy + 32], [x - 3, yy + 64]], 15, 3, 1321 + i)} fill={RAIN}
+                opacity={Math.min(1, 1.6 * Math.sin(f * Math.PI))} />
+            );
+          })
+        : null}
+      {/* precipitation → collection: the river, a blue painted ribbon widening as it runs to the sea */}
+      {legOn(gap, 90 - gap) > 0 ? (
+        <>
+          <path d={band(arc(4, 4 + 82 * legOn(4, 86), r, 30), (u) => 26 + u * 22, 1331, 0.1)} fill={RW.base} />
+          <path d={band(arc(4, 4 + 82 * legOn(4, 86), r + 8, 30), (u) => 6 + u * 6, 1333, 0.2)} fill={RW.shadow} opacity={0.75} />
+          {Array.from({ length: 5 }, (_, i) => {
+            const u = (frame * 0.01 * speed + i / 5) % 1;
+            const d = 6 + u * 78;
+            if (!drawn(d)) return null;
+            return <path key={i} d={ribbon(arc(d - 4, d + 4, r - 6, 4), 3, 6, 1341 + i)} fill={PAPER} opacity={0.85 * Math.sin(u * Math.PI)} />;
+          })}
+        </>
+      ) : null}
+      {/* the drops going round (after the ring closes): travel clockwise along the band */}
+      {travel > 0 && p >= 0.999
+        ? Array.from({ length: 6 }, (_, i) => {
+            const d = start + travel + i * 60 + 20;
+            const [x, y] = at(d);
+            const fade = clamp01(travel / 30);
+            return (
+              <g key={`d${i}`} transform={`translate(${x} ${y}) rotate(${d + 90}) scale(1.6)`} opacity={fade}>
+                {/* teardrop pointing back along the path (round head leads, clockwise), cream-haloed off the band */}
+                <path d="M -40 0 Q -6 -22 10 -21 A 21 21 0 0 1 10 21 Q -6 22 -40 0 Z" fill={PAPER} />
+                <path d="M -34 0 Q -6 -17 10 -16 A 16 16 0 0 1 10 16 Q -6 17 -34 0 Z" fill={RW.line} />
+                <path d="M -27 0 Q -4 -11 10 -11 A 11 11 0 0 1 10 11 Q -4 11 -27 0 Z" fill={RW.base} />
+                <path d={ribbon([[2, -6], [10, -8], [16, -4]], 3, 1, 1371 + i)} fill={PAPER} opacity={0.7} />
+              </g>
+            );
+          })
+        : null}
+      {/* arrowheads: one per leg at its middle, >= 60 px, tangent and pointing clockwise */}
+      {[225, 315, 45, 135].map((deg, i) => {
+        if (!drawn(deg) || !drawn(deg + 10)) return null;
+        const pop = clamp01(legOn(deg - 20, deg + 10));
+        const d = deg + Math.sin(frame / 14 + i) * 2;
+        const [x, y] = at(d);
+        const s = 0.6 + 0.4 * pop;
+        return (
+          <g key={deg} transform={`translate(${x} ${y}) rotate(${d + 90}) scale(${s})`}>
+            <path d="M 46 0 L -34 -48 L -16 0 L -34 48 Z" fill={INK} />
+            <path d="M 33 0 L -24 -34 L -9 0 L -24 34 Z" fill={RW.base} />
+            <path d={ribbon([[-20, -27], [24, 0]], 5, 2, 1351 + i)} fill={RW.light} opacity={0.8} />
           </g>
         );
       })}
