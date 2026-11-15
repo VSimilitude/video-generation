@@ -1,5 +1,4 @@
 import React from "react";
-import { kidInkOutline, kidRadius, kidShadow, kidTheme, kidType, mixHex } from "../../../lib/kid";
 import { useSpeaking } from "../../../lib/narration";
 import {
   AbsoluteFill,
@@ -14,7 +13,6 @@ import {
   atLine,
   kidPaintTheme,
   midOf,
-  outlinePath,
   project,
   remasterCam,
   ribbon,
@@ -29,6 +27,7 @@ import {
 } from "./common";
 import { FgSwell, Glints, Svg, secs } from "./act1kit";
 import { PaintedShape, band, circleD } from "./act3kit";
+import { EpisodeTag, WaterTitle } from "./titlekit";
 
 // Cold open, re-pictured on the look package (shot-plan rows s01–s02).
 // Beats are ep 1's (src/videos/water-cycle/scenes/coldOpen.tsx); every picture
@@ -245,11 +244,8 @@ const FoamCape: React.FC<{ x: number; y: number; scale: number; billow: number }
 
 const S2_GROUND = 922;
 const S2_DRIP = { x: 1700, y: stand("drip", S2_GROUND) };
-const TITLE_LINES = ["DRIP'S BIG", "ADVENTURE"];
-
 const TitleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const cam = remasterCam(frame, {
     base: { x: 960, y: 540, dy: -460 },
     creep: { from: 12 },
@@ -265,7 +261,7 @@ const TitleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         sky={
           <>
             {/* The sunrise plate is pale: deepen the zenith (multiply) so the title sits on value, not on paper. */}
-            <AbsoluteFill style={{ background: "linear-gradient(180deg, #3f6fb8 0%, #7f9fd0 38%, rgba(255,255,255,0) 70%)", mixBlendMode: "multiply", opacity: 0.85 }} />
+            <AbsoluteFill style={{ background: "linear-gradient(180deg, #6f93cf 0%, #a3bde2 40%, rgba(255,255,255,0) 70%)", mixBlendMode: "multiply", opacity: 0.8 }} />
             <LightPool x={960} y={720} r={1100} ry={420} color="#ffc47a" opacity={0.7} />
           </>
         }
@@ -284,65 +280,10 @@ const TitleScene: React.FC<{ scene: TimedScene }> = ({ scene }) => {
         }
       />
       <KeyBloom x={960} y={700} r={520} color="#ffd89a" opacity={0.35} />
-      <DrippingTitle from={10} />
-      <div style={{ position: "absolute", left: 0, right: 0, top: 690, textAlign: "center", fontFamily: kidTheme.fontFamily,
-        opacity: Math.max(0, Math.min(1, (frame - 60) / 14)) }}>
-        <span style={{ display: "inline-block", background: P.paper, border: `7px solid ${P.ink}`, borderRadius: kidRadius.pill,
-          padding: "10px 44px", fontSize: kidType.min, fontWeight: 900, letterSpacing: 6, color: P.ink, boxShadow: kidShadow(1),
-          transform: `scale(${spring({ frame: frame - 60, fps, config: { damping: 12, mass: 0.6 } })})` }}>
-          LITTLE BIG WORLD · EPISODE ONE
-        </span>
-      </div>
+      {/* The title is made of water (titlekit.tsx): hand-built tube letters that flow on and drip. */}
+      <WaterTitle />
+      <EpisodeTag from={60} />
     </AbsoluteFill>
-  );
-};
-
-const DrippingTitle: React.FC<{ from: number }> = ({ from }) => (
-  <div style={{ position: "absolute", left: 0, right: 0, top: 300, display: "flex", flexDirection: "column", alignItems: "center",
-    gap: 66, transform: "translateY(-50%)", fontFamily: kidTheme.fontFamily, pointerEvents: "none" }}>
-    {TITLE_LINES.map((line, li) => (
-      <div key={line} style={{ display: "flex", alignItems: "flex-end" }}>
-        {line.split("").map((ch, i) => (
-          <TitleLetter key={`${ch}-${i}`} ch={ch} index={li * 10 + i} from={from + (li * 10 + i) * 2.5} />
-        ))}
-      </div>
-    ))}
-  </div>
-);
-
-const LETTER = mixHex(P.water.base, P.paper, 0.25);
-
-const TitleLetter: React.FC<{ ch: string; index: number; from: number }> = ({ ch, index, from }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - from, fps, config: { damping: 9, mass: 0.5 } });
-  const size = kidType.title;
-  if (ch === " ") return <span style={{ width: size * 0.3 }} />;
-  const drips = index >= 10 ? index % 3 === 0 : index % 7 === 3;
-  const t = (frame - from) / 30;
-  const cycle = drips && t > 0.6 ? (t * 0.42 + index * 0.17) % 1 : -1;
-  const len = cycle < 0 ? 0 : 18 + cycle * 44;
-  const fallen = cycle > 0.72 ? (cycle - 0.72) / 0.28 : 0;
-  const dripD = `M -13 -10 C -13 ${len * 0.5} -15 ${len} 0 ${len + 16} C 15 ${len} 13 ${len * 0.5} 13 -10 Z`;
-  return (
-    <span style={{ position: "relative", display: "inline-block", fontSize: size, fontWeight: 900, lineHeight: 1, color: LETTER,
-      textShadow: `${kidInkOutline(4.5)}, 0 8px 0 rgba(43,42,51,0.35)`,
-      transform: `translateY(${(1 - s) * -160}px) scale(${0.4 + 0.6 * s}) rotate(${(1 - s) * -10}deg)`,
-      opacity: Math.min(1, Math.max(0, (frame - from) / 3)) }}>
-      {ch}
-      {len > 0 ? (
-        <svg width={60} height={200} viewBox="-30 0 60 200" style={{ position: "absolute", left: "50%", top: "82%", marginLeft: -30, overflow: "visible" }}>
-          <path d={dripD} fill={LETTER} />
-          <path d={outlinePath(dripD, 7, 2, 900 + index, { thickAt: Math.PI / 2 })} fill={P.ink} />
-          {fallen > 0 ? (
-            <g opacity={1 - fallen}>
-              <circle cx={0} cy={len + 40 + fallen * 190} r={15} fill={LETTER} />
-              <path d={outlinePath(`M 15 ${len + 40 + fallen * 190} A 15 15 0 1 1 -15 ${len + 40 + fallen * 190} A 15 15 0 1 1 15 ${len + 40 + fallen * 190} Z`, 6, 2, 950 + index)} fill={P.ink} />
-            </g>
-          ) : null}
-        </svg>
-      ) : null}
-    </span>
   );
 };
 

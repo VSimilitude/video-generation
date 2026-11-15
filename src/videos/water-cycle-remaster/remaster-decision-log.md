@@ -6,6 +6,45 @@ listed here so he can overturn from the list after judging the deployed tile.
 Composition `DripWaterCycleRemaster`, slug `water-cycle-remaster`. The
 original `DripWaterCycle` (src/videos/water-cycle) is untouched.
 
+## 2026-11-15 — title card redo after Mike's first watch (scratchpad/remaster/title/)
+
+- **D40 The s02 dripping title is rebuilt as a title MADE OF WATER
+  (overturnable; revert = restore `DrippingTitle`/`TitleLetter` in
+  scenes/coldOpen.tsx from git and delete scenes/titlekit.tsx).** Trigger:
+  Mike, on the shipped remaster: "still looks kinda cheap overall ... the
+  dripping letters looks bad". Calls: (1) no font any more: 14 hand-built tube
+  glyphs (skeleton strokes), so the title is the same on every device; (2) it
+  is the hero: ADVENTURE about 1540 px wide, block y 104-590 (was about a
+  third of the width); (3) wet volume by layered strokes, no filters: ink
+  offset down-right (thick-thin), deep rim, graded body, warm sunrise bounce,
+  broken cream highlight, slow liquid wobble; (4) entrance = each letter
+  arrives whole as an empty glass letter and fills with water from the foot
+  (wavy clipPath waterline), left to right, complete by scene frame 57, in
+  place of the spring pop (a first version that drew strokes on was rejected
+  in review: paused frames showed wrong letters); (5) 9 seeded drip sites at
+  real low points: swell, neck, snap, fall under gravity, LAND (line 2 into
+  the sea with splash + ripple rings; line 1 as a 3-frame splat on the letter
+  below, which squashes); V and U sit over the episode tag and only hang;
+  (6) the episode pill is a painted paper tag, same text and time (frame 60);
+  (7) the zenith multiply scrim in TitleScene was lightened so the letters
+  separate from the sky by value. Kept: TITLE_LINES text and line break,
+  scene timing, camera, sunrise set, Drip as a speck, no pure white.
+  Review: a separate agent saw before and after sheets plus its own motion
+  strips, twice (after the build and after one fix round): PASS both times,
+  "professional", "clearly better, and a layman would notice untold".
+  Gates on the final code (showrunner's own run): `npx tsc --noEmit` EXIT 0;
+  `npm run -s lint:hooks` 0 findings; every-frame render of frames 0-1100 at
+  `--scale=0.25` EXIT 0 (scratchpad/remaster/title/gate_showrunner.log).
+  Cost: scene render 25.5 s vs 25.0 s before, single-threaded (1.02x).
+  NOT verified: real-time playback in the web player on a phone (frame rate
+  judged from headless render time and "no filters" only); the full-episode
+  every-frame render (only the cold open range was run); eps 1-6 untouched
+  by construction (no file under src/lib/kid changed). Left as is: line-1
+  landing caps are unoutlined for 1-2 frames; a 2-frame tick on the N at
+  frames 904-906; a just-arrived unfilled letter reads as a pale sticker for
+  3-4 frames; R's ripples run partly behind the tag's right end; the look is
+  glossy gel more than see-through water.
+
 ## 2026-11-14 23:30 — final review on merged main (scratchpad/remaster/final/final-review.md)
 
 - **D39 Final review = SHIP AFTER ONE BLOCKER; the rest ships as a list for
