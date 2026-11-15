@@ -5,7 +5,12 @@ work), then this (where we are). Memory auto-loads the decision record.
 Everything below is committed and pushed on `main` unless marked otherwise.
 This file is CURRENT STATE, not a journal — git log holds the history.
 
-## MODE: LOOK-PACKAGE CAMPAIGN — ep-1 remaster (Mike AUTONOMOUS, 2026-11-14)
+## MODE: LOOK-PACKAGE CAMPAIGN — ep-1 remaster SHIPPED 2026-11-15, parked for Mike's pass
+
+**Status 2026-11-15:** the remaster is built, gated, unhidden (61de620) and
+deployed as its own gallery tile; the phone cut is with Mike. Nobody has
+watched it yet. Next step is Mike's watch-through; his notes go verbatim to
+a fresh showrunner. The campaign brief below is kept for context.
 
 Mike's boot rulings 2026-11-14 (FINAL, do not re-ask): the graphics gap is
 real and wider than the painted medium alone; see memory
@@ -31,45 +36,56 @@ explicit path only. Reference repo (MIT) cloned read-only at
 not its ink-on-3D look; our art direction stays soft gouache storybook).
 
 ### In-flight (showrunner owns this section)
-Commits: wave 1 0120a21 · kit 8caa4ab (gate PASS D16) · docs/voices 80f9855 ·
-site shell 262f957 · skeleton c82f560 · act 1 (after fix pass, D25) · act 3
-96feb43 · act 2 ac8ff01 merged 7b24e16. **All 32 story scenes staged;
-composition `DripWaterCycleRemaster` still `hidden: true`.** Quota window
-reopened 20:36 (PROCEED). Reviews DONE: act 2 ACCEPT WITH FIXES 7.55 (D30), act 3 ACCEPT WITH FIXES
-7.1 (D31), act-1 fix re-check ACCEPTED. RECAP (s33–s36) BUILT 21:20 in the main tree (gates green, every-frame
-16040–18340 at 0.25 EXIT 0; recap-report.md; D32) → COMMITTED faea4ce; fork
-review DONE: ACCEPT WITH FIXES 7.1 (D33; the s34 ring must read as a DIRECTED
-cycle). ALL 36 SCENES STAGED AND COMMITTED.
-**CREW KILLED 21:04; new showrunner booted 21:18 (D34); recovery done.**
-RECAP FIX committed 37cb4ea (four FIX-NOW of recap-review.md landed by the
-builder's stills; not yet seen by a review fork).
-**POLISH GATED 22:54, UNCOMMITTED in the worktree .claude/worktrees/polish
-(branch `worktree-polish`, base 7b24e16), ready to commit + merge (D37):**
-tsc 0, lint:hooks 0, every-frame whole composition at 0.25 18341/18341 +
-re-gate of act 2 (5430-10210) and s28 (13624-13979) EXIT 0; eps 1-6
-identical-frame check passed for the additive `LightRig.strength?`; sun check
-of all eight re-rolled plates NO SUN (D36, scratchpad/remaster/sun-check-review.md).
-Scope per D35; report scratchpad/remaster/polish-report.md (FINAL, has the
-git-add list and the NOT DONE list). Three-way merge onto main was simulated
-clean at 21:25 for .cache.json / backgrounds.mjs / plateManifest.ts.
-Polish merged 16894ad (docs 8f98fe2). **POST-MERGE PASS (23:30):** final
-review on merged main = SHIP AFTER ONE BLOCKER (D39,
-scratchpad/remaster/final/final-review.md); blocker B1 (s08 foreground swell
-ends) fixed in scenes/act1kit.tsx, UNCOMMITTED (D38). **FINAL CUT RENDERED 01:41
-(2026-11-15), chain log scratchpad/remaster/final/chain.log:** every-frame
-whole composition at 0.25 EXIT 0 (pre-fix bundle) + re-gate 0-5429 with the
-fix EXIT 0; full render EXIT 0 -> out/DripWaterCycleRemaster.mp4 (1080p h264,
-18341 f, 10:11, 271.8 MB); phone cut out/DripWaterCycleRemaster_phone.mp4
-(720p HEVC hvc1 CRF 29, moov before mdat, 22.64 MiB). No narration line
-changed in the whole recovery, so no new Whisper gate. Neither file has been
-WATCHED by anyone: motion and audio are Mike's to judge. NEXT: orchestrator
-commits act1kit.tsx + docs, delivers the two files, ships (registry unhide,
-`npm run site`, deploy from a clean worktree) -> showrunner writes the
-LEARNINGS/STYLE retro + bible update. Mike's list: decision log D35, D37,
-D39 + scratchpad/remaster/final/final-review.md SHIP-WITH.
-Mike already has the kit sheet and act 1–3 contact sheets.
-Decision log: remaster-decision-log.md D1–D39 TOP-first. Briefs:
-act-builder-brief.md, shot-plan.md, brief.md.
+**SHIPPED 2026-11-15, MIKE'S REVIEW PENDING.** `DripWaterCycleRemaster`
+(18341 f = 10:11) is live as its own gallery tile, "Drip's Big Adventure
+(Remaster)", next to the untouched original. Final-cut fix 489c324, registry
+unhide 61de620, site deployed from a clean worktree and verified. Phone cut
+delivered to Mike (out/DripWaterCycleRemaster_phone.mp4, 720p HEVC hvc1 CRF
+29, 22.64 MiB; full render out/DripWaterCycleRemaster.mp4). He has NOT
+watched it yet; nobody has judged motion, audio in context or true
+phone-size viewing. Retro written: docs/LEARNINGS.md (2026-11-15 entry),
+docs/STYLE.md (painted-backgrounds rules), docs/kids/BIBLE.md (world rule 19
+"Sunny is the only sun" + the remaster note). Nothing is running; no
+worktree holds uncommitted work (`.claude/worktrees/polish` is merged and
+can be removed).
+
+Mike's ten eye-checks (from the final review,
+scratchpad/remaster/final/final-review.md; stills cannot show motion):
+1. s34: do the drops travelling round the ring and the moving wisps, rain
+   and river read as water going round?
+2. s34: the EVAPORATION tag is cut by the left frame edge for about 2 s
+   (frames 16910-16960).
+3. s35 bath vs s28 tub: does the callback read as the same bathtub? (navy
+   tub, blue tiled room, duck in the plate vs cream tub, yellow room,
+   painted duck)
+4. s08 pull-out before "Every ocean!": a dark foreground band rises across
+   the bottom fifth.
+5. s22: the hanging sign reads grey rather than cream; the lamp barely
+   reaches Cloudia.
+6. s21: the bubble sits on Cloudia with its tail pointing away.
+7. s19: Cloudia washed under the haze; dark smudge top-centre of the sky.
+8. s28: the channel insert is overcast and the greyest insert.
+9. s24, s26, s32: the corner mounds are lighter than before.
+10. s33: the ring runs behind the "ECK / shun" chips for one line.
+
+Calls Mike can overturn (remaster-decision-log.md, TOP-first, D1-D39):
+- D35: polish items deferred to a second wave (act-1 crowd ribbon filter,
+  Sunny lens shine, big wave, NameArrow; act-2 swarm filter; act-3 boulder
+  plate, grass blades, moose values, sea plate, ring strokes, s22 crane
+  hold; thermometer paint variant).
+- D37: calls inside the polish pass (mound value family, light strength on
+  s24-s29, Drip darkened in the moose shadow, drab overcast channel kept).
+- D39: the ship-with list (items 2-3 and 5-7 above).
+D36 (no painted sun) is his own ruling and is final.
+
+NEXT, when Mike has watched: relay his notes verbatim to a fresh showrunner;
+a tweak wave starts from the eye-check list above plus the SHIP-WITH section
+of final-review.md (each item names its file and mechanism). The bigger
+question his verdict answers: does the look package become the series
+default (docs/ANIMATION-ROADMAP.md Step 2). Process changes to adopt in the
+next campaign are in the LEARNINGS entry: camera-extreme stills, a
+one-frame-per-second strip from the validate render, briefs written to
+files, stamped gate logs.
 
 ## PREVIOUS MODE: EP-6 CAMPAIGN — CUT SHIPPED 2026-10-26 (Mike AWAKE, "straight to a cut")
 

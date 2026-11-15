@@ -12,6 +12,108 @@ and abandoned. Newest entries at the top.
 
 ---
 
+## 2026-11-15 — remaster retro (Drip's Big Adventure re-animated — look-package campaign)
+
+`DripWaterCycleRemaster` (src/videos/water-cycle-remaster, 18341 f = 10:11),
+ep 1's script and timing table verbatim under the Step-2 look package
+(docs/ANIMATION-ROADMAP.md), shipped as a separate gallery tile next to the
+untouched original. Autonomous mode; every call is in
+`remaster-decision-log.md` (D1–D39). **Mike has not watched it yet: nothing
+below is his verdict.** This entry is written by the showrunner who took over
+at 21:18 on build day after a crew loss; the waves before that (kit, PaintDemo
+gate, skeleton, acts) are summarised from the decision log and reports, not
+from memory.
+
+**What the look package bought, by the rubric (V1–V8, fork-scored on stills).**
+First-pass act means were 7.55 (act 2), 7.1 (act 3) and 7.1 (recap), all
+ACCEPT WITH FIXES; after the polish and recap fix passes the final review
+scored the changed scenes 7.45 / 7.69 / 7.35 / 7.41 (acts 1/2/3/recap). Those
+two sets are different reviewers on different frame samples, so read them as
+"everything sits in the mid-7s", not as a measured gain. What the scores say
+consistently: staging, camera verbs, bubbles and Big Words (V5, V7) were
+right first time because the shot plan fixed them before any builder
+started; the two weak axes in every act were **V1 medium on plates and
+near-plane props** (smooth digital renders, flat kit props, uniform strokes)
+and **V3 light not reading on the characters** (the rig was correct in the
+table and invisible on screen). The fixes that moved V3 were all "make it
+bigger than feels right": rim wider than the ink line, lit band stronger, a
+visible multiply pool for a cast shadow, a lamp that emits a cone.
+
+**Two review passes caught different things.** Pass 1 (per act, right after
+build) caught design-level misses: the s34 ring was a poster of four places,
+not water going round (the one pedagogy defect of the campaign); the desk
+and sign differed between act 2 and act 3 because two builders drew them
+independently; a grass plate crossed the hero's face. Pass 2 (one reviewer
+on the merged tree) caught what only exists on the whole film: the s08
+transient below, the s28/s35 bathtub mismatch, a Big Word tag cropped by a
+camera follow. Between the two, the replacement polish builder's eye audit
+of its dead predecessor's 18 worklist items found 4 wrong on stills (bubble
+tail still on the crown, mounds still black, left key still invisible,
+moose shadow not on Drip) and 1 missing. A "DONE" in a report is a claim.
+
+**The s08 transient: sampled stills cannot see one-second defects.** On the
+pull-out before "Every ocean!" the foreground swell showed both ends as a
+dark slab for about 32 frames. Every gate passed: typecheck, hook lint, the
+every-frame render (it only proves the frames render) and three rounds of
+stills that sampled scene midpoints. It was found by luck, because the final
+reviewer sampled a camera move. The class is "geometry that is only exposed
+at a camera extreme". Gates that would catch it, cheapest first: (1) stills
+at the camera EXTREMES of every scene, not the midpoint: min zoom, max pan,
+max roll (the frame numbers come from the scene's own cam function); (2) a
+contact strip from the 0.25 validate mp4 at one frame per second, viewed by
+a fork: the render already exists and costs nothing more; (3) an overscan
+lint: any full-width shape on a plane must span the frame at the scene's
+minimum zoom times the plane's depth factor. Do (1) and (2) from the next
+episode. Three earlier bleed fixes in the same campaign (rolled plate
+corners, a panned haze veil, a rotated sky gradient) were the same class.
+
+**flux-schnell ignores negative prompts.** "No gloss, no chrome, no 3D
+render" came back glossy, chrome and 3D twice; rewording positively ("a
+loose hand-painted gouache illustration from a children's picture book …
+flat chalky colour, two or three flat tones") fixed bathtub, tap and dog
+bowl in one to three rolls. The same applies to content: "no sun" does not
+work, "under a soft overcast sky" does. Gag objects that must match across
+scenes (the rubber duck) should be drawn SVG props, never prompted into a
+plate.
+
+**Plates keyed offline worked.** Non-sky plane plates are prompted on a flat
+key colour and keyed by `key-plates.mjs` into alpha webp with the depth
+atmosphere baked in (D17), so planes cost nothing per frame. Its cost showed
+up later: stray keyed specks read as stains (an `erase` list was added), and
+every re-roll needs a re-key and a manifest regen, which makes three shared
+generated files (`.cache.json`, `plateManifest.ts`, `backgrounds.mjs`) the
+merge surface between parallel builders. It merged clean here only because
+the builders touched different keys.
+
+**Crew loss and recovery.** At 21:04 the orchestrator session and all agents
+died with two builders mid-edit (21 dirty files in a worktree, two in the
+main tree, one report saying IN PROGRESS, one with no report). Recovery took
+about 15 minutes to a running crew: typecheck + hook lint on both trees as
+found, read the diffs, simulate the three-way merge on the overlapping
+files, then two FRESH builders each briefed "audit the inherited edits by
+eye first, then finish". Nothing was lost and nothing was redone, because
+state lived on disk: worklist files, review files, a decision log, a live
+HANDOFF. What was missing and cost time: the dead builders' briefs existed
+only in a dead transcript (write briefs to a file before spawning), and one
+gate log gave no way to tell whether the render started before or after the
+builder's last edit (stamp the gate: write `git diff --stat | sha1sum` and a
+start time as the log's first line, and always `echo EXIT $?` into it). The
+re-gate that ambiguity forced was cheap; shipping an ungated edit would not
+have been.
+
+**Quota pacing.** The window was tight twice (8.8M headroom against an 8M
+batch). What kept it inside: renders are CPU, not tokens, so they were
+chained into single background jobs with one blocking wait instead of
+polls; reviewers were fresh narrow agents writing to files rather than forks
+of a large context; and the one-constant s08 fix was made by the showrunner
+directly (D38) instead of through a builder. That last one is an exception
+to "builders build", justified only by size and logged as such.
+
+**Open at retro time.** Mike's ten eye-checks and the overturnable calls
+(D35 deferred polish, D37 calls inside the polish pass, D39 ship-with list)
+are in docs/HANDOFF.md. Not judged by anyone yet: motion (the s34 drops and
+process marks), audio in context, and true phone-size viewing.
+
 ## 2026-10-26 — storm retro (Boom and the One, Two, Three — kids ep 6)
 
 Written the day the cut shipped (commits 6841034 → 13b1e90; 28,049f =

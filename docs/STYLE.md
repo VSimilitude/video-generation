@@ -423,6 +423,33 @@ came out of it.
   committed plate, twice. Any generator's early return precedes every
   mutation, and "`ls` the output dir after a dry-run" is a gate.
 
+- **Prompt positively; the model ignores "no …" lists** (remaster,
+  2026-11-15). Name the medium and the look you want ("a loose hand-painted
+  gouache illustration from a children's picture book, flat chalky colour,
+  two or three flat tones, visible dry-brush strokes"), and name the sky you
+  want ("a soft overcast sky"), never the thing to avoid. Inspect every new
+  plate alone at 100% for the digital tells: gloss, chrome, speculars,
+  perspective tiles, photoreal texture.
+- **No painted sun in any plate, ever** (Mike's ruling, 2026-11-14; bible
+  world rule 19). Sunny is the only sun. Prompt overcast or sun-out-of-frame
+  skies; a re-rolled plate gets a sun check (raw, keyed, in-scene) before it
+  is committed.
+- **Objects that must match across scenes are drawn, not prompted.** A gag
+  prop (the bath duck), a recurring desk or a sign is a shared SVG component
+  through PaintFill + ribbon; two plates never agree on it, and neither do
+  two builders (one shared kit file per recurring set piece).
+- **Multi-plane plates are keyed offline** (`key-plates.mjs`, remaster D17):
+  flat key colour in the prompt, alpha + baked depth atmosphere in the webp,
+  zero live filters. Every re-roll is followed by a re-key and a manifest
+  regen.
+- **Overscan for the camera's extreme, not its rest pose.** Anything that
+  spans the frame on a moving plane (plates, haze veils, sky gradients,
+  foreground swells and mounds) must still cover the frame at the scene's
+  minimum zoom, maximum pan and maximum roll, scaled by the plane's depth.
+  Verify with stills AT those extremes; a midpoint still proves nothing
+  (four separate edge-exposure bugs in the remaster, one found only in the
+  final review).
+
 ## Character-first staging
 
 - **The characters are the content.** In the financial series a diagram

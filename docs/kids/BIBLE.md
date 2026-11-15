@@ -35,6 +35,18 @@ document disagrees with the tweak-round state, the tweak-round state wins.
 | — | `drip-fork` | DripChooses (CYOA, phase 1.5) | 4:41–5:20/path | **Non-canon.** Branching Drip mini-adventure built from ep-1 assets (`docs/CYOA.md`). |
 | — | `drip-again` | DripAgain — Drip Goes Up Again | 5:11–5:55/path | **Non-canon.** Sequel CYOA pitched by the 8-year-old (beaver's dam, a mountain that is really a volcano, obsidian). |
 
+**Ep-1 remaster (2026-11-15).** `water-cycle-remaster` /
+`DripWaterCycleRemaster`, 10:11, is ep 1 re-animated under the look package:
+same script, same lines, same canon; it adds no story, gags, counts or
+teases, so no ledger entry changes. Voices follow current casting (Drip
+MiniMax Lively_Girl happy, Cloudia MiniMax Abbess; Narrator and Sunny clips
+byte-identical to ep 1). Visual canon it fixes for reuse: the Cloud Hotel
+desk is a scalloped cloud-top desk in violet cloud-marble with a lamp and a
+label, and the hotel sign is a cream wooden board hanging on two cords
+(`scenes/lobbykit.tsx`). Shipped as a separate tile; **Mike's review is
+pending**, and his verdict decides whether the look package becomes the
+series default.
+
 **Ep-4 canon status.** Folded 2026-08-24 by the ep-5 showrunner (canon
 only — the ep-4 taste/process retro runs with Mike's ep-4 tweak round;
 extraction record: `scratchpad/ep5/ep4-canon-extract.md`). Anything below
@@ -1038,6 +1050,15 @@ what a script may not break.
     invites and busts it on the stamp — a genuine misconception, never a
     straw man, and the correction stays a gift (rule 11). Forward-only:
     shipped episodes are not retrofitted.
+19. **Sunny is the only sun** (Mike, 2026-11-14, FINAL). No background
+    plate, insert or prop may contain a painted sun, a sun disc, or a round
+    glow or halo that reads as one: the sun in this world is a character
+    and he is on screen only when he is in the scene. Skies are prompted
+    overcast or with the sun out of frame; light may come from a direction
+    without its source being painted. Every new or re-rolled plate gets a
+    sun check before it ships (first applied to the ep-1 remaster: eight
+    plates checked, one re-rolled). The Moon is not covered by this rule
+    (one moon per night scene, as in the ep-1 mind-blower).
 
 ---
 
