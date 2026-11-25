@@ -23,3 +23,6 @@ dist-site/
 # API keys for build-time asset generation (image gen); never commit
 .env
 tmp/
+
+# Review stills and other throwaway output
+scratchpad/
