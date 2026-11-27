@@ -56,9 +56,15 @@ one, not free capacity.
   session are what eat quota.
 - **Quota gate between batches** (adopted 2026-08-02 after two mid-batch
   kills lost showrunner transcripts): at every batch checkpoint, BEFORE
-  sending the "proceed", run `node scripts/check-quota.mjs` (measures the
-  active 5-hour window from local transcripts; calibrated ceiling in the
-  script header). On PAUSE: hold the proceed message and schedule it for the
+  sending the "proceed", run `node scripts/check-quota.mjs`. Since
+  2026-11-26 it reads the REAL 5-hour and weekly used % that Claude Code
+  hands to the status line (`~/.claude/quota-status.json`, written by
+  `~/.claude/statusline.py`; true reset times, other sessions included) and
+  gates at 90% of the 5-hour window / 95% of the week. The batch size
+  argument is a percent of the window (<= 100) or weighted tokens (default
+  8M, about 30%). If the file is over 15 min old (no interactive session
+  open) it prints ESTIMATE ONLY and falls back to the old ccusage
+  transcript estimate, where the slop-zone cautions still apply. On PAUSE: hold the proceed message and schedule it for the
   window reset (cron/Monitor) — the showrunner sits cleanly stopped with its
   transcript intact and resumes with full context. A clean stop always
   resumes; a mid-flight kill loses the transcript and forces a fresh boot +

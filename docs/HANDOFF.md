@@ -104,6 +104,12 @@ other sessions; the window anchors at the FIRST ACTION after the previous
 reset and ccusage floors block starts to the hour, so check-quota adds
 60-min slop and prints SLOP ZONE near boundaries; a session-limit kill
 message's reset time beats ccusage. Never talk yourself out of a PAUSE.
+Update 2026-11-26: check-quota now gates on the REAL 5-hour and weekly
+used % (`~/.claude/quota-status.json`, refreshed by the status line of any
+open interactive session) with true reset times; the ccusage estimate and
+its slop rules above only apply when it prints ESTIMATE ONLY (file over
+15 min old). In percent terms the old wind-down 18M/21M weighted is about
+67%/78% of the 5-hour window.
 
 ## EP 6 — CUT COMPLETE, DEPLOYED (2026-10-26); retro + Mike's pass PENDING
 "Boom and the One, Two, Three" (`BoomStorm`, src/videos/storm, 28,049f =
